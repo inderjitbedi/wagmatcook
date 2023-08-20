@@ -1,0 +1,212 @@
+.App {
+  text-align: center;
+}
+
+* {
+  font-family: 'Inter';
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #0871ED;
+}
+
+.gray-text {
+  color: #ACACAC;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.dir-row {
+  flex-direction: row;
+}
+
+.align-center {
+  align-items: center;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mt-6 {
+  margin-top: 6rem !important;
+}
+
+.mt-8 {
+  margin-top: 8rem !important;
+}
+
+a.link {
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  color: #222222;
+  text-decoration: none;
+}
+
+.sidebar {
+  background-color: #093FE1;
+  color: #fff;
+  height: 100vh;
+
+  .content-box {
+    padding: 35px 35px 0;
+  }
+
+
+
+  .logo {
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    letter-spacing: -0.02em;
+    text-align: left;
+
+  }
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29px;
+  text-align: left;
+
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 32px;
+  text-align: left;
+
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+  text-align: left;
+
+}
+
+p {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+  text-align: left;
+
+}
+
+.signup-form {
+  max-width: 385px;
+  width: 100%;
+  margin: auto;
+}
+
+button.MuiButton-containedPrimary {
+  background-color: #279AF1;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 113px;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: 'Inter';
+
+}
+
+.MuiInputBase-root {
+  height: 40px;
+  padding: 8px 11px 8px 11px;
+  border-radius: 6px !important;
+
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border: 1px solid #CDD1DC;
+}
+
+fieldset legend span {
+  font-size: 13px;
+  color: #8F9BB3;
+  line-height: 13px;
+  margin-top: 0;
+}
+
+.signup-form .MuiFormLabel-root {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222B45;
+  line-height: 17px;
+  margin-top: 0;
+}
+
+
+.signup-form .MuiFormControl-root,
+input.MuiInputBase-input {
+  margin-top: 5px !important;
+  margin-bottom: 10px;
+  padding: 0 !important;
+  font-size: 14px;
+  color: #8F9BB3;
+  font-weight: 400;
+}
+
+.MuiFormLabel-root {
+  color: #222222
+}
