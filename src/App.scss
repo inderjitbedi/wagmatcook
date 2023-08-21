@@ -36,7 +36,8 @@
   color: #ACACAC;
 }
 
-.d-flex {
+.d-flex,
+.flex {
   display: flex;
 }
 
@@ -58,12 +59,24 @@
   }
 }
 
+.mt-1 {
+  margin-top: 1rem !important;
+}
+
+.mt-2 {
+  margin-top: 2rem !important;
+}
+
 .mt-6 {
   margin-top: 6rem !important;
 }
 
 .mt-8 {
   margin-top: 8rem !important;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
 }
 
 a.link {
@@ -174,7 +187,8 @@ button.MuiButton-containedPrimary {
   height: 40px;
   padding: 8px 11px 8px 11px;
   border-radius: 6px !important;
-
+  margin: 5px 0 8px;
+  ;
 }
 
 .MuiOutlinedInput-notchedOutline {
@@ -199,8 +213,8 @@ fieldset legend span {
 
 .signup-form .MuiFormControl-root,
 input.MuiInputBase-input {
-  margin-top: 5px !important;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  margin-top: 0 !important;
   padding: 0 !important;
   font-size: 14px;
   color: #8F9BB3;
@@ -209,4 +223,146 @@ input.MuiInputBase-input {
 
 .MuiFormLabel-root {
   color: #222222
+}
+
+.MuiStack-root {
+  max-width: 562px;
+  min-width: 562px;
+  padding: 20px;
+  margin: auto;
+
+  .MuiAlert-icon {
+    color: #222222 !important;
+  }
+
+
+  .MuiAlert-message {
+    color: #222222;
+    font-size: 16px;
+
+    p {
+      font-size: 14px;
+      color: #686868;
+      width: 75%;
+      padding-right: 15px;
+    }
+
+    button.MuiButton-containedPrimary {
+      font-size: 13px;
+    }
+  }
+}
+
+input[type="file"].custom {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.bg-gray-100 {
+  width: 72px;
+  height: 72px;
+  background-color: #D9D9D9;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+}
+
+.ml-5 {
+  margin-left: 1.25rem;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.duration-150 {
+  transition-duration: 150ms;
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
+.transition {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+}
+
+.text-gray-700 {
+  --text-opacity: 1;
+  color: #4a5568;
+  color: rgba(74, 85, 104, var(--text-opacity));
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.remove-button {
+  background-color: transparent;
+  border: 0;
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  color: #8B8B8B;
+  text-align: left;
+  margin-left: 5px;
+
+}
+
+.org-logo {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.upload-photo {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  padding: 5px;
+  display: inline-block;
+  color: #595959;
+  box-shadow: 1px 4px 4px 0px #DFDFDF;
+  border-radius: 20px;
+  border: 1px solid #dfdfdf;
+
+}
+
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }

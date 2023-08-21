@@ -56,7 +56,7 @@ export default function OrganisationSignUp() {
                                 type="password" id="password" />
                             <p className='gray-text '>By clicking, you agree to our <a href="" className='App-link'>Terms of Services</a>and that you have read and understood our <a href="" className='App-link'>Privacy Policy</a> .</p>
 
-                            <Button type="submit" variant="contained">
+                            <Button type="submit" variant="contained" className='mt-1'>
                                 Create Your Account
                             </Button>
                         </Box>
