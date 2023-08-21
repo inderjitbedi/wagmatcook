@@ -56,6 +56,7 @@ export default function SignIn() {
                             <Button
                                 type="submit"
                                 variant="contained"
+                                className='mt-1'
                             >
                                 Continue
                             </Button>
@@ -73,6 +74,7 @@ export default function SignIn() {
                                     <Button
                                         type="submit"
                                         variant="contained"
+
                                     >
                                         Resend Email
                                     </Button>
