@@ -1,4 +1,4 @@
-const File = require("../models/fileModel");
+const File = require("../models/file");
 
 const fileController = {
     async upload(req, res) {

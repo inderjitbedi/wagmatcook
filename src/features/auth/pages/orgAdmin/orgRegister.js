@@ -7,7 +7,7 @@ import { Grid, Box } from '@mui/material';
 
 
 
-export default function OrganizationSignUpForm() {
+export default function RegisterOrganization() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -43,12 +43,12 @@ export default function OrganizationSignUpForm() {
                             <div class="file-input flex items-center  mb-1">
 
                                 <div class="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                    <div className='text-center' >
-                                        <img src="../assets/user.png" alt='user' />
+                                    <div className='image-container '  >
+                                        <img src="../assets/user.png"  alt='user' />
                                     </div>
-                                    <div class="h-12 w-12 rounded-full overflow-hidden">
-                                        <img src="previewPhoto" alt="" class="h-12 w-12 object-cover" />
-                                    </div>
+                                    {/* <div class="h-12 w-12 rounded-full overflow-hidden image-container">
+                                        <img src="../assets/user.png" alt="" class="" />
+                                    </div> */}
                                 </div>
 
                                 <div class="flex items-center">

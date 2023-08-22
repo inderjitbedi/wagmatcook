@@ -366,3 +366,26 @@ input[type="file"].custom {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
+
+.error {
+  color: red;
+  font-size: 12px;
+  padding-bottom: 7px;
+  display: inline-block;
+}
+.astrick{
+  color: red;
+  font-weight: 100;
+}
+.fit-image {
+  max-width: 100%; /* Set the maximum width to 100% of the container width */
+  max-height: 100%; /* Set the maximum height to 100% of the container height */
+  width: auto; /* Allow the width to adjust proportionally based on the height */
+  height: auto; /* Allow the height to adjust proportionally based on the width */
+}
+.image-container{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

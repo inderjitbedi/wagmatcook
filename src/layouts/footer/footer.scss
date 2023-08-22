@@ -1,0 +1,55 @@
+// @import '../../../public/assets/scss/base';
+
+#footer {
+  // @include pos(r, null);
+  // @include padding(20 0);
+  box-shadow: 0px -1px 0px rgba(0, 0, 0, 0.06);
+  // background-color: $white;
+  font-size: 12px;
+
+  ul {
+    li {
+      // @include pos(r, null);
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-right: 15px;
+        padding-right: 15px;
+
+        &:before {
+          content: '';
+          // @include circle(2px);
+          // @include pos(ab, 0 0 0 null);
+          margin: auto auto;
+          // background-color: $theme-grey;
+        }
+      }
+
+      a {
+        font-size: 12px;
+        // color: $theme-grey-700;
+        font-weight: 500;
+
+        &:hover {
+          // color: $theme;
+        }
+      }
+    }
+  }
+
+  .socialLinks {
+    // @include display-grid;
+    // @include grid-template-columns(auto auto auto);
+    grid-gap: 20px;
+    gap: 20px;
+
+    a {
+      // color: $theme-grey-700;
+      font-size: 20px;
+
+      &:hover {
+        // color: $theme;
+      }
+    }
+  }
+}

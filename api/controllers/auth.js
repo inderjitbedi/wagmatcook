@@ -7,6 +7,7 @@ const roles = require('../enum/roles')
 const authController = {
     async register(req, res) {
         try {
+            console.log("in reqister");
             const user = new User(req.body);
             user.role = roles.ORG_ADMIN;
 
@@ -30,7 +31,7 @@ const authController = {
             if (!user) {
                 return res.status(400).json({ message: 'User not found.' });
             }
-            if (user.role !== 'ORG_ADMIN')
+            if (user.role !==  roles.ORG_ADMIN)
                 return res.status(400).json({ message: 'Not an Org admin user.' });
 
             const token = crypto.randomBytes(10).toString('hex');

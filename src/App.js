@@ -1,13 +1,15 @@
-import SignIn from './SignIn.js';
 import './App.scss';
-import OrganisationSignUp from './OrganisationSignUp.js';
-import PasswordReset from './PasswordReset.js';
-import OrganizationSignUpForm from './OrganizationSignUpForm';
+import ScrollToTop from './features/auth/pages/scrollTop';
+import Navigation from "./navigation";
 
 function App() {
   return (
-    <OrganizationSignUpForm />
+    <>
+      <Navigation></Navigation>
+      </>
   );
 }
+
+
 
 export default App;
