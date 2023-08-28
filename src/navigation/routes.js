@@ -6,7 +6,8 @@ import RegisterOrganization from "../features/auth/pages/orgAdmin/orgRegister";
 import OADashBoard from "../Dashboard/OADashboard/OADashBoard";
 import OADashBoardNext from "../Dashboard/OADashboard/OADashBoardNext";
 // import verify from "../features/auth/pages/verify"
-
+import Departments from "../Departments/Departments";
+import Disciplinary from "../Disciplinary/Disciplinary";
 const Routes = [
   {
     component: signup,
@@ -61,6 +62,22 @@ const Routes = [
     component: OADashBoardNext,
     path: "/OADashBoardNext",
     title: "OADashBoardNext",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: Departments,
+    path: "/Departments",
+    title: "Departments",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: Disciplinary ,
+    path: "/Disciplinary",
+    title: "Disciplinary ",
     to: "/",
     type: "public",
     children: [],

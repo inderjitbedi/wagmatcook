@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import SideBar from "./SideBar.js";
 import {
   Dashboard,
@@ -30,9 +30,25 @@ import {
   CardEmployeeDiv,
   CardEmployeePara,
   CardEmployeespan,
+  MainCardPara,
+  MainCardParaLight,
+  CardLeavesList,
+  CardLeavesDiv,
+  CardLeavesPara,
+  CardLeavesButton,
+  CardLeavesArrow,
+  CardEmployeeImg,
+  CardList,
+  CardListPara,
+  CardListSpan,
 } from "./OaDashBoardNextStyles.js";
 
 const OADashBoardNext = () => {
+  const Data = [1, 2, 3];
+    const [status, setStatus] = useState("Active");
+    const HandelClick = () => {
+    setStatus(status === "Active" ? "Inactive" : "Active");
+}
   return (
     <Dashboard>
       <DashNav>
@@ -76,31 +92,82 @@ const OADashBoardNext = () => {
               <DashCardTitle>Leaves</DashCardTitle>
               <MainCardView>View All</MainCardView>
             </MainCardTitleDiv>
+            {Data.map((data) => (
+              <CardLeavesList>
+                <CardLeavesDiv>
+                  <MainCardPara>Sickness Benefits</MainCardPara>
+                  <MainCardParaLight>Overtime Accumulated</MainCardParaLight>
+                </CardLeavesDiv>
+                <CardLeavesPara>Max Carry Over: 10</CardLeavesPara>
+                <CardLeavesButton
+                  onClick={HandelClick}
+                  style={
+                    status === "Active"
+                      ? { backgroundColor: "#c8ffc7",color: "#0d7d0b"}
+                      : { backgroundColor: "#FF6666", color: "#FF0000" }
+                  }
+                >
+                  {status}{" "}
+                  <CardLeavesArrow
+                    src="svg/Arrow Down.svg"
+                    style={
+                      status === "active"
+                        ? {}
+                        : { fill: "#FF0000" }
+                    }
+                  />
+                </CardLeavesButton>
+              </CardLeavesList>
+            ))}
           </MainCard>
           <MainCard>
             <MainCardTitleDiv>
               <DashCardTitle>New Employee</DashCardTitle>
               <MainCardView>View All</MainCardView>
             </MainCardTitleDiv>
-            <CardEmployeeList>
-                          <CardEmployeeDiv>
-                              
-              </CardEmployeeDiv>
-              <CardEmployeePara>
-                Employee ID: <CardEmployeespan>LA-0234</CardEmployeespan>
-              </CardEmployeePara>
-            </CardEmployeeList>
+            {Data.map((data) => (
+              <CardEmployeeList>
+                <CardEmployeeDiv>
+                  <CardEmployeeImg src="images/Oval Copy 2.jpg" />
+                  <CardLeavesDiv>
+                    <MainCardPara>Web Developer</MainCardPara>
+                    <MainCardParaLight>Web Developer</MainCardParaLight>
+                  </CardLeavesDiv>
+                </CardEmployeeDiv>
+                <CardEmployeePara>
+                  Employee ID: <CardEmployeespan>LA-0234</CardEmployeespan>
+                </CardEmployeePara>
+              </CardEmployeeList>
+            ))}
           </MainCard>
           <MainCard>
             <MainCardTitleDiv>
               <DashCardTitle>Departments</DashCardTitle>
               <MainCardView>View All</MainCardView>
             </MainCardTitleDiv>
+            {Data.map((data) => (
+              <CardList>
+                <MainCardPara>Product Design </MainCardPara>
+                <CardListPara>
+                  Employees:
+                  <CardListSpan>11</CardListSpan>
+                </CardListPara>
+              </CardList>
+            ))}
           </MainCard>
           <MainCard>
             <MainCardTitleDiv>
               <DashCardTitle>Disciplinary Types</DashCardTitle>
             </MainCardTitleDiv>
+            {Data.map((data) => (
+              <CardList>
+                <MainCardPara>Verbal warning </MainCardPara>
+                <CardListPara>
+                  Requires BCR:
+                  <CardListSpan>Yes</CardListSpan>
+                </CardListPara>
+              </CardList>
+            ))}
           </MainCard>
         </MainCardContainer>
       </DashMain>
