@@ -47,7 +47,7 @@ app.use(loggerMiddleware);
 
 app.use('/api/auth', authRoute);
 app.use('/api/organization', orgRoute);
-// app.use("/",express.static(path.join(__dirname, 'guardian-client')));
+app.use("/",express.static(path.join(__dirname, '../build')));
 app.use("/api/media", express.static(path.join(__dirname, 'assets')));
 app.use("/api/temp",express.static(path.join(__dirname, 'temp')));
 app.use("/api/uploads",express.static(path.join(__dirname, 'uploads')));

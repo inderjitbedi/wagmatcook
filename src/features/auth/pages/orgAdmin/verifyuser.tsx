@@ -65,12 +65,17 @@ export default function VerifyUser() {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem("token", result?.token);
-            navigate("/register-organization");
+            toast.info("Verified successfully.")
+            setTimeout(() => {
+              navigate("/register-organization");
+            }, 500);
           }
         })
         .catch((error: any) => {
           console.error("Error:", error);
         });
+    } else {
+      toast.warn("Please enter the temporary password.")
     }
   };
 
@@ -99,16 +104,16 @@ export default function VerifyUser() {
             </div>
           </div>
         </Grid>
-        <Grid item xs={9} className="position-relative">
-          <div className="signup-form mt-8">
+        <Grid item xs={9} >
+          <div className="signup-form mt-8  mb-250">
             <h1>Check your inbox!</h1>
             <p className="gray-text">
               We’ve just emailed you a temporary password.
               <br /> Please enter it below.{" "}
             </p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mt: 1 }}>
-                <InputLabel>Temporary password</InputLabel>
+                <InputLabel>Temporary password <span className="astrick">*</span></InputLabel>
                 <TextField
                   margin="normal"
                   required
@@ -128,7 +133,8 @@ export default function VerifyUser() {
                 </Button>
               </Box>
             </form>
-            <Stack sx={{ width: "100%" }} spacing={2}>
+          
+          </div>  <Stack sx={{ width: "100%" }} spacing={2}>
               <Alert severity="info">
                 Didn’t receive an email?
                 <div className="d-flex dir-row align-center">
@@ -146,7 +152,6 @@ export default function VerifyUser() {
                 </div>
               </Alert>
             </Stack>
-          </div>
         </Grid>
       </Grid>
     </React.Fragment>

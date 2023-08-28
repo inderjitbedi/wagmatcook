@@ -18,10 +18,9 @@ import ScrollToTop from "../features/auth/pages/scrollTop";
 
 const Navigation = () => {
   const isUser: boolean = !!localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user") || "")
+    ? JSON.parse(localStorage.getItem("user") || "") && localStorage.getItem("token")
     : ""; //useAppSelector(isUserLoggedIn);
   // const showSpinner = useAppSelector(fetchAccountStorageSpinnerState);
-  console.log(isUser);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,9 +35,9 @@ const Navigation = () => {
                 key={path}
                 element={
                   <ScrollToTop>
-                    {(type === "public" && !isUser) || type === "semi" ? (
+                    {/* {(type === "public" && !isUser) || type === "semi" ? ( */}
                       <PublicLayout component={Component} />
-                    ) : type === "private" && isUser ? (
+                    {/* ) : type === "private" && isUser ? (
                       <PrivateLayout component={Component}>
                         {children &&
                           children.length &&
@@ -52,7 +51,8 @@ const Navigation = () => {
                       </PrivateLayout>
                     ) : (
                       <Navigate replace to={to} />
-                    )}
+                    ) }*/
+                    }
                   </ScrollToTop>
                 }
               />

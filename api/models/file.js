@@ -5,6 +5,10 @@ const fileSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    originalName: {
+        type: String,
+        required: true,
+    },
     mimeType: {
         type: String,
         required: true,
@@ -16,6 +20,10 @@ const fileSchema = new mongoose.Schema({
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
+    },
+    destination: {
+        type: String,
         required: true,
     },
     path: {

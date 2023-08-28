@@ -15,7 +15,7 @@ const authController = {
             user.tempPassword = token;
             user.tempPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
-
+            req.user = user;
             sendGrid.send(user.email, 'tempPassword', { req, token });
 
             res.status(201).json({ user, message: 'User registered. Temp password successfully sent via email.' });
@@ -38,10 +38,10 @@ const authController = {
             user.tempPassword = token;
             user.tempPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
-
+            req.user = user;
             sendGrid.send(user.email, 'tempPassword', { req, token });
 
-            res.status(200).json({ message: 'Temp password successfully resent via email.' });
+            res.status(200).json({user, message: 'Temp password successfully resent via email.' });
         } catch (err) {
             next(err);
         }
@@ -70,8 +70,9 @@ const authController = {
     async login(req, res) {
         try {
             const { email, password } = req.body;
-            let user = await User.findOne({ email, IsDeleted: false });
+            let user = await User.findOne({ email, isDeleted: false });
             if (!user) throw new Error('User not registered');
+
             const isMatch = await user.comparePassword(password);
             if (!isMatch) throw new Error('Invalid credentials');
             const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
@@ -106,11 +107,11 @@ const authController = {
 
             const token = crypto.randomBytes(20).toString('hex');
             user.resetPasswordToken = token;
-            user.resetPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
+            user.resetPasswordTokenExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
 
             sendGrid.send(user.email, 'forgotPassword', { req, token });
-            res.status(200).json({ message: 'Password reset email sent' });
+            res.status(200).json({ user,message: 'Password reset email sent' });
         } catch (err) {
             next(err);
         }
@@ -118,8 +119,9 @@ const authController = {
     async resetPassword(req, res, next) {
         try {
             const { token } = req.params;
+            console.log(token);
             const { newPassword } = req.body;
-            const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+            const user = await User.findOne({ resetPasswordToken: token, resetPasswordTokenExpiry: { $gt: Date.now() } });
             if (!user) {
                 return res.status(400).json({ message: 'Invalid or expired token' });
             }
@@ -129,9 +131,9 @@ const authController = {
             // }
             user.password = newPassword;
             user.resetPasswordToken = undefined;
-            user.resetPasswordExpires = undefined;
+            user.resetPasswordTokenExpiry = undefined;
             await user.save();
-            res.status(200).json({ message: 'Password changed successfully' });
+            res.status(200).json({ user,message: 'Password changed successfully' });
         } catch (err) {
             next(err);
         }

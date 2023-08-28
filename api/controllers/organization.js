@@ -1,11 +1,35 @@
 const User = require("../models/user");
 const Organization = require("../models/organization");
-
+const path = require("path");
+const fs = require("fs");
+const File = require("../models/file");
 const orgController = {
     async create(req, res) {
         try {
             const org = new Organization(req.body);
+console.log(req.user);
+            let file = await File.findOne({ _id: req.body.file });
+            const tempFilePath = [file.destination, file.name].join('/')
+            const newFilePath = "uploads/";
+            const newFileName = Date.now() + "_" + req.user._id + "_" + file.originalName.replaceAll(' ', '_')
+            const destFilePath = newFilePath + newFileName
+            await fs.renameSync(path.join(__dirname, "../" + tempFilePath),
+                path.join(__dirname, "../" + destFilePath));
+            console.log("Saved File:", {
+                ...file.toObject(),
+                destination: newFilePath,
+                path: destFilePath,
+                name: newFileName
+            });
+            file = await File.findOneAndUpdate({ _id: req.body.file }, {
+                ...file.toObject(),
+                destination: newFilePath,
+                path: destFilePath,
+                name: newFileName
+            }, { new: true });
+
             org.createdBy = req.user._id;
+            org.logo = file._id
             await org.save();
             res.status(201).json({ organization: org, message: 'Organization created successfully.' });
         } catch (error) {

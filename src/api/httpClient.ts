@@ -6,22 +6,19 @@ import axiosInstance from "./axiosClient";
 // import { store } from "../../app/store";
 
 
-async function httpClient(payload:any) {
-    console.log(payload);
-    
+async function httpClient(payload: any) {
     const payloadData = {
-        ...payload
+        ...payload,
     };
-
     try {
         const response = await axiosInstance(payloadData);
         const { data: result, headers } = response;
         return {
             result,
             headers,
-            error: null,
+            error: null
         };
-    } catch (error:any) {
+    } catch (error: any) {
         let myError = error?.response ? error?.response?.data : error;
 
         if (myError?.status) {
@@ -30,11 +27,11 @@ async function httpClient(payload:any) {
             } else {
                 toast.error(myError.message);
             }
-        }  else {
+        } else {
             toast.error(myError.message);
         }
         return {
-            error: myError, 
+            error: myError,
             result: null,
             headers: null,
         };
