@@ -2,7 +2,7 @@ import axios, {  AxiosResponse } from "axios";
 
 const axiosClient =  axios.create({
   // baseURL: 'http://localhost:4041/api',//`${process.env.REACT_APP_USER_API_URL}`,
-  baseURL: 'http://hrapp.chantsit.com/api',//`${process.env.REACT_APP_USER_API_URL}`,
+  baseURL: 'http://hrapi.chantsit.com/',//`${process.env.REACT_APP_USER_API_URL}`,
   headers: {
     'Content-Type': 'application/json'
   },
