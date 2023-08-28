@@ -3,6 +3,8 @@ import signup from "../features/auth/pages/orgAdmin/signup";
 import signin from "../features/auth/shared/signin";
 import verifyuser from "../features/auth/pages/orgAdmin/verifyuser";
 import RegisterOrganization from "../features/auth/pages/orgAdmin/orgRegister";
+import ForgotPassword from "../features/auth/shared/forgot-password";
+import ResetPassword from "../features/auth/shared/reset-password";
 
 // import verify from "../features/auth/pages/verify"
 
@@ -11,7 +13,7 @@ const Routes = [
         component: signup,
         path: "/",
         title: "Org Admin Register",
-        to: "/register-organization",
+        to: "/",
         type: "public",
         children: []
         // children: [
@@ -32,13 +34,29 @@ const Routes = [
         type: "public",
         children: []
 
+    }, {
+        component: ForgotPassword,
+        path: "/forgot-password",
+        title: "forgot-password",
+        to: "/",
+        type: "public",
+        children: []
+
+    }, {
+        component: ResetPassword,
+        path: "/reset-password/:token",
+        title: "reset-password",
+        to: "/",
+        type: "public",
+        children: []
+
     },
     {
         component: verifyuser,
         path: "/verifyuser",
         title: "verifyuser",
         to: "/",
-        type: "semi",
+        type: "public",
         children: []
 
     }, {
@@ -46,7 +64,7 @@ const Routes = [
         path: "/register-organization",
         title: "register-organization",
         to: "/",
-        type: "private",
+        type: "public",
         children: []
 
     },

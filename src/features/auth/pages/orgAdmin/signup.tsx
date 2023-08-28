@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import { TextField, InputLabel } from "@mui/material";
+import { TextField, InputLabel, Stack, Alert } from "@mui/material";
 import { Grid, Box } from "@mui/material";
 import httpClient from "../../../../api/httpClient";
 import { call } from "redux-saga/effects";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -75,7 +76,12 @@ export default function Signup() {
 
   function handleSubmit(event: any) {
     event.preventDefault();
-    if (formData.email && validateEmail(formData.email)) {
+    console.log(validateEmail(formData.email), validatePassword(formData.password)
+      , !validatePasswordMatch(formData.confirmPassword));
+
+    if (formData.name && formData.email && formData.password && formData.confirmPassword
+      && validateEmail(formData.email) && validatePassword(formData.password)
+      && !validatePasswordMatch(formData.confirmPassword)) {
       let dataCopy: any = { ...formData };
       delete dataCopy.confirmPassword;
       let url = `/auth/register`;
@@ -87,6 +93,7 @@ export default function Signup() {
       })
         .then(({ result }) => {
           if (result?.user) {
+            // toast.info("")
             localStorage.setItem("user", JSON.stringify(result?.user));
             navigate("/verifyuser");
           }
@@ -94,12 +101,14 @@ export default function Signup() {
         .catch((error: any) => {
           console.error("Error:", error);
         });
+    } else {
+      toast.warn("All fields are required")
     }
   }
 
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} >
         <Grid item xs={3}>
           <div className="sidebar">
             <div className="content-box">
@@ -122,13 +131,13 @@ export default function Signup() {
             </div>
           </div>
         </Grid>
-        <Grid item xs={9}>
-          <div className="signup-form mt-8">
+        <Grid item xs={9} >
+          <div className="signup-form mt-8 mb-50" >
             <h1>Sign up as an organization</h1>
             <p className="text">
               Please provide your Organization information{" "}
             </p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mt: 1 }}>
                 <InputLabel>
                   Full Name <span className="astrick">*</span>
@@ -139,7 +148,7 @@ export default function Signup() {
                   fullWidth
                   id="name"
                   name="name"
-                  placeholder=""
+                  placeholder="Enter name"
                   autoFocus
                   value={formData.name}
                   onChange={(e) =>
@@ -156,7 +165,7 @@ export default function Signup() {
                   fullWidth
                   id="email"
                   name="email"
-                  placeholder="name@mail.com"
+                  placeholder="Enter email"
                   value={formData.email}
                   onChange={handleEmailChange}
                 />
@@ -202,9 +211,9 @@ export default function Signup() {
 
                 <p className="gray-text ">
                   By clicking, you agree to our
-                  <a className="App-link">Terms of Services</a>
+                  <a className="app-link"> Terms of Services </a>
                   and that you have read and understood our
-                  <a className="App-link">Privacy Policy</a> .
+                  <a className="app-link"> Privacy Policy</a>.
                 </p>
 
                 <Button type="submit" variant="contained" className="mt-1">
@@ -212,7 +221,27 @@ export default function Signup() {
                 </Button>
               </Box>
             </form>
-          </div>
+           
+          </div> <Stack sx={{ width: "100%" }} spacing={2}>
+              <Alert severity="info">
+                Already have an account?
+                <div className="d-flex dir-row align-center">
+                  <p>
+                  If you already have an account, please visit our login page and sign in.
+                  </p>
+                  {/* <Button
+                    type="button"
+                    variant="contained"
+                    to="/signin"
+                  >
+                    Login
+                  </Button> */}
+                  <Link to="/signin">
+                    <Button type="button" variant="contained">Login</Button>
+                  </Link>
+                </div>
+              </Alert>
+            </Stack>
         </Grid>
       </Grid>
     </React.Fragment>

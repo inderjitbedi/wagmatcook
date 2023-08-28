@@ -12,23 +12,33 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         cb(null, Date.now() + "_" + file.originalname.replaceAll(' ', '_'));
     },
-    limits: (req, file, cb) => {
-        const fileConfig = constants[req.params.type.toUpperCase() + '_CONFIG'];
-        cb(null, { fileSize: fileConfig.MAX_SIZE })
-    },
+    // limits: (req, file, cb) => {
+
+    //     const fileConfig = constants[req.params.type.toUpperCase() + '_CONFIG'];
+    //     
+    //     cb(null, { fileSize: fileConfig.MAX_SIZE })
+    // },
 });
+
+// Define a function to determine the file size limit dynamically
+const getFileSizeLimit = (req) => {
+    const fileConfig = constants[req.params.type.toUpperCase() + '_CONFIG'];console.log(fileConfig.MAX_SIZE);
+    return fileConfig.MAX_SIZE; // Set your desired file size limit in bytes here
+};
 
 const uploadFile = multer({
     storage: storage,
+    limits: getFileSizeLimit,
     fileFilter: (req, file, cb) => {
+
         const fileConfig = constants[req.params.type.toUpperCase() + '_CONFIG'];
         const filetypes = fileConfig.ALLOWED_EXTENSIONS_REGEX;
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = filetypes.test(file.mimetype);
-        if (mimetype&& extname) {  
+        if (mimetype && extname) {
             return cb(null, true);
         } else {
-            cb(new Error(`Error: File must be of type ${fileConfig.ALLOWED_EXTENSIONS}!`));
+            return cb(new Error(`File must be of type ${fileConfig.ALLOWED_EXTENSIONS}!`));
         }
     }
 })

@@ -9,7 +9,7 @@ const PrivateLayout = ({ component: Component }: any) => (
       <div className="mainBodyWrapper" id="mainBodyWrapper">
         <Component></Component>
       </div>
-      <FooterLayout></FooterLayout>
+      {/* <FooterLayout></FooterLayout> */}
     </main>
   </>
 );

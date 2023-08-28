@@ -19,9 +19,17 @@ function verifyToken(req, res, next) {
       return res.status(401).send({ message: 'Unauthorised!' });
     }
     req.user = user;
+    console.log(req.user);
 
     next();
   });
 }
 
-module.exports = verifyToken;
+function handleMulterError(err, req, res, next) {
+  if (err) {
+    return res.status(400).json({ error: err.message });
+  }
+  next();
+}
+
+module.exports = { handleMulterError, verifyToken };

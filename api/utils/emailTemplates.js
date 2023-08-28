@@ -19,7 +19,7 @@ const emailTemplates = {
                                     role="presentation">
                                     <tr>
                                         <td align="center">
-                                            <a href="${process.env.FRONTEND_URL}auth/reset-password/${data.token}"
+                                            <a href="${process.env.FRONTEND_URL}reset-password/${data.token}"
                                                 class="f-fallback button " target="_blank">Reset
                                                 your password</a>
                                         </td>
@@ -31,7 +31,7 @@ const emailTemplates = {
                     <p>If you did not request this, please ignore this email and your password
                         will remain unchanged.</p>
                     <p>Thanks,
-                        <br>The Guardian team
+                        <br>The Wagmatcook Team
                     </p>
                     <!-- Sub copy -->
                     <table class="body-sub" role="presentation">
@@ -41,7 +41,7 @@ const emailTemplates = {
                                     button above, copy and paste the URL below into your web
                                     browser.</p>
                                 <p class="f-fallback sub">
-                                    ${process.env.FRONTEND_URL}auth/reset-password/${data.token}
+                                    ${process.env.FRONTEND_URL}reset-password/${data.token}
                                 </p>
                             </td>
                         </tr>
@@ -56,7 +56,7 @@ const emailTemplates = {
             subject: 'Temporary Password',
             html: getFullTemplate(data, `
                 <div class="f-fallback">
-                    <h1>Hi ${data.req.body.name},</h1>
+                    <h1>Hi ${data.req.user.name},</h1>
                     <p>We received a request to verify your account. To complete the verification process, please use the following temporary password:
 
                     </p>
@@ -120,7 +120,7 @@ const emailTemplates = {
                         </table>
                         <!-- <p>For security, this request was received from a {{operating_system}} device using {{browser_name}}. If you do not want to join, please ignore this email or <a href="{{support_url}}">contact support</a> if you have questions.</p> -->
                         <p>Thanks,
-                            <br>The Guardian team
+                            <br>The Wagmatcook Team
                         </p>
                         <!-- Sub copy -->
                         <table class="body-sub" role="presentation">

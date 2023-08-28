@@ -13,7 +13,7 @@ const fileController = {
                 originalName: uploadedFile.originalname,
                 path: uploadedFile.path,
                 destination: uploadedFile.destination,
-                type: uploadedFile.mimetype,
+                mimeType: uploadedFile.mimetype,
                 size: uploadedFile.size,
                 uploadedBy: req.user._id
             }
