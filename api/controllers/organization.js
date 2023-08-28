@@ -3,16 +3,28 @@ const Organization = require("../models/organization");
 const path = require("path");
 const fs = require("fs");
 const File = require("../models/file");
+
+
+// Function to create a directory if it doesn't exist
+const createDirectoryIfNotExists = (directory) => {
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+};
+
 const orgController = {
     async create(req, res) {
         try {
             const org = new Organization(req.body);
-console.log(req.user);
+            console.log(req.user);
             let file = await File.findOne({ _id: req.body.file });
             const tempFilePath = [file.destination, file.name].join('/')
             const newFilePath = "uploads/";
             const newFileName = Date.now() + "_" + req.user._id + "_" + file.originalName.replaceAll(' ', '_')
             const destFilePath = newFilePath + newFileName
+           
+            createDirectoryIfNotExists(path.join(__dirname, '../', newFilePath));
+           
             await fs.renameSync(path.join(__dirname, "../" + tempFilePath),
                 path.join(__dirname, "../" + destFilePath));
             console.log("Saved File:", {
