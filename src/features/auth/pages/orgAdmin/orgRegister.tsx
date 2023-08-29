@@ -139,7 +139,7 @@ export default function RegisterOrganization() {
                                                 <img src="../assets/user.png" alt='user' />
                                             </div>}
                                             {file && file?.path && <div className="h-12 rounded-full overflow-hidden image-container">
-                                                <img className="mw-100p" src={"http://localhost:4041/api/" + file?.destination + "/" + file?.name} alt="" />
+                                                <img className="mw-100p" src={"http://hrapi.chantsit.com/" + file?.destination + "/" + file?.name} alt="" />
                                             </div>}
                                         </div>
 

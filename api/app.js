@@ -7,12 +7,15 @@ const path = require('path');
 
 const authRoute = require('./routes/auth')
 const orgRoute = require('./routes/organization')
+const departmentRoute = require('./routes/department')
+const disciplinaryRoute = require('./routes/disciplinary')
 // const swagger = require('./swagger');
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
 
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
 
 var originsWhitelist = [
@@ -47,10 +50,19 @@ app.use(loggerMiddleware);
 
 app.use('/api/auth', authRoute);
 app.use('/api/organization', orgRoute);
-app.use("/",express.static(path.join(__dirname, '../build')));
+app.use('/api/department', departmentRoute);
+app.use('/api/disciplinary', disciplinaryRoute);
+
+app.use("/api", express.static(path.join(__dirname, '../wagmatcook')));
 app.use("/api/media", express.static(path.join(__dirname, 'assets')));
-app.use("/api/temp",express.static(path.join(__dirname, 'temp')));
-app.use("/api/uploads",express.static(path.join(__dirname, 'uploads')));
+app.use("/api/temp", express.static(path.join(__dirname, 'temp')));
+app.use("/api/uploads", express.static(path.join(__dirname, 'uploads')));
+
+
+
+
+
+
 
 app.listen(process.env.PORT, () => {
     console.log('Server started on port ' + process.env.PORT);
