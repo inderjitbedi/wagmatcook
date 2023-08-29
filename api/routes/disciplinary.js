@@ -8,7 +8,7 @@ router.put('/update/:id', verifyToken, disciplinaryController.update);
 router.put('/delete/:id', verifyToken, disciplinaryController.delete);
 router.get('/list/:orgid', verifyToken, disciplinaryController.list); // /list?page=1&limit=10&searchKey=search_keyword
 router.get('/detail/:id', verifyToken, disciplinaryController.detail);
-router.put('/reorder', verifyToken, disciplinaryController.reorder);  // discipilinaries: [id,id,id]
+router.put('/reorder', verifyToken, disciplinaryController.reorder);  // disciplinaries: [id,id,id]
 
 
 module.exports = router;

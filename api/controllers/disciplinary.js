@@ -61,20 +61,20 @@ const disciplinaryController = {
                     { description: { $regex: req.query.searchKey, $options: 'i' } }
                 ];
             }
-            const discipilinaries = await Disciplinary.find(filters)
+            const disciplinaries = await Disciplinary.find(filters)
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
 
-            const totalDiscipilinaries = await Disciplinary.countDocuments(filters);
-            const totalPages = Math.ceil(totalDiscipilinaries / req.query.limit);
+            const totalDisciplinaries = await Disciplinary.countDocuments(filters);
+            const totalPages = Math.ceil(totalDisciplinaries / req.query.limit);
 
             res.status(200).json({
-                discipilinaries,
-                totalDiscipilinaries,
+                disciplinaries,
+                totalDisciplinaries,
                 currentPage: page,
                 totalPages,
-                message: 'Discipilinaries fetched successfully'
+                message: 'Disciplinaries fetched successfully'
             });
         } catch (error) {
             console.error("disciplinaryController:list:error -", error);
@@ -84,11 +84,11 @@ const disciplinaryController = {
     async reorder(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            let discipilinaries = req.body.discipilinaries
-            discipilinaries.forEach(async (disciplinary, i) => {
+            let disciplinaries = req.body.disciplinaries
+            disciplinaries.forEach(async (disciplinary, i) => {
                 await Disciplinary.findByIdAndUpdate(disciplinary, { order: i + 1 });
             });
-            res.json({ message: 'Discipilinaries reordered successfully' });
+            res.json({ message: 'Disciplinaries reordered successfully' });
         } catch (error) {
             console.error("\n\disciplinaryController:reorder:error -", error);
             res.status(400).json({ message: error.toString() });;
