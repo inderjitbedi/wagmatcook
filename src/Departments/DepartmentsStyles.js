@@ -18,7 +18,7 @@ export const DepartmentIconImg = styled.img`
 export const DepartmentFilterContainer = styled.div`
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
 `;
 export const AddNewButton = styled.button`
@@ -81,8 +81,13 @@ export const DepartmentCardPara = styled.p`
 export const DepartmentCardParaLit = styled.p`
   font-size: 12px;
   font-weight: 400;
-  line-height: 8px;
+  line-height: 16px;
   color: #8f9bb3;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  
+
 `;
 export const DepartmentCardButtoncolor = styled.button`
   border: none;
@@ -91,6 +96,7 @@ export const DepartmentCardButtoncolor = styled.button`
   width: 26px;
   height: 26px;
   padding: 5px;
+  cursor: pointer;
 
 `;
 export const DepartmentCardButtongrey = styled.button`
@@ -100,11 +106,13 @@ export const DepartmentCardButtongrey = styled.button`
   width: 26px;
   height: 26px;
   padding: 5px;
+  cursor: pointer;
 `;
 export const DepartmentButtonContainer = styled.div`
 display: flex;
 align-items: center;
 gap: 15px;
+justify-self: flex-end;
 `;
 
 export const ModalUpperDiv = styled.div`
@@ -124,6 +132,15 @@ export const ModalIcon = styled.img`
   width: 24px;
   height: 24px;
   cursor: pointer;
+`;
+export const ModalIconDelete = styled.img`
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top:0px;
 `;
 export const ModalUpperMid = styled.div`
   border-bottom: 1px solid #eff4fa;
@@ -172,12 +189,14 @@ export const TextArea = styled.textarea`
   background: #fff;
   box-sizing: border-box;
 `;
+
 export const ModalThanks = styled.div`
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
 padding: 40px 0px;
+position: relative;
 `;
 export const ModalThanksImg = styled.img`
   display: block;
@@ -189,8 +208,22 @@ export const ModalThanksHeading = styled.p`
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 22px;
+  width: 70%;
+  text-align: center;
 `;
+export const DeleteButton = styled.button`
+  border-radius: 8px;
+  background: #ea4335;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+  padding: 1em 2em;
+  border: none;
+  cursor: pointer;
+`;
+
 
 
 

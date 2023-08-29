@@ -13,7 +13,6 @@ import { toast } from 'react-toastify';
 
 export default function SignIn() {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -138,13 +137,15 @@ export default function SignIn() {
                                         </Link>
                                     </Grid>
                                 </Grid>
+                                <Link to= "/OADashBoard">
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     className='mt-1'
-                                >
+                                    >
                                     Login
                                 </Button>
+                            </Link>
                             </Box>
                         </form>
                     </div>

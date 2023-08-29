@@ -1,5 +1,7 @@
-import React from "react";
+import React ,{useState,useEffect} from "react";
 import SideBar from "./SideBar.js";
+import OADAashModal from "./OADAashModal.js";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Dashboard,
   DashNav,
@@ -32,6 +34,18 @@ import {
 
 
 const OADashBoard = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const history = useNavigate();
+  
+  useEffect(() => {
+    if (history.action === "PUSH") {
+      setIsModalOpen(true);
+    }
+  }, [history.action]);
+
+   const closeModal = () => {
+     setIsModalOpen(false);
+   };
     const CardData = [
       {
         Title: "Leaves",
@@ -60,8 +74,9 @@ const OADashBoard = () => {
     ];
   return (
     <Dashboard>
+      <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
       <DashNav>
-      <SideBar />
+        <SideBar />
       </DashNav>
       <DashMain>
         <DashHeader>
