@@ -1,25 +1,29 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
-const orgSchema = new mongoose.Schema({
+const departmentSchema = new mongoose.Schema({
     name: {
         type: String,
         default: null,
         required: true,
     },
-    size: {
-        type: Number,
+    description: {
+        type: String,
         default: null,
-        required: true,
     },
-    logo: {
+    organization: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'File',
+        ref: 'Organization',
+        required: true,
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null,
     },
     isActive: {
         type: Boolean,
@@ -33,6 +37,7 @@ const orgSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-const Organization = mongoose.model('Organization', orgSchema);
 
-module.exports = Organization;
+const Department = mongoose.model('Department', departmentSchema);
+
+module.exports = Department;
