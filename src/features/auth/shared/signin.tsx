@@ -58,6 +58,7 @@ export default function SignIn() {
                 .then(({ result }) => {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
+                        localStorage.setItem("token", result?.token);
                         toast.info("Welcome " + result.user.name)
                     }
                 })
