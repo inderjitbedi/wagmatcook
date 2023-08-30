@@ -50,6 +50,7 @@ display: flex;
 gap:16px;
 margin-top: 17px;
 flex-wrap: wrap;
+margin-bottom: 10px;
 
 `;
 export const DepartmentCardDiv = styled.div`
@@ -144,7 +145,7 @@ export const ModalIconDelete = styled.img`
 `;
 export const ModalUpperMid = styled.div`
   border-bottom: 1px solid #eff4fa;
-  padding: 16px 35px 36px 35px;
+  padding: 16px 35px 26px 35px;
   box-sizing: border-box;
 `;
 export const ModalBottom = styled.div`
@@ -224,7 +225,14 @@ export const DeleteButton = styled.button`
   cursor: pointer;
 `;
 
-
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 0px;
+  margin-top: 2px;
+`;
 
 
 

@@ -4,6 +4,13 @@ import Modal from "@mui/material/Modal";
 import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
 import DeleteModal from "../Modals/DeleteModal";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 import {
   DashMain,
@@ -37,15 +44,44 @@ import {
   InputPara,
   Select,
   Option,
+  Errors,
 } from "./DisciplinaryStyles";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 446,
+  bgcolor: "background.paper",
+  border: "none",
+  boxShadow: 45,
+  padding: "20px 0px",
+  borderRadius: "8px",
+};
+const CellHeadStyles = {
+  color: "#8F9BB3",
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "16px",
+};
+
+const CellStyle = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "15px",
+};
+const CellStyle2 = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 400,
+  lineHeight: "15px",
+};
 
 const Disciplinary = () => {
   const [open, setOpen] = useState(false);
@@ -55,136 +91,96 @@ const Disciplinary = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 446,
-    bgcolor: "background.paper",
-    border: "none",
-    boxShadow: 45,
-    padding: "20px 0px",
-    borderRadius: "8px",
-  };
-  const CellHeadStyles = {
-    color: "#8F9BB3",
-    fontFamily: "Inter",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "16px",
-  };
+  //Delete Modal Delete
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOpenDelete = () => setOpenDelete(true);
+  const handleCloseDelete = () => setOpenDelete(false);
 
-  const CellStyle = {
-    color: "#222B45",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "15px",
-  };
-  const CellStyle2 = {
-    color: "#222B45",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "15px",
-  };
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [requiredBcr, setRequiredBcr] = useState("");
+  const [page, setPage] = useState(1);
+  const [Id, setId] = useState("");
 
-  const CellData = [
-    "Order No.",
-    "Name",
-    "Description",
-    "Requires BCR",
-    "Action",
-  ];
-  const rows = [
-    {
-      orderno: 1,
-      name: "Verbal warning ",
-      description: "this is the description text ",
-      requirebcr: "yes",
-    },
-    {
-      orderno: 2,
-      name: "Verbal warning ",
-      description: "this is the description text ",
-      requirebcr: "yes",
-    },
-    {
-      orderno: 3,
-      name: "Verbal warning ",
-      description: "this is the description text ",
-      requirebcr: "yes",
-    },
-    {
-      orderno: 4,
-      name: "Verbal warning ",
-      description: "this is the description text ",
-      requirebcr: "no",
-    },
-    {
-      orderno: 5,
-      name: "Verbal warning ",
-      description: "this is the description text ",
-      requirebcr: "yes",
-    },
-  ];
+  const [searchValue, setSearchValue] = useState("");
+  const [disciplinaryData, setDisciplinaryData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     requiredBcr: "",
   });
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [requiredBcr, setRequiredBcr] = useState("");
+  const [errors, setErros] = useState({
+    nameError: "",
+    descriptionError: "",
+    requiredBcrError: "",
+  });
 
   const [upDateData, setupDateData] = useState({
     name: name,
     description: description,
     requiredBcr: requiredBcr,
   });
+  const validateForm = (formData) => {
+    const namePattern = /^[A-Za-z\s]+$/;
 
-  const [searchValue, setSearchValue] = useState("");
-  const [disciplinaryData, setDisciplinaryData] = useState([]);
-  const [Id, setId] = useState("");
-  //Delete Modal Delete
-  const [openDelete, setOpenDelete] = useState(false);
-  const handleOpenDelete = () => setOpenDelete(true);
-  const handleCloseDelete = () => setOpenDelete(false);
+    if (!formData.name || !formData.name.match(namePattern)) {
+      setErros({ ...errors, nameError: "Name is not Valid" });
+    } else if (!formData.description) {
+      setErros({ ...errors, descriptionError: "Description is not Valid" });
+    } else {
+      return true;
+    }
+  };
+  // else if (!formData.requiredBcr) {
+  //       setErros({
+  //         ...errors,
+  //         requiredBcrError: "RequiredBcr is not Valid",
+  //       });
+  //     }
 
-    const HandleDelete = () => {
-      let url = `/disciplinary/delete/${Id}`;
-      httpClient({
-        method: "put",
-        url,
+  const HandleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+  };
+  //Delete function 
+  const HandleDelete = () => {
+    let url = `/disciplinary/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          GetDisciplinary();
+          setId("");
+          toast.success("update successfull");
+        } else {
+          toast.warn("something went wrong ");
+        }
       })
-        .then(({ result }) => {
-          if (result) {
-           
-            GetDisciplinary();
-            setId("");
-            toast.success("update successfull");
-          } else {
-            toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error creating department. Please try again.");
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
   // get disciplinary
   const GetDisciplinary = () => {
-    let url = `/disciplinary/list?page=1&limit=10&searchKey=${searchValue}`;
+    let url = `/disciplinary/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
     })
       .then(({ result }) => {
         if (result) {
-          setDisciplinaryData(result);
+          if (page === 1) {
+            setDisciplinaryData(result.disciplinaries);
+          } else {
+            setDisciplinaryData((prevState) => {
+              return [...prevState, ...result.disciplinaries];
+            });
+          }
+          // setDisciplinaryData(result.disciplinaries);
         } else {
           toast.warn("something went wrong ");
         }
@@ -196,14 +192,15 @@ const Disciplinary = () => {
   };
   useEffect(() => {
     GetDisciplinary();
-  }, [searchValue]);
-  // console.log(disciplinaryData,"dtata aa gya h ");
+    // HandleReorder();
+  }, [searchValue, page]);
+
   //create new enter in table
   const handleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = {
       ...formData,
-      order: disciplinaryData.disciplinaries.length + 1,
+      order: disciplinaryData?.length + 1,
     };
     let url = "/disciplinary/create";
     httpClient({
@@ -213,8 +210,10 @@ const Disciplinary = () => {
     })
       .then(({ result }) => {
         if (result) {
-          toast.success("Added successfull");
           GetDisciplinary();
+          setFormData("");
+          setErros("");
+          toast.success("Added successfull");
         } else {
           toast.warn("something went wrong ");
         }
@@ -242,7 +241,7 @@ const Disciplinary = () => {
           setRequiredBcr("");
           setName("");
           setupDateData("");
-
+          setErros("");
           toast.success("update successfull");
         } else {
           toast.warn("something went wrong ");
@@ -254,18 +253,48 @@ const Disciplinary = () => {
       });
   };
   // handle changes here
-
   const handleChanges = (e) => {
     const { value, name } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleChangesEdit = (e) => {
     const { value, name } = e.target;
     setupDateData({ ...upDateData, [name]: value });
   };
-   const handleSearchCahnge = (e) => {
-     setSearchValue(e.target.value);
-   };
+
+  // handle reorder
+  const HandleReorder = (reOrder) => {
+    console.log(reOrder, "this reorder");
+    let url = "/disciplinary/reorder";
+    httpClient({
+      method: "put",
+      url,
+      data: reOrder,
+    })
+      .then(({ result }) => {
+        if (result) {
+          toast.success("Added successfull");
+          // GetDisciplinary();
+          // setFormData("");
+        } else {
+          toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
+
+  // useEffect(() => {
+  //   let reOrder = disciplinaryData.disciplinaries?.map((data) => data._id);
+  //   console.log("in side set time out function " , typeof(reOrder));
+  //   HandleReorder(reOrder);
+
+  //   console.log("useEffect in action for Delete");
+  // }, [HandleDelete]);
+
   return (
     <Dashboard>
       <DashNav>
@@ -300,7 +329,10 @@ const Disciplinary = () => {
               <ModalUpperDiv>
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    setErros("");
+                  }}
                   src="/icons/alert-circle.png"
                 />
               </ModalUpperDiv>
@@ -315,6 +347,7 @@ const Disciplinary = () => {
                   value={formData.name}
                   placeholder="name"
                 />
+                <Errors>{errors.nameError}</Errors>
                 <InputLabel>
                   Details <InputSpan>*</InputSpan>
                 </InputLabel>
@@ -325,6 +358,7 @@ const Disciplinary = () => {
                   value={formData.description}
                   placeholder="Write Something.."
                 />
+                <Errors>{errors.descriptionError}</Errors>
                 <InputPara> Max 500 characters</InputPara>
                 <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -339,10 +373,13 @@ const Disciplinary = () => {
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select>
+                {/* <Errors>{errors.requiredBcrError}</Errors> */}
                 <AddNewButton
                   onClick={(e) => {
-                    handleClose();
-                    handleSubmit(e);
+                    if (validateForm(formData)) {
+                      handleClose();
+                      handleSubmit(e);
+                    }
                   }}
                 >
                   Submit
@@ -377,7 +414,7 @@ const Disciplinary = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {disciplinaryData.disciplinaries?.map((data) => (
+              {disciplinaryData?.map((data) => (
                 <TableRow
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
@@ -400,7 +437,7 @@ const Disciplinary = () => {
                   </TableCell>
                   <TableCell sx={CellStyle} align="left">
                     {" "}
-                    {data.requiredBcr === false ? "NO" : "yes"}{" "}
+                    {data.requiredBcr === false ? "No" : "Yes"}{" "}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
                     {" "}
@@ -429,6 +466,9 @@ const Disciplinary = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+          Load More
+        </AddNewButton>
       </DashMain>
       {/* modal fo editing  */}
       <Modal
@@ -439,9 +479,12 @@ const Disciplinary = () => {
       >
         <Box sx={style}>
           <ModalUpperDiv>
-            <ModalHeading> Update Department</ModalHeading>
+            <ModalHeading> Update Disciplinary</ModalHeading>
             <ModalIcon
-              onClick={handleCloseEdit}
+              onClick={() => {
+                handleCloseEdit();
+                setErros("");
+              }}
               src="/icons/alert-circle.png"
             />
           </ModalUpperDiv>
@@ -456,6 +499,7 @@ const Disciplinary = () => {
               value={upDateData.name}
               placeholder={name}
             />
+            <Errors>{errors.nameError}</Errors>
             <InputLabel>
               Details <InputSpan>*</InputSpan>
             </InputLabel>
@@ -466,24 +510,30 @@ const Disciplinary = () => {
               value={upDateData.description}
               placeholder={description}
             />
+            <Errors style={{ display: "inline-block" }}>
+              {errors.descriptionError}
+            </Errors>
             <InputPara> Max 500 characters</InputPara>
             <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>
             </InputLabel>
-
             <Select
               value={upDateData.requiredBcr}
               name="requiredBcr"
               onChange={handleChangesEdit}
             >
-              <Option value="">{requiredBcr}</Option>
+              <Option value="" disabled hidden>
+                {requiredBcr}
+              </Option>
               <Option value={true}>Yes</Option>
               <Option value={false}>No</Option>
             </Select>
             <AddNewButton
               onClick={() => {
-                handleCloseEdit();
-                HandleUpdate();
+                if (validateForm(upDateData)) {
+                  HandleUpdate();
+                  handleCloseEdit();
+                }
               }}
             >
               Update
@@ -495,6 +545,7 @@ const Disciplinary = () => {
         openDelete={openDelete}
         handleCloseDelete={handleCloseDelete}
         HandleDelete={HandleDelete}
+        HandleReorder={HandleReorder}
       />
     </Dashboard>
   );

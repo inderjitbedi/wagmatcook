@@ -43,8 +43,7 @@ import {
   ModalThanks,
   ModalThanksImg,
   ModalThanksHeading,
-  DeleteButton,
-  ModalIconDelete,
+  Errors,
 } from "./DepartmentsStyles";
 
 const style = {
@@ -86,13 +85,13 @@ const Departments = () => {
     "Students",
     "Other",
   ];
-  const TempData = [1, 2, 3, 4, 5];
+  // const TempData = [1, 2, 3, 4, 5];
   const [searchValue, setSearchValue] = useState("");
   const [departmentData, setDepartmentData] = useState([]);
   const [Id, setId] = useState("");
   const [nameEdit, setNameEdit] = useState("");
   const [descriptionEdit, setDescriptionEdit] = useState("");
-
+  const [page, setPage] = useState(1);
   const handleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
   };
@@ -100,10 +99,19 @@ const Departments = () => {
     name: "",
     description: "",
   });
-  const [upDateData, setUpDateData] = useState({
-    name: "",
-    description: "",
+  const [errors, setErros] = useState({
+    nameError: "",
+    descriptionError: "",
   });
+  const [upDateData, setUpDateData] = useState({
+    name: nameEdit,
+    description: descriptionEdit,
+  });
+
+  const HandleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+  };
   const handleChange = (e) => {
     const { value, name } = e.target;
     setFormData((prevState) => {
@@ -112,21 +120,26 @@ const Departments = () => {
         [name]: value,
       };
     });
-    console.log(formData, "hey data is pickuped ");
   };
   const handleChangeEdit = (e) => {
     const { value, name } = e.target;
     setUpDateData({ ...upDateData, [name]: value });
   };
   const GetDepartments = () => {
-    let url = `/department/list?page=1&limit=10&searchKey= ${searchValue}`;
+    let url = `/department/list?page=${page}&limit=10&searchKey= ${searchValue}`;
     httpClient({
       method: "get",
       url,
     })
       .then(({ result }) => {
         if (result) {
-          setDepartmentData(result.departments);
+          if (page === 1) {
+            setDepartmentData(result.departments);
+          } else {
+            setDepartmentData((prevState) => {
+              return [...prevState, ...result.departments];
+            });
+          }
         } else {
           toast.warn("something went wrong ");
         }
@@ -138,8 +151,7 @@ const Departments = () => {
   };
   useEffect(() => {
     GetDepartments();
-  }, [searchValue]);
-  console.log(departmentData, "this is the data");
+  }, [searchValue, page]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -154,6 +166,8 @@ const Departments = () => {
         if (result?.department) {
           handleOpenThanks();
           GetDepartments();
+          setFormData("");
+          setErros("");
         } else {
           toast.warn("something went wrong ");
         }
@@ -179,7 +193,8 @@ const Departments = () => {
           setId("");
           setNameEdit("");
           setDescriptionEdit("");
-
+          setUpDateData("");
+          setErros("");
           toast.success("update successfull");
         } else {
           toast.warn("something went wrong ");
@@ -191,28 +206,38 @@ const Departments = () => {
       });
   };
   const HandleDelete = () => {
-
-     let url = `/department/delete/${Id}`;
-     httpClient({
-       method: "put",
-       url,
-     })
-       .then(({ result }) => {
-         if (result) {
-           // handleOpenThanks();
-           GetDepartments();
-           setId("");
-           toast.success("update successfull");
-         } else {
-           toast.warn("something went wrong ");
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error creating department. Please try again.");
-       });
+    let url = `/department/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          // handleOpenThanks();
+          GetDepartments();
+          setId("");
+          toast.success("update successfull");
+        } else {
+          toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
   };
+  // validation functions
+  const validateForm = (formData) => {
+    const namePattern = /^[A-Za-z\s]+$/;
 
+    if (!formData.name || !formData.name.match(namePattern)) {
+      setErros({ ...errors, nameError: "Name is not Valid" });
+    } else if (!formData.description) {
+      setErros({ ...errors, descriptionError: "Description is not Valid" });
+    } else {
+      return true;
+    }
+  };
   return (
     <Dashboard>
       <DashNav>
@@ -257,7 +282,10 @@ const Departments = () => {
               <ModalUpperDiv>
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    setErros("");
+                  }}
                   src="/icons/alert-circle.png"
                 />
               </ModalUpperDiv>
@@ -269,6 +297,7 @@ const Departments = () => {
                   name="name"
                   type="text"
                 />
+                <Errors>{errors.nameError}</Errors>
                 <TextArea
                   placeholder="Description"
                   onChange={handleChange}
@@ -276,12 +305,16 @@ const Departments = () => {
                   type="text"
                   name="description"
                 />
+
+                <Errors>{errors.descriptionError}</Errors>
               </ModalUpperMid>
               <ModalBottom>
                 <AddNewButton
                   onClick={(e) => {
-                    handleClose();
-                    handleSubmit(e);
+                    if (validateForm(formData)) {
+                      handleSubmit(e);
+                      handleClose();
+                    }
                   }}
                 >
                   Add New
@@ -347,6 +380,7 @@ const Departments = () => {
             </DepartmentCardDiv>
           ))}
         </DepartmentCardContainer>
+        <AddNewButton onClick={HandleLoadMore}>Load More</AddNewButton>
       </DashMain>
       {/* modal to edit  */}
       <Modal
@@ -359,7 +393,10 @@ const Departments = () => {
           <ModalUpperDiv>
             <ModalHeading>Edit Department</ModalHeading>
             <ModalIcon
-              onClick={handleCloseEdit}
+              onClick={() => {
+                handleCloseEdit();
+                setErros("");
+              }}
               src="/icons/alert-circle.png"
             />
           </ModalUpperDiv>
@@ -371,6 +408,7 @@ const Departments = () => {
               name="name"
               type="text"
             />
+            <Errors>{errors.nameError}</Errors>
             <TextArea
               placeholder={descriptionEdit}
               onChange={handleChangeEdit}
@@ -378,12 +416,15 @@ const Departments = () => {
               type="text"
               name="description"
             />
+            <Errors>{errors.descriptionError}</Errors>
           </ModalUpperMid>
           <ModalBottom>
             <AddNewButton
               onClick={(e) => {
-                handleCloseEdit();
-                HandleUpdate();
+                if (validateForm(upDateData)) {
+                  HandleUpdate();
+                  handleCloseEdit();
+                }
               }}
             >
               Update

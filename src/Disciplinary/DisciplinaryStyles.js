@@ -144,3 +144,11 @@ export const Option = styled.option`
   line-height: 24px; /* 150% */
   padding: 8px 11px;
 `;
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 0px;
+  margin-top: 2px;
+`;
