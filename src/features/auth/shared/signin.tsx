@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { TextField, InputLabel } from '@mui/material';
 
@@ -12,6 +12,11 @@ import { toast } from 'react-toastify';
 
 
 export default function SignIn() {
+
+
+    useEffect(() => {
+        localStorage.clear()
+    }, []);
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
@@ -58,6 +63,7 @@ export default function SignIn() {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         toast.info("Welcome " + result.user.name)
+                        navigate('/OADashBoard');
                     }
                 })
                 .catch((error: any) => {
@@ -132,20 +138,18 @@ export default function SignIn() {
 
                                     </Grid>
                                     <Grid item>
-                                        <Link  to="/forgot-password" className='link' >
+                                        <Link to="/forgot-password" className='link' >
                                             Forgot password?
                                         </Link>
                                     </Grid>
                                 </Grid>
-                                <Link to= "/OADashBoard">
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     className='mt-1'
-                                    >
+                                >
                                     Login
                                 </Button>
-                            </Link>
                             </Box>
                         </form>
                     </div>

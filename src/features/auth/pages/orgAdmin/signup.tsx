@@ -10,6 +10,9 @@ import { toast } from "react-toastify";
 export default function Signup() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    localStorage.clear()
+}, []);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -50,7 +53,7 @@ export default function Signup() {
     }
   };
   useEffect(() => {
-    console.log(formData);
+    // console.log(formData);
   }, [formData]);
   const handlePasswordChange = (e: any) => {
     const { value } = e.target;
