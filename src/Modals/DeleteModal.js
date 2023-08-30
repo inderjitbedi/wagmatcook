@@ -71,7 +71,7 @@ const DeleteModal = ({ openDelete, handleCloseDelete, HandleDelete }) => {
         <ModalThanks>
           <ModalIconDelete
             onClick={handleCloseDelete}
-            src="/icons/alert-circle.png"
+            src="/images/icons/alert-circle.png"
           />
           <ModalThanksImg src="/images/Danger Circle.jpg" />
           <ModalThanksHeading>

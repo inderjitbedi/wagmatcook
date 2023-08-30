@@ -228,14 +228,14 @@ const Departments = () => {
                   onChange={handleSearchCahnge}
                   value={searchValue}
                 ></SearchInput>
-                <SearchIcon src="/icons/searchIcon.png" />
+                <SearchIcon src="/images/icons/searchIcon.png" />
               </SearchBox>
             </DashHeaderSearch>
           </DashHeaderDepartment>
           <DepartmentIconContainer>
-            <DepartmentIconImg src="/icons/Messages.png" />
-            <DepartmentIconImg src="/icons/Notifications.png" />
-            <DepartmentIconImg src="/icons/PersonIcon.png" />
+            <DepartmentIconImg src="/images/icons/Messages.png" />
+            <DepartmentIconImg src="/images/icons/Notifications.png" />
+            <DepartmentIconImg src="/images/icons/PersonIcon.png" />
           </DepartmentIconContainer>
         </DashHeader>
         <DepartmentFilterContainer>
@@ -256,7 +256,7 @@ const Departments = () => {
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
                   onClick={handleClose}
-                  src="/icons/alert-circle.png"
+                  src="/images/icons/alert-circle.png"
                 />
               </ModalUpperDiv>
               <ModalUpperMid>
@@ -331,7 +331,7 @@ const Departments = () => {
                     handleOpenEdit();
                   }}
                 >
-                  <img src="/icons/alert-circle-fill.png" />
+                  <img src="/images/icons/alert-circle-fill.png" />
                 </DepartmentCardButtoncolor>
                 <DepartmentCardButtongrey
                   onClick={() => {
@@ -339,7 +339,7 @@ const Departments = () => {
                     setId(data._id);
                   }}
                 >
-                  <img src="/icons/trash-2.png" />
+                  <img src="/images/icons/trash-2.png" />
                 </DepartmentCardButtongrey>
               </DepartmentButtonContainer>
             </DepartmentCardDiv>
@@ -358,7 +358,7 @@ const Departments = () => {
             <ModalHeading>Edit Department</ModalHeading>
             <ModalIcon
               onClick={handleCloseEdit}
-              src="/icons/alert-circle.png"
+              src="/images/icons/alert-circle.png"
             />
           </ModalUpperDiv>
           <ModalUpperMid>
