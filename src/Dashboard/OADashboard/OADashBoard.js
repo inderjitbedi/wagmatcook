@@ -1,4 +1,4 @@
-import React ,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar.js";
 import OADAashModal from "./OADAashModal.js";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ import {
   DashCardIcons,
   DashCardPri,
   DashCardTitle2,
-  
+
 } from "./OADashBoardStyles";
 
 
@@ -36,42 +36,45 @@ import {
 const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useNavigate();
-  
-  useEffect(() => {
-    if (history.action === "PUSH") {
-      setIsModalOpen(true);
-    }
-  }, [history.action]);
 
-   const closeModal = () => {
-     setIsModalOpen(false);
-   };
-    const CardData = [
-      {
-        Title: "Leaves",
-        SubTitle: "Add Leaves",
-        Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
-        src: "/icons/AddLeaves.png",
-      },
-      {
-        Title: "Employee",
-        SubTitle: "Add Employee",
-        Para: "Add Employee by clicking add button and provide the name, email and other details. ",
-        src: "/icons/Employes.png",
-      },
-      {
-        Title: "Departments",
-        SubTitle: "Add Departments",
-        Para: "Add new department by clicking add button and Add Name, description. ",
-        src: "/icons/Department.png",
-      },
-      {
-        Title: "Disciplinary Types",
-        SubTitle: "Add Disciplinary Types",
-        Para: "Add new department by clicking add button and Add Name, description. ",
-        src: "/icons/Discipliner.png",
-      },
-    ];
+  useEffect(() => {
+    if (!localStorage.getItem('welcomeModelShown')) {
+      // if (history.action === "PUSH") {
+      setIsModalOpen(true);
+      localStorage.setItem('welcomeModelShown',true)
+      // }
+    }
+  }, []);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const CardData = [
+    {
+      Title: "Leaves",
+      SubTitle: "Add Leaves",
+      Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
+      src: "/images/icons/AddLeaves.png",
+    },
+    {
+      Title: "Employee",
+      SubTitle: "Add Employee",
+      Para: "Add Employee by clicking add button and provide the name, email and other details. ",
+      src: "/images/icons/Employes.png",
+    },
+    {
+      Title: "Departments",
+      SubTitle: "Add Departments",
+      Para: "Add new department by clicking add button and Add Name, description. ",
+      src: "/images/icons/Department.png",
+    },
+    {
+      Title: "Disciplinary Types",
+      SubTitle: "Add Disciplinary Types",
+      Para: "Add new department by clicking add button and Add Name, description. ",
+      src: "/images/icons/Discipliner.png",
+    },
+  ];
   return (
     <Dashboard>
       <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
@@ -84,9 +87,9 @@ const OADashBoard = () => {
           <DashHeaderSearch>
             <SearchBox>
               <SearchInput type="text" placeholder="Search..."></SearchInput>
-              <SearchIcon src="/icons/searchIcon.png" />
+              <SearchIcon src="/images/icons/searchIcon.png" />
             </SearchBox>
-            <DashNotification src="/icons/Notifications.png" />
+            <DashNotification src="/images/icons/Notifications.png" />
           </DashHeaderSearch>
         </DashHeader>
         <DashHeading>Welcome Jason Porter!</DashHeading>

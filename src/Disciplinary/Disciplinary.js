@@ -311,9 +311,9 @@ const Disciplinary = () => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               ></SearchInput>
-              <SearchIcon src="/icons/searchIcon.png" />
+              <SearchIcon src="/images/icons/searchIcon.png" />
             </SearchBox>
-            <DashNotification src="/icons/Notifications.png" />
+            <DashNotification src="/images/icons/Notifications.png" />
           </DashHeaderSearch>
         </DashHeader>
         <DisciplinaryDiv>
@@ -333,7 +333,7 @@ const Disciplinary = () => {
                     handleClose();
                     setErros("");
                   }}
-                  src="/icons/alert-circle.png"
+                  src="/images/icons/alert-circle.png"
                 />
               </ModalUpperDiv>
               <ModalUpperMid>
@@ -423,7 +423,7 @@ const Disciplinary = () => {
                 >
                   <TableCell sx={CellStyle2} align="left">
                     <MenuIconDiv>
-                      <MenuIcon src="/icons/Menu Dots.png " />
+                      <MenuIcon src="/images/icons/Menu Dots.png " />
                       {data.order}
                     </MenuIconDiv>
                   </TableCell>
@@ -450,14 +450,14 @@ const Disciplinary = () => {
                           setRequiredBcr(data.requiredBcr);
                           setName(data.name);
                         }}
-                        src="/icons/Pendown.png"
+                        src="/images/icons/Pendown.png"
                       />
                       <ActionIcons
                         onClick={() => {
                           handleOpenDelete();
                           setId(data._id);
                         }}
-                        src="/icons/trash-2.png"
+                        src="/images/icons/trash-2.png"
                       />
                     </ActionIconDiv>
                   </TableCell>
@@ -485,7 +485,7 @@ const Disciplinary = () => {
                 handleCloseEdit();
                 setErros("");
               }}
-              src="/icons/alert-circle.png"
+              src="/images/icons/alert-circle.png"
             />
           </ModalUpperDiv>
           <ModalUpperMid>

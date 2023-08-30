@@ -60,9 +60,9 @@ const OADashBoardNext = () => {
           <DashHeaderSearch>
             <SearchBox>
               <SearchInput type="text" placeholder="Search..."></SearchInput>
-              <SearchIcon src="/icons/searchIcon.png" />
+              <SearchIcon src="/images/icons/searchIcon.png" />
             </SearchBox>
-            <DashNotification src="/icons/Notifications.png" />
+            <DashNotification src="/images/icons/Notifications.png" />
           </DashHeaderSearch>
         </DashHeader>
         <DashHeading>Welcome Jason Porter!</DashHeading>
