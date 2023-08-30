@@ -263,6 +263,9 @@ const Disciplinary = () => {
     const { value, name } = e.target;
     setupDateData({ ...upDateData, [name]: value });
   };
+   const handleSearchCahnge = (e) => {
+     setSearchValue(e.target.value);
+   };
   return (
     <Dashboard>
       <DashNav>
@@ -273,7 +276,12 @@ const Disciplinary = () => {
           <DashHeaderTitle>Disciplinary</DashHeaderTitle>
           <DashHeaderSearch>
             <SearchBox>
-              <SearchInput type="text" placeholder="Search..."></SearchInput>
+              <SearchInput
+                type="text"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              ></SearchInput>
               <SearchIcon src="/icons/searchIcon.png" />
             </SearchBox>
             <DashNotification src="/icons/Notifications.png" />
@@ -446,7 +454,7 @@ const Disciplinary = () => {
               name="name"
               onChange={handleChangesEdit}
               value={upDateData.name}
-              placeholder="name"
+              placeholder={name}
             />
             <InputLabel>
               Details <InputSpan>*</InputSpan>
@@ -456,7 +464,7 @@ const Disciplinary = () => {
               name="description"
               onChange={handleChangesEdit}
               value={upDateData.description}
-              placeholder="Write Something.."
+              placeholder={description}
             />
             <InputPara> Max 500 characters</InputPara>
             <InputLabel>
@@ -468,7 +476,7 @@ const Disciplinary = () => {
               name="requiredBcr"
               onChange={handleChangesEdit}
             >
-              <Option value="">Select an option</Option>
+              <Option value="">{requiredBcr}</Option>
               <Option value={true}>Yes</Option>
               <Option value={false}>No</Option>
             </Select>

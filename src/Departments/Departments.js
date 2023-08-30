@@ -176,7 +176,9 @@ const Departments = () => {
         if (result?.department) {
           // handleOpenThanks();
           GetDepartments();
-           setId("");
+          setId("");
+          setNameEdit("");
+          setDescriptionEdit("");
 
           toast.success("update successfull");
         } else {
@@ -363,14 +365,14 @@ const Departments = () => {
           </ModalUpperDiv>
           <ModalUpperMid>
             <Input
-              placeholder="Department Name"
+              placeholder={nameEdit}
               onChange={handleChangeEdit}
               value={upDateData.name}
               name="name"
               type="text"
             />
             <TextArea
-              placeholder="Description"
+              placeholder={descriptionEdit}
               onChange={handleChangeEdit}
               value={upDateData.description}
               type="text"
