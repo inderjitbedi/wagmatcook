@@ -125,9 +125,9 @@ const Disciplinary = () => {
     const namePattern = /^[A-Za-z\s]+$/;
 
     if (!formData.name || !formData.name.match(namePattern)) {
-      setErros({ ...errors, nameError: "Name is not Valid" });
+      setErros({ ...errors, nameError: "Invalid Name. Plaese Try Again " });
     } else if (!formData.description) {
-      setErros({ ...errors, descriptionError: "Description is not Valid" });
+      setErros({ ...errors, descriptionError: "Description Is Empty" });
     } else {
       return true;
     }
@@ -159,12 +159,7 @@ const Disciplinary = () => {
           HandleReorder(ReorderArray);
           GetDisciplinary();
           setId("");
-          //find the Id in disciplinary array and remove it
-          //call the new function containing reorder
-          //take  the disciplinary data from reorder api and set it inside the setdisciplinary
-          // svg , casing and display msg , reorder
-          //side bar - two items ->
-          toast.success("update successfull");
+          toast.success("Entry Deleted Successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -223,14 +218,14 @@ const Disciplinary = () => {
           GetDisciplinary();
           setFormData("");
           setErros("");
-          toast.success("Added successfull");
+          toast.success("Entry Added Successfully");
         } else {
           toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error creating Disciplinary. Please try again.");
       });
   };
   // handel updates
@@ -252,14 +247,14 @@ const Disciplinary = () => {
           setName("");
           setupDateData("");
           setErros("");
-          toast.success("update successfull");
+          toast.success("Entry Updated Successfully");
         } else {
           toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error creating Disciplinary. Please try again.");
       });
   };
   // Handle changes here
@@ -285,9 +280,7 @@ const Disciplinary = () => {
     })
       .then(({ result }) => {
         if (result) {
-          // toast.success("Added successfull");
-          // GetDisciplinary();
-          // setFormData("");
+          // At Present Nothing
         } else {
           toast.warn("something went wrong ");
         }
@@ -313,9 +306,9 @@ const Disciplinary = () => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               ></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.png" />
+              <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
-            <DashNotification src="/images/icons/Notifications.png" />
+            <DashNotification src="/images/icons/Notifications.svg" />
           </DashHeaderSearch>
         </DashHeader>
         <DisciplinaryDiv>
@@ -335,7 +328,7 @@ const Disciplinary = () => {
                     HandleClose();
                     setErros("");
                   }}
-                  src="/images/icons/alert-circle.png"
+                  src="/images/icons/Alert-Circle.svg"
                 />
               </ModalUpperDiv>
               <ModalUpperMid>
@@ -425,7 +418,7 @@ const Disciplinary = () => {
                 >
                   <TableCell sx={CellStyle2} align="left">
                     <MenuIconDiv>
-                      <MenuIcon src="/images/icons/Menu Dots.png " />
+                      <MenuIcon src="/images/icons/Menu Dots.svg " />
                       {data.order}
                     </MenuIconDiv>
                   </TableCell>
@@ -452,14 +445,14 @@ const Disciplinary = () => {
                           setRequiredBcr(data.requiredBcr);
                           setName(data.name);
                         }}
-                        src="/images/icons/Pendown.png"
+                        src="/images/icons/Pendown.svg"
                       />
                       <ActionIcons
                         onClick={() => {
                           HandleOpenDelete();
                           setId(data._id);
                         }}
-                        src="/images/icons/trash-2.png"
+                        src="/images/icons/Trash-2.svg"
                       />
                     </ActionIconDiv>
                   </TableCell>
@@ -487,7 +480,7 @@ const Disciplinary = () => {
                 HandleCloseEdit();
                 setErros("");
               }}
-              src="/images/icons/alert-circle.png"
+              src="/images/icons/Alert-Circle.svg"
             />
           </ModalUpperDiv>
           <ModalUpperMid>

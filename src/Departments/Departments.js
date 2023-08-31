@@ -195,9 +195,9 @@ const Departments = () => {
           setDescriptionEdit("");
           setUpDateData("");
           setErros("");
-          toast.success("update successfull");
+          toast.success("Entry Updated Successfully");
         } else {
-          toast.warn("something went wrong ");
+          toast.warn("Something Went Wrong ");
         }
       })
       .catch((error) => {
@@ -216,9 +216,9 @@ const Departments = () => {
           // HandleOpenThanks();
           GetDepartments();
           setId("");
-          toast.success("update successfull");
+          toast.success("Entry Deleted successfully");
         } else {
-          toast.warn("something went wrong ");
+          toast.warn("Something Went Wrong ");
         }
       })
       .catch((error) => {
@@ -231,9 +231,9 @@ const Departments = () => {
     const namePattern = /^[A-Za-z\s]+$/;
 
     if (!formData.name || !formData.name.match(namePattern)) {
-      setErros({ ...errors, nameError: "Name is not Valid" });
+      setErros({ ...errors, nameError: "InValid Name. Plaese Try Again" });
     } else if (!formData.description) {
-      setErros({ ...errors, descriptionError: "Description is not Valid" });
+      setErros({ ...errors, descriptionError: "Description is Empty" });
     } else {
       return true;
     }
@@ -255,14 +255,14 @@ const Departments = () => {
                   onChange={HandleSearchCahnge}
                   value={searchValue}
                 ></SearchInput>
-                <SearchIcon src="/images/icons/searchIcon.png" />
+                <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
             </DashHeaderSearch>
           </DashHeaderDepartment>
           <DepartmentIconContainer>
-            <DepartmentIconImg src="/images/icons/Messages.png" />
-            <DepartmentIconImg src="/images/icons/Notifications.png" />
-            <DepartmentIconImg src="/images/icons/PersonIcon.png" />
+            <DepartmentIconImg src="/images/icons/Messages.svg" />
+            <DepartmentIconImg src="/images/icons/Notifications.svg" />
+            <DepartmentIconImg src="/images/icons/PersonIcon.svg" />
           </DepartmentIconContainer>
         </DashHeader>
         <DepartmentFilterContainer>
@@ -286,7 +286,7 @@ const Departments = () => {
                     HandleClose();
                     setErros("");
                   }}
-                  src="/images/icons/alert-circle.png"
+                  src="/images/icons/Alert-Circle.svg"
                 />
               </ModalUpperDiv>
               <ModalUpperMid>
@@ -366,7 +366,7 @@ const Departments = () => {
                     HandleOpenEdit();
                   }}
                 >
-                  <img src="/images/icons/alert-circle-fill.png" />
+                  <img src="/images/icons/Pendown.svg" />
                 </DepartmentCardButtoncolor>
                 <DepartmentCardButtongrey
                   onClick={() => {
@@ -374,7 +374,7 @@ const Departments = () => {
                     setId(data._id);
                   }}
                 >
-                  <img src="/images/icons/trash-2.png" />
+                  <img src="/images/icons/Trash-2.svg" />
                 </DepartmentCardButtongrey>
               </DepartmentButtonContainer>
             </DepartmentCardDiv>
@@ -397,7 +397,7 @@ const Departments = () => {
                 HandleCloseEdit();
                 setErros("");
               }}
-              src="/images/icons/alert-circle.png"
+              src="/images/icons/alert-circle.svg"
             />
           </ModalUpperDiv>
           <ModalUpperMid>

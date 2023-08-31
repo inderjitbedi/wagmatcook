@@ -98,6 +98,9 @@ export const DepartmentCardButtoncolor = styled.button`
   height: 26px;
   padding: 5px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
 `;
 export const DepartmentCardButtongrey = styled.button`
@@ -108,6 +111,9 @@ export const DepartmentCardButtongrey = styled.button`
   height: 26px;
   padding: 5px;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 export const DepartmentButtonContainer = styled.div`
 display: flex;

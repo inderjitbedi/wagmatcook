@@ -59,7 +59,7 @@ const SideBar = () => {
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
-        <SideBarLogo src="/images/icons/Group 13.png" />
+        <SideBarLogo src="/images/icons/Group-Logo.svg" />
         <SideBarLogodiv>
           <SideBarLogoPara>Organization </SideBarLogoPara>
           <SideBarLogoHead>Figma Inc.</SideBarLogoHead>
