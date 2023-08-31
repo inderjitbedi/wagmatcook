@@ -327,6 +327,7 @@ const Disciplinary = () => {
                   onClick={() => {
                     HandleClose();
                     setErros("");
+                    setFormData("");
                   }}
                   src="/images/icons/Alert-Circle.svg"
                 />

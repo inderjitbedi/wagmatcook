@@ -54,25 +54,25 @@ const OADashBoard = () => {
       Title: "Leaves",
       SubTitle: "Add Leaves",
       Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
-      src: "/images/icons/AddLeaves.png",
+      src: "/images/icons/AddLeaves.svg",
     },
     {
       Title: "Employee",
       SubTitle: "Add Employee",
       Para: "Add Employee by clicking add button and provide the name, email and other details. ",
-      src: "/images/icons/Employes.png",
+      src: "/images/icons/Employees.svg",
     },
     {
       Title: "Departments",
       SubTitle: "Add Departments",
       Para: "Add new department by clicking add button and Add Name, description. ",
-      src: "/images/icons/Department.png",
+      src: "/images/icons/Department.svg",
     },
     {
       Title: "Disciplinary Types",
       SubTitle: "Add Disciplinary Types",
       Para: "Add new department by clicking add button and Add Name, description. ",
-      src: "/images/icons/Discipliner.png",
+      src: "/images/icons/Discipliner.svg",
     },
   ];
   return (
@@ -87,9 +87,9 @@ const OADashBoard = () => {
           <DashHeaderSearch>
             <SearchBox>
               <SearchInput type="text" placeholder="Search..."></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.png" />
+              <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
-            <DashNotification src="/images/icons/Notifications.png" />
+            <DashNotification src="/images/icons/Notifications.svg" />
           </DashHeaderSearch>
         </DashHeader>
         <DashHeading>Welcome Jason Porter!</DashHeading>
