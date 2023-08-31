@@ -61,20 +61,20 @@ const style = {
 
 const Departments = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => setOpen(false);
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
-  const handleOpenDelete = () => setOpenDelete(true);
-  const handleCloseDelete = () => setOpenDelete(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
   //update modal variable
   const [openEdit, setOpenEdit] = useState(false);
-  const handleOpenEdit = () => setOpenEdit(true);
-  const handleCloseEdit = () => setOpenEdit(false);
+  const HandleOpenEdit = () => setOpenEdit(true);
+  const HandleCloseEdit = () => setOpenEdit(false);
 
   const [openThanks, setOpenThanks] = useState(false);
-  const handleOpenThanks = () => setOpenThanks(true);
-  const handleCloseThanks = () => setOpenThanks(false);
+  const HandleOpenThanks = () => setOpenThanks(true);
+  const HandleCloseThanks = () => setOpenThanks(false);
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -92,7 +92,7 @@ const Departments = () => {
   const [nameEdit, setNameEdit] = useState("");
   const [descriptionEdit, setDescriptionEdit] = useState("");
   const [page, setPage] = useState(1);
-  const handleSearchCahnge = (e) => {
+  const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
   };
   const [formData, setFormData] = useState({
@@ -112,7 +112,7 @@ const Departments = () => {
     const nextPage = page + 1;
     setPage(nextPage);
   };
-  const handleChange = (e) => {
+  const HandleChange = (e) => {
     const { value, name } = e.target;
     setFormData((prevState) => {
       return {
@@ -121,7 +121,7 @@ const Departments = () => {
       };
     });
   };
-  const handleChangeEdit = (e) => {
+  const HandleChangeEdit = (e) => {
     const { value, name } = e.target;
     setUpDateData({ ...upDateData, [name]: value });
   };
@@ -153,7 +153,7 @@ const Departments = () => {
     GetDepartments();
   }, [searchValue, page]);
 
-  const handleSubmit = (e) => {
+  const HandleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
@@ -164,7 +164,7 @@ const Departments = () => {
     })
       .then(({ result }) => {
         if (result?.department) {
-          handleOpenThanks();
+          HandleOpenThanks();
           GetDepartments();
           setFormData("");
           setErros("");
@@ -188,7 +188,7 @@ const Departments = () => {
     })
       .then(({ result }) => {
         if (result?.department) {
-          // handleOpenThanks();
+          // HandleOpenThanks();
           GetDepartments();
           setId("");
           setNameEdit("");
@@ -213,7 +213,7 @@ const Departments = () => {
     })
       .then(({ result }) => {
         if (result) {
-          // handleOpenThanks();
+          // HandleOpenThanks();
           GetDepartments();
           setId("");
           toast.success("update successfull");
@@ -252,7 +252,7 @@ const Departments = () => {
                 <SearchInput
                   type="text"
                   placeholder="Search..."
-                  onChange={handleSearchCahnge}
+                  onChange={HandleSearchCahnge}
                   value={searchValue}
                 ></SearchInput>
                 <SearchIcon src="/images/icons/searchIcon.png" />
@@ -271,10 +271,10 @@ const Departments = () => {
               <DepartmentFilterButton>{data}</DepartmentFilterButton>
             ))}
           </DepartmentFilterdiv> */}
-          <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+          <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
-            onClose={handleClose}
+            onClose={HandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -283,7 +283,7 @@ const Departments = () => {
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
                   onClick={() => {
-                    handleClose();
+                    HandleClose();
                     setErros("");
                   }}
                   src="/images/icons/alert-circle.png"
@@ -292,7 +292,7 @@ const Departments = () => {
               <ModalUpperMid>
                 <Input
                   placeholder="Department Name"
-                  onChange={handleChange}
+                  onChange={HandleChange}
                   value={formData.name}
                   name="name"
                   type="text"
@@ -300,7 +300,7 @@ const Departments = () => {
                 <Errors>{errors.nameError}</Errors>
                 <TextArea
                   placeholder="Description"
-                  onChange={handleChange}
+                  onChange={HandleChange}
                   value={formData.description}
                   type="text"
                   name="description"
@@ -312,20 +312,20 @@ const Departments = () => {
                 <AddNewButton
                   onClick={(e) => {
                     if (validateForm(formData)) {
-                      handleSubmit(e);
-                      handleClose();
+                      HandleSubmit(e);
+                      HandleClose();
                     }
                   }}
                 >
                   Add New
                 </AddNewButton>
-                <CancelButton onClick={handleClose}>Cancel</CancelButton>
+                <CancelButton onClick={HandleClose}>Cancel</CancelButton>
               </ModalBottom>
             </Box>
           </Modal>
           <Modal
             open={openThanks}
-            onClose={handleCloseThanks}
+            onClose={HandleCloseThanks}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -337,7 +337,7 @@ const Departments = () => {
                 </ModalThanksHeading>
                 <AddNewButton
                   onClick={() => {
-                    handleCloseThanks();
+                    HandleCloseThanks();
                     setFormData({ name: "", description: "" });
                   }}
                 >
@@ -363,14 +363,14 @@ const Departments = () => {
                     setId(data._id);
                     setDescriptionEdit(data.description);
                     setNameEdit(data.name);
-                    handleOpenEdit();
+                    HandleOpenEdit();
                   }}
                 >
                   <img src="/images/icons/alert-circle-fill.png" />
                 </DepartmentCardButtoncolor>
                 <DepartmentCardButtongrey
                   onClick={() => {
-                    handleOpenDelete();
+                    HandleOpenDelete();
                     setId(data._id);
                   }}
                 >
@@ -385,7 +385,7 @@ const Departments = () => {
       {/* modal to edit  */}
       <Modal
         open={openEdit}
-        onClose={handleCloseEdit}
+        onClose={HandleCloseEdit}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -394,7 +394,7 @@ const Departments = () => {
             <ModalHeading>Edit Department</ModalHeading>
             <ModalIcon
               onClick={() => {
-                handleCloseEdit();
+                HandleCloseEdit();
                 setErros("");
               }}
               src="/images/icons/alert-circle.png"
@@ -403,7 +403,7 @@ const Departments = () => {
           <ModalUpperMid>
             <Input
               placeholder={nameEdit}
-              onChange={handleChangeEdit}
+              onChange={HandleChangeEdit}
               value={upDateData.name}
               name="name"
               type="text"
@@ -411,7 +411,7 @@ const Departments = () => {
             <Errors>{errors.nameError}</Errors>
             <TextArea
               placeholder={descriptionEdit}
-              onChange={handleChangeEdit}
+              onChange={HandleChangeEdit}
               value={upDateData.description}
               type="text"
               name="description"
@@ -423,20 +423,20 @@ const Departments = () => {
               onClick={(e) => {
                 if (validateForm(upDateData)) {
                   HandleUpdate();
-                  handleCloseEdit();
+                  HandleCloseEdit();
                 }
               }}
             >
               Update
             </AddNewButton>
-            <CancelButton onClick={handleCloseEdit}>Cancel</CancelButton>
+            <CancelButton onClick={HandleCloseEdit}>Cancel</CancelButton>
           </ModalBottom>
         </Box>
       </Modal>
       {/* Delete Modal  */}
       <DeleteModal
         openDelete={openDelete}
-        handleCloseDelete={handleCloseDelete}
+        HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
       />
     </Dashboard>

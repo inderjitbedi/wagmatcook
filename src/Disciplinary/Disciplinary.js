@@ -85,16 +85,16 @@ const CellStyle2 = {
 
 const Disciplinary = () => {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => setOpen(false);
   // update modal var
   const [openEdit, setOpenEdit] = useState(false);
-  const handleOpenEdit = () => setOpenEdit(true);
-  const handleCloseEdit = () => setOpenEdit(false);
+  const HandleOpenEdit = () => setOpenEdit(true);
+  const HandleCloseEdit = () => setOpenEdit(false);
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
-  const handleOpenDelete = () => setOpenDelete(true);
-  const handleCloseDelete = () => setOpenDelete(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -143,7 +143,7 @@ const Disciplinary = () => {
     const nextPage = page + 1;
     setPage(nextPage);
   };
-  //Delete function 
+  //Delete function
   const HandleDelete = () => {
     let url = `/disciplinary/delete/${Id}`;
     httpClient({
@@ -152,8 +152,18 @@ const Disciplinary = () => {
     })
       .then(({ result }) => {
         if (result) {
+          let FilteredArray = disciplinaryData.filter(
+            (data) => data._id !== Id
+          );
+          let ReorderArray = FilteredArray.map((data) => data._id);
+          HandleReorder(ReorderArray);
           GetDisciplinary();
           setId("");
+          //find the Id in disciplinary array and remove it
+          //call the new function containing reorder
+          //take  the disciplinary data from reorder api and set it inside the setdisciplinary
+          // svg , casing and display msg , reorder
+          //side bar - two items ->
           toast.success("update successfull");
         } else {
           toast.warn("something went wrong ");
@@ -196,7 +206,7 @@ const Disciplinary = () => {
   }, [searchValue, page]);
 
   //create new enter in table
-  const handleSubmit = (e) => {
+  const HandleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = {
       ...formData,
@@ -252,29 +262,30 @@ const Disciplinary = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-  // handle changes here
-  const handleChanges = (e) => {
+  // Handle changes here
+  const HandleChanges = (e) => {
     const { value, name } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleChangesEdit = (e) => {
+  const HandleChangesEdit = (e) => {
     const { value, name } = e.target;
     setupDateData({ ...upDateData, [name]: value });
   };
 
-  // handle reorder
+  // Handle reorder
   const HandleReorder = (reOrder) => {
     console.log(reOrder, "this reorder");
     let url = "/disciplinary/reorder";
+
     httpClient({
       method: "put",
       url,
-      data: reOrder,
+      data: { disciplinaries: reOrder },
     })
       .then(({ result }) => {
         if (result) {
-          toast.success("Added successfull");
+          // toast.success("Added successfull");
           // GetDisciplinary();
           // setFormData("");
         } else {
@@ -286,15 +297,6 @@ const Disciplinary = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-
-  // useEffect(() => {
-  //   let reOrder = disciplinaryData.disciplinaries?.map((data) => data._id);
-  //   console.log("in side set time out function " , typeof(reOrder));
-  //   HandleReorder(reOrder);
-
-  //   console.log("useEffect in action for Delete");
-  // }, [HandleDelete]);
-
   return (
     <Dashboard>
       <DashNav>
@@ -318,10 +320,10 @@ const Disciplinary = () => {
         </DashHeader>
         <DisciplinaryDiv>
           <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
-          <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+          <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
-            onClose={handleClose}
+            onClose={HandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -330,7 +332,7 @@ const Disciplinary = () => {
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
                   onClick={() => {
-                    handleClose();
+                    HandleClose();
                     setErros("");
                   }}
                   src="/images/icons/alert-circle.png"
@@ -343,7 +345,7 @@ const Disciplinary = () => {
                 <Input
                   type="text"
                   name="name"
-                  onChange={handleChanges}
+                  onChange={HandleChanges}
                   value={formData.name}
                   placeholder="name"
                 />
@@ -354,7 +356,7 @@ const Disciplinary = () => {
                 <TextArea
                   type="text"
                   name="description"
-                  onChange={handleChanges}
+                  onChange={HandleChanges}
                   value={formData.description}
                   placeholder="Write Something.."
                 />
@@ -367,7 +369,7 @@ const Disciplinary = () => {
                 <Select
                   value={formData.requiredBcr}
                   name="requiredBcr"
-                  onChange={handleChanges}
+                  onChange={HandleChanges}
                 >
                   <Option value="">Select an option</Option>
                   <Option value={true}>Yes</Option>
@@ -377,8 +379,8 @@ const Disciplinary = () => {
                 <AddNewButton
                   onClick={(e) => {
                     if (validateForm(formData)) {
-                      handleClose();
-                      handleSubmit(e);
+                      HandleClose();
+                      HandleSubmit(e);
                     }
                   }}
                 >
@@ -444,7 +446,7 @@ const Disciplinary = () => {
                     <ActionIconDiv>
                       <ActionIcons
                         onClick={() => {
-                          handleOpenEdit();
+                          HandleOpenEdit();
                           setId(data._id);
                           setDescription(data.description);
                           setRequiredBcr(data.requiredBcr);
@@ -454,7 +456,7 @@ const Disciplinary = () => {
                       />
                       <ActionIcons
                         onClick={() => {
-                          handleOpenDelete();
+                          HandleOpenDelete();
                           setId(data._id);
                         }}
                         src="/images/icons/trash-2.png"
@@ -473,7 +475,7 @@ const Disciplinary = () => {
       {/* modal fo editing  */}
       <Modal
         open={openEdit}
-        onClose={handleCloseEdit}
+        onClose={HandleCloseEdit}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -482,7 +484,7 @@ const Disciplinary = () => {
             <ModalHeading> Update Disciplinary</ModalHeading>
             <ModalIcon
               onClick={() => {
-                handleCloseEdit();
+                HandleCloseEdit();
                 setErros("");
               }}
               src="/images/icons/alert-circle.png"
@@ -495,7 +497,7 @@ const Disciplinary = () => {
             <Input
               type="text"
               name="name"
-              onChange={handleChangesEdit}
+              onChange={HandleChangesEdit}
               value={upDateData.name}
               placeholder={name}
             />
@@ -506,7 +508,7 @@ const Disciplinary = () => {
             <TextArea
               type="text"
               name="description"
-              onChange={handleChangesEdit}
+              onChange={HandleChangesEdit}
               value={upDateData.description}
               placeholder={description}
             />
@@ -520,7 +522,7 @@ const Disciplinary = () => {
             <Select
               value={upDateData.requiredBcr}
               name="requiredBcr"
-              onChange={handleChangesEdit}
+              onChange={HandleChangesEdit}
             >
               <Option value="" disabled hidden>
                 {requiredBcr}
@@ -532,7 +534,7 @@ const Disciplinary = () => {
               onClick={() => {
                 if (validateForm(upDateData)) {
                   HandleUpdate();
-                  handleCloseEdit();
+                  HandleCloseEdit();
                 }
               }}
             >
@@ -543,7 +545,7 @@ const Disciplinary = () => {
       </Modal>
       <DeleteModal
         openDelete={openDelete}
-        handleCloseDelete={handleCloseDelete}
+        HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
         HandleReorder={HandleReorder}
       />

@@ -59,21 +59,21 @@ const DeleteButton = styled.button`
 `;
 const DeleteModal = ({
   openDelete,
-  handleCloseDelete,
+  HandleCloseDelete,
   HandleDelete,
   HandleReorder,
 }) => {
   return (
     <Modal
       open={openDelete}
-      onClose={handleCloseDelete}
+      onClose={HandleCloseDelete}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
         <ModalThanks>
           <ModalIconDelete
-            onClick={handleCloseDelete}
+            onClick={HandleCloseDelete}
             src="/images/icons/alert-circle.png"
           />
           <ModalThanksImg src="/images/Danger Circle.jpg" />
@@ -82,7 +82,7 @@ const DeleteModal = ({
           </ModalThanksHeading>
           <DeleteButton
             onClick={() => {
-              handleCloseDelete();
+              HandleCloseDelete();
               HandleDelete();
             //   HandleReorder();
             }}
