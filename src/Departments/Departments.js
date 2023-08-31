@@ -99,7 +99,7 @@ const Departments = () => {
     name: "",
     description: "",
   });
-  const [errors, setErros] = useState({
+  const [errors, setErrors] = useState({
     nameError: "",
     descriptionError: "",
   });
@@ -114,6 +114,37 @@ const Departments = () => {
   };
   const HandleChange = (e) => {
     const { value, name } = e.target;
+
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description should be at least 10 characters long",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
+
     setFormData((prevState) => {
       return {
         ...prevState,
@@ -121,8 +152,38 @@ const Departments = () => {
       };
     });
   };
+  // const isSubmitDisabled = errors.nameError || errors.descriptionError;
   const HandleChangeEdit = (e) => {
     const { value, name } = e.target;
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description should be at least 10 characters long",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
     setUpDateData({ ...upDateData, [name]: value });
   };
   const GetDepartments = () => {
@@ -157,53 +218,57 @@ const Departments = () => {
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result }) => {
-        if (result?.department) {
-          HandleOpenThanks();
-          GetDepartments();
-          setFormData("");
-          setErros("");
-        } else {
-          toast.warn("something went wrong ");
-        }
+    if (!errors.nameError && !errors.descriptionError) {
+      httpClient({
+        method: "post",
+        url,
+        data: dataCopy,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-      });
+        .then(({ result }) => {
+          if (result?.department) {
+            HandleOpenThanks();
+            GetDepartments();
+            setFormData("");
+            setErrors("");
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+        });
+    }
   };
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
     let url = `/department/update/${Id}`;
-    httpClient({
-      method: "put",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result }) => {
-        if (result?.department) {
-          // HandleOpenThanks();
-          GetDepartments();
-          setId("");
-          setNameEdit("");
-          setDescriptionEdit("");
-          setUpDateData("");
-          setErros("");
-          toast.success("Entry Updated Successfully");
-        } else {
-          toast.warn("Something Went Wrong ");
-        }
+    if (!errors.nameError && !errors.descriptionError) {
+      httpClient({
+        method: "put",
+        url,
+        data: dataCopy,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-      });
+        .then(({ result }) => {
+          if (result?.department) {
+            // HandleOpenThanks();
+            GetDepartments();
+            setId("");
+            setNameEdit("");
+            setDescriptionEdit("");
+            setUpDateData("");
+            setErrors("");
+            toast.success("Entry Updated Successfully");
+          } else {
+            toast.warn("Something Went Wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+        });
+    }
   };
   const HandleDelete = () => {
     let url = `/department/delete/${Id}`;
@@ -227,17 +292,19 @@ const Departments = () => {
       });
   };
   // validation functions
-  const validateForm = (formData) => {
-    const namePattern = /^[A-Za-z\s]+$/;
+  // const validateForm = (formData) => {
+  //   const namePattern = /^[A-Za-z\s]+$/;
 
-    if (!formData.name || !formData.name.match(namePattern)) {
-      setErros({ ...errors, nameError: "InValid Name. Plaese Try Again" });
-    } else if (!formData.description) {
-      setErros({ ...errors, descriptionError: "Description is Empty" });
-    } else {
-      return true;
-    }
-  };
+  //   if (!formData.name || !formData.name.match(namePattern)) {
+  //     setErrors({ ...errors, nameError: "InValid Name or Empty . Plaese Try Again" });
+  //   }
+  //   else if (!formData.description) {
+  //     setErrors({ ...errors, descriptionError: "Description is Empty" });
+  //   } else {
+  //     return true;
+  //   }
+
+  // };
   return (
     <Dashboard>
       <DashNav>
@@ -284,11 +351,12 @@ const Departments = () => {
                 <ModalIcon
                   onClick={() => {
                     HandleClose();
-                    setErros("");
+                    setErrors("");
                   }}
                   src="/images/icons/Alert-Circle.svg"
                 />
               </ModalUpperDiv>
+
               <ModalUpperMid>
                 <Input
                   placeholder="Department Name"
@@ -310,12 +378,12 @@ const Departments = () => {
               </ModalUpperMid>
               <ModalBottom>
                 <AddNewButton
+                  type="submit"
                   onClick={(e) => {
-                    if (validateForm(formData)) {
-                      HandleSubmit(e);
-                      HandleClose();
-                    }
+                    HandleSubmit(e);
+                    HandleClose();
                   }}
+                  // disabled={isSubmitDisabled}
                 >
                   Add New
                 </AddNewButton>
@@ -395,7 +463,7 @@ const Departments = () => {
             <ModalIcon
               onClick={() => {
                 HandleCloseEdit();
-                setErros("");
+                setErrors("");
               }}
               src="/images/icons/alert-circle.svg"
             />
@@ -421,10 +489,8 @@ const Departments = () => {
           <ModalBottom>
             <AddNewButton
               onClick={(e) => {
-                if (validateForm(upDateData)) {
-                  HandleUpdate();
-                  HandleCloseEdit();
-                }
+                HandleUpdate();
+                HandleCloseEdit();
               }}
             >
               Update

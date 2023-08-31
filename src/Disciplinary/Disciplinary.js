@@ -110,7 +110,7 @@ const Disciplinary = () => {
     requiredBcr: "",
   });
 
-  const [errors, setErros] = useState({
+  const [errors, setErrors] = useState({
     nameError: "",
     descriptionError: "",
     requiredBcrError: "",
@@ -121,23 +121,7 @@ const Disciplinary = () => {
     description: description,
     requiredBcr: requiredBcr,
   });
-  const validateForm = (formData) => {
-    const namePattern = /^[A-Za-z\s]+$/;
 
-    if (!formData.name || !formData.name.match(namePattern)) {
-      setErros({ ...errors, nameError: "Invalid Name. Plaese Try Again " });
-    } else if (!formData.description) {
-      setErros({ ...errors, descriptionError: "Description Is Empty" });
-    } else {
-      return true;
-    }
-  };
-  // else if (!formData.requiredBcr) {
-  //       setErros({
-  //         ...errors,
-  //         requiredBcrError: "RequiredBcr is not Valid",
-  //       });
-  //     }
 
   const HandleLoadMore = () => {
     const nextPage = page + 1;
@@ -217,7 +201,7 @@ const Disciplinary = () => {
         if (result) {
           GetDisciplinary();
           setFormData("");
-          setErros("");
+          setErrors("");
           toast.success("Entry Added Successfully");
         } else {
           toast.warn("something went wrong ");
@@ -246,7 +230,7 @@ const Disciplinary = () => {
           setRequiredBcr("");
           setName("");
           setupDateData("");
-          setErros("");
+          setErrors("");
           toast.success("Entry Updated Successfully");
         } else {
           toast.warn("something went wrong ");
@@ -260,11 +244,80 @@ const Disciplinary = () => {
   // Handle changes here
   const HandleChanges = (e) => {
     const { value, name } = e.target;
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details should be at least 10 characters long",
+        });
+      } else if (formData.description.length > 500) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details cannot exceed 500 characters",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
   const HandleChangesEdit = (e) => {
     const { value, name } = e.target;
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details should be at least 10 characters long",
+        });
+      } else if (formData.description.length > 500) {
+        setErrors({
+          ...errors,
+          descriptionError: "Details cannot exceed 500 characters",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
     setupDateData({ ...upDateData, [name]: value });
   };
 
@@ -326,7 +379,7 @@ const Disciplinary = () => {
                 <ModalIcon
                   onClick={() => {
                     HandleClose();
-                    setErros("");
+                    setErrors("");
                     setFormData("");
                   }}
                   src="/images/icons/Alert-Circle.svg"
@@ -372,10 +425,10 @@ const Disciplinary = () => {
                 {/* <Errors>{errors.requiredBcrError}</Errors> */}
                 <AddNewButton
                   onClick={(e) => {
-                    if (validateForm(formData)) {
+                   
                       HandleClose();
                       HandleSubmit(e);
-                    }
+                  
                   }}
                 >
                   Submit
@@ -479,7 +532,7 @@ const Disciplinary = () => {
             <ModalIcon
               onClick={() => {
                 HandleCloseEdit();
-                setErros("");
+                setErrors("");
               }}
               src="/images/icons/Alert-Circle.svg"
             />
@@ -526,10 +579,10 @@ const Disciplinary = () => {
             </Select>
             <AddNewButton
               onClick={() => {
-                if (validateForm(upDateData)) {
+              
                   HandleUpdate();
                   HandleCloseEdit();
-                }
+                
               }}
             >
               Update
