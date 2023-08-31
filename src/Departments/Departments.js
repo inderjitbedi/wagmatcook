@@ -291,20 +291,7 @@ const Departments = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-  // validation functions
-  // const validateForm = (formData) => {
-  //   const namePattern = /^[A-Za-z\s]+$/;
-
-  //   if (!formData.name || !formData.name.match(namePattern)) {
-  //     setErrors({ ...errors, nameError: "InValid Name or Empty . Plaese Try Again" });
-  //   }
-  //   else if (!formData.description) {
-  //     setErrors({ ...errors, descriptionError: "Description is Empty" });
-  //   } else {
-  //     return true;
-  //   }
-
-  // };
+  
   return (
     <Dashboard>
       <DashNav>

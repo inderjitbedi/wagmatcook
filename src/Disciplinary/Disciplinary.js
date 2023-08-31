@@ -122,7 +122,6 @@ const Disciplinary = () => {
     requiredBcr: requiredBcr,
   });
 
-
   const HandleLoadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -187,59 +186,64 @@ const Disciplinary = () => {
   //create new enter in table
   const HandleSubmit = (e) => {
     e.preventDefault();
-    let dataCopy = {
-      ...formData,
-      order: disciplinaryData?.length + 1,
-    };
+
     let url = "/disciplinary/create";
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result }) => {
-        if (result) {
-          GetDisciplinary();
-          setFormData("");
-          setErrors("");
-          toast.success("Entry Added Successfully");
-        } else {
-          toast.warn("something went wrong ");
-        }
+    if (!errors.nameError && !errors.descriptionError) {
+      let dataCopy = {
+        ...formData,
+        order: disciplinaryData?.length + 1,
+      };
+      httpClient({
+        method: "post",
+        url,
+        data: dataCopy,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating Disciplinary. Please try again.");
-      });
+        .then(({ result }) => {
+          if (result) {
+            GetDisciplinary();
+            setFormData("");
+            setErrors("");
+            toast.success("Entry Added Successfully");
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating Disciplinary. Please try again.");
+        });
+    }
   };
   // handel updates
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
     let url = `/disciplinary/update/${Id}`;
-    httpClient({
-      method: "put",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result }) => {
-        if (result) {
-          GetDisciplinary();
-          setId("");
-          setDescription("");
-          setRequiredBcr("");
-          setName("");
-          setupDateData("");
-          setErrors("");
-          toast.success("Entry Updated Successfully");
-        } else {
-          toast.warn("something went wrong ");
-        }
+    if (!errors.nameError && !errors.descriptionError) {
+      httpClient({
+        method: "put",
+        url,
+        data: dataCopy,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating Disciplinary. Please try again.");
-      });
+        .then(({ result }) => {
+          if (result) {
+            GetDisciplinary();
+            setId("");
+            setDescription("");
+            setRequiredBcr("");
+            setName("");
+            setupDateData("");
+            setErrors("");
+            toast.success("Entry Updated Successfully");
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating Disciplinary. Please try again.");
+        });
+    }
   };
   // Handle changes here
   const HandleChanges = (e) => {
@@ -425,10 +429,8 @@ const Disciplinary = () => {
                 {/* <Errors>{errors.requiredBcrError}</Errors> */}
                 <AddNewButton
                   onClick={(e) => {
-                   
-                      HandleClose();
-                      HandleSubmit(e);
-                  
+                    HandleClose();
+                    HandleSubmit(e);
                   }}
                 >
                   Submit
@@ -579,10 +581,8 @@ const Disciplinary = () => {
             </Select>
             <AddNewButton
               onClick={() => {
-              
-                  HandleUpdate();
-                  HandleCloseEdit();
-                
+                HandleUpdate();
+                HandleCloseEdit();
               }}
             >
               Update
