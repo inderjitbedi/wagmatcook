@@ -124,6 +124,8 @@ const SAUserList = () => {
       order: 1,
     },
   ];
+  //name org department status 
+  // change the button login - otp otp - login
   return (
     <Dashboard>
       <DashNav>
@@ -163,17 +165,15 @@ const SAUserList = () => {
                   background: "#FBFBFB",
                 }}
               >
-                <TableCell sx={CellHeadStyles} align="left">
-                  Order No.
-                </TableCell>
+             
                 <TableCell sx={CellHeadStyles} align="left">
                   Name
                 </TableCell>
                 <TableCell sx={CellHeadStyles} align="left">
-                  Description
+                  Organization
                 </TableCell>
                 <TableCell sx={CellHeadStyles} align="left">
-                  Requires BCR
+                  Status
                 </TableCell>
                 <TableCell sx={CellHeadStyles} align="left">
                   Action
@@ -188,12 +188,6 @@ const SAUserList = () => {
                     background: "#fff",
                   }}
                 >
-                  <TableCell sx={CellStyle2} align="left">
-                    <MenuIconDiv>
-                      <MenuIcon src="/images/icons/Menu Dots.svg " />
-                      {data.order}
-                    </MenuIconDiv>
-                  </TableCell>
                   <TableCell sx={CellStyle} align="left">
                     {" "}
                     {data.name}{" "}

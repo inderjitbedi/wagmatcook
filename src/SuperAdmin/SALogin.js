@@ -68,7 +68,7 @@ const SALogin = () => {
                   </Grid>
                 </Grid>
                 <Button type="submit" variant="contained" className="mt-1">
-                  Login
+                  Continue
                 </Button>
               </Box>
             </form>

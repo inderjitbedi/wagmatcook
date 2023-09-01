@@ -103,6 +103,9 @@ const Disciplinary = () => {
   const [Id, setId] = useState("");
 
   const [searchValue, setSearchValue] = useState("");
+  const [delayedSearchValue, setDelayedSearchValue] = useState("");
+  const delayDuration = 1000; // Set the delay duration in milliseconds
+  let searchTimer;
   const [disciplinaryData, setDisciplinaryData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -140,7 +143,6 @@ const Disciplinary = () => {
           );
           let ReorderArray = FilteredArray.map((data) => data._id);
           HandleReorder(ReorderArray);
-          GetDisciplinary();
           setId("");
           toast.success("Entry Deleted Successfully");
         } else {
@@ -181,14 +183,39 @@ const Disciplinary = () => {
   useEffect(() => {
     GetDisciplinary();
     // HandleReorder();
-  }, [searchValue, page]);
+  }, [delayedSearchValue, page]);
 
   //create new enter in table
   const HandleSubmit = (e) => {
     e.preventDefault();
 
     let url = "/disciplinary/create";
-    if (!errors.nameError && !errors.descriptionError) {
+    if (!formData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+      if (!formData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+    if (
+      formData.name &&
+      formData.description &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
       let dataCopy = {
         ...formData,
         order: disciplinaryData?.length + 1,
@@ -219,7 +246,33 @@ const Disciplinary = () => {
     let dataCopy = { ...upDateData };
 
     let url = `/disciplinary/update/${Id}`;
-    if (!errors.nameError && !errors.descriptionError) {
+    if (!upDateData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+      if (!upDateData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+
+    if (
+      upDateData.description &&
+      upDateData.name &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
       httpClient({
         method: "put",
         url,
@@ -337,7 +390,7 @@ const Disciplinary = () => {
     })
       .then(({ result }) => {
         if (result) {
-          // At Present Nothing
+          GetDisciplinary();
         } else {
           toast.warn("something went wrong ");
         }
@@ -346,6 +399,13 @@ const Disciplinary = () => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
       });
+  };
+  const HandleSearchCahnge = (e) => {
+    setSearchValue(e.target.value);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      setDelayedSearchValue(e.target.value);
+    }, delayDuration);
   };
   return (
     <Dashboard>
@@ -361,7 +421,7 @@ const Disciplinary = () => {
                 type="text"
                 placeholder="Search..."
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => HandleSearchCahnge()}
               ></SearchInput>
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>

@@ -118,6 +118,7 @@ const SAOrganization = () => {
       order: 1,
     },
   ];
+  //name email and status 
   return (
     <Dashboard>
       <DashNav>
@@ -200,17 +201,15 @@ const SAOrganization = () => {
                   background: "#FBFBFB",
                 }}
               >
-                <TableCell sx={{...CellHeadStyles, minWidth: "100px" }} align="left">
-                  Order No.
-                </TableCell>
+             
                 <TableCell sx={{...CellHeadStyles, minWidth: "250px" }}  align="left">
                   Name
                 </TableCell>
                 <TableCell sx={{...CellHeadStyles, minWidth: "180px" }}  align="left">
-                  Description
+                  Email
                 </TableCell>
                 <TableCell sx={{...CellHeadStyles, minWidth: "150px" }}  align="left">
-                  Requires BCR
+                  Status
                 </TableCell>
                 <TableCell sx={{...CellHeadStyles, minWidth: "150px" }}  align="left">
                   Action
@@ -225,12 +224,7 @@ const SAOrganization = () => {
                     background: "#fff",
                   }}
                 >
-                  <TableCell sx={CellStyle2} align="left">
-                    <MenuIconDiv>
-                      <MenuIcon src="/images/icons/Menu Dots.svg " />
-                      {data.order}
-                    </MenuIconDiv>
-                  </TableCell>
+                
                   <TableCell sx={CellStyle} align="left">
                     {" "}
                     {data.name}{" "}

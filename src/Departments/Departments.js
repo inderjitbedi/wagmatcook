@@ -87,6 +87,9 @@ const Departments = () => {
   ];
   // const TempData = [1, 2, 3, 4, 5];
   const [searchValue, setSearchValue] = useState("");
+  const [delayedSearchValue, setDelayedSearchValue] = useState("");
+  const delayDuration = 1000; // Set the delay duration in milliseconds
+  let searchTimer;
   const [departmentData, setDepartmentData] = useState([]);
   const [Id, setId] = useState("");
   const [nameEdit, setNameEdit] = useState("");
@@ -94,6 +97,10 @@ const Departments = () => {
   const [page, setPage] = useState(1);
   const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      setDelayedSearchValue(e.target.value);
+    }, delayDuration);
   };
   const [formData, setFormData] = useState({
     name: "",
@@ -187,7 +194,7 @@ const Departments = () => {
     setUpDateData({ ...upDateData, [name]: value });
   };
   const GetDepartments = () => {
-    let url = `/department/list?page=${page}&limit=10&searchKey= ${searchValue}`;
+    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -212,13 +219,39 @@ const Departments = () => {
   };
   useEffect(() => {
     GetDepartments();
-  }, [searchValue, page]);
+  }, [delayedSearchValue, page]);
 
   const HandleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
-    if (!errors.nameError && !errors.descriptionError) {
+
+    if (!formData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+      if (!formData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+    if (
+      formData.name &&
+      formData.description &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
       httpClient({
         method: "post",
         url,
@@ -226,6 +259,7 @@ const Departments = () => {
       })
         .then(({ result }) => {
           if (result?.department) {
+            HandleClose();
             HandleOpenThanks();
             GetDepartments();
             setFormData("");
@@ -244,7 +278,32 @@ const Departments = () => {
     let dataCopy = { ...upDateData };
 
     let url = `/department/update/${Id}`;
-    if (!errors.nameError && !errors.descriptionError) {
+    if (!upDateData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+      if (!upDateData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+    if (
+      upDateData.description &&
+      upDateData.name &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
       httpClient({
         method: "put",
         url,
@@ -253,6 +312,8 @@ const Departments = () => {
         .then(({ result }) => {
           if (result?.department) {
             // HandleOpenThanks();
+            HandleCloseEdit();
+
             GetDepartments();
             setId("");
             setNameEdit("");
@@ -291,7 +352,7 @@ const Departments = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-  
+
   return (
     <Dashboard>
       <DashNav>
@@ -368,7 +429,6 @@ const Departments = () => {
                   type="submit"
                   onClick={(e) => {
                     HandleSubmit(e);
-                    HandleClose();
                   }}
                   // disabled={isSubmitDisabled}
                 >
@@ -477,7 +537,6 @@ const Departments = () => {
             <AddNewButton
               onClick={(e) => {
                 HandleUpdate();
-                HandleCloseEdit();
               }}
             >
               Update

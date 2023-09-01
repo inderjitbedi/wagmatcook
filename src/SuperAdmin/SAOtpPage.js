@@ -60,7 +60,7 @@ const SAOtpPage = () => {
                 />
 
                 <Button type="submit" variant="contained" className="mt-1">
-                  Continue
+                  Login
                 </Button>
               </Box>
             </form>
