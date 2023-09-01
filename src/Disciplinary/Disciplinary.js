@@ -11,7 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
   DashMain,
   Dashboard,
@@ -101,6 +101,7 @@ const Disciplinary = () => {
   const [requiredBcr, setRequiredBcr] = useState("");
   const [page, setPage] = useState(1);
   const [Id, setId] = useState("");
+  const [result, setResult] = useState([]);
 
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
@@ -126,7 +127,7 @@ const Disciplinary = () => {
   });
 
   const HandleLoadMore = () => {
-    const nextPage = page + 1;
+    const nextPage = result.currentPage + 1;
     setPage(nextPage);
   };
   //Delete function
@@ -163,6 +164,7 @@ const Disciplinary = () => {
     })
       .then(({ result }) => {
         if (result) {
+          setResult(result);
           if (page === 1) {
             setDisciplinaryData(result.disciplinaries);
           } else {
@@ -338,7 +340,7 @@ const Disciplinary = () => {
 
     setFormData({ ...formData, [name]: value });
   };
-
+  console.log(result, "type of result " ,typeof(result));
   const HandleChangesEdit = (e) => {
     const { value, name } = e.target;
     // Validation for the Name field
@@ -407,6 +409,30 @@ const Disciplinary = () => {
       setDelayedSearchValue(e.target.value);
     }, delayDuration);
   };
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reorderedData = Array.from(disciplinaryData);
+    const [movedItem] = reorderedData.splice(result.source.index, 1);
+    reorderedData.splice(result.destination.index, 0, movedItem);
+    console.log("drag is working ");
+    setDisciplinaryData(reorderedData);
+    HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+  };
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 10px 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
   return (
     <Dashboard>
       <DashNav>
@@ -421,7 +447,7 @@ const Disciplinary = () => {
                 type="text"
                 placeholder="Search..."
                 value={searchValue}
-                onChange={(e) => HandleSearchCahnge()}
+                onChange={(e) => HandleSearchCahnge(e)}
               ></SearchInput>
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
@@ -499,87 +525,120 @@ const Disciplinary = () => {
             </Box>
           </Modal>
         </DisciplinaryDiv>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
-                }}
-              >
-                <TableCell sx={CellHeadStyles} align="left">
-                  Order No.
-                </TableCell>
-                <TableCell sx={CellHeadStyles} align="left">
-                  Name
-                </TableCell>
-                <TableCell sx={CellHeadStyles} align="left">
-                  Description
-                </TableCell>
-                <TableCell sx={CellHeadStyles} align="left">
-                  Requires BCR
-                </TableCell>
-                <TableCell sx={CellHeadStyles} align="left">
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {disciplinaryData?.map((data) => (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
                 <TableRow
                   sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    background: "#fff",
+                    background: "#FBFBFB",
                   }}
                 >
-                  <TableCell sx={CellStyle2} align="left">
-                    <MenuIconDiv>
-                      <MenuIcon src="/images/icons/Menu Dots.svg " />
-                      {data.order}
-                    </MenuIconDiv>
+                  <TableCell sx={CellHeadStyles} align="left">
+                    Order No.
                   </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    {" "}
-                    {data.name}{" "}
+                  <TableCell sx={CellHeadStyles} align="left">
+                    Name
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    {data.description}{" "}
+                  <TableCell sx={CellHeadStyles} align="left">
+                    Description
                   </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    {" "}
-                    {data.requiredBcr === false ? "No" : "Yes"}{" "}
+                  <TableCell sx={CellHeadStyles} align="left">
+                    Requires BCR
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    <ActionIconDiv>
-                      <ActionIcons
-                        onClick={() => {
-                          HandleOpenEdit();
-                          setId(data._id);
-                          setDescription(data.description);
-                          setRequiredBcr(data.requiredBcr);
-                          setName(data.name);
-                        }}
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <ActionIcons
-                        onClick={() => {
-                          HandleOpenDelete();
-                          setId(data._id);
-                        }}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                    </ActionIconDiv>
+                  <TableCell sx={CellHeadStyles} align="left">
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
-          Load More
-        </AddNewButton>
+              </TableHead>
+
+              <Droppable droppableId="table">
+                {(provided, snapshot) => (
+                  <TableBody
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDraggingOver)}
+                  >
+                    {disciplinaryData?.map((data, index) => (
+                      <Draggable
+                        key={data._id}
+                        draggableId={data._id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <TableRow
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                              background: "#fff",
+                            }}
+                          >
+                            <TableCell sx={CellStyle2} align="left">
+                              <MenuIconDiv>
+                                <MenuIcon
+                                  {...provided.dragHandleProps}
+                                  src="/images/icons/Menu Dots.svg "
+                                  style={{ cursor: "grab" }}
+                                />
+                                {data.order}
+                              </MenuIconDiv>
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {" "}
+                              {data.name}{" "}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {" "}
+                              {data.description}{" "}
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {" "}
+                              {data.requiredBcr === false ? "No" : "Yes"}{" "}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {" "}
+                              <ActionIconDiv>
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleOpenEdit();
+                                    setId(data._id);
+                                    setDescription(data.description);
+                                    setRequiredBcr(data.requiredBcr);
+                                    setName(data.name);
+                                  }}
+                                  src="/images/icons/Pendown.svg"
+                                />
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleOpenDelete();
+                                    setId(data._id);
+                                  }}
+                                  src="/images/icons/Trash-2.svg"
+                                />
+                              </ActionIconDiv>
+                            </TableCell>
+                            {provided.placeholder}
+                          </TableRow>
+                        )}
+                      </Draggable>
+                    ))}
+                  </TableBody>
+                )}
+              </Droppable>
+            </Table>
+          </TableContainer>
+        </DragDropContext>
+        {result.totalPages > result.currentPage && (
+          <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+            Load More
+          </AddNewButton>
+        )}{" "}
       </DashMain>
       {/* modal fo editing  */}
       <Modal

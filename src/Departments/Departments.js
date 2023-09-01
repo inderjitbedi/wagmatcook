@@ -71,6 +71,7 @@ const Departments = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const HandleOpenEdit = () => setOpenEdit(true);
   const HandleCloseEdit = () => setOpenEdit(false);
+  const [result, setResult] = useState([]);
 
   const [openThanks, setOpenThanks] = useState(false);
   const HandleOpenThanks = () => setOpenThanks(true);
@@ -116,7 +117,8 @@ const Departments = () => {
   });
 
   const HandleLoadMore = () => {
-    const nextPage = page + 1;
+    const nextPage = result.currentPage + 1;
+
     setPage(nextPage);
   };
   const HandleChange = (e) => {
@@ -200,6 +202,8 @@ const Departments = () => {
       url,
     })
       .then(({ result }) => {
+        setResult(result);
+
         if (result) {
           if (page === 1) {
             setDepartmentData(result.departments);
@@ -495,7 +499,11 @@ const Departments = () => {
             </DepartmentCardDiv>
           ))}
         </DepartmentCardContainer>
-        <AddNewButton onClick={HandleLoadMore}>Load More</AddNewButton>
+        {result.totalPages > result.currentPage && (
+          <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+            Load More
+          </AddNewButton>
+        )}{" "}
       </DashMain>
       {/* modal to edit  */}
       <Modal

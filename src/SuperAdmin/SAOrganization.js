@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import SASideBar from "./SASideBar";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -9,6 +9,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import httpClient from "../api/httpClient";
+import { toast } from "react-toastify";
+
 import {
   Dashboard,
   DashNav,
@@ -38,7 +41,7 @@ import {
   InputSpan,
   TextArea,
   InputPara,
-
+  Errors,
 } from "./SAStyles";
 
 const style = {
@@ -77,48 +80,132 @@ const CellStyle2 = {
   lineHeight: "15px",
 };
 const SAOrganization = () => {
-   const [open, setOpen] = useState(false);
-   const HandleOpen = () => setOpen(true);
-   const HandleClose = () => setOpen(false);
-  const disciplinaryData = [
+  const [open, setOpen] = useState(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => setOpen(false);
+  // const [organizationData, setOrganization] = useState([]);
+  const [result, setResult] = useState([]);
+  // getting list of organization list from a api
+  const [formData, setFormData] = useState([
     {
-      _id: "64f015b3f1b4113adc352819",
-      name: "test user ",
-      description: "no 4 ",
-      requiredBcr: true,
-      order: 1,
+      name: "",
+      email: "",
     },
+  ]);
+  const [errors, setErrors] = useState([
     {
-      _id: "64f015b3f1b4113adc352819",
-      name: "test user ",
-      description: "no 4 ",
-      requiredBcr: true,
-      order: 1,
+      nameError: "",
+      emailError: "",
     },
-    {
-      _id: "64f015b3f1b4113adc352819",
-      name: "test user ",
-      description: "no 4 ",
-      requiredBcr: true,
-      order: 1,
-    },
+  ]);
+  const HandleChanges = (e) => {
+    const { value, name } = e.target;
 
-    {
-      _id: "64f015b3f1b4113adc352819",
-      name: "test user ",
-      description: "no 4 ",
-      requiredBcr: true,
-      order: 1,
-    },
-    {
-      _id: "64f015b3f1b4113adc352819",
-      name: "test user ",
-      description: "no 4 ",
-      requiredBcr: true,
-      order: 1,
-    },
-  ];
-  //name email and status 
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+
+    if (name === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isValid = emailPattern.test(value);
+      if (!value) {
+        setErrors({ ...errors, emailError: "Email cannot be empty" });
+      } else if (isValid) {
+        setErrors({ ...errors, emailError: "Invalid email address" });
+      } else {
+        setErrors({ ...errors, emailError: "" });
+      }
+    }
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const GetOrganizationList = () => {
+    let url = `/organization/list?page=1&limit=10`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
+
+  useEffect(() => {
+    GetOrganizationList();
+  }, []);
+
+  console.log(result);
+  const HandleSubmit = (e) => {
+    e.preventDefault();
+    let url = `/organization/invite `;
+    if (!formData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+    } else {
+      setErrors({ ...errors, nameError: "" });
+    }
+    if (!formData.email) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+
+          emailError: "Please enter email",
+        };
+      });
+    } else {
+      setErrors({ ...errors, emailError: "" });
+    }
+    if (
+      formData.name &&
+      formData.email &&
+      !errors.nameError &&
+      !errors.emailError
+    ) {
+      let dataCopy = formData;
+      console.log(formData);
+      httpClient({
+        method: "post",
+        url,
+        data: dataCopy,
+      })
+        .then(({ result }) => {
+          if (result) {
+            HandleClose();
+            GetOrganizationList();
+            setFormData("");
+            setErrors("");
+            toast.success("Entry Added Successfully");
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating Disciplinary. Please try again.");
+        });
+    }
+  };
   return (
     <Dashboard>
       <DashNav>
@@ -166,28 +253,28 @@ const SAOrganization = () => {
                 <Input
                   type="text"
                   name="name"
-                  // onChange={HandleChanges}
-                  // value={formData.name}
-                  placeholder="name"
+                  onChange={HandleChanges}
+                  value={formData.name}
+                  placeholder="Organization Name "
                 />
-                {/* <Errors>{errors.nameError}</Errors> */}
+                <Errors>{errors.nameError}</Errors>
                 <InputLabel>
                   Email <InputSpan>*</InputSpan>
                 </InputLabel>
                 <Input
                   type="Email"
-                  name="name"
-                  // onChange={HandleChanges}
-                  // value={formData.name}
-                  placeholder="name"
+                  name="email"
+                  onChange={HandleChanges}
+                  value={formData.email}
+                  placeholder="Email@gmail.com"
                 />
+                <Errors>{errors.emailError}</Errors>
                 <AddNewButton
                   onClick={(e) => {
-                    HandleClose();
-                    // HandleSubmit(e);
+                    HandleSubmit(e);
                   }}
                 >
-                  Add 
+                  Invite
                 </AddNewButton>
               </ModalUpperMid>
             </Box>
@@ -201,41 +288,51 @@ const SAOrganization = () => {
                   background: "#FBFBFB",
                 }}
               >
-             
-                <TableCell sx={{...CellHeadStyles, minWidth: "250px" }}  align="left">
+                <TableCell
+                  sx={{ ...CellHeadStyles, minWidth: "250px" }}
+                  align="left"
+                >
                   Name
                 </TableCell>
-                <TableCell sx={{...CellHeadStyles, minWidth: "180px" }}  align="left">
+                <TableCell
+                  sx={{ ...CellHeadStyles, minWidth: "180px" }}
+                  align="left"
+                >
                   Email
                 </TableCell>
-                <TableCell sx={{...CellHeadStyles, minWidth: "150px" }}  align="left">
+                <TableCell
+                  sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                  align="left"
+                >
                   Status
                 </TableCell>
-                <TableCell sx={{...CellHeadStyles, minWidth: "150px" }}  align="left">
+                <TableCell
+                  sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                  align="left"
+                >
                   Action
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {disciplinaryData?.map((data) => (
+              {result.organizations?.map((data) => (
                 <TableRow
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                     background: "#fff",
                   }}
                 >
-                
                   <TableCell sx={CellStyle} align="left">
                     {" "}
                     {data.name}{" "}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
                     {" "}
-                    {data.description}{" "}
+                    name@gamail.com{" "}
                   </TableCell>
                   <TableCell sx={CellStyle} align="left">
                     {" "}
-                    {data.requiredBcr === false ? "No" : "Yes"}{" "}
+                    {data.isActive === false ? "InActive" : "Active"}{" "}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
                     {" "}
@@ -270,6 +367,6 @@ const SAOrganization = () => {
       </DashMain>
     </Dashboard>
   );
-}
+};
 
 export default SAOrganization;

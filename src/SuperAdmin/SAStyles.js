@@ -277,3 +277,11 @@ export const InputPara = styled.p`
   display: flex;
   justify-content: flex-end;
 `;
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 0px;
+  margin-top: 2px;
+`;
