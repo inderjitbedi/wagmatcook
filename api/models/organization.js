@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const orgSchema = new mongoose.Schema({
     name: {
@@ -10,7 +9,7 @@ const orgSchema = new mongoose.Schema({
     size: {
         type: Number,
         default: null,
-        required: true,
+        // required: true,
     },
     logo: {
         type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +18,7 @@ const orgSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        // required: true,
     },
     isActive: {
         type: Boolean,

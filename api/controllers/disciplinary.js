@@ -88,7 +88,31 @@ const disciplinaryController = {
             disciplinaries.forEach(async (disciplinary, i) => {
                 await Disciplinary.findByIdAndUpdate(disciplinary, { order: i + 1 });
             });
-            res.json({ message: 'Disciplinaries reordered successfully' });
+            const page = 1;
+            const limit =  10;
+            const startIndex = (page - 1) * limit;
+
+            let filters = { isDeleted: false, organization : '64e43ba127e762b8eee50d47' };
+
+            if (req.query.searchKey) {
+                filters.$or = [
+                    { name: { $regex: req.query.searchKey, $options: 'i' } },
+                    { description: { $regex: req.query.searchKey, $options: 'i' } }
+                ];
+            }
+            disciplinaries = await Disciplinary.find(filters)
+                .skip(startIndex)
+                .limit(limit)
+                .sort({ order: 1 });
+
+            const totalDisciplinaries = await Disciplinary.countDocuments(filters);
+            const totalPages = Math.ceil(totalDisciplinaries / req.query.limit);
+
+            res.status(200).json({
+                disciplinaries,
+                totalDisciplinaries,
+                currentPage: page,
+                totalPages, message: 'Disciplinaries reordered successfully' });
         } catch (error) {
             console.error("\n\disciplinaryController:reorder:error -", error);
             res.status(400).json({ message: error.toString() });;

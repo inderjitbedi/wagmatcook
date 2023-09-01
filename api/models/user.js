@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const roles = require('../enum/roles');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -9,20 +10,30 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     default: null,
+    required: true
   },
   password: {
     type: String,
     default: null,
   },
-  role:{
+  role: {
     type: String,
     default: null,
+    enum: Object.values(roles),
   },
   tempPassword: {
     type: String,
     default: null,
   },
   tempPasswordExpiry: {
+    type: Date,
+    default: null,
+  },
+  invitationToken: {
+    type: String,
+    default: null,
+  },
+  invitationTokenExpiry: {
     type: Date,
     default: null,
   },
@@ -35,13 +46,17 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
   isActive: {
-      type: Boolean,
-      default: true
+    type: Boolean,
+    default: true
   },
   isDeleted: {
-      type: Boolean,
-      default: false
+    type: Boolean,
+    default: false
   },
+  isSignedup: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true,
 });
@@ -49,7 +64,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
   const user = this;
   if (!user.isModified('password')) {
-      return next();
+    return next();
   }
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
