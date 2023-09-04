@@ -50,6 +50,53 @@ const emailTemplates = {
             `)
         }
     },
+    invite(data) {
+
+        return {
+            subject: 'Invitation to Sign Up',
+            html: getFullTemplate(data, `
+                <div class="f-fallback">
+                    <h1>Hi ${data.user.email},</h1>
+                    <p>  You've been invited to join our platform. Your presence will be highly appreciated.
+                    </p>
+                    <table class="body-action" align="center" width="100%" cellpadding="0"
+                        cellspacing="0" role="presentation">
+                        <tr>
+                            <td align="center">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                                    role="presentation">
+                                    <tr>
+                                        <td align="center">
+                                            <a href="${process.env.FRONTEND_URL}signup/${data.user.invitationToken}"
+                                                class="f-fallback button " target="_blank">Complete Signup</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <p> If you have any questions or need assistance, please don't hesitate to contact us.</p>
+                    <p>Thanks,
+                        <br>The Wagmatcook Team
+                    </p>
+                    <!-- Sub copy -->
+                    <table class="body-sub" role="presentation">
+                        <tr>
+                            <td>
+                                <p class="f-fallback sub">If you’re having trouble with the
+                                    button above, copy and paste the URL below into your web
+                                    browser.</p>
+                                <p class="f-fallback sub">
+                                    ${process.env.FRONTEND_URL}signup/${data.user.invitationToken}
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            `)
+        }
+    },
+    
     tempPassword(data) {
 
         return {
@@ -575,7 +622,7 @@ const getFullTemplate = (data, body) => {
                    <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                        <tr>
                            <td class="email-masthead">
-                            <img src="https://${data.req.headers.host}/api/media/logo/guardian.jpg" alt="Wagmatcook">
+                         <h1>Wagmatcook</h1>   
                            </td>
                        </tr>
                        <!-- Email Body -->
