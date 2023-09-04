@@ -61,7 +61,7 @@ const DeleteModal = ({
   openDelete,
   HandleCloseDelete,
   HandleDelete,
-  HandleReorder,
+  isLoading,
 }) => {
   return (
     <Modal
@@ -74,7 +74,7 @@ const DeleteModal = ({
         <ModalThanks>
           <ModalIconDelete
             onClick={HandleCloseDelete}
-            src="/images/icons/alert-circle.png"
+            src="/images/icons/Alert-Circle.svg" 
           />
           <ModalThanksImg src="/images/Danger Circle.jpg" />
           <ModalThanksHeading>
@@ -82,10 +82,11 @@ const DeleteModal = ({
           </ModalThanksHeading>
           <DeleteButton
             onClick={() => {
-              HandleCloseDelete();
+              // HandleCloseDelete();
               HandleDelete();
             //   HandleReorder();
             }}
+            disabled={isLoading}
           >
             {" "}
             Delete{" "}

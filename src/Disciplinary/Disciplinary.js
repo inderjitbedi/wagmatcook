@@ -11,7 +11,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { RotatingLines } from "react-loader-spinner";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useNavigate } from "react-router";
 import {
   DashMain,
   Dashboard,
@@ -84,6 +86,7 @@ const CellStyle2 = {
 };
 
 const Disciplinary = () => {
+  const Navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
   const HandleClose = () => setOpen(false);
@@ -95,14 +98,11 @@ const Disciplinary = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [requiredBcr, setRequiredBcr] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [Id, setId] = useState("");
   const [result, setResult] = useState([]);
-
+  const [descriptionLenght, setDescriptionLenght] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
@@ -121,9 +121,9 @@ const Disciplinary = () => {
   });
 
   const [upDateData, setupDateData] = useState({
-    name: name,
-    description: description,
-    requiredBcr: requiredBcr,
+    name: "",
+    description: "",
+    requiredBcr: "",
   });
 
   const HandleLoadMore = () => {
@@ -132,6 +132,8 @@ const Disciplinary = () => {
   };
   //Delete function
   const HandleDelete = () => {
+      setIsLoading(true);
+
     let url = `/disciplinary/delete/${Id}`;
     httpClient({
       method: "put",
@@ -145,6 +147,8 @@ const Disciplinary = () => {
           let ReorderArray = FilteredArray.map((data) => data._id);
           HandleReorder(ReorderArray);
           setId("");
+          HandleCloseDelete();
+
           toast.success("Entry Deleted Successfully");
         } else {
           toast.warn("something went wrong ");
@@ -153,11 +157,16 @@ const Disciplinary = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
   // get disciplinary
   const GetDisciplinary = () => {
-    let url = `/disciplinary/list?page=${page}&limit=10&searchKey=${searchValue}`;
+    setIsLoading(true);
+    let url = `/disciplinary/list?page=${page}&limit=2&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -180,11 +189,19 @@ const Disciplinary = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
   useEffect(() => {
-    GetDisciplinary();
-    // HandleReorder();
+        let isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) {
+      Navigate("/signin");
+    } else {
+      GetDisciplinary();
+    }
   }, [delayedSearchValue, page]);
 
   //create new enter in table
@@ -218,6 +235,7 @@ const Disciplinary = () => {
       !errors.nameError &&
       !errors.descriptionError
     ) {
+      setIsLoading(true);
       let dataCopy = {
         ...formData,
         order: disciplinaryData?.length + 1,
@@ -229,6 +247,7 @@ const Disciplinary = () => {
       })
         .then(({ result }) => {
           if (result) {
+            HandleClose();
             GetDisciplinary();
             setFormData("");
             setErrors("");
@@ -240,6 +259,11 @@ const Disciplinary = () => {
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error creating Disciplinary. Please try again.");
+          HandleClose();
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
@@ -275,6 +299,8 @@ const Disciplinary = () => {
       !errors.nameError &&
       !errors.descriptionError
     ) {
+      setIsLoading(true);
+
       httpClient({
         method: "put",
         url,
@@ -295,6 +321,10 @@ const Disciplinary = () => {
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error creating Disciplinary. Please try again.");
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
@@ -315,7 +345,8 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+setDescriptionLenght(value.length)
+      // validation: Description should not be empty and should have a minimum length of 10 characters
       if (!value) {
         setErrors({
           ...errors,
@@ -355,7 +386,8 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      setDescriptionLenght(value.length);
+      // validation: Description should not be empty and should have a minimum length of 10 characters
       if (!value) {
         setErrors({
           ...errors,
@@ -431,7 +463,7 @@ const Disciplinary = () => {
     background: isDraggingOver ? "#fff" : "#fff",
     padding: "2px",
   });
-  const populateUpdateForm = (data) => {
+  const PopulateUpdateForm = (data) => {
     setupDateData({
       name: data.name,
       description: data.description,
@@ -503,8 +535,12 @@ const Disciplinary = () => {
                   value={formData.description}
                   placeholder="Write Something.."
                 />
-                <Errors>{errors.descriptionError}</Errors>
-                <InputPara> Max 500 characters</InputPara>
+
+                <InputPara>
+                  {" "}
+                  <Errors>{errors.descriptionError}</Errors> Max
+                  {500 - descriptionLenght} characters
+                </InputPara>
                 <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
                 </InputLabel>
@@ -514,16 +550,16 @@ const Disciplinary = () => {
                   name="requiredBcr"
                   onChange={HandleChanges}
                 >
-                  <Option value="">Select an option</Option>
+                  <Option value={false}>Select an option</Option>
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select>
                 {/* <Errors>{errors.requiredBcrError}</Errors> */}
                 <AddNewButton
                   onClick={(e) => {
-                    HandleClose();
                     HandleSubmit(e);
                   }}
+                  disabled={isLoading}
                 >
                   Submit
                 </AddNewButton>
@@ -531,112 +567,134 @@ const Disciplinary = () => {
             </Box>
           </Modal>
         </DisciplinaryDiv>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell sx={CellHeadStyles} align="left">
-                    Order No.
-                  </TableCell>
-                  <TableCell sx={CellHeadStyles} align="left">
-                    Name
-                  </TableCell>
-                  <TableCell sx={CellHeadStyles} align="left">
-                    Description
-                  </TableCell>
-                  <TableCell sx={CellHeadStyles} align="left">
-                    Requires BCR
-                  </TableCell>
-                  <TableCell sx={CellHeadStyles} align="left">
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
-              <Droppable droppableId="table">
-                {(provided, snapshot) => (
-                  <TableBody
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "70vh",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <RotatingLines
+              strokeColor="#279AF1"
+              strokeWidth="3"
+              animationDuration="0.75"
+              width="52"
+              visible={true}
+            />
+          </div>
+        ) : (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      background: "#FBFBFB",
+                    }}
                   >
-                    {disciplinaryData?.map((data, index) => (
-                      <Draggable
-                        key={data._id}
-                        draggableId={data._id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <TableRow
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                              background: "#fff",
-                            }}
-                          >
-                            <TableCell sx={CellStyle2} align="left">
-                              <MenuIconDiv>
-                                <MenuIcon
-                                  {...provided.dragHandleProps}
-                                  src="/images/icons/Menu Dots.svg "
-                                  style={{ cursor: "grab" }}
-                                />
-                                {data.order}
-                              </MenuIconDiv>
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {" "}
-                              {data.name}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              {data.description}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {" "}
-                              {data.requiredBcr === false ? "No" : "Yes"}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              <ActionIconDiv>
-                                <ActionIcons
-                                  onClick={() => {
-                                    setId(data._id);
-                                    populateUpdateForm(data);
-                                  }}
-                                  src="/images/icons/Pendown.svg"
-                                />
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleOpenDelete();
-                                    setId(data._id);
-                                  }}
-                                  src="/images/icons/Trash-2.svg"
-                                />
-                              </ActionIconDiv>
-                            </TableCell>
-                            {provided.placeholder}
-                          </TableRow>
-                        )}
-                      </Draggable>
-                    ))}
-                  </TableBody>
-                )}
-              </Droppable>
-            </Table>
-          </TableContainer>
-        </DragDropContext>
+                    <TableCell sx={CellHeadStyles} align="left">
+                      Order No.
+                    </TableCell>
+                    <TableCell sx={CellHeadStyles} align="left">
+                      Name
+                    </TableCell>
+                    <TableCell sx={CellHeadStyles} align="left">
+                      Description
+                    </TableCell>
+                    <TableCell sx={CellHeadStyles} align="left">
+                      Requires BCR
+                    </TableCell>
+                    <TableCell sx={CellHeadStyles} align="left">
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <Droppable droppableId="table">
+                  {(provided, snapshot) => (
+                    <TableBody
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {disciplinaryData?.map((data, index) => (
+                        <Draggable
+                          key={data._id}
+                          draggableId={data._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <TableRow
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                background: "#fff",
+                              }}
+                            >
+                              <TableCell sx={CellStyle2} align="left">
+                                <MenuIconDiv>
+                                  <MenuIcon
+                                    {...provided.dragHandleProps}
+                                    src="/images/icons/Menu Dots.svg "
+                                    style={{ cursor: "grab" }}
+                                  />
+                                  {data.order}
+                                </MenuIconDiv>
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {" "}
+                                {data.name}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                {data.description}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {" "}
+                                {data.requiredBcr === false ? "No" : "Yes"}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                <ActionIconDiv>
+                                  <ActionIcons
+                                    onClick={() => {
+                                      setId(data._id);
+                                      PopulateUpdateForm(data);
+                                    }}
+                                    src="/images/icons/Pendown.svg"
+                                  />
+                                  <ActionIcons
+                                    onClick={() => {
+                                      HandleOpenDelete();
+                                      setId(data._id);
+                                    }}
+                                    src="/images/icons/Trash-2.svg"
+                                  />
+                                </ActionIconDiv>
+                              </TableCell>
+                              {provided.placeholder}
+                            </TableRow>
+                          )}
+                        </Draggable>
+                      ))}
+                    </TableBody>
+                  )}
+                </Droppable>
+              </Table>
+            </TableContainer>
+          </DragDropContext>
+        )}
         {result.totalPages > result.currentPage && (
           <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
             Load More
@@ -670,7 +728,7 @@ const Disciplinary = () => {
               name="name"
               onChange={HandleChangesEdit}
               value={upDateData.name}
-              placeholder={name}
+              // placeholder={name}
             />
             <Errors>{errors.nameError}</Errors>
             <InputLabel>
@@ -681,7 +739,7 @@ const Disciplinary = () => {
               name="description"
               onChange={HandleChangesEdit}
               value={upDateData.description}
-              placeholder={description}
+              // placeholder={descriptio}
             />
             <Errors style={{ display: "inline-block" }}>
               {errors.descriptionError}
@@ -696,7 +754,7 @@ const Disciplinary = () => {
               onChange={HandleChangesEdit}
             >
               <Option value="" disabled hidden>
-                {requiredBcr}
+                select a option
               </Option>
               <Option value={true}>Yes</Option>
               <Option value={false}>No</Option>
@@ -705,6 +763,7 @@ const Disciplinary = () => {
               onClick={() => {
                 HandleUpdate();
               }}
+              disabled={isLoading}
             >
               Update
             </AddNewButton>
@@ -716,6 +775,7 @@ const Disciplinary = () => {
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
         HandleReorder={HandleReorder}
+        isLoading={isLoading}
       />
     </Dashboard>
   );

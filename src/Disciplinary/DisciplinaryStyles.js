@@ -121,7 +121,7 @@ export const InputPara = styled.p`
   font-weight: 400;
   line-height: 0px; /* 171.429% */
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 export const Select = styled.select`
   font-size: 13px;

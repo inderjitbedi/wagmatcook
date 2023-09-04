@@ -11,7 +11,13 @@ export default function Signup() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.clear()
+    // localStorage.clear()
+     let isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (isLoggedIn) {
+            navigate("/OADashBoard");
+        } else {
+           localStorage.clear() 
+        }
 }, []);
   const [formData, setFormData] = useState({
     name: "",
