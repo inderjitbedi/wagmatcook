@@ -251,6 +251,7 @@ const Departments = () => {
   console.log(departmentData, "this is out data looks like ");
 
   const HandleSubmit = (e) => {
+
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
@@ -281,6 +282,8 @@ const Departments = () => {
       !errors.nameError &&
       !errors.descriptionError
     ) {
+      setIsLoading(true);
+
       httpClient({
         method: "post",
         url,
@@ -300,6 +303,10 @@ const Departments = () => {
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
@@ -512,7 +519,7 @@ const Departments = () => {
                   onClick={(e) => {
                     HandleSubmit(e);
                   }}
-                  // disabled={isSubmitDisabled}
+                  disabled={isLoading}
                 >
                   Add New
                 </AddNewButton>
