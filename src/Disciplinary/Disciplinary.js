@@ -284,9 +284,7 @@ const Disciplinary = () => {
           if (result) {
             GetDisciplinary();
             setId("");
-            setDescription("");
-            setRequiredBcr("");
-            setName("");
+            HandleCloseEdit();
             setupDateData("");
             setErrors("");
             toast.success("Entry Updated Successfully");
@@ -340,7 +338,7 @@ const Disciplinary = () => {
 
     setFormData({ ...formData, [name]: value });
   };
-  console.log(result, "type of result " ,typeof(result));
+  console.log(result, "type of result ", typeof result);
   const HandleChangesEdit = (e) => {
     const { value, name } = e.target;
     // Validation for the Name field
@@ -433,6 +431,14 @@ const Disciplinary = () => {
     background: isDraggingOver ? "#fff" : "#fff",
     padding: "2px",
   });
+  const populateUpdateForm = (data) => {
+    setupDateData({
+      name: data.name,
+      description: data.description,
+      requiredBcr: data.requiredBcr,
+    });
+    HandleOpenEdit();
+  };
   return (
     <Dashboard>
       <DashNav>
@@ -606,11 +612,8 @@ const Disciplinary = () => {
                               <ActionIconDiv>
                                 <ActionIcons
                                   onClick={() => {
-                                    HandleOpenEdit();
                                     setId(data._id);
-                                    setDescription(data.description);
-                                    setRequiredBcr(data.requiredBcr);
-                                    setName(data.name);
+                                    populateUpdateForm(data);
                                   }}
                                   src="/images/icons/Pendown.svg"
                                 />
@@ -701,7 +704,6 @@ const Disciplinary = () => {
             <AddNewButton
               onClick={() => {
                 HandleUpdate();
-                HandleCloseEdit();
               }}
             >
               Update
