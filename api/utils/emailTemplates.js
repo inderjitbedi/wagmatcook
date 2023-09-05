@@ -3,7 +3,7 @@ const emailTemplates = {
     forgotPassword(data) {
 
         return {
-            subject: 'Password Reset',
+            subject: 'Wagmatcook | Password Reset',
             html: getFullTemplate(data, `
                 <div class="f-fallback">
                     <h1>Hi ${data.req.body.email},</h1>
@@ -53,7 +53,7 @@ const emailTemplates = {
     invite(data) {
 
         return {
-            subject: 'Invitation to Sign Up',
+            subject: 'Wagmatcook | Invitation to Sign Up',
             html: getFullTemplate(data, `
                 <div class="f-fallback">
                     <h1>Hi ${data.user.email},</h1>
@@ -100,7 +100,7 @@ const emailTemplates = {
     tempPassword(data) {
 
         return {
-            subject: 'Temporary Password',
+            subject: 'Wagmatcook | Temporary Password',
             html: getFullTemplate(data, `
                 <div class="f-fallback">
                     <h1>Hi ${data.req.user.name},</h1>
@@ -132,10 +132,44 @@ const emailTemplates = {
             `)
         }
     },
+    sendOtp(data) {
+
+        return {
+            subject: 'Wagmatcook | One Time Password',
+            html: getFullTemplate(data, `
+                <div class="f-fallback">
+                    <h1>Hi ${data.req.user.name || data.req.user.email},</h1>
+                    <p>You are receiving this email because you requested a One-Time Password (OTP) for signing in. Your OTP is an additional layer of security to verify your identity. Please do not share this OTP with anyone.
+
+                    </p>
+                    <table class="body-action" align="center" width="100%" cellpadding="0"
+                        cellspacing="0" role="presentation">
+                        <tr>
+                            <td align="center">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0"
+                                    role="presentation">
+                                    <tr>
+                                        <td align="center">
+                                        OTP: <strong>${data.token}</strong>
+                                             </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <p>This otp is valid for a limited time and should be used within 24 hours.</p>
+                    <p>Thanks,
+                        <br>The Wagmatcook Team
+                    </p>
+                 
+                </div>
+            `)
+        }
+    },
 
     inviteUser(data) {
         return {
-            subject: 'Invitation to signup',
+            subject: 'Wagmatcook | Invitation to signup',
             html: getFullTemplate(data, `
                     <div class="f-fallback">
                         <h1>Hi ${data.req.body.email},</h1>
