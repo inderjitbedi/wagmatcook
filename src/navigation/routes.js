@@ -15,6 +15,11 @@ import SALogin from "../SuperAdmin/SALogin";
 import SAOrganization from "../SuperAdmin/SAOrganization";
 import SAOtpPage from "../SuperAdmin/SAOtpPage";
 import SAUserList from "../SuperAdmin/SAUserList";
+import Benefits from "../Employee/AddEmployee/Benefits";
+import CertificatesInfo from "../Employee/AddEmployee/CertificatesInfo";
+import JobDetails from "../Employee/AddEmployee/JobDetails";
+import PersonalInfo from "../Employee/AddEmployee/PersonalInfo";
+import Employee from "../Employee/ViewEmployee/Employee";
 const Routes = [
   {
     component: signup,
@@ -105,7 +110,7 @@ const Routes = [
     type: "public",
     children: [],
   },
- 
+
   {
     component: SALogin,
     path: "/SALogin",
@@ -134,6 +139,46 @@ const Routes = [
     component: SAOrganization,
     path: "/SAOrganization",
     title: "SAOrganization ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: Benefits,
+    path: "/Benefits",
+    title: "Benefits ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: CertificatesInfo,
+    path: "/CertificatesInfo",
+    title: "CertificatesInfo ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: JobDetails,
+    path: "/JobDetails",
+    title: "JobDetails ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: PersonalInfo,
+    path: "/PersonalInfo",
+    title: "PersonalInfo ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: Employee,
+    path: "/Employee",
+    title: "Employee ",
     to: "/",
     type: "public",
     children: [],

@@ -552,6 +552,7 @@ const Departments = () => {
             </Box>
           </Modal>
         </DepartmentFilterContainer>
+        
         {isLoading ? (
           <div
             style={{

@@ -30,6 +30,7 @@ const SideBar = () => {
       {
         Title: "Employee",
         src: "/svg/Employee.svg",
+        to:"/Employee"
       },
       {
         Title: "Activities",
