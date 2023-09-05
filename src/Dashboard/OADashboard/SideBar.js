@@ -11,8 +11,11 @@ import {
   SideBarListTitle,
   SideBarList,
 } from "./SideBarStyles";
+import { Link, useNavigate ,useLocation} from "react-router-dom";
 
 const SideBar = () => {
+  const location = useLocation();
+
     const SideBarData = [
       {
         Title: "Dashboard",
@@ -21,12 +24,13 @@ const SideBar = () => {
       {
         Title: "Departments",
         src: "/svg/Departments.svg",
+        to: "/Departments",
       },
-     
 
       {
         Title: "Employee",
         src: "/svg/Employee.svg",
+        to:"/Employee"
       },
       {
         Title: "Activities",
@@ -43,6 +47,7 @@ const SideBar = () => {
       {
         Title: "Disciplinary",
         src: "/svg/Disciplinary.svg",
+        to: "/Disciplinary",
       },
       {
         Title: "Account",
@@ -52,14 +57,18 @@ const SideBar = () => {
         Title: "Report",
         src: "/svg/Reports.svg",
       },
-    ];
+  ];
+  const style = {
+    textDecoration: "none",
+    color: "#279AF1",
+  };
   return (
     <>
       {" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
-        <SideBarLogo src="/images/icons/Group 13.png" />
+        <SideBarLogo src="/images/icons/Group-Logo.svg" />
         <SideBarLogodiv>
           <SideBarLogoPara>Organization </SideBarLogoPara>
           <SideBarLogoHead>Figma Inc.</SideBarLogoHead>
@@ -68,12 +77,27 @@ const SideBar = () => {
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
       <SideBarList>
         {SideBarData.map((data) => (
-          <SideBarListContainer>
-            <SideBarListLogo src={data.src}>
-              {/* <use xlinkHref="/svg/Dashboard.svg" /> */}
-            </SideBarListLogo>
-            <SideBarListTitle> {data.Title}</SideBarListTitle>
-          </SideBarListContainer>
+          <Link
+            style={
+             { textDecoration: "none" }
+            }
+            to={data.to}
+            key={data.to}
+          >
+            <SideBarListContainer>
+              <SideBarListLogo src={data.src}>
+                {/* <use xlinkHref="/svg/Dashboard.svg" /> */}
+              </SideBarListLogo>
+              <SideBarListTitle
+                style={
+                  location.pathname === data.to ? style : { color: "#5C5C5C" }
+                }
+              >
+                {" "}
+                {data.Title}
+              </SideBarListTitle>
+            </SideBarListContainer>
+          </Link>
         ))}
       </SideBarList>
     </>

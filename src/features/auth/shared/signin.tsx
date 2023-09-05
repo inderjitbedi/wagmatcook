@@ -13,11 +13,18 @@ import { toast } from 'react-toastify';
 
 export default function SignIn() {
 
+   const navigate = useNavigate();
 
     useEffect(() => {
-        localStorage.clear()
+        // localStorage.clear()
+        let isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (isLoggedIn) {
+            navigate("/OADashBoard");
+        } else {
+           localStorage.clear() 
+        }
     }, []);
-    const navigate = useNavigate();
+ 
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -63,6 +70,7 @@ export default function SignIn() {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         localStorage.setItem("token", result?.token);
+                        localStorage.setItem("isLoggedIn", 'true');
                         toast.info("Welcome " + result.user.name)
                         navigate('/OADashBoard');
                     }

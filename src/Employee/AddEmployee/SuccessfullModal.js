@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from 'react';
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -46,55 +45,45 @@ const ModalThanksHeading = styled.p`
   width: 70%;
   text-align: center;
 `;
-const DeleteButton = styled.button`
-  border-radius: 8px;
-  background: #ea4335;
-  color: #ffffff;
-  font-size: 13px;
-  line-height: 16px;
-  font-weight: 600;
-  padding: 1em 2em;
-  border: none;
-  cursor: pointer;
-`;
-const DeleteModal = ({
-  openDelete,
-  HandleCloseDelete,
-  HandleDelete,
-  isLoading,
-}) => {
+
+ const ButtonBlue = styled.button`
+   border-radius: 6px;
+   background: #279af1;
+   display: inline-flex;
+   padding: 11px 14px 12px 14px;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   color: #fff;
+   text-align: center;
+   font-size: 14px;
+   font-style: normal;
+   font-weight: 600;
+   line-height: normal;
+   border: none;
+ `;
+
+const SuccessfullModal = () => {
   return (
     <Modal
-      open={openDelete}
-      onClose={HandleCloseDelete}
+      // open={openDelete}
+      // onClose={HandleCloseDelete}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
         <ModalThanks>
           <ModalIconDelete
-            onClick={HandleCloseDelete}
-            src="/images/icons/Alert-Circle.svg" 
+            // onClick={HandleCloseDelete}
+            src="/images/icons/Alert-Circle.svg"
           />
-          <ModalThanksImg src="/images/Danger Circle.jpg" />
-          <ModalThanksHeading>
-            Are you sure you want to delete this leave?
-          </ModalThanksHeading>
-          <DeleteButton
-            onClick={() => {
-              // HandleCloseDelete();
-              HandleDelete();
-            //   HandleReorder();
-            }}
-            disabled={isLoading}
-          >
-            {" "}
-            Delete{" "}
-          </DeleteButton>
+          <ModalThanksImg src="/images/success.jpg" />
+          <ModalThanksHeading>Employee Added Successfully</ModalThanksHeading>
+      <ButtonBlue>Thanks</ButtonBlue>
         </ModalThanks>
       </Box>
     </Modal>
   );
-};
+}
 
-export default DeleteModal;
+export default SuccessfullModal

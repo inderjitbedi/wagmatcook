@@ -3,7 +3,7 @@
 }
 
 * {
-  font-family: 'Inter';
+  font-family: "Inter";
 }
 
 .App-logo {
@@ -29,12 +29,12 @@
 }
 
 .app-link {
-  color: #0871ED;
+  color: #0871ed;
   cursor: pointer;
 }
 
 .gray-text {
-  color: #ACACAC;
+  color: #acacac;
 }
 
 .d-flex,
@@ -101,15 +101,13 @@ a.link {
 }
 
 .sidebar {
-  background-color: #093FE1;
+  background-color: #093fe1;
   color: #fff;
   height: 100vh;
 
   .content-box {
     padding: 35px 35px 0;
   }
-
-
 
   .logo {
     font-family: Inter;
@@ -118,7 +116,6 @@ a.link {
     line-height: 29px;
     letter-spacing: -0.02em;
     text-align: left;
-
   }
 }
 
@@ -127,7 +124,6 @@ h1 {
   font-weight: 700;
   line-height: 29px;
   text-align: left;
-
 }
 
 h2 {
@@ -136,7 +132,6 @@ h2 {
   line-height: 24px;
   letter-spacing: 0px;
   text-align: left;
-
 }
 
 h3 {
@@ -145,7 +140,6 @@ h3 {
   line-height: 24px;
   letter-spacing: 0px;
   text-align: left;
-
 }
 
 h4 {
@@ -153,7 +147,6 @@ h4 {
   font-weight: 700;
   line-height: 32px;
   text-align: left;
-
 }
 
 .text {
@@ -161,7 +154,6 @@ h4 {
   font-weight: 500;
   line-height: 19px;
   text-align: left;
-
 }
 
 p {
@@ -170,7 +162,6 @@ p {
   line-height: 24px;
   letter-spacing: -0.02em;
   text-align: left;
-
 }
 
 .signup-form {
@@ -180,7 +171,7 @@ p {
 }
 
 button.MuiButton-containedPrimary {
-  background-color: #279AF1;
+  background-color: #279af1;
   padding: 12px 14px;
   font-size: 14px;
   font-weight: 600;
@@ -189,8 +180,7 @@ button.MuiButton-containedPrimary {
   letter-spacing: 0em;
   text-align: center;
   text-transform: capitalize;
-  font-family: 'Inter';
-
+  font-family: "Inter";
 }
 
 .MuiInputBase-root {
@@ -198,16 +188,15 @@ button.MuiButton-containedPrimary {
   padding: 8px 11px 8px 11px;
   border-radius: 6px !important;
   margin: 5px 0 8px;
-  ;
 }
 
 .MuiOutlinedInput-notchedOutline {
-  border: 1px solid #CDD1DC;
+  border: 1px solid #cdd1dc;
 }
 
 fieldset legend span {
   font-size: 13px;
-  color: #8F9BB3;
+  color: #8f9bb3;
   line-height: 13px;
   margin-top: 0;
 }
@@ -215,11 +204,10 @@ fieldset legend span {
 .signup-form .MuiFormLabel-root {
   font-size: 14px;
   font-weight: 600;
-  color: #222B45;
+  color: #222b45;
   line-height: 17px;
   margin-top: 0;
 }
-
 
 .signup-form .MuiFormControl-root,
 input.MuiInputBase-input {
@@ -227,12 +215,12 @@ input.MuiInputBase-input {
   margin-top: 0 !important;
   padding: 0 !important;
   font-size: 14px;
-  color: #8F9BB3;
+  color: #8f9bb3;
   font-weight: 400;
 }
 
 .MuiFormLabel-root {
-  color: #222222
+  color: #222222;
 }
 
 .MuiStack-root {
@@ -247,7 +235,6 @@ input.MuiInputBase-input {
   .MuiAlert-icon {
     color: #222222 !important;
   }
-
 
   .MuiAlert-message {
     color: #222222;
@@ -296,7 +283,7 @@ input[type="file"].custom {
 .bg-gray-100 {
   width: 72px;
   height: 72px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
 }
 
 .object-cover {
@@ -304,7 +291,7 @@ input[type="file"].custom {
 }
 
 .shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .ml-5 {
@@ -320,11 +307,12 @@ input[type="file"].custom {
 }
 
 .ease-in-out {
-  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .transition {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-property: background-color, border-color, color, fill, stroke,
+    opacity, box-shadow, transform;
 }
 
 .text-gray-700 {
@@ -344,7 +332,7 @@ input[type="file"].custom {
   font-size: 14px;
   font-weight: 500;
   line-height: 17px;
-  color: #8B8B8B;
+  color: #8b8b8b;
   text-align: left;
   margin-left: 5px;
   cursor: pointer;
@@ -371,15 +359,14 @@ input[type="file"].custom {
   padding: 5px;
   // display: inline-block;
   color: #595959;
-  box-shadow: 1px 4px 4px 0px #DFDFDF;
+  box-shadow: 1px 4px 4px 0px #dfdfdf;
   border-radius: 10px;
   border: 1px solid #dfdfdf;
   cursor: pointer;
-
 }
 
 .upload-info {
-  color: #8C8C8C;
+  color: #8c8c8c;
   display: inline-block;
   margin: 1px 0 10px 84px;
   font-size: 12px;
@@ -421,21 +408,57 @@ input[type="file"].custom {
 }
 
 .MuiPaper-root.MuiPaper-elevation {
-  background-color: #F5FAFF;
+  background-color: #f5faff;
 }
 
 .mw-100p {
   max-width: 100%;
 }
-.mw-600{
+.mw-600 {
   max-width: 600px;
 }
-.mw-385{
+.mw-385 {
   max-width: 385px;
 }
-.mb-50{
+.mb-50 {
   margin-bottom: 50px;
 }
-.mb-250{
+.mb-250 {
   margin-bottom: 250px;
 }
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  color:  #279af1;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #8f9bb3;
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+  &::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+  background-color:  #279af1;
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+&:checked::before {
+  transform: scale(1);
+}
+// &:focus {
+//   outline: max(2px, 0.15em) solid #279af1;
+//   outline-offset: max(2px, 0.15em);
+// }
+
+}
+
+

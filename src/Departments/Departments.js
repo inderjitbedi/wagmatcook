@@ -4,6 +4,10 @@ import Modal from "@mui/material/Modal";
 import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
 import DeleteModal from "../Modals/DeleteModal";
+import { RotatingLines } from "react-loader-spinner";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router";
 import {
   Dashboard,
   DashNav,
@@ -43,8 +47,7 @@ import {
   ModalThanks,
   ModalThanksImg,
   ModalThanksHeading,
-  DeleteButton,
-  ModalIconDelete,
+  Errors,
 } from "./DepartmentsStyles";
 
 const style = {
@@ -61,21 +64,34 @@ const style = {
 };
 
 const Departments = () => {
+  const Navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => setOpen(false);
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
-  const handleOpenDelete = () => setOpenDelete(true);
-  const handleCloseDelete = () => setOpenDelete(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
   //update modal variable
   const [openEdit, setOpenEdit] = useState(false);
-  const handleOpenEdit = () => setOpenEdit(true);
-  const handleCloseEdit = () => setOpenEdit(false);
-
+  const HandleOpenEdit = () => setOpenEdit(true);
+  const HandleCloseEdit = () => setOpenEdit(false);
+  const [result, setResult] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
   const [openThanks, setOpenThanks] = useState(false);
-  const handleOpenThanks = () => setOpenThanks(true);
-  const handleCloseThanks = () => setOpenThanks(false);
+  const HandleOpenThanks = () => setOpenThanks(true);
+  const HandleCloseThanks = () => setOpenThanks(false);
+  // menu state 
+   const [anchorEl, setAnchorEl] = useState(null);
+   const openMenu = Boolean(anchorEl);
+   const handleClickMenu = (event) => {
+     setAnchorEl(event.currentTarget);
+   };
+   const handleCloseMenu = () => {
+     setAnchorEl(null);
+   };
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -86,47 +102,130 @@ const Departments = () => {
     "Students",
     "Other",
   ];
-  const TempData = [1, 2, 3, 4, 5];
+  // const TempData = [1, 2, 3, 4, 5];
   const [searchValue, setSearchValue] = useState("");
+  const [delayedSearchValue, setDelayedSearchValue] = useState("");
+  const delayDuration = 1000; // Set the delay duration in milliseconds
+  let searchTimer;
   const [departmentData, setDepartmentData] = useState([]);
   const [Id, setId] = useState("");
-  const [nameEdit, setNameEdit] = useState("");
-  const [descriptionEdit, setDescriptionEdit] = useState("");
 
-  const handleSearchCahnge = (e) => {
+  const [page, setPage] = useState(1);
+  const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      setDelayedSearchValue(e.target.value);
+    }, delayDuration);
   };
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
+  const [errors, setErrors] = useState({
+    nameError: "",
+    descriptionError: "",
+  });
   const [upDateData, setUpDateData] = useState({
     name: "",
     description: "",
   });
-  const handleChange = (e) => {
-    const { value, name } = e.target;
-    setFormData((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
-    console.log(formData, "hey data is pickuped ");
+
+  const HandleLoadMore = () => {
+    const nextPage = result.currentPage + 1;
+
+    setPage(nextPage);
   };
-  const handleChangeEdit = (e) => {
+  const HandleChange = (e) => {
     const { value, name } = e.target;
+
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description should be at least 10 characters long",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
+
+    setFormData({ ...formData, [name]: value });
+  };
+  // const isSubmitDisabled = errors.nameError || errors.descriptionError;
+  const HandleChangeEdit = (e) => {
+    const { value, name } = e.target;
+    // Validation for the Name field
+    if (name === "name") {
+      if (!value) {
+        setErrors({ ...errors, nameError: "Name cannot be empty" });
+      } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        setErrors({
+          ...errors,
+          nameError: "Name must not contain numbers or special characters",
+        });
+      } else {
+        setErrors({ ...errors, nameError: "" });
+      }
+    }
+    if (name === "description") {
+      //validation: Description should not be empty and should have a minimum length of 10 characters
+      if (!value) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description cannot be empty",
+        });
+      } else if (value.length < 10) {
+        setErrors({
+          ...errors,
+          descriptionError: "Description should be at least 10 characters long",
+        });
+      } else {
+        setErrors({ ...errors, descriptionError: "" });
+      }
+    }
     setUpDateData({ ...upDateData, [name]: value });
   };
   const GetDepartments = () => {
-    let url = `/department/list?page=1&limit=10&searchKey= ${searchValue}`;
+    setIsLoading(true);
+
+    let url = `/department/list?page=${page}&limit=2&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
     })
       .then(({ result }) => {
         if (result) {
-          setDepartmentData(result.departments);
+          setResult(result);
+          if (page === 1) {
+            console.log("page 1");
+            setDepartmentData(result.departments);
+          } else {
+            console.log("page is not 1 now ");
+            setDepartmentData((prevState) => [
+              ...prevState,
+              ...result.departments,
+            ]);
+          }
         } else {
           toast.warn("something went wrong ");
         }
@@ -134,83 +233,192 @@ const Departments = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
   useEffect(() => {
-    GetDepartments();
-  }, [searchValue]);
-  console.log(departmentData, "this is the data");
+     let isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) {
+      Navigate("/signin");
+    } else {
+      GetDepartments();
+    }
+    
+  }, [delayedSearchValue, page]);
+  console.log(departmentData, "this is out data looks like ");
 
-  const handleSubmit = (e) => {
+  const HandleSubmit = (e) => {
+
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result }) => {
-        if (result?.department) {
-          handleOpenThanks();
-          GetDepartments();
-        } else {
-          toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+
+    if (!formData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
       });
+      if (!formData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+    if (
+      formData.name &&
+      formData.description &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
+      setIsLoading(true);
+
+      httpClient({
+        method: "post",
+        url,
+        data: dataCopy,
+      })
+        .then(({ result }) => {
+          if (result?.department) {
+            HandleClose();
+            HandleOpenThanks();
+            GetDepartments();
+            setFormData("");
+            setErrors("");
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   };
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
     let url = `/department/update/${Id}`;
+    if (!upDateData.name) {
+      setErrors((prevState) => {
+        return {
+          ...prevState,
+          nameError: "Name cannot be empty",
+        };
+      });
+      if (!upDateData.description) {
+        setErrors((prevState) => {
+          return {
+            ...prevState,
+
+            descriptionError: "Description cannot be empty",
+          };
+        });
+      } else {
+        setErrors("");
+      }
+      // console.log("in handel submit ", errors);
+    }
+    if (
+      upDateData.description &&
+      upDateData.name &&
+      !errors.nameError &&
+      !errors.descriptionError
+    ) {
+      setIsLoading(true);
+
+      httpClient({
+        method: "put",
+        url,
+        data: dataCopy,
+      })
+        .then(({ result }) => {
+          if (result?.department) {
+            const indexToReplace = departmentData.findIndex((obj) => obj._id = result.department._id);
+            if (indexToReplace !== -1) {
+              const UpdatedData = departmentData;
+              UpdatedData[indexToReplace] = result.department;
+              setDepartmentData(UpdatedData);
+              console.log(UpdatedData, "is working")
+            }
+            HandleCloseEdit();
+            // GetDepartments();
+            setId("");
+            setUpDateData("");
+            setErrors("");
+            toast.success("Entry Updated Successfully");
+            console.log(result?.department, "updated entry");
+          } else {
+            toast.warn("Something Went Wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  };
+  const HandleDelete = () => {
+    setIsLoading(true);
+    let url = `/department/delete/${Id}`;
     httpClient({
       method: "put",
       url,
-      data: dataCopy,
     })
       .then(({ result }) => {
-        if (result?.department) {
-          // handleOpenThanks();
+        if (result) {
+          // HandleOpenThanks();
           GetDepartments();
-           setId("");
+          setId("");
+          HandleCloseDelete();
 
-          toast.success("update successfull");
+          toast.success("Entry Deleted successfully");
         } else {
-          toast.warn("something went wrong ");
+          toast.warn("Something Went Wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
-  const HandleDelete = () => {
-
-     let url = `/department/delete/${Id}`;
-     httpClient({
-       method: "put",
-       url,
-     })
-       .then(({ result }) => {
-         if (result) {
-           // handleOpenThanks();
-           GetDepartments();
-           setId("");
-           toast.success("update successfull");
-         } else {
-           toast.warn("something went wrong ");
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error creating department. Please try again.");
-       });
+  const PopulateUpdateForm = (data) => {
+    setUpDateData({
+      name: data.name,
+      description: data.description,
+      requiredBcr: data.requiredBcr,
+    });
+    HandleOpenEdit();
   };
-
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    Navigate("/signin");
+    
+  }
   return (
     <Dashboard>
       <DashNav>
@@ -225,29 +433,52 @@ const Departments = () => {
                 <SearchInput
                   type="text"
                   placeholder="Search..."
-                  onChange={handleSearchCahnge}
+                  onChange={HandleSearchCahnge}
                   value={searchValue}
                 ></SearchInput>
-                <SearchIcon src="/images/icons/searchIcon.png" />
+                <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
             </DashHeaderSearch>
           </DashHeaderDepartment>
           <DepartmentIconContainer>
-            <DepartmentIconImg src="/images/icons/Messages.png" />
-            <DepartmentIconImg src="/images/icons/Notifications.png" />
-            <DepartmentIconImg src="/images/icons/PersonIcon.png" />
+            <DepartmentIconImg src="/images/icons/Messages.svg" />
+            <DepartmentIconImg src="/images/icons/Notifications.svg" />
+
+            <DepartmentIconImg
+              style={{ cursor: "pointer" }}
+              onClick={(event) => handleClickMenu(event)}
+              src="/images/icons/PersonIcon.svg"
+            />
           </DepartmentIconContainer>
         </DashHeader>
+        <Menu
+          sx={{ margin: "0px" }}
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        </Menu>
         <DepartmentFilterContainer>
           {/* <DepartmentFilterdiv>
             {FilterData.map((data) => (
               <DepartmentFilterButton>{data}</DepartmentFilterButton>
             ))}
           </DepartmentFilterdiv> */}
-          <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+          <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
-            onClose={handleClose}
+            onClose={HandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -255,42 +486,50 @@ const Departments = () => {
               <ModalUpperDiv>
                 <ModalHeading>Add New Department</ModalHeading>
                 <ModalIcon
-                  onClick={handleClose}
-                  src="/images/icons/alert-circle.png"
+                  onClick={() => {
+                    HandleClose();
+                    setErrors("");
+                  }}
+                  src="/images/icons/Alert-Circle.svg"
                 />
               </ModalUpperDiv>
+
               <ModalUpperMid>
                 <Input
                   placeholder="Department Name"
-                  onChange={handleChange}
+                  onChange={HandleChange}
                   value={formData.name}
                   name="name"
                   type="text"
                 />
+                <Errors>{errors.nameError}</Errors>
                 <TextArea
                   placeholder="Description"
-                  onChange={handleChange}
+                  onChange={HandleChange}
                   value={formData.description}
                   type="text"
                   name="description"
                 />
+
+                <Errors>{errors.descriptionError}</Errors>
               </ModalUpperMid>
               <ModalBottom>
                 <AddNewButton
+                  type="submit"
                   onClick={(e) => {
-                    handleClose();
-                    handleSubmit(e);
+                    HandleSubmit(e);
                   }}
+                  disabled={isLoading}
                 >
                   Add New
                 </AddNewButton>
-                <CancelButton onClick={handleClose}>Cancel</CancelButton>
+                <CancelButton onClick={HandleClose}>Cancel</CancelButton>
               </ModalBottom>
             </Box>
           </Modal>
           <Modal
             open={openThanks}
-            onClose={handleCloseThanks}
+            onClose={HandleCloseThanks}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -302,7 +541,7 @@ const Departments = () => {
                 </ModalThanksHeading>
                 <AddNewButton
                   onClick={() => {
-                    handleCloseThanks();
+                    HandleCloseThanks();
                     setFormData({ name: "", description: "" });
                   }}
                 >
@@ -313,43 +552,68 @@ const Departments = () => {
             </Box>
           </Modal>
         </DepartmentFilterContainer>
-        <DepartmentCardContainer>
-          {departmentData?.map((data) => (
-            <DepartmentCardDiv>
-              <DepartmentCardImg />
-              <DepartmentCardPara>{data.name}</DepartmentCardPara>
-              <DepartmentCardParaLit>
-                {" "}
-                {data.description}{" "}
-              </DepartmentCardParaLit>
-              <DepartmentButtonContainer>
-                <DepartmentCardButtoncolor
-                  onClick={() => {
-                    setId(data._id);
-                    setDescriptionEdit(data.description);
-                    setNameEdit(data.name);
-                    handleOpenEdit();
-                  }}
-                >
-                  <img src="/images/icons/alert-circle-fill.png" />
-                </DepartmentCardButtoncolor>
-                <DepartmentCardButtongrey
-                  onClick={() => {
-                    handleOpenDelete();
-                    setId(data._id);
-                  }}
-                >
-                  <img src="/images/icons/trash-2.png" />
-                </DepartmentCardButtongrey>
-              </DepartmentButtonContainer>
-            </DepartmentCardDiv>
-          ))}
-        </DepartmentCardContainer>
+        
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "70vh",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <RotatingLines
+              strokeColor="#279AF1"
+              strokeWidth="3"
+              animationDuration="0.75"
+              width="52"
+              visible={true}
+            />
+          </div>
+        ) : (
+          <DepartmentCardContainer>
+            {departmentData?.map((data) => (
+              <DepartmentCardDiv>
+                <DepartmentCardImg />
+                <DepartmentCardPara>{data.name}</DepartmentCardPara>
+                <DepartmentCardParaLit>
+                  {" "}
+                  {data.description}{" "}
+                </DepartmentCardParaLit>
+                <DepartmentButtonContainer>
+                  <DepartmentCardButtoncolor
+                    onClick={() => {
+                      setId(data._id);
+                      PopulateUpdateForm(data);
+                      HandleOpenEdit();
+                    }}
+                  >
+                    <img src="/images/icons/Pendown.svg" />
+                  </DepartmentCardButtoncolor>
+                  <DepartmentCardButtongrey
+                    onClick={() => {
+                      HandleOpenDelete();
+                      setId(data._id);
+                    }}
+                  >
+                    <img src="/images/icons/Trash-2.svg" />
+                  </DepartmentCardButtongrey>
+                </DepartmentButtonContainer>
+              </DepartmentCardDiv>
+            ))}
+          </DepartmentCardContainer>
+        )}
+        {result.totalPages > result.currentPage && (
+          <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+            Load More
+          </AddNewButton>
+        )}{" "}
       </DashMain>
       {/* modal to edit  */}
       <Modal
         open={openEdit}
-        onClose={handleCloseEdit}
+        onClose={HandleCloseEdit}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -357,44 +621,50 @@ const Departments = () => {
           <ModalUpperDiv>
             <ModalHeading>Edit Department</ModalHeading>
             <ModalIcon
-              onClick={handleCloseEdit}
-              src="/images/icons/alert-circle.png"
+              onClick={() => {
+                HandleCloseEdit();
+                setErrors("");
+              }}
+              src="/images/icons/alert-circle.svg"
             />
           </ModalUpperDiv>
           <ModalUpperMid>
             <Input
-              placeholder="Department Name"
-              onChange={handleChangeEdit}
+              // placeholder={nameEdit}
+              onChange={HandleChangeEdit}
               value={upDateData.name}
               name="name"
               type="text"
             />
+            <Errors>{errors.nameError}</Errors>
             <TextArea
-              placeholder="Description"
-              onChange={handleChangeEdit}
+              // placeholder={descriptionEdit}
+              onChange={HandleChangeEdit}
               value={upDateData.description}
               type="text"
               name="description"
             />
+            <Errors>{errors.descriptionError}</Errors>
           </ModalUpperMid>
           <ModalBottom>
             <AddNewButton
               onClick={(e) => {
-                handleCloseEdit();
                 HandleUpdate();
               }}
+              disabled={isLoading}
             >
               Update
             </AddNewButton>
-            <CancelButton onClick={handleCloseEdit}>Cancel</CancelButton>
+            <CancelButton onClick={HandleCloseEdit}>Cancel</CancelButton>
           </ModalBottom>
         </Box>
       </Modal>
       {/* Delete Modal  */}
       <DeleteModal
         openDelete={openDelete}
-        handleCloseDelete={handleCloseDelete}
+        HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
+        isLoading={isLoading}
       />
     </Dashboard>
   );

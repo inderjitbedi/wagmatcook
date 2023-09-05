@@ -121,7 +121,7 @@ export const InputPara = styled.p`
   font-weight: 400;
   line-height: 0px; /* 171.429% */
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 export const Select = styled.select`
   font-size: 13px;
@@ -143,4 +143,12 @@ export const Option = styled.option`
   font-weight: 400;
   line-height: 24px; /* 150% */
   padding: 8px 11px;
+`;
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 0px;
+  margin-top: 2px;
 `;
