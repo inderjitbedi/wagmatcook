@@ -7,11 +7,14 @@ const roles = require('../enum/roles')
 const authController = {
     async register(req, res) {
         try {
-            console.log("in reqister");
-            const user = new User(req.body);
+            const { email } = req.body;
+            let user = await User.findOne({ email });
+            if (user) {
+                return res.status(400).json({ message: 'Email already registered.' });
+            }
             user.role = roles.ORG_ADMIN;
 
-            const token = crypto.randomBytes(10).toString('hex');
+            const token = crypto.randomBytes(5).toString('hex');
             user.tempPassword = token;
             user.tempPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
@@ -31,7 +34,7 @@ const authController = {
             if (!user) {
                 return res.status(400).json({ message: 'User not found.' });
             }
-            if (user.role !==  roles.ORG_ADMIN)
+            if (user.role !== roles.ORG_ADMIN)
                 return res.status(400).json({ message: 'Not an Org admin user.' });
 
             const token = crypto.randomBytes(10).toString('hex');
@@ -41,11 +44,14 @@ const authController = {
             req.user = user;
             sendGrid.send(user.email, 'tempPassword', { req, token });
 
-            res.status(200).json({user, message: 'Temp password successfully resent via email.' });
+            res.status(200).json({ user, message: 'Temp password successfully resent via email.' });
         } catch (err) {
             next(err);
         }
     },
+
+
+
 
     async verifyUser(req, res) {
         try {
@@ -71,13 +77,17 @@ const authController = {
         try {
             const { email, password } = req.body;
             let user = await User.findOne({ email, isDeleted: false });
-            if (!user) throw new Error('User not registered');
+            if (!user) {
+                return res.status(400).json({ message: 'User not found.' });
+            }
 
             const isMatch = await user.comparePassword(password);
             if (!isMatch) throw new Error('Invalid credentials');
+
             const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();
-            delete user.password
+            delete user.password;
+
             res.json({ user, token, message: 'User signed in successfully' });
         } catch (error) {
             res.status(401).json({ message: error.message });
@@ -111,7 +121,7 @@ const authController = {
             await user.save();
 
             sendGrid.send(user.email, 'forgotPassword', { req, token });
-            res.status(200).json({ user,message: 'Password reset email sent' });
+            res.status(200).json({ user, message: 'Password reset email sent' });
         } catch (err) {
             next(err);
         }
@@ -133,12 +143,81 @@ const authController = {
             user.resetPasswordToken = undefined;
             user.resetPasswordTokenExpiry = undefined;
             await user.save();
-            res.status(200).json({ user,message: 'Password changed successfully' });
+            res.status(200).json({ user, message: 'Password changed successfully' });
         } catch (err) {
             next(err);
         }
     },
 
+
+
+
+
+
+    async sendOtpForLogin(req, res) {
+        try {
+            const { email } = req.body;
+            let user = await User.findOne({ email });
+            if (!user) {
+                return res.status(400).json({ message: 'User not registered.' });
+            }
+
+            const token = crypto.randomBytes(3).toString('hex');
+            user.otp = token;
+            user.otpExpiry = Date.now() + (3600000 * 24); // 24 hour
+            await user.save();
+
+            req.user = user;
+            sendGrid.send(user.email, 'sendOtp', { req, token });
+            res.status(200).json({ message: 'OTP sent successfully via email.' });
+        } catch (error) {
+            console.error("authController:register:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async loginWithOtp(req, res) {
+        try {
+            const { email, otp } = req.body;
+            let user = await User.findOne({ email, otp, otpExpiry: { $gt: Date.now() } });
+            if (!user) {
+                return res.status(400).json({ message: 'Invalid or expired One Time Password(OTP)' });
+            }
+            user.otp = undefined;
+            user.otpExpiry = undefined;
+            await user.save();
+            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+            user = user.toObject();
+            delete user.password
+            res.status(200).json({ user, token, message: 'User signed in successfully' });
+        } catch (error) {
+            console.error("authController:register:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async completeOrgAdminSignup(req, res) {
+        try {
+
+            const { token } = req.params;
+            const { email, name } = req.body;
+            let user = await User.findOne({ email, invitationToken: token, invitationTokenExpiry: { $gt: Date.now() } });
+            if (!user) {
+                return res.status(400).json({ message: 'Invalid or expired invitation' });
+            }
+
+            user.name = name;
+            user.invitationToken = undefined;
+            user.invitationTokenExpiry = undefined;
+            await user.save();
+            token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+            user = user.toObject();
+            delete user.password
+            res.status(200).json({ user, token, message: 'User signup completed successfully' });
+
+        } catch (error) {
+            console.error("authController:register:error -", error);
+            res.status(400).json(error);
+        }
+    }
 }
 
 module.exports = authController;
