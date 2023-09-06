@@ -1,5 +1,6 @@
 import React from "react";
 import EmployeeSidebar from "./EmployeeSidebar";
+import { useNavigate } from "react-router-dom";
 import {
   Employee,
   EmployeeMain,
@@ -27,6 +28,7 @@ import {
   
 } from "./AddEmployeeStyles";
 const Benefits = () => {
+  const Navigate = useNavigate();
   return (
     <Employee style={{ height: "100vh" }}>
       <EmployeeNav>
@@ -35,7 +37,7 @@ const Benefits = () => {
       <EmployeeMain>
         <HeaderEmployee>
           <FlexContaier>
-            <BackButton>
+            <BackButton onClick={() => Navigate(-1)}>
               {" "}
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -47,9 +49,15 @@ const Benefits = () => {
         <EmployeeBody style={{ height: "75vh" }}>
           <BodyHeader>
             <BodyHeaderTitle>
-              <span style={{ color: "#8B8B8B" }}>
+              <span
+                style={{ color: "#8B8B8B" }}
+                onClick={() => Navigate("/PersonalInfo")}
+              >
                 {" "}
-                Personal Information &#62; Job Details &#62;{" "}
+                Personal Information &#62;{" "}
+              </span>{" "}
+              <span style={{ color: "#8B8B8B" }} onClick={() => Navigate("/JobDetails")}>
+                Job Details &#62;
               </span>{" "}
               Benefits
             </BodyHeaderTitle>
@@ -114,8 +122,10 @@ const Benefits = () => {
             </FormContainer>
 
             <FlexContaier>
-              <ButtonGrey>Back</ButtonGrey>
-              <ButtonBlue>Continue</ButtonBlue>
+              <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+              <ButtonBlue onClick={() => Navigate("/CertificatesInfo")}>
+                Continue
+              </ButtonBlue>
             </FlexContaier>
           </BodyMain>
         </EmployeeBody>

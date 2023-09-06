@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import EmployeeSidebar from "./EmployeeSidebar";
+import { useNavigate } from "react-router-dom";
 import {
   Employee,
   EmployeeMain,
@@ -30,6 +31,28 @@ import {
 } from "./AddEmployeeStyles";
 
 const JobDetails = () => {
+  const Navigate = useNavigate();
+  const initialPosition = {
+    positionTitle: "",
+    department: "",
+    from: "",
+    to: "",
+  };
+  const [positions, setPositions] = useState([initialPosition]);
+  const HandleAddPositions = () => {
+    setPositions([...positions, initialPosition]);
+  };
+   const HandleRemovePosition = (index) => {
+    const updatedPositions = [...positions];
+    updatedPositions.splice(index, 1);
+    setPositions(updatedPositions);
+  };
+  //  const handleInputChange = (index, field, value) => {
+  //   const updatedPositions = [...positions];
+  //   updatedPositions[index][field] = value;
+  //   setPositions(updatedPositions);
+  // };
+                    // onChange={(e) => handleInputChange(index, 'positionTitle', e.target.value)}
   return (
     <Employee>
       <EmployeeNav>
@@ -38,7 +61,7 @@ const JobDetails = () => {
       <EmployeeMain>
         <HeaderEmployee>
           <FlexContaier>
-            <BackButton>
+            <BackButton onClick={() => Navigate(-1)}>
               {" "}
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -50,7 +73,13 @@ const JobDetails = () => {
         <EmployeeBody>
           <BodyHeader>
             <BodyHeaderTitle>
-              <span style={{ color: "#8B8B8B" }}> Personal Information </span>
+              <span
+                style={{ color: "#8B8B8B" }}
+                onClick={() => Navigate("/PersonalInfo")}
+              >
+                {" "}
+                Personal Information{" "}
+              </span>
               &#62; Job Details
             </BodyHeaderTitle>
           </BodyHeader>
@@ -147,7 +176,7 @@ const JobDetails = () => {
                   <Errors></Errors>
                 </FlexColumnForm>
               </FlexContaierForm>
-              <FlexContaierForm style={{ width: "50%",gap:"46px" }}>
+              <FlexContaierForm style={{ width: "50%", gap: "46px" }}>
                 <AlignFlex>
                   <input
                     style={{ width: "" }}
@@ -172,47 +201,68 @@ const JobDetails = () => {
               </FlexContaierForm>
             </FormContainer>
 
-            <BodyMainHeading style={{ marginBottom: "25px",marginTop:"50px" }}>
+            <BodyMainHeading
+              style={{ marginBottom: "25px", marginTop: "50px" }}
+            >
               Position History
             </BodyMainHeading>
-            <FormContainer>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Position Title<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input type="text" name="firstname" />
-                  <Errors></Errors>
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Department <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input type="text" name="firstname" />
-                  <Errors></Errors>
-                </FlexColumnForm>
-              </FlexContaierForm>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    From<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input type="text" name="firstname" />
-                  <Errors></Errors>
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    To<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input type="text" name="firstname" />
-                  <Errors></Errors>
-                </FlexColumnForm>
-              </FlexContaierForm>
-            </FormContainer>
-            <BluePara> Add New Position</BluePara>
+            {positions.map((position, index) => (
+              <FormContainer>
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Position Title<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input type="text" name="firstname" />
+                    <Errors></Errors>
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Department <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input type="text" name="firstname" />
+                    <Errors></Errors>
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      From<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input type="text" name="firstname" />
+                    <Errors></Errors>
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      To<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input type="text" name="firstname" />
+                    <Errors></Errors>
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                {positions.length > 1 && (
+                  <BluePara
+                    onClick={() => HandleRemovePosition(index)}
+                    style={{ color: "red" }}
+                  >
+                    {" "}
+                    Remove
+                  </BluePara>
+                )}
+              </FormContainer>
+            ))}
             <FlexContaier>
-              <ButtonGrey>Back</ButtonGrey>
-              <ButtonBlue>Continue</ButtonBlue>
+              <BluePara onClick={HandleAddPositions}>
+                {" "}
+                Add New Position
+              </BluePara>
+            </FlexContaier>
+
+            <FlexContaier>
+              <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+              <ButtonBlue onClick={() => Navigate("/Benefits")}>
+                Continue
+              </ButtonBlue>
             </FlexContaier>
           </BodyMain>
         </EmployeeBody>

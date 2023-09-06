@@ -269,6 +269,7 @@ export const ButtonBlue = styled.button`
   gap: 10px;
   color:  #fff;
   text-align: center;
+   cursor: pointer;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -311,8 +312,10 @@ export const ButtonGrey = styled.button`
   align-items: center;
   gap: 10px;
   border: none;
+  cursor: pointer;
 `;
 export const BluePara = styled.p`
+ cursor: pointer;
   color: #279af1;
   font-family: Inter;
   font-size: 14px;
