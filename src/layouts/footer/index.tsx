@@ -7,7 +7,7 @@ const FooterLayout = () => {
       <div className="container">
         <div className="row align-items-center">
           <div className="col-12 text-center">
-            {/* <p className="mb-0">© 2023 Integolf</p> */}
+            <p className="mb-0">© 2023 Wagmatcook</p>
           </div>
         </div>
       </div>

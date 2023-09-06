@@ -59,16 +59,16 @@ const SALogin = () => {
                   <span className="error">{errors.emailError}</span>
                 )} */}
 
-                <Grid container>
+                {/* <Grid container>
                   <Grid item xs></Grid>
                   <Grid item>
                     <Link to="/forgot-password" className="link">
                       Forgot password?
                     </Link>
                   </Grid>
-                </Grid>
+                </Grid> */}
                 <Button type="submit" variant="contained" className="mt-1">
-                  Continue
+                  Get OTP
                 </Button>
               </Box>
             </form>

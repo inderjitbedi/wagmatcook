@@ -35,9 +35,9 @@ const Navigation = () => {
                 key={path}
                 element={
                   <ScrollToTop>
-                    {/* {(type === "public" && !isUser) || type === "semi" ? ( */}
+                    {(type === "public" && !isUser) ? (
                       <PublicLayout component={Component} />
-                    {/* ) : type === "private" && isUser ? (
+                    ) : type === "private" && isUser ? (
                       <PrivateLayout component={Component}>
                         {children &&
                           children.length &&
@@ -51,8 +51,7 @@ const Navigation = () => {
                       </PrivateLayout>
                     ) : (
                       <Navigate replace to={to} />
-                    ) }*/
-                    }
+                    )}
                   </ScrollToTop>
                 }
               />
