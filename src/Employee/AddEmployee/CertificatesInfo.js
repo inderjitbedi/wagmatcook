@@ -1,5 +1,6 @@
-import React from 'react'
+import React from "react";
 import EmployeeSidebar from "./EmployeeSidebar";
+import { useNavigate } from "react-router-dom";
 import {
   Employee,
   EmployeeMain,
@@ -26,19 +27,19 @@ import {
   Option,
   ButtonGrey,
   BluePara,
-
 } from "./AddEmployeeStyles";
 
 const CertificatesInfo = () => {
+  const Navigate = useNavigate();
   return (
-    <Employee style={{height:"100vh"}}>
+    <Employee style={{ height: "100vh" }}>
       <EmployeeNav>
         <EmployeeSidebar />
       </EmployeeNav>
       <EmployeeMain>
         <HeaderEmployee>
           <FlexContaier>
-            <BackButton>
+            <BackButton onClick={() => Navigate(-1)}>
               {" "}
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -47,13 +48,30 @@ const CertificatesInfo = () => {
           </FlexContaier>
           <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
         </HeaderEmployee>
-        <EmployeeBody style={{height:"75vh"}}>
+        <EmployeeBody style={{ height: "75vh" }}>
           <BodyHeader>
             <BodyHeaderTitle>
-              <span style={{ color: "#8B8B8B" }}>
+              <span
+                style={{ color: "#8B8B8B" }}
+                onClick={() => Navigate("/PersonalInfo")}
+              >
                 {" "}
-                Personal Information &#62; Job Details &#62; Benefits{" "}
-              </span> Certificates
+                Personal Information &#62;{" "}
+              </span>{" "}
+              <span
+                style={{ color: "#8B8B8B" }}
+                onClick={() => Navigate("/JobDetails")}
+              >
+                Job Details &#62;
+              </span>
+              <span
+                style={{ color: "#8B8B8B" }}
+                onClick={() => Navigate("/benefits")}
+              >
+                {" "}
+                &#62; Benefits{" "}
+              </span>{" "}
+              Certificates
             </BodyHeaderTitle>
           </BodyHeader>
           <BodyMain>
@@ -103,7 +121,7 @@ const CertificatesInfo = () => {
 
             <BluePara> Add New</BluePara>
             <FlexContaier>
-              <ButtonGrey>Back</ButtonGrey>
+              <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
               <ButtonBlue>Continue</ButtonBlue>
             </FlexContaier>
           </BodyMain>
@@ -111,6 +129,6 @@ const CertificatesInfo = () => {
       </EmployeeMain>
     </Employee>
   );
-}
+};
 
-export default CertificatesInfo
+export default CertificatesInfo;

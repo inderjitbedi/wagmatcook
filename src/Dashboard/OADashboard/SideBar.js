@@ -78,13 +78,11 @@ const SideBar = () => {
       <SideBarList>
         {SideBarData.map((data) => (
           <Link
-            style={
-             { textDecoration: "none" }
-            }
+            style={{ textDecoration: "none",}}
             to={data.to}
             key={data.to}
           >
-            <SideBarListContainer>
+            <SideBarListContainer style={{ zIndex: "1" }}>
               <SideBarListLogo src={data.src}>
                 {/* <use xlinkHref="/svg/Dashboard.svg" /> */}
               </SideBarListLogo>

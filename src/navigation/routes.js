@@ -20,6 +20,15 @@ import CertificatesInfo from "../Employee/AddEmployee/CertificatesInfo";
 import JobDetails from "../Employee/AddEmployee/JobDetails";
 import PersonalInfo from "../Employee/AddEmployee/PersonalInfo";
 import Employee from "../Employee/ViewEmployee/Employee";
+import EmployeeJobDetails from "../Employee/ViewEmployee/EmployeeJobDetails";
+import EmployeePersonal from "../Employee/ViewEmployee/EmployeePersonal";
+import EVBenefits from "../Employee/ViewEmployee/EVBenefits";
+import EVCertificates from "../Employee/ViewEmployee/EVCertificates";
+import EVDiscipline from "../Employee/ViewEmployee/EVDiscipline";
+import EVDocuments from "../Employee/ViewEmployee/EVDocuments";
+import EVLeaveHistory from "../Employee/ViewEmployee/EVLeaveHistory";
+import EVPerformance from "../Employee/ViewEmployee/EVPerformance";
+
 const Routes = [
   {
     component: signup,
@@ -179,6 +188,70 @@ const Routes = [
     component: Employee,
     path: "/Employee",
     title: "Employee ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EmployeeJobDetails,
+    path: "/EmployeeJobDetails",
+    title: "EmployeeJobDetails ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVLeaveHistory,
+    path: "/EVLeaveHistory",
+    title: "EVLeaveHistory ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EmployeePersonal,
+    path: "/EmployeePersonal",
+    title: "EmployeePersonal ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVBenefits,
+    path: "/EVBenefits",
+    title: "EVBenefits ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVCertificates,
+    path: "/EVCertificates",
+    title: "EVCertificates ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVDiscipline,
+    path: "/EVDiscipline",
+    title: "EVDiscipline ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVDocuments,
+    path: "/EVDocuments",
+    title: "EVDocuments ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: EVPerformance,
+    path: "/EVPerformance",
+    title: "EVPerformance ",
     to: "/",
     type: "public",
     children: [],

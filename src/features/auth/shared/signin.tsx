@@ -98,7 +98,8 @@ export default function SignIn() {
                         </div>
                     </div>
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={9} style={{ position: "relative" }}>
+                    <p className='upper-text'>New On Wagmatcook ? <span className='blue-text'>Create Account</span></p>
                     <div className='signup-form mt-8'>
                         <h1>
                             Sign in

@@ -1,5 +1,6 @@
 import React from "react";
 import EmployeeSidebar from "./EmployeeSidebar";
+import { useNavigate } from "react-router-dom";
 import {
   Employee,
   EmployeeMain,
@@ -33,6 +34,7 @@ import {
 } from "./AddEmployeeStyles";
 
 const PersonalInfo = () => {
+  const Navigate = useNavigate();
   return (
     <Employee>
       <EmployeeNav>
@@ -41,7 +43,7 @@ const PersonalInfo = () => {
       <EmployeeMain>
         <HeaderEmployee>
           <FlexContaier>
-            <BackButton>
+            <BackButton onClick={() => Navigate(-1)}>
               {" "}
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -209,7 +211,9 @@ const PersonalInfo = () => {
                 </FlexColumnForm>
               </FlexContaierForm>
             </FormContainer>
-            <ButtonBlue>Continue</ButtonBlue>
+            <ButtonBlue onClick={() => Navigate("/JobDetails")}>
+              Continue
+            </ButtonBlue>
           </BodyMain>
         </EmployeeBody>
       </EmployeeMain>
