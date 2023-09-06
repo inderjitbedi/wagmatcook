@@ -140,7 +140,9 @@ export default function Signup() {
             </div>
           </div>
         </Grid>
-        <Grid item xs={9} >
+        <Grid item xs={9} style={{ position: "relative" }}>
+                    <p className='upper-text'>New On Wagmatcook ? <span className='blue-text'>Login</span></p>
+          
           <div className="signup-form mt-8 mb-50" >
             <h1>Sign up as an organization</h1>
             <p className="text">
