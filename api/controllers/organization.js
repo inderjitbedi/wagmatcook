@@ -101,6 +101,61 @@ const orgController = {
             res.status(400).json(error);
         }
     },
+
+    async listOrganizationsWithPrimaryUsers(req, res) {
+        try {
+            const organizations = await Organization.aggregate([
+                {
+                    $match: { isDeleted: false, isActive: true }, // Match active and non-deleted organizations
+                },
+                {
+                    $lookup: {
+                        from: 'userorganizations', // Name of the UserOrganization collection
+                        localField: '_id',
+                        foreignField: 'organization',
+                        as: 'users',
+                    },
+                },
+                {
+                    $unwind: '$users', // Unwind the users array
+                },
+                {
+                    $match: { 'users.isPrimary': true }, // Filter for users with isPrimary: true
+                },
+                {
+                    $group: {
+                        _id: '$_id',
+                        name: { $first: '$name' },
+                        size: { $first: '$size' },
+                        logo: { $first: '$logo' },
+                        createdBy: { $first: '$createdBy' },
+                        isActive: { $first: '$isActive' },
+                        isDeleted: { $first: '$isDeleted' },
+                        primaryUser: { $first: '$users.user' },
+                    },
+                },
+                {
+                    $lookup: {
+                      from: 'users', // Name of the User collection
+                      localField: 'primaryUser',
+                      foreignField: '_id',
+                      as: 'primaryUser', // Store the populated user in the 'primaryUser' field
+                    },
+                  },
+                  {
+                    $unwind: '$primaryUser', // Unwind the populated primaryUser
+                  },
+            ]);
+
+            res.status(200).json({
+                organizations,
+                message: 'Organizations with primary users fetched successfully',
+            });
+        } catch (error) {
+            console.error('listOrganizationsWithPrimaryUsers:error -', error);
+            res.status(400).json(error);
+        }
+    },
     async initiate(req, res) {
         try {
             const org = new Organization({

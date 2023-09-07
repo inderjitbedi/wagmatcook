@@ -227,6 +227,7 @@ const authController = {
             user.name = name;
             user.invitationToken = undefined;
             user.invitationTokenExpiry = undefined;
+            user.isSignedup = true;
             await user.save();
             token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();

@@ -546,8 +546,8 @@ const getFullTemplate = (data, body) => {
            .email-masthead {
                padding: 25px 0;
                display: flex;
-               align-items: center !important;
-               justify-content: center !important;
+               justify-content: center;
+               align-items: center ;
            }
    
            .email-masthead_logo {
@@ -645,6 +645,9 @@ const getFullTemplate = (data, body) => {
                color-scheme: light dark;
                supported-color-schemes: light dark
            }
+           .company-name{
+            margin:auto
+           }
        </style>
    </head>
    
@@ -656,7 +659,7 @@ const getFullTemplate = (data, body) => {
                    <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                        <tr>
                            <td class="email-masthead">
-                         <h1>Wagmatcook</h1>   
+                              <h1 class="company-name">Wagmatcook</h1>   
                            </td>
                        </tr>
                        <!-- Email Body -->

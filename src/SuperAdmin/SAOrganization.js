@@ -249,10 +249,10 @@ const SAOrganization = () => {
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
           <DepartmentIconImg
-              style={{ cursor: "pointer" }}
-              onClick={(event) => handleClickMenu(event)}
-              src="/images/icons/PersonIcon.svg"
-            />
+            style={{ cursor: "pointer" }}
+            onClick={(event) => handleClickMenu(event)}
+            src="/images/icons/PersonIcon.svg"
+          />
         </DashHeaderSearch>
       </DashHeader>
       <Menu
@@ -354,17 +354,23 @@ const SAOrganization = () => {
                 sx={{ ...CellHeadStyles, minWidth: "150px" }}
                 align="left"
               >
-                Status
+                Has Signed Up?
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 sx={{ ...CellHeadStyles, minWidth: "150px" }}
                 align="left"
               >
                 Action
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
+            {result?.organizations?.length == 0 &&
+              <TableRow  >
+                <TableCell rowSpan={3}>
+                  No organizations found
+                </TableCell>
+              </TableRow>}
             {result.organizations?.map((data) => (
               <TableRow
                 sx={{
@@ -376,12 +382,12 @@ const SAOrganization = () => {
                   {data.name}
                 </TableCell>
                 <TableCell sx={CellStyle2} align="left">
-                  -
+                  {data.primaryUser?.email || '-'}
                 </TableCell>
                 <TableCell sx={CellStyle} align="left">
-                  {data.isActive ? "Active" : "Inactive"}
+                  {data.primaryUser?.isSignedup ? "Yes" : "No"}
                 </TableCell>
-                <TableCell sx={CellStyle2} align="left">
+                {/* <TableCell sx={CellStyle2} align="left">
                   <ActionIconDiv>
                     <ActionIcons
                       // onClick={() => {
@@ -401,9 +407,10 @@ const SAOrganization = () => {
                       src="/images/icons/Trash-2.svg"
                     />
                   </ActionIconDiv>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
+
           </TableBody>
         </Table>
       </TableContainer>
