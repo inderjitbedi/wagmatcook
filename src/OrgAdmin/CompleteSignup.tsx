@@ -215,7 +215,7 @@ export default function CompleteSignup() {
                   If you already have an account, please visit our login page and sign in.
                 </p>
                
-                <Link to="/signin">
+                <Link to="/">
                   <Button type="button" variant="contained">Login</Button>
                 </Link>
               </div>

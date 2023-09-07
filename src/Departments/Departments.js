@@ -240,13 +240,13 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-    let isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      Navigate("/signin");
-    } else {
+    // let isLoggedIn = localStorage.getItem("isLoggedIn");
+    // if (!isLoggedIn) {
+    //   Navigate("/");
+    // } else {
       GetDepartments();
-    }
-  }, [delayedSearchValue, page]);
+    // }
+  }, []);
   console.log(departmentData, "this is out data looks like ");
 
   const HandleSubmit = (e) => {
@@ -416,7 +416,7 @@ const Departments = () => {
   const HandleLogout = () => {
     localStorage.clear();
     handleCloseMenu();
-    Navigate("/signin");
+    Navigate("/");
   };
   return (
     <>

@@ -196,13 +196,13 @@ const Disciplinary = () => {
       });
   };
   useEffect(() => {
-        let isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      Navigate("/signin");
-    } else {
+    //     let isLoggedIn = localStorage.getItem("isLoggedIn");
+    // if (!isLoggedIn) {
+    //   Navigate("/");
+    // } else {
       GetDisciplinary();
-    }
-  }, [delayedSearchValue, page]);
+    // }
+  }, []);
 
   //create new enter in table
   const HandleSubmit = (e) => {
@@ -490,6 +490,7 @@ setDescriptionLenght(value.length)
             <DashNotification src="/images/icons/Notifications.svg" />
           </DashHeaderSearch>
         </DashHeader>
+        
         <DisciplinaryDiv>
           <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>

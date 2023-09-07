@@ -11,6 +11,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 import {
   Dashboard,
@@ -44,6 +46,8 @@ import {
   Errors,
 } from "./SAStyles";
 import API_URLS from "../constants/apiUrls";
+import { useNavigate } from "react-router-dom";
+import { DepartmentIconImg } from "../Departments/DepartmentsStyles";
 
 const style = {
   position: "absolute",
@@ -81,6 +85,7 @@ const CellStyle2 = {
   lineHeight: "15px",
 };
 const SAOrganization = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
     setErrors({
@@ -214,6 +219,20 @@ const SAOrganization = () => {
         });
     }
   };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    navigate("/");
+  };
   return (
     <>
       <DashHeader>
@@ -229,8 +248,31 @@ const SAOrganization = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
+          <DepartmentIconImg
+              style={{ cursor: "pointer" }}
+              onClick={(event) => handleClickMenu(event)}
+              src="/images/icons/PersonIcon.svg"
+            />
         </DashHeaderSearch>
       </DashHeader>
+      <Menu
+        sx={{ margin: "0px" }}
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+      </Menu>
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
         <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>

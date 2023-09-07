@@ -58,7 +58,7 @@ export default function ForgotPassword() {
                 .then(({ result }) => {
                     if (result?.user) {
                         toast.info("Reset Password link successfully sent.")
-                        navigate("/signin");
+                        navigate("/");
                     }
                 })
                 .catch((error: any) => {
