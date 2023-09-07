@@ -1,25 +1,7 @@
 import React from 'react'
-import SideBar from "../../Dashboard/OADashboard/SideBar";
-import EmployeeSideBar from "./EmployeeSideBar";
+
 import {
-  Dashboard,
-  DashMain,
-  DashNav,
-  DashHeader,
-  DashHeaderSearch,
-  DashHeaderTitle,
-  DashNotification,
-  SearchBox,
-  SearchIcon,
-  SearchInput,
-  FlexContaier,
-  BackButton,
-  IconsEmployee,
-  EmployeeBody,
-  BodyHeader,
-  BodyHeading,
-  BodyContainer,
-  SideBarContainer,
+
   MainBodyContainer,
   PersonalInfo,
   PersonalImg,
@@ -39,41 +21,9 @@ import {
 } from "./ViewEmployeeStyle";
 const EVBenefits = () => {
   return (
-    <Dashboard>
-      <DashNav>
-        <SideBar />
-      </DashNav>
-      <DashMain>
-        <DashHeader>
-          <FlexContaier>
-            <BackButton>
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-              Back
-            </BackButton>
-            <DashHeaderTitle>Employee</DashHeaderTitle>
-          </FlexContaier>
+   
+      
 
-          <DashHeaderSearch>
-            <SearchBox>
-              <SearchInput
-                type="text"
-                placeholder="Search..."
-                // value={searchValue}
-                // onChange={(e) => HandleSearchCahnge(e)}
-              ></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-            </SearchBox>
-            <DashNotification src="/images/icons/Notifications.svg" />
-          </DashHeaderSearch>
-        </DashHeader>
-        <EmployeeBody>
-          <BodyHeader>
-            <BodyHeading>Employee Details</BodyHeading>
-          </BodyHeader>
-          <BodyContainer>
-            <SideBarContainer>
-              <EmployeeSideBar />
-            </SideBarContainer>
             <MainBodyContainer>
               <FlexSpaceBetween style={{ alignItems: "center" }}>
                 <PersonalInfo>
@@ -131,10 +81,8 @@ const EVBenefits = () => {
                 </BasicInfoDiv>
               </BasicInfoContainer>
             </MainBodyContainer>
-          </BodyContainer>
-        </EmployeeBody>
-      </DashMain>
-    </Dashboard>
+
+     
   );
 }
 

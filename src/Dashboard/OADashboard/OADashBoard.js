@@ -37,14 +37,14 @@ const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const history = useNavigate();
 
-  useEffect(() => {
-    if (!localStorage.getItem('welcomeModelShown')) {
-      // if (history.action === "PUSH") {
-      setIsModalOpen(true);
-      localStorage.setItem('welcomeModelShown',true)
-      // }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!localStorage.getItem('welcomeModelShown')) {
+  //     // if (history.action === "PUSH") {
+  //     setIsModalOpen(true);
+  //     localStorage.setItem('welcomeModelShown',true)
+  //     // }
+  //   }
+  // }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -76,12 +76,10 @@ const OADashBoard = () => {
     },
   ];
   return (
-    <Dashboard>
+    <>
       <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-      <DashNav>
-        <SideBar />
-      </DashNav>
-      <DashMain>
+    
+      <>
         <DashHeader>
           <DashHeaderTitle>Dashboard</DashHeaderTitle>
           <DashHeaderSearch>
@@ -118,8 +116,8 @@ const OADashBoard = () => {
             </DashCard>
           ))}
         </DashCardContainer>
-      </DashMain>
-    </Dashboard>
+      </>
+    </>
   );
 };
 

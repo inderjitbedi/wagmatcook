@@ -29,6 +29,7 @@ const ModalContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
 `;
 const ModalHeading = styled.h1`
   color: #222b45;
@@ -38,14 +39,16 @@ const ModalHeading = styled.h1`
   font-weight: 600;
   line-height: 16px;
 `;
-const ModalIcon = styled`
+const ModalIcon = styled.img`
 width: 24px;
 height: 24px;
 display:inline-block;
+cursor: pointer;
 `;
 const ModalFormContainer = styled.div`
   padding: 20px 29px 15px 29px;
   width: 100%;
+  box-sizing: border-box;
 `;
 const AddNewEmployeeModal = () => {
   return (

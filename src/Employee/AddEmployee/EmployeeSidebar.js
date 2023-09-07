@@ -20,6 +20,7 @@ const EmployeeSidebar = () => {
     {
       Title: "Dashboard",
       src: "/svg/Dashboard.svg",
+      
     },
 
     {

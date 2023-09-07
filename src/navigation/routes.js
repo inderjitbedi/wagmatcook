@@ -30,7 +30,9 @@ import SharedSignin from "../Shared/Auth/Signin";
 import VerifyOTP from "../Shared/Auth/VerifyOTP";
 import SALayout from "../SuperAdmin/SALayout";
 import CompleteSignup from "../OrgAdmin/CompleteSignup";
-
+import OADashBoardLayout from "../Dashboard/OADashboard/OADashBoardLayout";
+import EmployeeLayout from "../Employee/ViewEmployee/EmployeeLayout";
+import AddEmployeeLayout from "../Employee/AddEmployee/AddEmployeeLayout";
 const Routes = [
   {
     component: signup,
@@ -39,7 +41,6 @@ const Routes = [
     to: "/",
     type: "public",
     children: [],
-  
   },
 
   {
@@ -71,42 +72,135 @@ const Routes = [
     path: "/register-organization",
     title: "register-organization",
     to: "/",
-    type: "public",
+    type: "private",
     children: [],
   },
   {
-    component: OADashBoard,
-    path: "/OADashBoard",
-    title: "OADashBoard",
+    component: OADashBoardLayout,
+    path: "/organization-admin",
+    title: "OrganizationAdmin",
     to: "/",
-    type: "public",
-    children: [],
+    type: "private",
+    children: [
+      {
+        component: OADashBoard,
+        path: "dashboard",
+        title: "DashBoard",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: OADashBoardNext,
+        path: "DashBoardNext",
+        title: "DashBoardNext",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+
+      {
+        component: Departments,
+        path: "departments",
+        title: "Departments",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: Disciplinary,
+        path: "disciplinary",
+        title: "Disciplinary ",
+        to: "/",
+        type: "private",
+
+        index: true,
+      },
+      {
+        component: Employee,
+        path: "employee",
+        title: "Employee ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+    ],
   },
   {
-    component: OADashBoardNext,
-    path: "/OADashBoardNext",
-    title: "OADashBoardNext",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: Departments,
-    path: "/Departments",
-    title: "Departments",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: Disciplinary,
-    path: "/Disciplinary",
+    component: EmployeeLayout,
+    path: "/employee-details",
     title: "Disciplinary ",
     to: "/",
-    type: "public",
-    children: [],
-  },
+    type: "private",
+    children: [
+      {
+        component: EmployeePersonal,
+        path: "personal",
+        title: "EmployeePersonal ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
 
+      {
+        component: EmployeeJobDetails,
+        path: "job-details",
+        title: "EmployeeJobDetails ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVBenefits,
+        path: "benefits",
+        title: "Benefits ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+
+      {
+        component: EVLeaveHistory,
+        path: "leave-history",
+        title: "EVLeaveHistory ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVCertificates,
+        path: "certificates",
+        title: "EVCertificates ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVDiscipline,
+        path: "discipline",
+        title: "EVDiscipline ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVDocuments,
+        path: "documents",
+        title: "EVDocuments ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVPerformance,
+        path: "performance",
+        title: "EVPerformance ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+    ],
+  },
 
   {
     component: SAUserList,
@@ -125,113 +219,48 @@ const Routes = [
     type: "public",
     children: [],
   },
-  {
-    component: Benefits,
-    path: "/Benefits",
-    title: "Benefits ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: CertificatesInfo,
-    path: "/CertificatesInfo",
-    title: "CertificatesInfo ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: JobDetails,
-    path: "/JobDetails",
-    title: "JobDetails ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: PersonalInfo,
-    path: "/PersonalInfo",
-    title: "PersonalInfo ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: Employee,
-    path: "/Employee",
-    title: "Employee ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EmployeeJobDetails,
-    path: "/EmployeeJobDetails",
-    title: "EmployeeJobDetails ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVLeaveHistory,
-    path: "/EVLeaveHistory",
-    title: "EVLeaveHistory ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EmployeePersonal,
-    path: "/EmployeePersonal",
-    title: "EmployeePersonal ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVBenefits,
-    path: "/EVBenefits",
-    title: "EVBenefits ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVCertificates,
-    path: "/EVCertificates",
-    title: "EVCertificates ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVDiscipline,
-    path: "/EVDiscipline",
-    title: "EVDiscipline ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVDocuments,
-    path: "/EVDocuments",
-    title: "EVDocuments ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: EVPerformance,
-    path: "/EVPerformance",
-    title: "EVPerformance ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
 
-
-
+  {
+    component: AddEmployeeLayout,
+    path: "/add-new-employee",
+    title: "AddEmployee",
+    to: "/",
+    type: "private",
+    children: [
+      {
+        component: Benefits,
+        path: "benefits",
+        title: "Benefits ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: CertificatesInfo,
+        path: "certificatesInfo",
+        title: "CertificatesInfo ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: JobDetails,
+        path: "job-details",
+        title: "JobDetails ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: PersonalInfo,
+        path: "personal-info",
+        title: "PersonalInfo ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+    ],
+  },
 
   {
     component: SharedSignin,
@@ -241,7 +270,7 @@ const Routes = [
     type: "public",
     children: [],
   },
-{
+  {
     component: VerifyOTP,
     path: "/verify-otp",
     title: "Verify OTP",
@@ -257,7 +286,7 @@ const Routes = [
     type: "public",
     children: [],
   },
-  
+
   {
     component: SALayout,
     path: "/super-admin",
@@ -267,11 +296,11 @@ const Routes = [
     children: [
       {
         component: SAOrganization,
-        path: "organizations", 
+        path: "organizations",
         title: "Organizations",
-        to: "/", 
+        to: "/",
         type: "private",
-        index: true
+        index: true,
       },
     ],
   },

@@ -20,17 +20,18 @@ const SideBar = () => {
       {
         Title: "Dashboard",
         src: "/svg/Dashboard.svg",
+        to: "/organization-admin/dashboard",
       },
       {
         Title: "Departments",
         src: "/svg/Departments.svg",
-        to: "/Departments",
+        to: "/organization-admin/departments",
       },
 
       {
         Title: "Employee",
         src: "/svg/Employee.svg",
-        to:"/Employee"
+        to: "/organization-admin/employee",
       },
       {
         Title: "Activities",
@@ -47,7 +48,7 @@ const SideBar = () => {
       {
         Title: "Disciplinary",
         src: "/svg/Disciplinary.svg",
-        to: "/Disciplinary",
+        to: "/organization-admin/disciplinary",
       },
       {
         Title: "Account",
@@ -57,7 +58,7 @@ const SideBar = () => {
         Title: "Report",
         src: "/svg/Reports.svg",
       },
-  ];
+    ];
   const style = {
     textDecoration: "none",
     color: "#279AF1",

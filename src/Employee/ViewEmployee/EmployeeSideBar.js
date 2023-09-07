@@ -34,39 +34,38 @@ const EmployeeSideBar = () => {
   const SideBarData = [
     {
       Title: "Personal",
-      to: "/EmployeePersonal",
+      to: "/employee-details/personal",
     },
     {
       Title: "Job Details",
-
-      to: "/EmployeeJobDetails",
+      to: "/employee-details/job-details",
     },
 
     {
       Title: "Benefits",
-      to: "/EVBenefits",
+      to: "/employee-details/benefits",
     },
     {
       Title: "Leave History",
-      to: "/EVLeaveHistory",
+      to: "/employee-details/leave-history",
     },
     {
       Title: "Certificates",
-      to: "/EVCertificates",
+      to: "/employee-details/certificates",
     },
     {
       Title: "Discipline",
-      to: "/EVDiscipline",
+      to: "/employee-details/discipline",
     },
     {
       Title: "Performance",
-      to: "/EVPerformance",
+      to: "/employee-details/performance",
     },
     {
       Title: "Documents",
-      to: "/EVDocuments",
+      to: "/employee-details/documents",
     },
-    ];
+  ];
       const style = {
         textDecoration: "none",
         color: "#279AF1",
