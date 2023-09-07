@@ -96,6 +96,7 @@ export default function CompleteSignup() {
         .then(({ result }: any) => {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
+            localStorage.setItem("organization", JSON.stringify(result?.organization));
             localStorage.setItem("token", result?.token);
             navigate("/organization-admin/organization-profile");
           }

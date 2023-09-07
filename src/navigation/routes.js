@@ -79,7 +79,7 @@ const Routes = [
     path: "/OADashBoard",
     title: "OADashBoard",
     to: "/",
-    type: "public",
+    type: "private",
     children: [],
   },
   {
@@ -87,7 +87,7 @@ const Routes = [
     path: "/OADashBoardNext",
     title: "OADashBoardNext",
     to: "/",
-    type: "public",
+    type: "private",
     children: [],
   },
   {

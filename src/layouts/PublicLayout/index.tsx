@@ -21,7 +21,7 @@ const PublicLayout = ({ component: Component }: any) => (
             </div>
             <div className="">
               <img
-                src="../../assets/login-image.svg"
+                src="./../assets/login-image.svg"
                 alt="background-img"
                 width="100%"
               />

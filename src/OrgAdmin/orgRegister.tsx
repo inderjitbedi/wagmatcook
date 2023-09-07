@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { TextField, InputLabel } from '@mui/material';
 import { Grid, Box } from '@mui/material';
@@ -13,6 +13,17 @@ import { toast } from 'react-toastify';
 export default function RegisterOrganization() {
     const navigate = useNavigate();
 
+
+    useEffect(() => {
+
+        let orgStr = localStorage.getItem('organization')
+        if (orgStr) {
+            let org = JSON.parse(orgStr);
+            setFormData({ ...formData, name: org.name })
+        console.log(org.name);
+
+        }
+    }, []);
     const [formData, setFormData] = useState<any>({
         name: "",
         size: "",
@@ -156,12 +167,12 @@ export default function RegisterOrganization() {
                                     >
                                         Remove
                                     </button>
-                                    {/* <span className='gray-text'>*png *jpeg up to 10MB at least 400px by 400px</span> */}
+                                    {/* <span className='gray-text'>'png', 'jpg', 'jpeg', 'gif', 'tiff'*png *jpeg up to 10MB at least 400px by 400px</span> */}
                                 </div>
 
 
                             </div>
-                            {!errors.fileError && <span className='upload-info'>*png *jpeg up to 10MB at least 400px by 400px</span>}
+                            {!errors.fileError && <span className='upload-info'>*png *jpg *jpeg *gif *tiff up to 10MB at least 400px by 400px</span>}
                             {errors.fileError && (
                                 <span className="upload-info error">{errors.fileError}</span>
                             )}
@@ -178,6 +189,7 @@ export default function RegisterOrganization() {
                             disabled InputProps={{
                                 readOnly: true,
                             }}
+                            value={formData.name}
                         // onChange={(e) =>
                         //     setFormData({ ...formData, name: e.target.value })
                         // }

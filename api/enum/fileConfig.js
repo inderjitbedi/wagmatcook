@@ -21,10 +21,10 @@ module.exports = Object.freeze({
         FOLDER_NAME: 'audios'
     },
     IMAGE_CONFIG: {
-        MAX_SIZE: 1 * 1024 * 1024,
-        ALLOWED_EXTENSIONS: ['png', 'jpg', 'jpeg'],
-        ALLOWED_EXTENSIONS_REGEX: /png|jpg|jpeg/,
-        MIME_TYPES: ['image/png', 'image/jpg', 'image/jpeg'],
+        MAX_SIZE: 10 * 1024 * 1024,
+        ALLOWED_EXTENSIONS: ['png', 'jpg', 'jpeg', 'gif', 'tiff'],
+        ALLOWED_EXTENSIONS_REGEX: /png|jpg|jpeg|gif|tiff/,
+        MIME_TYPES: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/tiff'],
         FOLDER_NAME: 'image'
     },
 });

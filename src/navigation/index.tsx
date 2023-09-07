@@ -59,7 +59,8 @@ const Navigation = () => {
                 ))}
               </Route>
             )}
-{/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+
+            {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
             {((type === "public" ) || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}>
             {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
             </Route>}
