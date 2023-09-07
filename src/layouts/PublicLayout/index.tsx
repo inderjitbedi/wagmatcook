@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const PublicLayout = ({ component: Component }: any) => {
   const componentImageMap: any = {
     CompleteSignup: './../../../assets/login-image.svg',
   };
-  const imageUrl = componentImageMap[Component.name] || './../assets/login-image.svg';
-  console.log(Component.name, imageUrl);
+  const location = useLocation();
+
+  // console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
+  // 
+  const imageUrl = location.pathname.indexOf('/organization-admin/complete-signup') > -1 ? './../../../assets/login-image.svg' : './../assets/login-image.svg';
+  // console.log(Component.name, imageUrl);
 
   return (
     <>

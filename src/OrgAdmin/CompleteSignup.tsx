@@ -3,12 +3,13 @@ import Button from "@mui/material/Button";
 import { TextField, InputLabel, Stack, Alert } from "@mui/material";
 import { Grid, Box } from "@mui/material";
 import httpClient from "../api/httpClient";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URLS from "../constants/apiUrls";
 
 export default function CompleteSignup() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { token, email } = useParams();
   // useEffect(() => {
   //   // localStorage.clear()
@@ -55,9 +56,9 @@ export default function CompleteSignup() {
   //     setErrors({ ...errors, emailError: "" });
   //   }
   // };
-  useEffect(() => {
-    // console.log(formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
+  // }, []);
   // const handlePasswordChange = (e: any) => {
   //   const { value } = e.target;
   //   setFormData({ ...formData, password: value });
