@@ -115,7 +115,7 @@ const EmployeeJobDetails = () => {
                         <ViewPara>Hattie</ViewPara>
                       </FlexColumn>
                       <FlexColumn>
-                        <TitlePara>Department </TitlePara>
+                        <TitlePara>Position </TitlePara>
                         <ViewPara>Watkins</ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>

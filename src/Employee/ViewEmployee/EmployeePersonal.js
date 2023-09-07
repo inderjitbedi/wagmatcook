@@ -179,6 +179,16 @@ const EmployeePersonal = () => {
                         <ViewPara>Female</ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Is Status </TitlePara>
+                        <ViewPara>Yes</ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Band Number</TitlePara>
+                        <ViewPara>JHGTRYSG4542DES</ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
                   </BasicDetailsDiv>
                 </BasicInfoDiv>
               </BasicInfoContainer>
