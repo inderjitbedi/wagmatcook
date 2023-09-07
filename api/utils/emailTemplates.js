@@ -67,7 +67,7 @@ const emailTemplates = {
                                     role="presentation">
                                     <tr>
                                         <td align="center">
-                                            <a href="${process.env.FRONTEND_URL}signup/${data.user.invitationToken}"
+                                            <a href="${process.env.FRONTEND_URL}organization-admin/complete-signup/${data.user.email}/${data.user.invitationToken}"
                                                 class="f-fallback button " target="_blank">Complete Signup</a>
                                         </td>
                                     </tr>

@@ -123,7 +123,7 @@ export default function RegisterOrganization() {
 
             <div className='signup-form mt-8'>
                 <h1>
-                    Organisation Profile
+                    Organization Profile
                 </h1>
                 <p className='text'>Please provide your Organization information</p>
                 <form onSubmit={handleSubmit} noValidate>
