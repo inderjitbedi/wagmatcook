@@ -1,19 +1,17 @@
-// import login from "../features/auth/pages/login";
-import signup from "../features/auth/pages/orgAdmin/signup";
-import signin from "../features/auth/shared/signin";
-import verifyuser from "../features/auth/pages/orgAdmin/verifyuser";
-import RegisterOrganization from "../features/auth/pages/orgAdmin/orgRegister";
+// import login from "../auth/pages/login";
+import signup from "../OrgAdmin/CompleteSignup";
+import signin from "../auth/shared/signin";
+import verifyuser from "../OrgAdmin/verifyuser";
+import RegisterOrganization from "../OrgAdmin/orgRegister";
 import OADashBoard from "../Dashboard/OADashboard/OADashBoard";
 import OADashBoardNext from "../Dashboard/OADashboard/OADashBoardNext";
-import ForgotPassword from "../features/auth/shared/forgot-password";
-import ResetPassword from "../features/auth/shared/reset-password";
+import ForgotPassword from "../auth/shared/forgot-password";
+import ResetPassword from "../auth/shared/reset-password";
 
-// import verify from "../features/auth/pages/verify"
+// import verify from "../auth/pages/verify"
 import Departments from "../Departments/Departments";
 import Disciplinary from "../Disciplinary/Disciplinary";
-import SALogin from "../SuperAdmin/SALogin";
 import SAOrganization from "../SuperAdmin/SAOrganization";
-import SAOtpPage from "../SuperAdmin/SAOtpPage";
 import SAUserList from "../SuperAdmin/SAUserList";
 import Benefits from "../Employee/AddEmployee/Benefits";
 import CertificatesInfo from "../Employee/AddEmployee/CertificatesInfo";
@@ -28,33 +26,22 @@ import EVDiscipline from "../Employee/ViewEmployee/EVDiscipline";
 import EVDocuments from "../Employee/ViewEmployee/EVDocuments";
 import EVLeaveHistory from "../Employee/ViewEmployee/EVLeaveHistory";
 import EVPerformance from "../Employee/ViewEmployee/EVPerformance";
+import SharedSignin from "../Shared/Auth/Signin";
+import VerifyOTP from "../Shared/Auth/VerifyOTP";
+import SALayout from "../SuperAdmin/SALayout";
+import CompleteSignup from "../OrgAdmin/CompleteSignup";
 
 const Routes = [
   {
     component: signup,
-    path: "/",
+    path: "/complete-signup",
     title: "Org Admin Register",
     to: "/",
     type: "public",
     children: [],
-    // children: [
-    //     // {
-    //     //   component: AddGolfCourse,
-    //     //   path: "golf-course",
-    //     //   title: "Golf Course | Register Account",
-    //     //   to: "/",
-    //     //   type: "private",
-    //     // },
-    // ]
+  
   },
-  {
-    component: signin,
-    path: "/signin",
-    title: "Signin",
-    to: "/",
-    type: "public",
-    children: [],
-  },
+
   {
     component: ForgotPassword,
     path: "/forgot-password",
@@ -120,14 +107,7 @@ const Routes = [
     children: [],
   },
 
-  {
-    component: SALogin,
-    path: "/SALogin",
-    title: "SALogin ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
+
   {
     component: SAUserList,
     path: "/SAUserList",
@@ -136,14 +116,7 @@ const Routes = [
     type: "public",
     children: [],
   },
-  {
-    component: SAOtpPage,
-    path: "/SAOtpPage",
-    title: "SAOtpPage ",
-    to: "/",
-    type: "public",
-    children: [],
-  },
+
   {
     component: SAOrganization,
     path: "/SAOrganization",
@@ -252,6 +225,60 @@ const Routes = [
     component: EVPerformance,
     path: "/EVPerformance",
     title: "EVPerformance ",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+
+
+
+
+  {
+    component: SharedSignin,
+    path: "/",
+    title: "Signin",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+{
+    component: VerifyOTP,
+    path: "/verify-otp",
+    title: "Verify OTP",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: CompleteSignup,
+    path: "/organization-admin/complete-signup/:email/:token",
+    title: "Organization Admin | Signup",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  
+  {
+    component: SALayout,
+    path: "/super-admin",
+    title: "SuperAdmin",
+    to: "/",
+    type: "private",
+    children: [
+      {
+        component: SAOrganization,
+        path: "organizations", 
+        title: "Organizations",
+        to: "/", 
+        type: "private",
+        index: true
+      },
+    ],
+  },
+  {
+    component: RegisterOrganization,
+    path: "/organization-admin/organization-profile",
+    title: "register-organization",
     to: "/",
     type: "public",
     children: [],

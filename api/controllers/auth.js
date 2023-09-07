@@ -2,7 +2,8 @@ const User = require("../models/user");
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const sendGrid = require('../providers/sendGrid.js')
-const roles = require('../enum/roles')
+const roles = require('../enum/roles');
+const UserOrganization = require("../models/userOrganization");
 
 const authController = {
     async register(req, res) {
@@ -19,7 +20,7 @@ const authController = {
             user.tempPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
             req.user = user;
-            sendGrid.send(user.email, 'tempPassword', { req, token });
+            await sendGrid.send(user.email, 'tempPassword', { req, token });
 
             res.status(201).json({ user, message: 'User registered. Temp password successfully sent via email.' });
         } catch (error) {
@@ -42,7 +43,7 @@ const authController = {
             user.tempPasswordExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
             req.user = user;
-            sendGrid.send(user.email, 'tempPassword', { req, token });
+            await sendGrid.send(user.email, 'tempPassword', { req, token });
 
             res.status(200).json({ user, message: 'Temp password successfully resent via email.' });
         } catch (err) {
@@ -120,7 +121,7 @@ const authController = {
             user.resetPasswordTokenExpiry = Date.now() + (3600000 * 24); // 24 hour
             await user.save();
 
-            sendGrid.send(user.email, 'forgotPassword', { req, token });
+            await sendGrid.send(user.email, 'forgotPassword', { req, token });
             res.status(200).json({ user, message: 'Password reset email sent' });
         } catch (err) {
             next(err);
@@ -168,11 +169,30 @@ const authController = {
             await user.save();
 
             req.user = user;
-            sendGrid.send(user.email, 'sendOtp', { req, token });
+            await sendGrid.send(user.email, 'sendOtp', { req, token });
             res.status(200).json({ message: 'OTP sent successfully via email.' });
         } catch (error) {
             console.error("authController:register:error -", error);
             res.status(400).json(error);
+        }
+    },
+    async resendOtpForLogin(req, res, next) {
+        try {
+            const { email } = req.params;
+            const user = await User.findOne({ email });
+            if (!user) {
+                return res.status(400).json({ message: 'User not found.' });
+            }
+            const token = crypto.randomBytes(3).toString('hex');
+            user.otp = token;
+            user.otpExpiry = Date.now() + (3600000 * 24); // 24 hour
+            await user.save();
+            req.user = user;
+            await sendGrid.send(user.email, 'sendOtp', { req, token });
+
+            res.status(200).json({ user, message: 'OTP resent successfully via email.' });
+        } catch (err) {
+            next(err);
         }
     },
     async loginWithOtp(req, res) {
@@ -197,7 +217,7 @@ const authController = {
     async completeOrgAdminSignup(req, res) {
         try {
 
-            const { token } = req.params;
+            let { token } = req.params;
             const { email, name } = req.body;
             let user = await User.findOne({ email, invitationToken: token, invitationTokenExpiry: { $gt: Date.now() } });
             if (!user) {
@@ -211,7 +231,11 @@ const authController = {
             token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();
             delete user.password
-            res.status(200).json({ user, token, message: 'User signup completed successfully' });
+
+            let relation = await UserOrganization.findOne({ user: user._id, role: roles.ORG_ADMIN, isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
+
+
+            res.status(200).json({ user, organization: relation.organization, token, message: 'User signup completed successfully' });
 
         } catch (error) {
             console.error("authController:register:error -", error);

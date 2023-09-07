@@ -73,7 +73,7 @@ const orgController = {
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, };
+            let filters = { isDeleted: false, isActive: true };
 
             if (req.query.searchKey) {
                 filters.$or = [
@@ -103,9 +103,10 @@ const orgController = {
     },
     async initiate(req, res) {
         try {
-            const org = new Organization({ name: req.body.name
+            const org = new Organization({
+                name: req.body.name
                 // , createdBy: req.user._id
-             });
+            });
             await org.save();
 
             const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
@@ -114,7 +115,9 @@ const orgController = {
             user.invitationTokenExpiry = Date.now() + (3600000 * 24);
             await user.save();
 
-            const relation = new UserOrganization({ user: user._id, organization: org._id });
+            const relation = new UserOrganization({ user: user._id, organization: org._id, isPrimary: true });
+            await relation.save()
+
 
             sendGrid.send(user.email, 'invite', { org, user });
             res.status(200).json({

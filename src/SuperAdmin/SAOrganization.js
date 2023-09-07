@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SASideBar from "./SASideBar";
+import SASideBar from "./SideBar/SASideBar";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Table from "@mui/material/Table";
@@ -43,6 +43,7 @@ import {
   InputPara,
   Errors,
 } from "./SAStyles";
+import API_URLS from "../constants/apiUrls";
 
 const style = {
   position: "absolute",
@@ -81,7 +82,13 @@ const CellStyle2 = {
 };
 const SAOrganization = () => {
   const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
+  const HandleOpen = () => {
+    setErrors({
+      nameError: "",
+      emailError: "",
+    });
+    setOpen(true);
+  };
   const HandleClose = () => setOpen(false);
   // const [organizationData, setOrganization] = useState([]);
   const [result, setResult] = useState([]);
@@ -103,7 +110,7 @@ const SAOrganization = () => {
 
     if (name === "name") {
       if (!value) {
-        setErrors({ ...errors, nameError: "Name cannot be empty" });
+        setErrors({ ...errors, nameError: "Required" });
       } else if (!/^[A-Za-z\s]+$/.test(value)) {
         setErrors({
           ...errors,
@@ -111,6 +118,7 @@ const SAOrganization = () => {
         });
       } else {
         setErrors({ ...errors, nameError: "" });
+
       }
     }
 
@@ -118,18 +126,20 @@ const SAOrganization = () => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isValid = emailPattern.test(value);
       if (!value) {
-        setErrors({ ...errors, emailError: "Email cannot be empty" });
+        setErrors({ ...errors, emailError: "Required" });
       } else if (isValid) {
-        setErrors({ ...errors, emailError: "Invalid email address" });
-      } else {
         setErrors({ ...errors, emailError: "" });
+      } else {
+        setErrors({ ...errors, emailError: "Invalid email address" });
+
       }
     }
     setFormData({ ...formData, [name]: value });
   };
 
   const GetOrganizationList = () => {
-    let url = `/organization/list?page=1&limit=10`;
+    console.log('called');
+    let url = `${API_URLS.adminOrganizationList}?page=1&limit=10`;
     httpClient({
       method: "get",
       url,
@@ -151,15 +161,14 @@ const SAOrganization = () => {
     GetOrganizationList();
   }, []);
 
-  console.log(result);
   const HandleSubmit = (e) => {
     e.preventDefault();
-    let url = `/organization/invite `;
+    let url = API_URLS.adminInviteOrganizationAdmin;
     if (!formData.name) {
       setErrors((prevState) => {
         return {
           ...prevState,
-          nameError: "Name cannot be empty",
+          nameError: "Required",
         };
       });
     } else {
@@ -170,7 +179,7 @@ const SAOrganization = () => {
         return {
           ...prevState,
 
-          emailError: "Please enter email",
+          emailError: "Required",
         };
       });
     } else {
@@ -183,7 +192,6 @@ const SAOrganization = () => {
       !errors.emailError
     ) {
       let dataCopy = formData;
-      console.log(formData);
       httpClient({
         method: "post",
         url,
@@ -195,9 +203,9 @@ const SAOrganization = () => {
             GetOrganizationList();
             setFormData("");
             setErrors("");
-            toast.success("Entry Added Successfully");
+            toast.success(result.message);
           } else {
-            toast.warn("something went wrong ");
+            toast.warn("Something went wrong.");
           }
         })
         .catch((error) => {
@@ -207,165 +215,160 @@ const SAOrganization = () => {
     }
   };
   return (
-    <Dashboard>
-      <DashNav>
-        <SASideBar />
-      </DashNav>
-      <DashMain>
-        <DashHeader>
-          <DashHeaderTitle>Organization List</DashHeaderTitle>
-          <DashHeaderSearch>
-            <SearchBox>
-              <SearchInput
+    <>
+      <DashHeader>
+        <DashHeaderTitle>Organization List</DashHeaderTitle>
+        <DashHeaderSearch>
+          <SearchBox>
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+            // value={searchValue}
+            // onChange={(e) => setSearchValue(e.target.value)}
+            ></SearchInput>
+            <SearchIcon src="/images/icons/searchIcon.svg" />
+          </SearchBox>
+          <DashNotification src="/images/icons/Notifications.svg" />
+        </DashHeaderSearch>
+      </DashHeader>
+      <DisciplinaryDiv>
+        <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
+        <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
+        <Modal
+          open={open}
+          onClose={HandleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <ModalUpperDiv>
+              <ModalHeading>Add New Members</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  HandleClose();
+                }}
+                src="/images/icons/Alert-Circle.svg"
+              />
+            </ModalUpperDiv>
+            <ModalUpperMid>
+              <InputLabel>
+                Organization Name <InputSpan>*</InputSpan>
+              </InputLabel>
+              <Input
                 type="text"
-                placeholder="Search..."
-                // value={searchValue}
-                // onChange={(e) => setSearchValue(e.target.value)}
-              ></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-            </SearchBox>
-            <DashNotification src="/images/icons/Notifications.svg" />
-          </DashHeaderSearch>
-        </DashHeader>
-        <DisciplinaryDiv>
-          <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
-          <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
-          <Modal
-            open={open}
-            onClose={HandleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <ModalUpperDiv>
-                <ModalHeading>Add New Members</ModalHeading>
-                <ModalIcon
-                  onClick={() => {
-                    HandleClose();
-                  }}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalUpperDiv>
-              <ModalUpperMid>
-                <InputLabel>
-                  Organization Name <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="text"
-                  name="name"
-                  onChange={HandleChanges}
-                  value={formData.name}
-                  placeholder="Organization Name "
-                />
-                <Errors>{errors.nameError}</Errors>
-                <InputLabel>
-                  Email <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="Email"
-                  name="email"
-                  onChange={HandleChanges}
-                  value={formData.email}
-                  placeholder="Email@gmail.com"
-                />
-                <Errors>{errors.emailError}</Errors>
-                <AddNewButton
-                  onClick={(e) => {
-                    HandleSubmit(e);
-                  }}
-                >
-                  Invite
-                </AddNewButton>
-              </ModalUpperMid>
-            </Box>
-          </Modal>
-        </DisciplinaryDiv>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
+                name="name"
+                onChange={HandleChanges}
+                value={formData.name}
+                placeholder="Organization Name"
+              />
+              {errors.nameError && (
+                <span className="error">{errors.nameError}</span>
+              )}
+              <InputLabel>
+                Email <InputSpan>*</InputSpan>
+              </InputLabel>
+              <Input
+                type="Email"
+                name="email"
+                onChange={HandleChanges}
+                value={formData.email}
+                placeholder="email@gmail.com"
+              />
+              {errors.emailError && (
+                <span className="error">{errors.emailError}</span>
+              )}
+              <AddNewButton
+                onClick={(e) => {
+                  HandleSubmit(e);
                 }}
               >
-                <TableCell
-                  sx={{ ...CellHeadStyles, minWidth: "250px" }}
-                  align="left"
-                >
-                  Name
+                Invite
+              </AddNewButton>
+            </ModalUpperMid>
+          </Box>
+        </Modal>
+      </DisciplinaryDiv>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow
+              sx={{
+                background: "#FBFBFB",
+              }}
+            >
+              <TableCell
+                sx={{ ...CellHeadStyles, minWidth: "250px" }}
+                align="left"
+              >
+                Name
+              </TableCell>
+              <TableCell
+                sx={{ ...CellHeadStyles, minWidth: "180px" }}
+                align="left"
+              >
+                Email
+              </TableCell>
+              <TableCell
+                sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                align="left"
+              >
+                Status
+              </TableCell>
+              <TableCell
+                sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                align="left"
+              >
+                Action
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {result.organizations?.map((data) => (
+              <TableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  background: "#fff",
+                }}
+              >
+                <TableCell sx={CellStyle} align="left">
+                  {data.name}
                 </TableCell>
-                <TableCell
-                  sx={{ ...CellHeadStyles, minWidth: "180px" }}
-                  align="left"
-                >
-                  Email
+                <TableCell sx={CellStyle2} align="left">
+                  -
                 </TableCell>
-                <TableCell
-                  sx={{ ...CellHeadStyles, minWidth: "150px" }}
-                  align="left"
-                >
-                  Status
+                <TableCell sx={CellStyle} align="left">
+                  {data.isActive ? "Active" : "Inactive"}
                 </TableCell>
-                <TableCell
-                  sx={{ ...CellHeadStyles, minWidth: "150px" }}
-                  align="left"
-                >
-                  Action
+                <TableCell sx={CellStyle2} align="left">
+                  <ActionIconDiv>
+                    <ActionIcons
+                      // onClick={() => {
+                      //   HandleOpenEdit();
+                      //   setId(data._id);
+                      //   setDescription(data.description);
+                      //   setRequiredBcr(data.requiredBcr);
+                      //   setName(data.name);
+                      // }}
+                      src="/images/icons/Pendown.svg"
+                    />
+                    <ActionIcons
+                      // onClick={() => {
+                      //   HandleOpenDelete();
+                      //   setId(data._id);
+                      // }}
+                      src="/images/icons/Trash-2.svg"
+                    />
+                  </ActionIconDiv>
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {result.organizations?.map((data) => (
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    background: "#fff",
-                  }}
-                >
-                  <TableCell sx={CellStyle} align="left">
-                    {" "}
-                    {data.name}{" "}
-                  </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    name@gamail.com{" "}
-                  </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    {" "}
-                    {data.isActive === false ? "InActive" : "Active"}{" "}
-                  </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    <ActionIconDiv>
-                      <ActionIcons
-                        // onClick={() => {
-                        //   HandleOpenEdit();
-                        //   setId(data._id);
-                        //   setDescription(data.description);
-                        //   setRequiredBcr(data.requiredBcr);
-                        //   setName(data.name);
-                        // }}
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <ActionIcons
-                        // onClick={() => {
-                        //   HandleOpenDelete();
-                        //   setId(data._id);
-                        // }}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                    </ActionIconDiv>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
           Load More
         </AddNewButton> */}
-      </DashMain>
-    </Dashboard>
+    </>
   );
 };
 

@@ -5,7 +5,7 @@ import { Grid, Box } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
-import httpClient from "../../../../api/httpClient";
+import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
 
 export default function VerifyUser() {

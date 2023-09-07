@@ -87,7 +87,7 @@ const emailTemplates = {
                                     button above, copy and paste the URL below into your web
                                     browser.</p>
                                 <p class="f-fallback sub">
-                                    ${process.env.FRONTEND_URL}signup/${data.user.invitationToken}
+                                    ${process.env.FRONTEND_URL}organization-admin/complete-signup/${data.user.email}/${data.user.invitationToken}
                                 </p>
                             </td>
                         </tr>

@@ -9,6 +9,10 @@ const authRoute = require('./routes/auth')
 const orgRoute = require('./routes/organization')
 const departmentRoute = require('./routes/department')
 const disciplinaryRoute = require('./routes/disciplinary')
+const superAdminRoute = require('./routes/superAdmin')
+const orgAdminRoute = require('./routes/orgAdmin')
+
+
 // const swagger = require('./swagger');
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
 
@@ -52,6 +56,10 @@ app.use('/api/auth', authRoute);
 app.use('/api/organization', orgRoute);
 app.use('/api/department', departmentRoute);
 app.use('/api/disciplinary', disciplinaryRoute);
+app.use('/api/super-admin', superAdminRoute);
+app.use('/api/organization-admin', orgAdminRoute);
+
+
 
 app.use("/api", express.static(path.join(__dirname, '../wagmatcook')));
 app.use("/api/media", express.static(path.join(__dirname, 'assets')));

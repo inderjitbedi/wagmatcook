@@ -15,7 +15,15 @@ const userOrganizationSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false
-  }
+  },
+  isPrimary: {
+    type: Boolean,
+    default: false
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
 }, {
   timestamps: true,
 });

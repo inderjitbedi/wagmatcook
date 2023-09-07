@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import {
   SidebarTitle,
@@ -7,38 +7,38 @@ import {
   SideBarListLogo,
   SideBarListTitle,
   SideBarList,
-} from "./SAStyles.js";
+} from "../SAStyles";
 
 const SASideBar = () => {
   const SideBarData = [
-    {
-      Title: "User",
-      src: "/svg/person.svg",
-      to: "/SAUserList",
-    },
+    // {
+    //   Title: "User",
+    //   src: "/svg/person.svg",
+    //   to: "/SAUserList",
+    // },
     {
       Title: "Organization",
       src: "/svg/Departments.svg",
-      to: "/SAOrganization",
+      to: "/super-admin/organizations",
     },
   ];
   return (
     <>
       {" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
-      <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
+      <span style={{ width: "100%", borderBottom: "1px solid #EDEDED", display:"inline-block"}}></span>
+
       <SidebarTitle>Super Admin</SidebarTitle>
-      <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
+      <span style={{ width: "80%", borderBottom: "1px solid #EDEDED", display:"inline-block",  margin: "0 28px" }}></span>
       <SideBarList>
         {SideBarData.map((data) => (
-          <Link style={{textDecoration:"none"}} to={data.to}>
+          <NavLink style={{textDecoration:"none"}} to={data.to}>
             <SideBarListContainer>
               <SideBarListLogo src={data.src}>
-                {/* <use xlinkHref="/svg/Dashboard.svg" /> */}
               </SideBarListLogo>
               <SideBarListTitle> {data.Title}</SideBarListTitle>
             </SideBarListContainer>
-          </Link>
+          </NavLink>
         ))}
       </SideBarList>
     </>
