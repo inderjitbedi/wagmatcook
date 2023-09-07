@@ -75,7 +75,7 @@ export const SideBarListTitle = styled.p`
 export const Employee = styled.div`
   display: flex;
   width: 100%;
-  /* height: 100vh; */
+
 `;
 export const EmployeeNav = styled.div`
   width: 18%;
@@ -99,6 +99,7 @@ export const BackButton = styled.button`
   display: flex;
   gap: 4px;
   align-items: center;
+  cursor: pointer;
 `;
 export const FlexColumn = styled.div`
   display: flex;
@@ -161,6 +162,7 @@ export const BodyMainHeading = styled.h1`
 `;
 export const FormContainer = styled.div`
   width: 60%;
+  position: relative;
 `;
 export const ImgUpload = styled.div`
   display: flex;
@@ -329,4 +331,13 @@ export const AlignFlex = styled.div`
 display: flex;
 align-items: center;
 gap:10px;
+`;
+export const DeleteIcon = styled.img`
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 0px;
 `;

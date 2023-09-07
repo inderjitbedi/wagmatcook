@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   SidebarTitle,
   SideBarLogoContainer,
@@ -11,53 +11,56 @@ import {
   SideBarListTitle,
   SideBarList,
 } from "./SideBarStyles";
-import { Link, useNavigate ,useLocation} from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const location = useLocation();
 
-    const SideBarData = [
-      {
-        Title: "Dashboard",
-        src: "/svg/Dashboard.svg",
-      },
-      {
-        Title: "Departments",
-        src: "/svg/Departments.svg",
-        to: "/Departments",
-      },
+  const SideBarData = [
+    {
+      Title: "Dashboard",
+      src: "/svg/Dashboard.svg",
+      to: "/organization-admin/dashboard",
+    },
+    {
+      Title: "Departments",
+      src: "/svg/Departments.svg",
+      to: "/organization-admin/departments",
+    },
 
-      {
-        Title: "Employee",
-        src: "/svg/Employee.svg",
-        to:"/Employee"
-      },
-      {
-        Title: "Activities",
-        src: "/svg/flash.svg",
-      },
-      {
-        Title: "Leave",
-        src: "/svg/Leaves.svg",
-      },
-      {
-        Title: "Benefits",
-        src: "/svg/Benefits.svg",
-      },
-      {
-        Title: "Disciplinary",
-        src: "/svg/Disciplinary.svg",
-        to: "/Disciplinary",
-      },
-      {
-        Title: "Account",
-        src: "/svg/person.svg",
-      },
-      {
-        Title: "Report",
-        src: "/svg/Reports.svg",
-      },
+    {
+      Title: "Employee",
+      src: "/svg/Employee.svg",
+      to: "/organization-admin/employee",
+      active: "employee-details",
+    },
+    {
+      Title: "Activities",
+      src: "/svg/flash.svg",
+    },
+    {
+      Title: "Leave",
+      src: "/svg/Leaves.svg",
+    },
+    {
+      Title: "Benefits",
+      src: "/svg/Benefits.svg",
+    },
+    {
+      Title: "Disciplinary",
+      src: "/svg/Disciplinary.svg",
+      to: "/organization-admin/disciplinary",
+    },
+    {
+      Title: "Account",
+      src: "/svg/person.svg",
+    },
+    {
+      Title: "Report",
+      src: "/svg/Reports.svg",
+    },
   ];
+  console.log(location.pathname);
   const style = {
     textDecoration: "none",
     color: "#279AF1",
@@ -77,18 +80,16 @@ const SideBar = () => {
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
       <SideBarList>
         {SideBarData.map((data) => (
-          <Link
-            style={{ textDecoration: "none",}}
-            to={data.to}
-            key={data.to}
-          >
+          <Link style={{ textDecoration: "none" }} to={data.to} key={data.to}>
             <SideBarListContainer style={{ zIndex: "1" }}>
               <SideBarListLogo src={data.src}>
                 {/* <use xlinkHref="/svg/Dashboard.svg" /> */}
               </SideBarListLogo>
               <SideBarListTitle
                 style={
-                  location.pathname === data.to ? style : { color: "#5C5C5C" }
+                  location.pathname === data.to 
+                    ? style
+                    : { color: "#5C5C5C" }
                 }
               >
                 {" "}
@@ -100,6 +101,6 @@ const SideBar = () => {
       </SideBarList>
     </>
   );
-}
+};
 
-export default SideBar
+export default SideBar;

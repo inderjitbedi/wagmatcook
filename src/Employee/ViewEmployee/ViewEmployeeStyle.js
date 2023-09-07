@@ -49,11 +49,15 @@ export const SearchInput = styled.input`
   border: 0px;
   /* padding:0.5em; */
   background-color: transparent;
+  width: 98%;
   &:focus {
     outline: none;
   }
 `;
-export const SearchIcon = styled.img``;
+export const SearchIcon = styled.img`
+width: 20px;
+height: 20px;
+`;
 export const DepartmentFilterContainer = styled.div`
   display: flex;
   align-items: flex-end;
@@ -109,6 +113,7 @@ export const IconContainer = styled.div`
 export const Icons = styled.img`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 export const TabelImg = styled.img`
   width: 30px;
@@ -149,6 +154,7 @@ export const BackButton = styled.button`
   display: flex;
   gap: 4px;
   align-items: center;
+  cursor: pointer;
 `;
 export const IconsEmployee = styled.img`
   display: inline-block;
@@ -260,6 +266,8 @@ padding: 0.5em .75em;
   display: flex;
   align-items: center;
   background-color: #fff;
+  gap:4px;
+  cursor: pointer;
 
 `;
 export const ButtonIcon = styled.img`
@@ -355,4 +363,152 @@ export const LeaveDiv = styled.div`
   align-items: center;
   justify-content: space-between;
   border: 1px solid #EFF4FA;
+`;
+export const FlexContaierForm = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* margin-bottom: 16px; */
+  width: 100%;
+  box-sizing: border-box;
+`;
+export const FlexColumnForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+  width: 100%;
+`;
+export const InputLabel = styled.label`
+  color: #222b45;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  margin-bottom: 10px;
+  display: block;
+`;
+export const InputSpan = styled.span`
+  color: red;
+  font-weight: 100;
+`;
+export const Input = styled.input`
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 10px;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+  outline: #dcdcdc;
+`;
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 0px;
+  margin-top: 2px;
+`;
+export const ButtonBlue = styled.button`
+  border-radius: 6px;
+  background: #279af1;
+  display: inline-flex;
+  padding: 11px 14px 12px 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  border: none;
+`;
+export const ModalContainer = styled.div`
+  padding: 20px 29px 15px 29px;
+  border-bottom: 2px solid #f3f3f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+`;
+export const ModalHeading = styled.h1`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 0px;
+`;
+export const ModalIcon = styled.img`
+width: 24px;
+height: 24px;
+display:inline-block;
+cursor: pointer;
+`;
+export const ModalFormContainer = styled.div`
+  padding: 20px 29px 15px 29px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+export const TextArea = styled.textarea`
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  resize: none;
+  height: 105px;
+  padding: 1em;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+`;
+export const InputPara = styled.p`
+  color: #737992;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0px; /* 171.429% */
+  display: flex;
+  justify-content: space-between;
+`;
+export const ModalThanks = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0px;
+  position: relative;
+`;
+export const ModalThanksImg = styled.img`
+  display: block;
+  width: 106px;
+  height: 106px;
+`;
+export const ModalIconDelete = styled.img`
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 0px;
+`;
+export const ModalThanksHeading = styled.p`
+  color: #222b45;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  width: 70%;
+  text-align: center;
 `;

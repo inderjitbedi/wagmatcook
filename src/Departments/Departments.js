@@ -79,19 +79,19 @@ const Departments = () => {
   const HandleCloseEdit = () => setOpenEdit(false);
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [openThanks, setOpenThanks] = useState(false);
   const HandleOpenThanks = () => setOpenThanks(true);
   const HandleCloseThanks = () => setOpenThanks(false);
-  // menu state 
-   const [anchorEl, setAnchorEl] = useState(null);
-   const openMenu = Boolean(anchorEl);
-   const handleClickMenu = (event) => {
-     setAnchorEl(event.currentTarget);
-   };
-   const handleCloseMenu = () => {
-     setAnchorEl(null);
-   };
+  // menu state
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -240,18 +240,16 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-     let isLoggedIn = localStorage.getItem("isLoggedIn");
+    let isLoggedIn = localStorage.getItem("isLoggedIn");
     if (!isLoggedIn) {
       Navigate("/signin");
     } else {
       GetDepartments();
     }
-    
   }, [delayedSearchValue, page]);
   console.log(departmentData, "this is out data looks like ");
 
   const HandleSubmit = (e) => {
-
     e.preventDefault();
     let dataCopy = { ...formData };
     let url = "/department/create";
@@ -349,12 +347,14 @@ const Departments = () => {
       })
         .then(({ result }) => {
           if (result?.department) {
-            const indexToReplace = departmentData.findIndex((obj) => obj._id = result.department._id);
+            const indexToReplace = departmentData.findIndex(
+              (obj) => (obj._id = result.department._id)
+            );
             if (indexToReplace !== -1) {
               const UpdatedData = departmentData;
               UpdatedData[indexToReplace] = result.department;
               setDepartmentData(UpdatedData);
-              console.log(UpdatedData, "is working")
+              console.log(UpdatedData, "is working");
             }
             HandleCloseEdit();
             // GetDepartments();
@@ -417,14 +417,10 @@ const Departments = () => {
     localStorage.clear();
     handleCloseMenu();
     Navigate("/signin");
-    
-  }
+  };
   return (
-    <Dashboard>
-      <DashNav>
-        <SideBar />
-      </DashNav>
-      <DashMain>
+    <>
+      <>
         <DashHeader>
           <DashHeaderDepartment>
             <DashHeaderTitle>Dashboard</DashHeaderTitle>
@@ -552,7 +548,6 @@ const Departments = () => {
             </Box>
           </Modal>
         </DepartmentFilterContainer>
-        
         {isLoading ? (
           <div
             style={{
@@ -609,7 +604,7 @@ const Departments = () => {
             Load More
           </AddNewButton>
         )}{" "}
-      </DashMain>
+      </>
       {/* modal to edit  */}
       <Modal
         open={openEdit}
@@ -666,7 +661,7 @@ const Departments = () => {
         HandleDelete={HandleDelete}
         isLoading={isLoading}
       />
-    </Dashboard>
+    </>
   );
 };
 

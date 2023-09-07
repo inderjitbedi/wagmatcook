@@ -472,11 +472,9 @@ setDescriptionLenght(value.length)
     HandleOpenEdit();
   };
   return (
-    <Dashboard>
-      <DashNav>
-        <SideBar />
-      </DashNav>
-      <DashMain>
+    <>
+    
+      <>
         <DashHeader>
           <DashHeaderTitle>Disciplinary</DashHeaderTitle>
           <DashHeaderSearch>
@@ -700,7 +698,7 @@ setDescriptionLenght(value.length)
             Load More
           </AddNewButton>
         )}{" "}
-      </DashMain>
+      </>
       {/* modal fo editing  */}
       <Modal
         open={openEdit}
@@ -777,7 +775,7 @@ setDescriptionLenght(value.length)
         HandleReorder={HandleReorder}
         isLoading={isLoading}
       />
-    </Dashboard>
+    </>
   );
 };
 
