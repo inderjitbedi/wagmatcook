@@ -4,7 +4,7 @@ import { TextField, InputLabel } from '@mui/material';
 
 import { Grid, Box } from '@mui/material';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import httpClient from '../../../api/httpClient';
+import httpClient from '../../api/httpClient';
 import { toast } from 'react-toastify';
 
 // TODO remove, this demo shouldn't need to reset the theme.

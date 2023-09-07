@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const orgController = require('../controllers/organization');
-const { verifySuperAdmin } = require('../middlewares/jwtMiddleware');
+const { verifyOrgAdmin } = require('../middlewares/jwtMiddleware');
+const authController = require('../controllers/auth');
 
-router.get('/complete-signup/:token', verifySuperAdmin, orgController.list);
-router.post('/invite', verifySuperAdmin, orgController.initiate);
+router.put('/complete-signup/:token', authController.completeOrgAdminSignup);
 
 
 module.exports = router;

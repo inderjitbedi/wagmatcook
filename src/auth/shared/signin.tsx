@@ -4,7 +4,7 @@ import { TextField, InputLabel } from '@mui/material';
 
 import { Grid, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import httpClient from '../../../api/httpClient';
+import httpClient from '../../api/httpClient';
 import { toast } from 'react-toastify';
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 export default function SignIn() {
 
-   const navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         // localStorage.clear()
@@ -21,10 +21,10 @@ export default function SignIn() {
         if (isLoggedIn) {
             navigate("/OADashBoard");
         } else {
-           localStorage.clear() 
+            localStorage.clear()
         }
     }, []);
- 
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -66,7 +66,7 @@ export default function SignIn() {
                 url,
                 data: dataCopy,
             })
-                .then(({ result }) => {
+                .then(({ result }: any) => {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         localStorage.setItem("token", result?.token);
@@ -99,7 +99,9 @@ export default function SignIn() {
                     </div>
                 </Grid>
                 <Grid item xs={9} style={{ position: "relative" }}>
-                    <p className='upper-text'>New On Wagmatcook ? <span className='blue-text'>Create Account</span></p>
+
+                    {/* <p className='upper-text'>New On Wagmatcook ? <span className='blue-text'>Create Account</span></p> */}
+
                     <div className='signup-form mt-8'>
                         <h1>
                             Sign in

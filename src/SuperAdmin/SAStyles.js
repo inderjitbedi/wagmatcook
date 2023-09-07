@@ -57,6 +57,10 @@ export const SideBarListContainer = styled.div`
   &:hover p {
     color: #279af1;
   }
+  &.active {
+    color: inherit;
+  }
+
 `;
 export const SideBarListLogo = styled.img`
   height: 18px;
@@ -147,6 +151,7 @@ export const AddNewButton = styled.button`
   padding: 1em 2em;
   border: none;
   cursor: pointer;
+  margin-top:25px;
 `;
 export const MenuIcon = styled.img`
   display: inline-block;
