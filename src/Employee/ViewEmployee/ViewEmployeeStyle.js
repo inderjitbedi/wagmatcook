@@ -113,6 +113,7 @@ export const IconContainer = styled.div`
 export const Icons = styled.img`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 export const TabelImg = styled.img`
   width: 30px;
@@ -153,6 +154,7 @@ export const BackButton = styled.button`
   display: flex;
   gap: 4px;
   align-items: center;
+  cursor: pointer;
 `;
 export const IconsEmployee = styled.img`
   display: inline-block;
@@ -265,6 +267,7 @@ padding: 0.5em .75em;
   align-items: center;
   background-color: #fff;
   gap:4px;
+  cursor: pointer;
 
 `;
 export const ButtonIcon = styled.img`

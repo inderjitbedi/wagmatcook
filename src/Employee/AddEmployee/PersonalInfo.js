@@ -326,12 +326,12 @@ const PersonalInfo = () => {
               </FlexContaierForm>
             </FormContainer>
             <ButtonBlue
-              type="submit"
-              //   onClick={() => {
+              // type="submit"
+                onClick={() => {
               // handleSubmit(onSubmit)
-              // // Navigate("/add-new-employee/job-details")
-              // console.log("click is happing")
-              // }}
+              Navigate("/add-new-employee/job-details")
+              console.log("click is happing")
+              }}
             >
               Continue
             </ButtonBlue>

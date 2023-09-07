@@ -67,8 +67,8 @@ const JobDetails = () => {
         <BodyHeader>
           <BodyHeaderTitle>
             <span
-              style={{ color: "#8B8B8B" }}
-              onClick={() => Navigate("/PersonalInfo")}
+              style={{ color: "#8B8B8B", cursor: "pointer" }}
+              onClick={() => Navigate("/add-new-employee/personal-info")}
             >
               {" "}
               Personal Information{" "}
@@ -237,7 +237,7 @@ const JobDetails = () => {
 
           <FlexContaier>
             <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
-            <ButtonBlue onClick={() => Navigate("/Benefits")}>
+            <ButtonBlue onClick={() => Navigate("/add-new-employee/benefits")}>
               Continue
             </ButtonBlue>
           </FlexContaier>

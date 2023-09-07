@@ -26,7 +26,7 @@ import {
   BluePara,
   DeleteIcon
 } from "./AddEmployeeStyles";
-import { position } from "stylis";
+
 
 const CertificatesInfo = () => {
 
@@ -63,24 +63,24 @@ const CertificatesInfo = () => {
         <BodyHeader>
           <BodyHeaderTitle>
             <span
-              style={{ color: "#8B8B8B" }}
-              onClick={() => Navigate("/PersonalInfo")}
+              style={{ color: "#8B8B8B", cursor: "pointer" }}
+              onClick={() => Navigate("/add-new-employee/personal-info")}
             >
               {" "}
               Personal Information &#62;{" "}
             </span>{" "}
             <span
-              style={{ color: "#8B8B8B" }}
-              onClick={() => Navigate("/JobDetails")}
+              style={{ color: "#8B8B8B", cursor: "pointer" }}
+              onClick={() => Navigate("/add-new-employee/job-details")}
             >
               Job Details &#62;
             </span>
             <span
-              style={{ color: "#8B8B8B" }}
-              onClick={() => Navigate("/benefits")}
+              style={{ color: "#8B8B8B", cursor: "pointer" }}
+              onClick={() => Navigate("/add-new-employee/benefits")}
             >
               {" "}
-              &#62; Benefits{" "}
+              Benefits &#62;{" "}
             </span>{" "}
             Certificates
           </BodyHeaderTitle>

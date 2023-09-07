@@ -7,6 +7,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useNavigate } from "react-router";
+import DeleteModal from "../../Modals/DeleteModal";
 import {
   Dashboard,
   DashMain,
@@ -50,6 +52,7 @@ const Celllstyle2 = {
 };
 
 const Employee = () => {
+  const Navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
@@ -61,6 +64,9 @@ const Employee = () => {
       setDelayedSearchValue(e.target.value);
     }, delayDuration);
   };
+    const [openDelete, setOpenDelete] = useState(false);
+    const HandleOpenDelete = () => setOpenDelete(true);
+    const HandleCloseDelete = () => setOpenDelete(false);
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -240,9 +246,17 @@ const Employee = () => {
                 </TableCell>
                 <TableCell align="left" sx={Celllstyle2}>
                   <IconContainer>
-                    <Icons src="/images/icons/eye.svg" />
-                    <Icons src="/images/icons/Pendown.svg" />
-                    <Icons src="/images/icons/Trash-2.svg" />
+                    <Icons
+                      onClick={() => Navigate("/employee-details/personal")}
+                      src="/images/icons/eye.svg"
+                    />
+                    <Icons
+                      onClick={() =>
+                        Navigate("/add-new-employee/personal-info")
+                      }
+                      src="/images/icons/Pendown.svg"
+                    />
+                    <Icons onClick={()=>  HandleOpenDelete()} src="/images/icons/Trash-2.svg" />
                   </IconContainer>
                 </TableCell>
               </TableRow>
@@ -250,6 +264,11 @@ const Employee = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <DeleteModal
+        openDelete={openDelete}
+        HandleCloseDelete={HandleCloseDelete}
+        // HandleDelete={HandleDelete}
+      />
     </>
   );
 };

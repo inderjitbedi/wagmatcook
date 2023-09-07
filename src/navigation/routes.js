@@ -237,7 +237,7 @@ const Routes = [
       },
       {
         component: CertificatesInfo,
-        path: "certificatesInfo",
+        path: "certificates-info",
         title: "CertificatesInfo ",
         to: "/",
         type: "private",
