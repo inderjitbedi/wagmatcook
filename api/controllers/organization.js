@@ -136,15 +136,15 @@ const orgController = {
                 },
                 {
                     $lookup: {
-                      from: 'users', // Name of the User collection
-                      localField: 'primaryUser',
-                      foreignField: '_id',
-                      as: 'primaryUser', // Store the populated user in the 'primaryUser' field
+                        from: 'users', // Name of the User collection
+                        localField: 'primaryUser',
+                        foreignField: '_id',
+                        as: 'primaryUser', // Store the populated user in the 'primaryUser' field
                     },
-                  },
-                  {
+                },
+                {
                     $unwind: '$primaryUser', // Unwind the populated primaryUser
-                  },
+                },
             ]);
 
             res.status(200).json({
@@ -158,6 +158,18 @@ const orgController = {
     },
     async initiate(req, res) {
         try {
+            console.log( req.body);
+            const organization = await Organization.findOne({ name: req.body.name })
+            if (organization) {
+                return res.status(400).json({ message: 'Organization name already registered' });
+            }
+            console.log( organization);
+            const userExists = await User.findOne({ email: req.body.email })
+            if (userExists) {
+                return res.status(400).json({ message: 'User email already registered' });
+            } 
+             console.log( userExists);
+
             const org = new Organization({
                 name: req.body.name
                 // , createdBy: req.user._id

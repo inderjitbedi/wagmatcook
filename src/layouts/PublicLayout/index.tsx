@@ -6,6 +6,7 @@ const PublicLayout = ({ component: Component }: any) => {
     CompleteSignup: './../../../assets/login-image.svg',
   };
   const imageUrl = componentImageMap[Component.name] || './../assets/login-image.svg';
+  console.log(Component.name, imageUrl);
 
   return (
     <>

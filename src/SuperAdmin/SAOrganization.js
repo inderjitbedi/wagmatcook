@@ -116,11 +116,11 @@ const SAOrganization = () => {
     if (name === "name") {
       if (!value) {
         setErrors({ ...errors, nameError: "Required" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+      // } else if (!/^[A-Za-z\s]+$/.test(value)) {
+      //   setErrors({
+      //     ...errors,
+      //     nameError: "Name must not contain numbers or special characters",
+      //   });
       } else {
         setErrors({ ...errors, nameError: "" });
 
@@ -153,7 +153,7 @@ const SAOrganization = () => {
         if (result) {
           setResult(result);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -210,7 +210,7 @@ const SAOrganization = () => {
             setErrors("");
             toast.success(result.message);
           } else {
-            toast.warn("Something went wrong.");
+            //toast.warn("Something went wrong.");
           }
         })
         .catch((error) => {
@@ -284,7 +284,7 @@ const SAOrganization = () => {
         >
           <Box sx={style}>
             <ModalUpperDiv>
-              <ModalHeading>Add New Members</ModalHeading>
+              <ModalHeading>Invite Organization Admin</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   HandleClose();
