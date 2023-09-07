@@ -6,7 +6,7 @@ const redirectToDashboard = (role: any, navigate: any) => {
             navigate('/super-admin/organizations');
             break;
         case ROLES.ORG_ADMIN:
-            navigate('/user/dashboard');
+            navigate('/organization-admin/dashboard');
             break;
         default:
             navigate('/'); // Redirect to a default page for unknown roles
