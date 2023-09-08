@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { useForm, Controller } from "react-hook-form";
 
 import {
   MainBodyContainer,
@@ -50,6 +51,22 @@ const EVCertificates = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+    const [formData, setFormData] = useState([]);
+    const {
+      register,
+      control,
+      handleSubmit,
+      formState: { errors },
+      getValues,
+    } = useForm({ mode: "all" });
+
+    const onSubmit = (data) => {
+      if (!errors) {
+      
+        setFormData(data);
+      }
+      console.log("form submmited", data);
+    };
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -89,50 +106,100 @@ const EVCertificates = () => {
                   src="/images/icons/Alert-Circle.svg"
                 />
               </ModalContainer>
-              <ModalFormContainer>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Certificate Title <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Provider <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Completion Date<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="password" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Exipiry<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="password" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <EditButton style={{marginBottom:"20px"}}>
-                  {" "}
-                  <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
-                  Documents
-                </EditButton>
-                <ButtonBlue>Submit</ButtonBlue>
-              </ModalFormContainer>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalFormContainer>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Certificate Title <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("title", {
+                          required: {
+                            value: true,
+                            message: "Certificates Title is Required",
+                          },
+                        })}
+                      />
+                      {errors.title && (
+                        <Errors> {errors.title?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Provider <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("provider", {
+                          required: {
+                            value: true,
+                            message: "Provider  is Required",
+                          },
+                        })}
+                      />
+                      {errors.provider && (
+                        <Errors> {errors.provider?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Completion Date<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("startdate", {
+                          required: {
+                            value: true,
+                            message: "Completion Date is Required",
+                          },
+                        })}
+                      />
+                      {errors.startdate && (
+                        <Errors>{errors.startdate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Exipiry<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("enddate", {
+                          required: {
+                            value: true,
+                            message: "  Exipiry  Date is Required",
+                          },
+                          validate: (fieldValue) => {
+                            const startDate = new Date(getValues("startdate"));
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Exipiry Date must not be earlier than completion Date"
+                            );
+                          },
+                        })}
+                      />
+                      {errors.enddate && (
+                        <Errors>{errors.enddate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <EditButton style={{ marginBottom: "20px" }}>
+                    {" "}
+                    <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
+                    Documents
+                  </EditButton>
+                  <ButtonBlue type="submit">Submit</ButtonBlue>
+                </ModalFormContainer>
+              </form>
             </Box>
           </Modal>
           {/*modal ends here  */}

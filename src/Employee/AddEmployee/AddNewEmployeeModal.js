@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
+import { useForm, Controller } from "react-hook-form";
+
 import {
   Input,
   ButtonBlue,
@@ -50,55 +52,135 @@ const ModalFormContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
 `;
-const AddNewEmployeeModal = () => {
+const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
+  const [formData, setFormData] = useState([]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({ mode: "all" });
+
+  const onSubmit = (data) => {
+    if (!errors) {
+      setFormData(data);
+    }
+    console.log("form submmited", data);
+  };
   return (
     <Modal
-      // open={openDelete}
-      // onClose={HandleCloseDelete}
+      open={openEmployee}
+      onClose={HandleCloseEmployee}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
         <ModalContainer>
           <ModalHeading>Add New Employee</ModalHeading>
-          <ModalIcon src="/images/icons/Alert-Circle.svg" />
+          <ModalIcon
+            onClick={HandleCloseEmployee}
+            src="/images/icons/Alert-Circle.svg"
+          />
         </ModalContainer>
-        <ModalFormContainer>
-          <FlexContaierForm>
-            <FlexColumnForm>
-              <InputLabel>First Name</InputLabel>
-              <Input type="text" name="firstname" />
-              <Errors></Errors>
-            </FlexColumnForm>
-            <FlexColumnForm>
-              <InputLabel>Last Name</InputLabel>
-              <Input type="text" name="firstname" />
-              <Errors></Errors>
-            </FlexColumnForm>
-          </FlexContaierForm>
-          <FlexContaierForm>
-            <FlexColumnForm>
-              <InputLabel>Email Address</InputLabel>
-              <Input type="email" name="firstname" />
-              <Errors></Errors>
-            </FlexColumnForm>
-          </FlexContaierForm>
-          <FlexContaierForm>
-            <FlexColumnForm>
-              <InputLabel>Passsword</InputLabel>
-              <Input type="password" name="firstname" />
-              <Errors></Errors>
-            </FlexColumnForm>
-          </FlexContaierForm>
-          <FlexContaierForm>
-            <FlexColumnForm>
-              <InputLabel>Confirm Password</InputLabel>
-              <Input type="password" name="firstname" />
-              <Errors></Errors>
-            </FlexColumnForm>
-          </FlexContaierForm>
-          <ButtonBlue>Submit</ButtonBlue>
-        </ModalFormContainer>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalFormContainer>
+            <FlexContaierForm>
+              <FlexColumnForm>
+                <InputLabel>First Name</InputLabel>
+                <Input
+                  type="text"
+                  {...register("firstname", {
+                    required: {
+                      value: true,
+                      message: "First Name is Required",
+                    },
+                  })}
+                />
+                {errors.firstname && (
+                  <Errors>{errors.firstname?.message}</Errors>
+                )}
+              </FlexColumnForm>
+              <FlexColumnForm>
+                <InputLabel>Last Name</InputLabel>
+                <Input
+                  type="text"
+                  {...register("lastname", {
+                    required: {
+                      value: true,
+                      message: "Last Name is Required",
+                    },
+                  })}
+                />
+                {errors.lastname && <Errors>{errors.lastname?.message}</Errors>}
+              </FlexColumnForm>
+            </FlexContaierForm>
+            <FlexContaierForm>
+              <FlexColumnForm>
+                <InputLabel>Email Address</InputLabel>
+                <Input
+                  type="email"
+                  {...register("email", {
+                    required: {
+                      value: true,
+                      message: "Email is Required",
+                    },
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Please enter a valid email",
+                    },
+                  })}
+                />
+                {errors.email && <Errors> {errors.email?.message} </Errors>}
+              </FlexColumnForm>
+            </FlexContaierForm>
+            <FlexContaierForm>
+              <FlexColumnForm>
+                <InputLabel>Passsword</InputLabel>
+                <Input
+                  type="password"
+                  {...register("password", {
+                    required: {
+                      value: true,
+                      message: "Password is Required",
+                    },
+                    pattern: {
+                      value:
+                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                      message: "Please enter a valid Password",
+                    },
+                  })}
+                />
+                {errors.password && <Errors> {errors.password?.message} </Errors>}
+              </FlexColumnForm>
+            </FlexContaierForm>
+            <FlexContaierForm>
+              <FlexColumnForm>
+                <InputLabel>Confirm Password</InputLabel>
+                <Input
+                  type="password"
+                  {...register("confirmpassword", {
+                    required: {
+                      value: true,
+                      message: "Password is Required",
+                    },
+                    validate: (fieldValue) => {
+                      const Password =String( getValues("password"));
+                      const confirmPassword =String(fieldValue)
+                      return (
+                        Password !== confirmPassword ||
+                        "Confirm password does not match to Password"
+                      );
+                    },
+                  })}
+                />
+                {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
+              </FlexColumnForm>
+            </FlexContaierForm>
+            <ButtonBlue type="submit">Submit</ButtonBlue>
+          </ModalFormContainer>
+        </form>
       </Box>
     </Modal>
   );

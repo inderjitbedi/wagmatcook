@@ -9,6 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ButtonBlue } from "../AddEmployee/AddEmployeeStyles";
+import { useForm, Controller } from "react-hook-form";
+
 
 import {
   MainBodyContainer,
@@ -179,7 +181,26 @@ const EVLeaveHistory = () => {
   const handleClose = () => setOpen(false);
     const [openThanks, setOpenThanks] = useState(false);
     const handleOpenThanks = () => setOpenThanks(true);
-    const handleCloseThanks = () => setOpenThanks(false);
+  const handleCloseThanks = () => setOpenThanks(false);
+
+    const [formData, setFormData] = useState([]);
+
+    const {
+      register,
+      control,
+      handleSubmit,
+      formState: { errors },
+      getValues,
+    } = useForm({ mode: "all" });
+
+    const onSubmit = (data) => {
+      if (!errors) {
+       
+        setFormData(data);
+        handleOpenThanks();
+      } 
+      console.log("form submmited", data);
+    };
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -295,62 +316,123 @@ const EVLeaveHistory = () => {
               src="/images/icons/Alert-Circle.svg"
             />
           </ModalContainer>
-          <ModalFormContainer>
-            <SearchBox style={{ marginBottom: "16px" }}>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-              <SearchInput type="text" placeholder="Search..."></SearchInput>
-            </SearchBox>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>
-                  From <InputSpan>*</InputSpan>{" "}
-                </InputLabel>
-                <Input type="text" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-              <FlexColumnForm>
-                <InputLabel>
-                  To<InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input type="text" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-            </FlexContaierForm>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>
-                  Leave Type<InputSpan>*</InputSpan>{" "}
-                </InputLabel>
-                <Input type="text" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-              <FlexColumnForm>
-                <InputLabel>
-                  Hours<InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input type="text" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-            </FlexContaierForm>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>Description</InputLabel>
-                <Input type="text" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-            </FlexContaierForm>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>
-                  Send Leave Request to <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input type="password" name="firstname" />
-                <Errors></Errors>
-              </FlexColumnForm>
-            </FlexContaierForm>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalFormContainer>
+              <SearchBox style={{ marginBottom: "16px" }}>
+                <SearchIcon src="/images/icons/searchIcon.svg" />
+                <SearchInput type="text" placeholder="Search..."></SearchInput>
+              </SearchBox>
+              <FlexContaierForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    From <InputSpan>*</InputSpan>{" "}
+                  </InputLabel>
+                  <Input
+                    type="date"
+                    {...register("startdate", {
+                      required: {
+                        value: true,
+                        message: "Start Date is Required",
+                      },
+                    })}
+                  />
+                  {errors.startdate && (
+                    <Errors>{errors.startdate?.message}</Errors>
+                  )}
+                </FlexColumnForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    To<InputSpan>*</InputSpan>
+                  </InputLabel>
+                  <Input
+                    type="date"
+                    {...register("enddate", {
+                      required: {
+                        value: true,
+                        message: "End Date is Required",
+                      },
+                      validate: (fieldValue) => {
+                        const startDate = new Date(getValues("startdate"));
+                        const endDate = new Date(fieldValue);
+                        return (
+                          startDate <= endDate ||
+                          "Must not be earlier than Start Date"
+                        );
+                      },
+                    })}
+                  />
+                  {errors.enddate && <Errors>{errors.enddate?.message}</Errors>}
+                </FlexColumnForm>
+              </FlexContaierForm>
+              <FlexContaierForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    Leave Type<InputSpan>*</InputSpan>{" "}
+                  </InputLabel>
+                  <Input
+                    type="text"
+                    {...register("type", {
+                      required: {
+                        value: true,
+                        message: "Leave Type  is Required",
+                      },
+                    })}
+                  />
+                  {errors.type && <Errors>{errors.type?.message}</Errors>}
+                </FlexColumnForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    Hours<InputSpan>*</InputSpan>
+                  </InputLabel>
+                  <Input
+                    type="text"
+                    {...register("hours", {
+                      required: {
+                        value: true,
+                        message: "Hours are Required",
+                      },
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Invalid Hours number "
+                        );
+                      },
+                    })}
+                  />
+                  {errors.hours && <Errors>{errors.hours?.message}</Errors>}
+                </FlexColumnForm>
+              </FlexContaierForm>
+              <FlexContaierForm>
+                <FlexColumnForm>
+                  <InputLabel>Description</InputLabel>
+                  <Input type="text" name="firstname" />
+                  <Errors></Errors>
+                </FlexColumnForm>
+              </FlexContaierForm>
+              <FlexContaierForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    Send Leave Request to <InputSpan>*</InputSpan>
+                  </InputLabel>
+                  <Input
+                    type="password"
+                    {...register("reportto", {
+                      required: {
+                        value: true,
+                        message: "Report To is Required",
+                      },
+                    })}
+                  />
+                  {errors.reportto && (
+                    <Errors>{errors.reportto?.message}</Errors>
+                  )}
+                </FlexColumnForm>
+              </FlexContaierForm>
 
-            <ButtonBlue onClick={handleOpenThanks}>Submit</ButtonBlue>
-          </ModalFormContainer>
+              <ButtonBlue type="submit">Submit</ButtonBlue>
+            </ModalFormContainer>
+          </form>
         </Box>
       </Modal>
       {/* thanks modal for leaves */}

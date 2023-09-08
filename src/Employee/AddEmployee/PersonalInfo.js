@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { useNavigate } from "react-router-dom";
 import {
@@ -33,13 +33,18 @@ import {
 
 const PersonalInfo = () => {
   const Navigate = useNavigate();
+  const [formData, setFormData] = useState([]);
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "all" });
   const onSubmit = (data) => {
+    if (!errors) {
+      Navigate("/add-new-employee/job-details");
+      setFormData(data);
+    }
     console.log("form submmited", data);
   };
 
@@ -62,7 +67,7 @@ const PersonalInfo = () => {
         </BodyHeader>
         <BodyMain>
           <BodyMainHeading>Basic Information</BodyMainHeading>
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <FormContainer>
               <ImgUpload>
                 <PersonImg />
@@ -96,7 +101,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors>{errors.firstname?.message}</Errors>
+                  {errors.firstname && (
+                    <Errors>{errors.firstname?.message}</Errors>
+                  )}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
@@ -111,7 +118,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors>{errors.lastname?.message}</Errors>
+                  {errors.lastname && (
+                    <Errors>{errors.lastname?.message}</Errors>
+                  )}
                 </FlexColumnForm>
               </FlexContaierForm>
 
@@ -129,7 +138,7 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors>{errors.address?.message}</Errors>
+                  {errors.address && <Errors>{errors.address?.message}</Errors>}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
@@ -144,7 +153,7 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors> {errors.city?.message} </Errors>
+                  {errors.city && <Errors> {errors.city?.message} </Errors>}
                 </FlexColumnForm>
               </FlexContaierForm>
 
@@ -162,7 +171,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors> {errors.province?.message} </Errors>
+                  {errors.province && (
+                    <Errors> {errors.province?.message} </Errors>
+                  )}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
@@ -177,7 +188,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors>{errors.postalcode?.message}</Errors>
+                  {errors.postalcode && (
+                    <Errors>{errors.postalcode?.message}</Errors>
+                  )}
                 </FlexColumnForm>
               </FlexContaierForm>
               <FlexContaierForm>
@@ -192,13 +205,33 @@ const PersonalInfo = () => {
                         value: true,
                         message: "Home Phone is Required",
                       },
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Invalid Home-Phone number "
+                        );
+                      },
                     })}
                   />
-                  <Errors> {errors.homephone?.message} </Errors>
+                  {errors.homephone && (
+                    <Errors> {errors.homephone?.message} </Errors>
+                  )}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>Personal (mobile)</InputLabel>
-                  <Input type="text" {...register("peersonalmobile")} />
+                  <Input
+                    type="text"
+                    {...register("peersonalmobile", {
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Invalid Mobile number contains a letters  "
+                        );
+                      },
+                    })}
+                  />
                   <Errors></Errors>
                 </FlexColumnForm>
               </FlexContaierForm>
@@ -214,9 +247,13 @@ const PersonalInfo = () => {
                         value: true,
                         message: "Email is Required",
                       },
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Please enter a valid email",
+                      },
                     })}
                   />
-                  <Errors> {errors.email?.message} </Errors>
+                  {errors.email && <Errors> {errors.email?.message} </Errors>}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
@@ -231,7 +268,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors> {errors.emergencycontact?.message} </Errors>
+                  {errors.emergencycontact && (
+                    <Errors> {errors.emergencycontact?.message} </Errors>
+                  )}
                 </FlexColumnForm>
               </FlexContaierForm>
               <FlexContaierForm>
@@ -247,9 +286,18 @@ const PersonalInfo = () => {
                         value: true,
                         message: "Emergency Contact Number is Required",
                       },
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Invalid sin "
+                        );
+                      },
                     })}
                   />
-                  <Errors> {errors.emergencycontactnumber?.message} </Errors>
+                  {errors.emergencycontactnumber && (
+                    <Errors> {errors.emergencycontactnumber?.message} </Errors>
+                  )}
                 </FlexColumnForm>
               </FlexContaierForm>
             </FormContainer>
@@ -271,7 +319,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors> {errors.employee_id?.message} </Errors>
+                  {errors.employee_id && (
+                    <Errors> {errors.employee_id?.message} </Errors>
+                  )}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
@@ -286,7 +336,9 @@ const PersonalInfo = () => {
                       },
                     })}
                   />
-                  <Errors> {errors.birthdate?.message} </Errors>
+                  {errors.birthdate && (
+                    <Errors> {errors.birthdate?.message} </Errors>
+                  )}
                 </FlexColumnForm>
               </FlexContaierForm>
               <FlexContaierForm>
@@ -301,36 +353,41 @@ const PersonalInfo = () => {
                         value: true,
                         message: "Sin is Required",
                       },
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Invalid sin "
+                        );
+                      },
                     })}
                   />
-                  <Errors> {errors.sin?.message} </Errors>
+                  {errors.sin && <Errors> {errors.sin?.message} </Errors>}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
                     Gender<InputSpan>*</InputSpan>
                   </InputLabel>
-                  <Select
-                    {...register("gender", {
-                      required: {
-                        value: true,
-                        message: "Gender is Required",
-                      },
-                    })}
-                  >
-                 
-                    <Option value={"Male"}>Male</Option>
-                    <Option value={"Female"}>Female</Option>
-                  </Select>
-                  <Errors>{errors.gender?.message}</Errors>
+                  <Controller
+                    name="gender"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select {...field}>
+                        <Option>Select</Option>
+                        <Option value={"Male"}>Male</Option>
+                        <Option value={"Female"}>Female</Option>
+                      </Select>
+                    )}
+                  />
+                  {errors.gender && <Errors> Gender is required</Errors>}
                 </FlexColumnForm>
               </FlexContaierForm>
             </FormContainer>
             <ButtonBlue
-              // type="submit"
-                onClick={() => {
-              // handleSubmit(onSubmit)
-              Navigate("/add-new-employee/job-details")
-              console.log("click is happing")
+              type="submit"
+              onClick={() => {
+                handleSubmit(onSubmit);
               }}
             >
               Continue
@@ -338,7 +395,7 @@ const PersonalInfo = () => {
           </form>
         </BodyMain>
       </EmployeeBody>
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

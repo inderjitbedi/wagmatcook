@@ -9,10 +9,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router";
 import DeleteModal from "../../Modals/DeleteModal";
+import AddNewEmployeeModal from "../AddEmployee/AddNewEmployeeModal";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import {
-  Dashboard,
-  DashMain,
-  DashNav,
   DashHeader,
   DashHeaderSearch,
   DashHeaderTitle,
@@ -64,9 +64,14 @@ const Employee = () => {
       setDelayedSearchValue(e.target.value);
     }, delayDuration);
   };
-    const [openDelete, setOpenDelete] = useState(false);
-    const HandleOpenDelete = () => setOpenDelete(true);
-    const HandleCloseDelete = () => setOpenDelete(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
+
+  const [openEmployee, setOpenEmployee] = useState(false);
+  const HandleOpenEmployee = () => setOpenEmployee(true);
+  const HandleCloseEmployee = () => setOpenEmployee(false);
+
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -79,6 +84,7 @@ const Employee = () => {
   ];
   const rows = [
     {
+      id: 25546546513213216,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -87,6 +93,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 25544846556213216,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -95,6 +102,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 25546546513454545,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -103,6 +111,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 255465465132748596,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -111,6 +120,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 2554654742536216,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -119,6 +129,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 255456546531214478,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -127,6 +138,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 2554654546513213216,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -135,6 +147,7 @@ const Employee = () => {
       role: "web Developer",
     },
     {
+      id: 255446511233213216,
       name: "Victoria perez",
       email: "KumarName@gamil.com",
       employeeid: "LA-0239",
@@ -143,6 +156,19 @@ const Employee = () => {
       role: "web Developer",
     },
   ];
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    Navigate("/signin");
+  };
   return (
     <>
       <DashHeader>
@@ -158,7 +184,30 @@ const Employee = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
+          <DashNotification
+            style={{ cursor: "pointer" }}
+            onClick={(event) => handleClickMenu(event)}
+            src="/images/icons/PersonIcon.svg"
+          />
         </DashHeaderSearch>
+        <Menu
+          sx={{ margin: "0px" }}
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        </Menu>
       </DashHeader>
       <DepartmentFilterContainer>
         <DepartmentFilterdiv>
@@ -166,7 +215,7 @@ const Employee = () => {
             <DepartmentFilterButton>{data}</DepartmentFilterButton>
           ))}
         </DepartmentFilterdiv>
-        <AddNewButton>Add New</AddNewButton>
+        <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
       </DepartmentFilterContainer>
       <HeaderDiv>
         <HeaderTitle>Employee List</HeaderTitle>
@@ -252,11 +301,14 @@ const Employee = () => {
                     />
                     <Icons
                       onClick={() =>
-                        Navigate("/add-new-employee/personal-info")
+                        Navigate(`/add-new-employee/personal-info/${data.id}`)
                       }
                       src="/images/icons/Pendown.svg"
                     />
-                    <Icons onClick={()=>  HandleOpenDelete()} src="/images/icons/Trash-2.svg" />
+                    <Icons
+                      onClick={() => HandleOpenDelete()}
+                      src="/images/icons/Trash-2.svg"
+                    />
                   </IconContainer>
                 </TableCell>
               </TableRow>
@@ -268,6 +320,10 @@ const Employee = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         // HandleDelete={HandleDelete}
+      />
+      <AddNewEmployeeModal
+        openEmployee={openEmployee}
+        HandleCloseEmployee={HandleCloseEmployee}
       />
     </>
   );

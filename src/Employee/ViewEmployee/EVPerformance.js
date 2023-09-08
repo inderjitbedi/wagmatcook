@@ -8,6 +8,8 @@ import {
 
 import "react-vertical-timeline-component/style.min.css";
 import "./Employee.css";
+import { useForm } from "react-hook-form";
+
 import {
   IconsEmployee,
   MainBodyContainer,
@@ -62,9 +64,32 @@ const EVPerformance = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-    const [openFollow, setOpenFollow] = useState(false);
-    const handleOpenFollow = () => setOpenFollow(true);
-    const handleCloseFollow = () => setOpenFollow(false);
+  const [openFollow, setOpenFollow] = useState(false);
+  const handleOpenFollow = () => setOpenFollow(true);
+  const handleCloseFollow = () => setOpenFollow(false);
+  const [formData, setFormData] = useState([]);
+  const [detailsLength, setDetailsLength] = useState(500);
+  const [followLength, setFollowLength] = useState(500);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({ mode: "all" });
+
+  const onSubmit = (data) => {
+    if (!errors) {
+      setFormData(data);
+    }
+    console.log("form submmited", data);
+  };
+   const onSubmitFollow = (data) => {
+    if (!errors) {
+      setFormData(data);// chnage the sate when you use it 
+    }
+    console.log("form submmited", data);
+  };
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -104,59 +129,133 @@ const EVPerformance = () => {
                   src="/images/icons/Alert-Circle.svg"
                 />
               </ModalContainer>
-              <ModalFormContainer>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Date of Review <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Completed By <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Details<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea type="text" name="description" />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalFormContainer>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Date of Review <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("date", {
+                          required: {
+                            value: true,
+                            message: "  Date is Required",
+                          },
+                        })}
+                      />
+                      {errors.startdate && (
+                        <Errors>{errors.date?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Completed By <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("enddate", {
+                          required: {
+                            value: true,
+                            message: "Completion  Date is Required",
+                          },
 
-                    <InputPara>
-                      {" "}
-                      <Errors></Errors> Max 500 characters
-                    </InputPara>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Date of Next Review<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="password" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <EditButton
-                  style={{ marginBottom: "20px", borderRadius: "8px" }}
-                >
-                  {" "}
-                  <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
-                  Documents
-                </EditButton>
-                <ButtonBlue>Submit</ButtonBlue>
-              </ModalFormContainer>
+                          validate: (fieldValue) => {
+                            const startDate = new Date(getValues("date"));
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Completion Date must not be earlier than Start Date"
+                            );
+                          },
+                        })}
+                      />
+                      {errors.enddate && (
+                        <Errors>{errors.enddate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Details<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <TextArea
+                        type="text"
+                        {...register("details", {
+                          required: {
+                            value: true,
+                            message: " Details is Required",
+                          },
+                          maxLength: {
+                            value: 500,
+                            message:
+                              "Details exceeds the maximum length of 500 characters ",
+                          },
+                          minLength: {
+                            value: 10,
+                            message: "Atleast write  10 characters ",
+                          },
+                          onChange: (value) => {
+                            setDetailsLength(500 - value.target.value.length);
+                          },
+                        })}
+                      />
+                      <InputPara>
+                        {" "}
+                        {<Errors>{errors.details?.message}</Errors>}{" "}
+                        <span style={{ justifySelf: "flex-end" }}>
+                          {" "}
+                          Max {detailsLength} characters
+                        </span>
+                      </InputPara>
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Date of Next Review<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("nextdate", {
+                          required: {
+                            value: true,
+                            message: "Next Review  Date is Required",
+                          },
+
+                          validate: (fieldValue) => {
+                            const startDate = new Date(getValues("date"));
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Next Review must not be earlier than Start Date"
+                            );
+                          },
+                        })}
+                      />
+                      {errors.nextdate && (
+                        <Errors>{errors.nextdate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <EditButton
+                    style={{ marginBottom: "20px", borderRadius: "8px" }}
+                  >
+                    {" "}
+                    <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
+                    Documents
+                  </EditButton>
+                  <ButtonBlue type="submit">Submit</ButtonBlue>
+                </ModalFormContainer>
+              </form>
             </Box>
           </Modal>
           {/*modal ends here  */}
+
           <BasicDetailsDiv>
             {/* dot and circle  */}
             <VerticalTimeline
@@ -223,7 +322,9 @@ const EVPerformance = () => {
                         <IconsEmployee src="/images/icons/File Text.svg" />{" "}
                         file_5fSSSS_01_11_2015.pdf
                       </File>
-                      <AddNewButton onClick={handleOpenFollow}>Add Follow-up</AddNewButton>
+                      <AddNewButton onClick={handleOpenFollow}>
+                        Add Follow-up
+                      </AddNewButton>
                     </FlexSpaceBetween>
                     <ReviewsDiv>Next Review on: 15-07-2023</ReviewsDiv>
                   </FlexColumn>
@@ -292,33 +393,73 @@ const EVPerformance = () => {
                       src="/images/icons/Alert-Circle.svg"
                     />
                   </ModalContainer>
-                  <ModalFormContainer>
-                    <FlexContaierForm>
-                      <FlexColumnForm>
-                        <InputLabel>
-                          Follow-up Date <InputSpan>*</InputSpan>
-                        </InputLabel>
-                        <Input type="text" name="firstname" />
-                        <Errors></Errors>
-                      </FlexColumnForm>
-                    </FlexContaierForm>
-                   
-                    <FlexContaierForm>
-                      <FlexColumnForm>
-                        <InputLabel>
-                          Details<InputSpan>*</InputSpan>
-                        </InputLabel>
-                        <TextArea type="text" name="description" />
+                  <form onSubmit={handleSubmit(onSubmitFollow)}>
+                    <ModalFormContainer>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Follow-up Date <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Input
+                            type="date"
+                            {...register("followdate", {
+                              required: {
+                                value: true,
+                                message: "  Date is Required",
+                              },
+                            })}
+                          />
+                          {errors.followdate && (
+                            <Errors>{errors.followdate?.message}</Errors>
+                          )}{" "}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
 
-                        <InputPara>
-                          {" "}
-                          <Errors></Errors> Max 500 characters
-                        </InputPara>
-                      </FlexColumnForm>
-                    </FlexContaierForm>
-                 
-                    <ButtonBlue>Submit</ButtonBlue>
-                  </ModalFormContainer>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Details<InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <TextArea
+                            type="text"
+                            {...register("detailsfollow", {
+                              required: {
+                                value: true,
+                                message: " Details is Required",
+                              },
+                              maxLength: {
+                                value: 500,
+                                message:
+                                  "Details exceeds the maximum length of 500 characters ",
+                              },
+                              minLength: {
+                                value: 10,
+                                message: "Atleast write  10 characters ",
+                              },
+                              onChange: (value) => {
+                                setFollowLength(
+                                  500 - value.target.value.length
+                                );
+                              },
+                            })}
+                          />
+
+                          <InputPara>
+                            {" "}
+                            {
+                              <Errors>{errors.detailsfollow?.message}</Errors>
+                            }{" "}
+                            <span style={{ justifySelf: "flex-end" }}>
+                              {" "}
+                              Max {followLength} characters
+                            </span>
+                          </InputPara>
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+
+                      <ButtonBlue type= "submit">Submit</ButtonBlue>
+                    </ModalFormContainer>
+                  </form>
                 </Box>
               </Modal>
             </VerticalTimeline>

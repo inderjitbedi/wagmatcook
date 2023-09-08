@@ -1,6 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import { useForm, Controller } from "react-hook-form";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -52,6 +54,23 @@ const EVDiscipline = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [detailsLength, setDetailsLength] = useState(500);
+  const [formData, setFormData] = useState([]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm({ mode: "all" });
+
+  const onSubmit = (data) => {
+    if (!errors) {
+      setFormData(data);
+    }
+    console.log("form submmited", data);
+  };
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -91,65 +110,138 @@ const EVDiscipline = () => {
                   src="/images/icons/Alert-Circle.svg"
                 />
               </ModalContainer>
-              <ModalFormContainer >
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Disciplinary Type <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Date <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="text" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      BCR<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="password" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Expiry Date<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input type="password" name="firstname" />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Details<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea type="text" name="description" />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalFormContainer>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Disciplinary Type <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("discipline", {
+                          required: {
+                            value: true,
+                            message: "Disciplinary Type is Required",
+                          },
+                        })}
+                      />
+                      {errors.discipline && (
+                        <Errors> {errors.discipline?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Date <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("startdate", {
+                          required: {
+                            value: true,
+                            message: "  Date is Required",
+                          },
+                        })}
+                      />
+                      {errors.startdate && (
+                        <Errors>{errors.startdate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        BCR<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("bcr", {
+                          required: {
+                            value: true,
+                            message: "BCR is Required",
+                          },
+                        })}
+                      />
+                      {errors.bcr && <Errors> {errors.bcr?.message}</Errors>}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Exipiry Date<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register("enddate", {
+                          required: {
+                            value: true,
+                            message: " Exipiry Date is Required",
+                          },
 
-                    <InputPara>
-                      {" "}
-                      <Errors></Errors> Max 500 characters
-                    </InputPara>
-                  </FlexColumnForm>
-                </FlexContaierForm>
-                <EditButton
-                  style={{ marginBottom: "20px", borderRadius: "8px" }}
-                >
-                  {" "}
-                  <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
-                  Documents
-                </EditButton>
-                <ButtonBlue>Submit</ButtonBlue>
-              </ModalFormContainer>
+                          validate: (fieldValue) => {
+                            const startDate = new Date(getValues("startdate"));
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Must not be earlier than Start Date"
+                            );
+                          },
+                        })}
+                      />
+                      {errors.enddate && (
+                        <Errors>{errors.enddate?.message}</Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Details<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <TextArea
+                        type="text"
+                        {...register("details", {
+                          required: {
+                            value: true,
+                            message: " Details is Required",
+                          },
+                          maxLength: {
+                            value: 500,
+                            message:
+                              "Details exceeds the maximum length of 500 characters ",
+                          },
+                          minLength: {
+                            value: 10,
+                            message: "Atleast write  10 characters ",
+                          },
+                          onChange: (value) => {
+                            setDetailsLength(500 - value.target.value.length);
+                          },
+                        })}
+                      />
+
+                      <InputPara>
+                        {" "}
+                        {<Errors>{errors.details?.message}</Errors>}{" "}
+                        <span style={{ justifySelf: "flex-end" }}>
+                          {" "}
+                          Max {detailsLength} characters
+                        </span>
+                      </InputPara>
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <EditButton
+                    style={{ marginBottom: "20px", borderRadius: "8px" }}
+                  >
+                    {" "}
+                    <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
+                    Documents
+                  </EditButton>
+                  <ButtonBlue type="submit">Submit</ButtonBlue>
+                </ModalFormContainer>
+              </form>
             </Box>
           </Modal>
           {/*modal ends here  */}

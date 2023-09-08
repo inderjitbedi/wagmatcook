@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -58,7 +59,24 @@ const EmployeeJobDetails = () => {
   const Navigate = useNavigate();
    const [open, setOpen] = useState(false);
    const handleOpen = () => setOpen(true);
-   const handleClose = () => setOpen(false);
+  const handleClose = () => setOpen(false);
+    const [formData, setFormData] = useState([]);
+
+    const {
+      register,
+      control,
+      handleSubmit,
+      formState: { errors },
+      getValues,
+    } = useForm({ mode: "all" });
+
+    const onSubmit = (data) => {
+      if (!errors) {
+        setFormData(data);
+      }
+      console.log("form submmited", data);
+  };
+  
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -164,41 +182,93 @@ const EmployeeJobDetails = () => {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                <ModalContainer>
-                  <ModalHeading>Add New Employee</ModalHeading>
-                  <ModalIcon onClick={handleClose} src="/images/icons/Alert-Circle.svg" />
-                </ModalContainer>
-                <ModalFormContainer>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Position Title <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input type="text" name="firstname" />
-                      <Errors></Errors>
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Start Date <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input type="text" name="firstname" />
-                      <Errors></Errors>
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        End Date <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input type="password" name="firstname" />
-                      <Errors></Errors>
-                    </FlexColumnForm>
-                  </FlexContaierForm>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <ModalContainer>
+                    <ModalHeading>Add New Employee</ModalHeading>
+                    <ModalIcon
+                      onClick={handleClose}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  </ModalContainer>
+                  <ModalFormContainer>
+                    <FlexContaierForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Position Title <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="text"
+                          {...register("positiontitle", {
+                            required: {
+                              value: true,
+                              message: "Position Title is Required",
+                            },
+                          })}
+                        />
+                        {errors.positiontitle && (
+                          <Errors> {errors.positiontitle?.message}</Errors>
+                        )}
+                      </FlexColumnForm>
+                    </FlexContaierForm>
+                    <FlexContaierForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Start Date <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register("startdate", {
+                            required: {
+                              value: true,
+                              message: "Start Date is Required",
+                            },
+                          })}
+                        />
+                        {errors.startdate && (
+                          <Errors>{errors.startdate?.message}</Errors>
+                        )}
+                      </FlexColumnForm>
+                    </FlexContaierForm>
+                    <FlexContaierForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          End Date <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register("enddate", {
+                            required: {
+                              value: true,
+                              message: "  Position End Date is Required",
+                            },
+                            validate: (fieldValue) => {
+                              const startDate = new Date(
+                                getValues("startdate")
+                              );
+                              const endDate = new Date(fieldValue);
+                              return (
+                                startDate <= endDate ||
+                                "End Date must not be earlier than Start Date"
+                              );
+                            },
+                          })}
+                        />
+                        {errors.enddate && (
+                          <Errors>{errors.enddate?.message}</Errors>
+                        )}
+                      </FlexColumnForm>
+                    </FlexContaierForm>
 
-                  <ButtonBlue>Submit</ButtonBlue>
-                </ModalFormContainer>
+                    <ButtonBlue
+                      type="submit"
+                      onClick={() => {
+                        handleSubmit(onSubmit);
+                      }}
+                    >
+                      Submit
+                    </ButtonBlue>
+                  </ModalFormContainer>
+                </form>
               </Box>
             </Modal>
 

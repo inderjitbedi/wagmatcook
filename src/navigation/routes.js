@@ -253,7 +253,7 @@ const Routes = [
       },
       {
         component: PersonalInfo,
-        path: "personal-info",
+        path: "personal-info/:id",
         title: "PersonalInfo ",
         to: "/",
         type: "private",
