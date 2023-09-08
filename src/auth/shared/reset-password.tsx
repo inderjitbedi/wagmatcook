@@ -79,7 +79,7 @@ export default function ResetPassword() {
                 .then(({ result }) => {
                     if (result?.user) {
                         toast.info("Password successfully updated.")
-                        navigate("/signin");
+                        navigate("/");
                     }
                 })
                 .catch((error: any) => {

@@ -35,8 +35,6 @@ const Navigation = () => {
     createRoutesFromElements(
       <>
         <Route path="/landing.html" />
-
-        <Route path="/landing.html" />
         {routes.map(({ component: Component, path, type, to, title, children }) => (
           <React.Fragment key={Date.now()}>
              {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token")))  */}
@@ -59,7 +57,8 @@ const Navigation = () => {
                 ))}
               </Route>
             )}
-{/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+
+            {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
             {((type === "public" ) || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}>
             {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
             </Route>}

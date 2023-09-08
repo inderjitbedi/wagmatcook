@@ -227,7 +227,7 @@ const Departments = () => {
             ]);
           }
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -240,13 +240,13 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-    let isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      Navigate("/signin");
-    } else {
+    // let isLoggedIn = localStorage.getItem("isLoggedIn");
+    // if (!isLoggedIn) {
+    //   Navigate("/");
+    // } else {
       GetDepartments();
-    }
-  }, [delayedSearchValue, page]);
+    // }
+  }, []);
   console.log(departmentData, "this is out data looks like ");
 
   const HandleSubmit = (e) => {
@@ -295,7 +295,7 @@ const Departments = () => {
             setFormData("");
             setErrors("");
           } else {
-            toast.warn("something went wrong ");
+            //toast.warn("something went wrong ");
           }
         })
         .catch((error) => {
@@ -364,7 +364,7 @@ const Departments = () => {
             toast.success("Entry Updated Successfully");
             console.log(result?.department, "updated entry");
           } else {
-            toast.warn("Something Went Wrong ");
+            //toast.warn("something went wrong ");
           }
         })
         .catch((error) => {
@@ -393,7 +393,7 @@ const Departments = () => {
 
           toast.success("Entry Deleted successfully");
         } else {
-          toast.warn("Something Went Wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -416,7 +416,7 @@ const Departments = () => {
   const HandleLogout = () => {
     localStorage.clear();
     handleCloseMenu();
-    Navigate("/signin");
+    Navigate("/");
   };
   return (
     <>

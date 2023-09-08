@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import SideBar from "./SideBar.js";
 import OADAashModal from "./OADAashModal.js";
 import { Link, useNavigate } from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import {
   Dashboard,
   DashNav,
@@ -30,12 +32,13 @@ import {
   DashCardTitle2,
 
 } from "./OADashBoardStyles";
+import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 
 
 const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   if (!localStorage.getItem('welcomeModelShown')) {
@@ -75,6 +78,20 @@ const OADashBoard = () => {
       src: "/images/icons/Discipliner.svg",
     },
   ];
+  
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    navigate("/");
+  };
   return (
     <>
       <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
@@ -88,8 +105,31 @@ const OADashBoard = () => {
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
             <DashNotification src="/images/icons/Notifications.svg" />
+            <DepartmentIconImg
+              style={{ cursor: "pointer" }}
+              onClick={(event) => handleClickMenu(event)}
+              src="/images/icons/PersonIcon.svg"
+            />
           </DashHeaderSearch>
         </DashHeader>
+        <Menu
+          sx={{ margin: "0px" }}
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        </Menu>
         <DashHeading>Welcome Jason Porter!</DashHeading>
         <BannerSection>
           <BannerHeading>

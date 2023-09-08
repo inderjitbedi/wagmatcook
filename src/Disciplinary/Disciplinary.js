@@ -151,7 +151,7 @@ const Disciplinary = () => {
 
           toast.success("Entry Deleted Successfully");
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -183,7 +183,7 @@ const Disciplinary = () => {
           }
           // setDisciplinaryData(result.disciplinaries);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -196,13 +196,13 @@ const Disciplinary = () => {
       });
   };
   useEffect(() => {
-        let isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      Navigate("/signin");
-    } else {
+    //     let isLoggedIn = localStorage.getItem("isLoggedIn");
+    // if (!isLoggedIn) {
+    //   Navigate("/");
+    // } else {
       GetDisciplinary();
-    }
-  }, [delayedSearchValue, page]);
+    // }
+  }, []);
 
   //create new enter in table
   const HandleSubmit = (e) => {
@@ -253,7 +253,7 @@ const Disciplinary = () => {
             setErrors("");
             toast.success("Entry Added Successfully");
           } else {
-            toast.warn("something went wrong ");
+            //toast.warn("something went wrong ");
           }
         })
         .catch((error) => {
@@ -315,7 +315,7 @@ const Disciplinary = () => {
             setErrors("");
             toast.success("Entry Updated Successfully");
           } else {
-            toast.warn("something went wrong ");
+            //toast.warn("something went wrong ");
           }
         })
         .catch((error) => {
@@ -424,7 +424,7 @@ setDescriptionLenght(value.length)
         if (result) {
           GetDisciplinary();
         } else {
-          toast.warn("something went wrong ");
+          ////toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -490,6 +490,7 @@ setDescriptionLenght(value.length)
             <DashNotification src="/images/icons/Notifications.svg" />
           </DashHeaderSearch>
         </DashHeader>
+        
         <DisciplinaryDiv>
           <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>

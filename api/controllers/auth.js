@@ -227,12 +227,14 @@ const authController = {
             user.name = name;
             user.invitationToken = undefined;
             user.invitationTokenExpiry = undefined;
+            user.isSignedup = true;
             await user.save();
             token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();
             delete user.password
 
-            let relation = await UserOrganization.findOne({ user: user._id, role: roles.ORG_ADMIN, isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
+
+            let relation = await UserOrganization.findOne({ user: user._id,  isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
 
 
             res.status(200).json({ user, organization: relation.organization, token, message: 'User signup completed successfully' });

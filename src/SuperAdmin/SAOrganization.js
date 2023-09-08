@@ -11,6 +11,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 import {
   Dashboard,
@@ -44,6 +46,8 @@ import {
   Errors,
 } from "./SAStyles";
 import API_URLS from "../constants/apiUrls";
+import { useNavigate } from "react-router-dom";
+import { DepartmentIconImg } from "../Departments/DepartmentsStyles";
 
 const style = {
   position: "absolute",
@@ -81,6 +85,7 @@ const CellStyle2 = {
   lineHeight: "15px",
 };
 const SAOrganization = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
     setErrors({
@@ -111,11 +116,11 @@ const SAOrganization = () => {
     if (name === "name") {
       if (!value) {
         setErrors({ ...errors, nameError: "Required" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+      // } else if (!/^[A-Za-z\s]+$/.test(value)) {
+      //   setErrors({
+      //     ...errors,
+      //     nameError: "Name must not contain numbers or special characters",
+      //   });
       } else {
         setErrors({ ...errors, nameError: "" });
 
@@ -148,7 +153,7 @@ const SAOrganization = () => {
         if (result) {
           setResult(result);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -205,7 +210,7 @@ const SAOrganization = () => {
             setErrors("");
             toast.success(result.message);
           } else {
-            toast.warn("Something went wrong.");
+            //toast.warn("Something went wrong.");
           }
         })
         .catch((error) => {
@@ -213,6 +218,20 @@ const SAOrganization = () => {
           toast.error("Error creating Disciplinary. Please try again.");
         });
     }
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    navigate("/");
   };
   return (
     <>
@@ -229,8 +248,31 @@ const SAOrganization = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
+          <DepartmentIconImg
+            style={{ cursor: "pointer" }}
+            onClick={(event) => handleClickMenu(event)}
+            src="/images/icons/PersonIcon.svg"
+          />
         </DashHeaderSearch>
       </DashHeader>
+      <Menu
+        sx={{ margin: "0px" }}
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+      </Menu>
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
         <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
@@ -242,7 +284,7 @@ const SAOrganization = () => {
         >
           <Box sx={style}>
             <ModalUpperDiv>
-              <ModalHeading>Add New Members</ModalHeading>
+              <ModalHeading>Invite Organization Admin</ModalHeading>
               <ModalIcon
                 onClick={() => {
                   HandleClose();
@@ -312,17 +354,23 @@ const SAOrganization = () => {
                 sx={{ ...CellHeadStyles, minWidth: "150px" }}
                 align="left"
               >
-                Status
+                Has Signed Up?
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 sx={{ ...CellHeadStyles, minWidth: "150px" }}
                 align="left"
               >
                 Action
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
+            {result?.organizations?.length == 0 &&
+              <TableRow  >
+                <TableCell rowSpan={3}>
+                  No organizations found
+                </TableCell>
+              </TableRow>}
             {result.organizations?.map((data) => (
               <TableRow
                 sx={{
@@ -334,12 +382,12 @@ const SAOrganization = () => {
                   {data.name}
                 </TableCell>
                 <TableCell sx={CellStyle2} align="left">
-                  -
+                  {data.primaryUser?.email || '-'}
                 </TableCell>
                 <TableCell sx={CellStyle} align="left">
-                  {data.isActive ? "Active" : "Inactive"}
+                  {data.primaryUser?.isSignedup ? "Yes" : "No"}
                 </TableCell>
-                <TableCell sx={CellStyle2} align="left">
+                {/* <TableCell sx={CellStyle2} align="left">
                   <ActionIconDiv>
                     <ActionIcons
                       // onClick={() => {
@@ -359,9 +407,10 @@ const SAOrganization = () => {
                       src="/images/icons/Trash-2.svg"
                     />
                   </ActionIconDiv>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
+
           </TableBody>
         </Table>
       </TableContainer>
