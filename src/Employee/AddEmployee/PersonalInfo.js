@@ -97,7 +97,7 @@ const PersonalInfo = () => {
                     {...register("firstname", {
                       required: {
                         value: true,
-                        message: "First Name is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -114,7 +114,7 @@ const PersonalInfo = () => {
                     {...register("lastname", {
                       required: {
                         value: true,
-                        message: "Last Name is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -134,7 +134,7 @@ const PersonalInfo = () => {
                     {...register("address", {
                       required: {
                         value: true,
-                        message: "Address is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -149,7 +149,7 @@ const PersonalInfo = () => {
                     {...register("city", {
                       required: {
                         value: true,
-                        message: "City is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -167,7 +167,7 @@ const PersonalInfo = () => {
                     {...register("province", {
                       required: {
                         value: true,
-                        message: "Province is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -184,7 +184,7 @@ const PersonalInfo = () => {
                     {...register("postalcode", {
                       required: {
                         value: true,
-                        message: "Postal Code is Required",
+                        message: "Required",
                       },
                     })}
                   />
@@ -203,7 +203,7 @@ const PersonalInfo = () => {
                     {...register("homephone", {
                       required: {
                         value: true,
-                        message: "Home Phone is Required",
+                        message: "Required",
                       },
                       validate: (fieldValue) => {
                         return (
