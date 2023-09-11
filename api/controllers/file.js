@@ -1,5 +1,8 @@
 const File = require("../models/file");
 
+const path = require("path");
+const fs = require("fs");
+
 const fileController = {
     async upload(req, res) {
         try {
@@ -27,5 +30,51 @@ const fileController = {
             res.status(400).json({ message: `Unable to upload the file: ${req.file.originalname}.\n\n ${error.toString()}` });;
         }
     },
+
+    async moveToUploads(req, file) {
+        if (!file) {
+            return null; 
+        }
+
+        const tempFilePath = [file.destination, file.name].join('/');
+        const newFilePath = 'uploads/';
+        const newFileName = Date.now() + '_' + req.user._id + '_' + file.originalName.replaceAll(' ', '_');
+        const destFilePath = newFilePath + newFileName;
+
+        createDirectoryIfNotExists(path.join(__dirname, '../', newFilePath));
+
+        await fs.renameSync(
+            path.join(__dirname, '../' + tempFilePath),
+            path.join(__dirname, '../' + destFilePath)
+        );
+
+        console.log('Saved File:', {
+            ...file.toObject(),
+            destination: newFilePath,
+            path: destFilePath,
+            name: newFileName,
+        });
+
+        const updatedFile = await File.findOneAndUpdate(
+            { _id: file._id },
+            {
+                ...file.toObject(),
+                destination: newFilePath,
+                path: destFilePath,
+                name: newFileName,
+            },
+            { new: true }
+        );
+
+        return updatedFile._id;
+    }
+
 }
+
+const createDirectoryIfNotExists = (directory) => {
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+};
+
 module.exports = fileController

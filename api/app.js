@@ -8,9 +8,11 @@ const path = require('path');
 const authRoute = require('./routes/auth')
 const orgRoute = require('./routes/organization')
 const departmentRoute = require('./routes/department')
+const benefitRoute = require('./routes/benefit')
 const disciplinaryRoute = require('./routes/disciplinary')
 const superAdminRoute = require('./routes/superAdmin')
 const orgAdminRoute = require('./routes/orgAdmin')
+const employeeRoute = require('./routes/employee')
 
 
 // const swagger = require('./swagger');
@@ -55,9 +57,11 @@ app.use(loggerMiddleware);
 app.use('/api/auth', authRoute);
 app.use('/api/organization', orgRoute);
 app.use('/api/department', departmentRoute);
+app.use('/api/benefit', benefitRoute);
 app.use('/api/disciplinary', disciplinaryRoute);
 app.use('/api/super-admin', superAdminRoute);
 app.use('/api/organization-admin', orgAdminRoute);
+app.use('/api/employee', employeeRoute);
 
 
 
