@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import SideBar from "../../Dashboard/OADashboard/SideBar";
+import React, { useState, useEffect } from "react";
+
+import Moment from "react-moment";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,6 +13,8 @@ import DeleteModal from "../../Modals/DeleteModal";
 import AddNewEmployeeModal from "../AddEmployee/AddNewEmployeeModal";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import httpClient from "../../api/httpClient";
+import { toast } from "react-toastify";
 import {
   DashHeader,
   DashHeaderSearch,
@@ -72,6 +75,48 @@ const Employee = () => {
   const HandleOpenEmployee = () => setOpenEmployee(true);
   const HandleCloseEmployee = () => setOpenEmployee(false);
 
+  //variable to fetch and get api data
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState([]);
+  const [employeeList, setEmployeeList] = useState([]);
+
+  // get employees
+  const GetEmployees = () => {
+    // setIsLoading(true); api serach - &searchKey=search_keyword
+
+    let url = `employee/list?page=1&limit=10`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  console.log("result of the fetch api ", result);
+  // caling the fetch employee list api
+  useEffect(() => {
+    GetEmployees();
+  }, []);
+
+  const HandleSubmitData = (data) => {
+    return data;
+  };
+  console.log("submit data ", HandleSubmitData());
+  // Add New Employee Post api  user name and email
+
   const FilterData = [
     "All",
     "Full-time Perm",
@@ -82,80 +127,7 @@ const Employee = () => {
     "Students",
     "Other",
   ];
-  const rows = [
-    {
-      id: 25546546513213216,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 25544846556213216,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 25546546513454545,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 255465465132748596,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 2554654742536216,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 255456546531214478,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 2554654546513213216,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-    {
-      id: 255446511233213216,
-      name: "Victoria perez",
-      email: "KumarName@gamil.com",
-      employeeid: "LA-0239",
-      phone: "+265 - 696 - 3453",
-      joindate: "30 Apr,2020",
-      role: "web Developer",
-    },
-  ];
+ 
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -263,7 +235,7 @@ const Employee = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((data, index) => (
+            {result.employees?.map((data, index) => (
               <TableRow
                 key={data.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -276,19 +248,24 @@ const Employee = () => {
                   <TabelDiv>
                     <TabelImg src="/images/Oval Copy 2.jpg" />
                     <TabelParaContainer>
-                      <TabelDarkPara>{data.name}</TabelDarkPara>
+                      <TabelDarkPara>
+                        {data.personalInfo[0]?.firstName +
+                          data.personalInfo[0]?.lastName}
+                      </TabelDarkPara>
                       <TabelLightPara>{data.email}</TabelLightPara>
                     </TabelParaContainer>
                   </TabelDiv>
                 </TableCell>
                 <TableCell align="left" sx={Celllstyle2}>
-                  {data.employeeid}
+                  {data.personalInfo[0].employeeId}
                 </TableCell>
                 <TableCell align="left" sx={Celllstyle2}>
-                  {data.phone}
+                  {data.personalInfo[0].mobile}
                 </TableCell>
                 <TableCell align="left" sx={Celllstyle2}>
-                  {data.joindate}
+                  {/* <Moment format="YYYY/MM/DD"> */}{" "}
+                  {data.jobDetails[0]?.startDate.slice(0, 10)}
+                  {/* </Moment> */}
                 </TableCell>
                 <TableCell align="left" sx={Celllstyle2}>
                   {data.role}
@@ -296,12 +273,16 @@ const Employee = () => {
                 <TableCell align="left" sx={Celllstyle2}>
                   <IconContainer>
                     <Icons
-                      onClick={() => Navigate("/employee-details/personal")}
+                      onClick={() =>
+                        Navigate(`/employee-details/personal/${data._id}`)
+                      }
                       src="/images/icons/eye.svg"
                     />
                     <Icons
                       onClick={() =>
-                        Navigate(`/add-new-employee/personal-info/${data.id}`)
+                        Navigate(
+                          `/organization-admin/personal-info/${data._id}`
+                        )
                       }
                       src="/images/icons/Pendown.svg"
                     />
@@ -324,6 +305,7 @@ const Employee = () => {
       <AddNewEmployeeModal
         openEmployee={openEmployee}
         HandleCloseEmployee={HandleCloseEmployee}
+        HandleSubmitData={HandleSubmitData}
       />
     </>
   );

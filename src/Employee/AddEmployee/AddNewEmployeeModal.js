@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
-
+import httpClient from "../../api/httpClient";
+import { useNavigate } from "react-router-dom";
 import {
   Input,
   ButtonBlue,
@@ -12,6 +13,7 @@ import {
   InputLabel,
   Errors,
 } from "./AddEmployeeStyles";
+import { toast } from "react-toastify";
 
 const style = {
   position: "absolute",
@@ -42,10 +44,10 @@ const ModalHeading = styled.h1`
   line-height: 16px;
 `;
 const ModalIcon = styled.img`
-width: 24px;
-height: 24px;
-display:inline-block;
-cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  cursor: pointer;
 `;
 const ModalFormContainer = styled.div`
   padding: 20px 29px 15px 29px;
@@ -53,26 +55,64 @@ const ModalFormContainer = styled.div`
   box-sizing: border-box;
 `;
 const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
-  const [formData, setFormData] = useState([]);
-
+  const Navigate = useNavigate();
   const {
     register,
-    control,
+    clearErrors,
     handleSubmit,
     formState: { errors },
-    getValues,
   } = useForm({ mode: "all" });
 
-  const onSubmit = (data) => {
-    if (!errors) {
-      setFormData(data);
-    }
-    console.log("form submmited", data);
+  // Add New Employee Post api  user name and email
+  const HandleAddEmployee = (data) => {
+    let dataCopy = data;
+
+    let url = `/employee/add`;
+
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result }) => { 
+        if (result) {
+          // console.log(result, "Employee Added ", result.employee._id, "this is the employee id  fetced ");
+          HandleCloseEmployee()
+          Navigate(`/add-new-employee/personal-info/${result.employee._id}`);
+        } else {
+          toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        toast.error("Error Adding Employee . Please try again.");
+      })
+      .finally(() => {
+        //  setIsLoading(false);
+      });
   };
+
+  const onSubmit = (data) => {
+    console.log(data, "buton active and working ", errors, "errorss showing ")
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors)) {
+      HandleAddEmployee(data);
+    }
+  };
+
   return (
     <Modal
       open={openEmployee}
-      onClose={HandleCloseEmployee}
+      onClose={() => {
+        HandleCloseEmployee();
+        clearErrors();
+      }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -80,7 +120,11 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
         <ModalContainer>
           <ModalHeading>Add New Employee</ModalHeading>
           <ModalIcon
-            onClick={HandleCloseEmployee}
+            onClick={() => {
+              HandleCloseEmployee();
+              // setError("");
+              clearErrors();
+            }}
             src="/images/icons/Alert-Circle.svg"
           />
         </ModalContainer>
@@ -94,7 +138,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                   {...register("firstname", {
                     required: {
                       value: true,
-                      message: "First Name is Required",
+                      message: "Required",
                     },
                   })}
                 />
@@ -109,7 +153,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                   {...register("lastname", {
                     required: {
                       value: true,
-                      message: "Last Name is Required",
+                      message: "Required",
                     },
                   })}
                 />
@@ -124,7 +168,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                   {...register("email", {
                     required: {
                       value: true,
-                      message: "Email is Required",
+                      message: "Required",
                     },
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -135,7 +179,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 {errors.email && <Errors> {errors.email?.message} </Errors>}
               </FlexColumnForm>
             </FlexContaierForm>
-            <FlexContaierForm>
+            {/* <FlexContaierForm>
               <FlexColumnForm>
                 <InputLabel>Passsword</InputLabel>
                 <Input
@@ -177,7 +221,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 />
                 {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
               </FlexColumnForm>
-            </FlexContaierForm>
+            </FlexContaierForm> */}
             <ButtonBlue type="submit">Submit</ButtonBlue>
           </ModalFormContainer>
         </form>

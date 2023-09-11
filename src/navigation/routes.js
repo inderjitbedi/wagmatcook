@@ -124,6 +124,38 @@ const Routes = [
         type: "private",
         index: true,
       },
+      {
+        component: Benefits,
+        path: "benefits/:employeeid",
+        title: "Benefits ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: CertificatesInfo,
+        path: "certificates-info/:employeeid",
+        title: "CertificatesInfo ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: JobDetails,
+        path: "job-details/:employeeid",
+        title: "JobDetails ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: PersonalInfo,
+        path: "personal-info/:employeeid",
+        title: "PersonalInfo ",
+        to: "/",
+        type: "private",
+        index: true,
+      },
     ],
   },
   {
@@ -135,7 +167,7 @@ const Routes = [
     children: [
       {
         component: EmployeePersonal,
-        path: "personal",
+        path: "personal/:employeeid",
         title: "EmployeePersonal ",
         to: "/",
         type: "private",
@@ -144,7 +176,7 @@ const Routes = [
 
       {
         component: EmployeeJobDetails,
-        path: "job-details",
+        path: "job-details/:employeeid",
         title: "EmployeeJobDetails ",
         to: "/",
         type: "private",
@@ -152,7 +184,7 @@ const Routes = [
       },
       {
         component: EVBenefits,
-        path: "benefits",
+        path: "benefits/:employeeid",
         title: "Benefits ",
         to: "/",
         type: "private",
@@ -161,7 +193,7 @@ const Routes = [
 
       {
         component: EVLeaveHistory,
-        path: "leave-history",
+        path: "leave-history/:employeeid",
         title: "EVLeaveHistory ",
         to: "/",
         type: "private",
@@ -169,7 +201,7 @@ const Routes = [
       },
       {
         component: EVCertificates,
-        path: "certificates",
+        path: "certificates/:employeeid",
         title: "EVCertificates ",
         to: "/",
         type: "private",
@@ -177,7 +209,7 @@ const Routes = [
       },
       {
         component: EVDiscipline,
-        path: "discipline",
+        path: "discipline/:employeeid",
         title: "EVDiscipline ",
         to: "/",
         type: "private",
@@ -185,7 +217,7 @@ const Routes = [
       },
       {
         component: EVDocuments,
-        path: "documents",
+        path: "documents/:employeeid",
         title: "EVDocuments ",
         to: "/",
         type: "private",
@@ -193,7 +225,7 @@ const Routes = [
       },
       {
         component: EVPerformance,
-        path: "performance",
+        path: "performance/:employeeid",
         title: "EVPerformance ",
         to: "/",
         type: "private",
@@ -226,40 +258,7 @@ const Routes = [
     title: "AddEmployee",
     to: "/",
     type: "private",
-    children: [
-      {
-        component: Benefits,
-        path: "benefits",
-        title: "Benefits ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: CertificatesInfo,
-        path: "certificates-info",
-        title: "CertificatesInfo ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: JobDetails,
-        path: "job-details",
-        title: "JobDetails ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: PersonalInfo,
-        path: "personal-info/:id",
-        title: "PersonalInfo ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-    ],
+    children: [],
   },
 
   {

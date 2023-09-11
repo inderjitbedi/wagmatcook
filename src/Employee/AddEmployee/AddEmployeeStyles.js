@@ -277,6 +277,7 @@ export const ButtonBlue = styled.button`
   font-weight: 600;
   line-height: normal;
   border: none;
+  /* margin-top: 25px; */
 `;
 export const Select = styled.select`
   font-size: 13px;
