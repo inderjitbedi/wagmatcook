@@ -78,7 +78,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
         if (result) {
           // console.log(result, "Employee Added ", result.employee._id, "this is the employee id  fetced ");
           HandleCloseEmployee()
-          Navigate(`/add-new-employee/personal-info/${result.employee._id}`);
+          Navigate(`/organization-admin/personal-info/${result.employee._id}`);
         } else {
           toast.warn("something went wrong ");
         }

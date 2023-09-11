@@ -69,9 +69,11 @@ const PersonalInfo = () => {
         setIsLoading(false);
       });
   };
+  console.log(result, "this is result of get api")
   useEffect(() => {
     GetEmployeesPersonalInfo();
   }, []);
+  
   const {
     register,
     control,

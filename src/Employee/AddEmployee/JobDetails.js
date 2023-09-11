@@ -61,7 +61,6 @@ const JobDetails = () => {
         hoursPerWeek: "",
         isActive: false,
         isBebEligible: false,
-
         ratePer: "",
         reportsTo: "",
         salary: "",
@@ -466,6 +465,7 @@ const JobDetails = () => {
                         // },
                       })}
                     />
+                    <Errors></Errors>
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -519,7 +519,7 @@ const JobDetails = () => {
                     <Errors></Errors>
                   </FlexColumnForm>
                 </FlexContaierForm>
-                {index > 0 && (
+                { getValues("positions").length > 1 && (
                   <DeleteIcon
                     onClick={() => remove(index)}
                     src="/images/icons/Alert-Circle.svg"
