@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const roles = require('../enum/roles');
+const UserOrganization = require('../models/userOrganization');
 
 function verifyToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -18,7 +19,10 @@ function verifyToken(req, res, next) {
     if (!user) {
       return res.status(401).send({ message: 'Unauthorised!' });
     }
+ 
+    const relation = await UserOrganization.findOne({ user: user._id }).populate('organization');
     req.user = user;
+    req.organization = relation.organization;
     next();
   });
 }
@@ -57,7 +61,10 @@ function verifyOrgAdmin(req, res, next) {
     if (!user) {
       return res.status(401).send({ message: 'Unauthorised! Not a org admin.' });
     }
+
+    const relation = await UserOrganization.findOne({ user: user._id }).populate('organization');
     req.user = user;
+    req.organization = relation.organization;
     next();
   });
 }
