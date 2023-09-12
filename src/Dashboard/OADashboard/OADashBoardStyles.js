@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const Dashboard = styled.div`
   display: flex;
   width: 100%;
+  height: 100vh;
 `;
 export const DashNav = styled.div`
   width: 18%;
@@ -13,8 +14,9 @@ export const DashNav = styled.div`
 
 export const DashMain = styled.div`
   width: 82%;
-  padding: 0px 30px 0px 20px;
+  padding: 0px 30px 80px 20px;
   background: #f3f3f5;
+  /* height: 100%; */
 `;
 export const DashHeader = styled.div`
   display: flex;

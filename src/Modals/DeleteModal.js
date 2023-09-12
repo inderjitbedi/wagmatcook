@@ -62,6 +62,7 @@ const DeleteModal = ({
   HandleCloseDelete,
   HandleDelete,
   isLoading,
+  message
 }) => {
   return (
     <Modal
@@ -78,7 +79,7 @@ const DeleteModal = ({
           />
           <ModalThanksImg src="/images/Danger Circle.jpg" />
           <ModalThanksHeading>
-            Are you sure you want to delete this leave?
+               {message}
           </ModalThanksHeading>
           <DeleteButton
             onClick={() => {

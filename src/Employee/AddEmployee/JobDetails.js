@@ -4,7 +4,8 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
-
+import { RotatingLines } from "react-loader-spinner";
+import { ErrorMessage } from "@hookform/error-message";
 import {
   HeaderEmployee,
   BackButton,
@@ -34,8 +35,9 @@ import {
 
 const JobDetails = () => {
   const Navigate = useNavigate();
-  const { employeeid } = useParams();
+  const { employeeid ,edit} = useParams();
   const [departmentData, setDepartmentData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState([]);
   const [result, setResult] = useState([]);
@@ -43,8 +45,8 @@ const JobDetails = () => {
   const initialPosition = {
     title: "",
     department: null,
-    startDate: "",
-    endDate: "",
+    startDate: new Date(),
+    endDate: new Date(),
   };
   const {
     register,
@@ -52,6 +54,8 @@ const JobDetails = () => {
     handleSubmit,
     formState: { errors },
     getValues,
+    reset,
+    setValue,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -78,7 +82,7 @@ const JobDetails = () => {
     control,
   });
   const GetEmployeesJobDetails = () => {
-    // setIsLoading(true); api serach - &searchKey=search_keyword
+    setIsLoading(true);
     const trimid = employeeid.trim();
     let url = `/employee/job-details/${trimid}`;
     httpClient({
@@ -88,6 +92,8 @@ const JobDetails = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result);
+          reset(result);
+          setValue("details.startDate", "result.details.startDate");
           console.log(result, "we are getting the persnal information ");
         } else {
           //toast.warn("something went wrong ");
@@ -96,10 +102,10 @@ const JobDetails = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
-        //  setIsLoading(false);
+        setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
   useEffect(() => {
@@ -122,7 +128,13 @@ const JobDetails = () => {
       .then(({ result }) => {
         if (result) {
           console.log(result);
-           Navigate(`/organization-admin/employee/`);
+             if (edit) {
+               // Navigate(`/organization-admin/employee/list`);
+               Navigate(-1);
+             } else {
+               Navigate(`/organization-admin/employee/list`);
+             }
+       
           setFormData(result);
         } else {
           toast.warn("something went wrong ");
@@ -137,33 +149,31 @@ const JobDetails = () => {
         // setIsLoading(false);
       });
   };
- const GetDepartments = () => {
-  //  setIsLoading(true);
+  const GetDepartments = () => {
+    //  setIsLoading(true);
 
-   let url = `/department/list`;
-   httpClient({
-     method: "get",
-     url,
-   })
-     .then(({ result }) => {
-       if (result) {
-        
-           setDepartmentData(result.departments);
-   
-       } else {
-         //toast.warn("something went wrong ");
-       }
-     })
-     .catch((error) => {
-       console.error("Error:", error);
-       toast.error("Error creating department. Please try again.");
-      //  setIsLoading(false);
-     })
-     .finally(() => {
-      //  setIsLoading(false);
-     });
+    let url = `/department/list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setDepartmentData(result.departments);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        //  setIsLoading(false);
+      })
+      .finally(() => {
+        //  setIsLoading(false);
+      });
   };
-  console.log(departmentData, "select option data ")
+  console.log(departmentData, "select option data ");
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -174,7 +184,7 @@ const JobDetails = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-    HandleSubmitJobDetails(data);
+      HandleSubmitJobDetails(data);
     }
     // console.log("form submmited", data);
   };
@@ -188,294 +198,60 @@ const JobDetails = () => {
             <IconsEmployee src="/images/icons/ArrowLeft.svg" />
             Back
           </BackButton>
-          <HeaderTitle>Add New Employee</HeaderTitle>
+          <HeaderTitle>
+            {" "}
+            {edit ? "Update JobDetails " : "Add New Employee "}
+          </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
       </HeaderEmployee>
-      <EmployeeBody>
-        <BodyHeader>
-          <BodyHeaderTitle>
-            <span
-              style={{ color: "#8B8B8B", cursor: "pointer" }}
-              onClick={() => Navigate("/add-new-employee/personal-info")}
-            >
-              {" "}
-              Personal Information{" "}
-            </span>
-            &#62; Job Details
-          </BodyHeaderTitle>
-        </BodyHeader>
-        <BodyMain>
-          <BodyMainHeading style={{ marginBottom: "25px" }}>
-            Job Details
-          </BodyMainHeading>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FormContainer>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Department<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Controller
-                    name="details.department"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Select {...field}>
-                        <Option>Select</Option>
-                        {departmentData?.map((data) => (
-                          <Option value={data._id}>{data.name}</Option>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                  {errors.details?.department && <Errors> required </Errors>}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Position Title <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.positionTitle", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.positionTitle && (
-                    <Errors> {errors.details?.positionTitle?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Position Start Date<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="date"
-                    {...register("details.startDate", {
-                      required: {
-                        value: true,
-                        message: " Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.startDate && (
-                    <Errors>{errors.details?.startDate?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Position End Date <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="date"
-                    {...register("details.endDate", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                      validate: (fieldValue) => {
-                        const startDate = new Date(
-                          getValues("details.startDate")
-                        );
-                        const endDate = new Date(fieldValue);
-                        return (
-                          startDate <= endDate ||
-                          "End Date must not be earlier than Start Date"
-                        );
-                      },
-                    })}
-                  />
-                  {errors.details?.endDate && (
-                    <Errors>{errors.details?.endDate?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Salary Scale From <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.salaryScaleFrom", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.salaryScaleFrom && (
-                    <Errors>{errors.details?.salaryScaleFrom?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Salary Scale To<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.salaryScaleTo", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.salaryScaleTo && (
-                    <Errors>{errors.details?.salaryScaleTo?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Actual Salary amounts<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.salary", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.salary && (
-                    <Errors>{errors.details?.salary?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Salary rate per
-                    <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.ratePer", {
-                      required: {
-                        value: true,
-                        message: " Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.ratePer && (
-                    <Errors>{errors.details?.ratePer?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Hours per week<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.hoursPerWeek", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                      validate: (fieldValue) => {
-                        return (
-                          (!isNaN(parseFloat(fieldValue)) &&
-                            isFinite(fieldValue)) ||
-                          "Invalid Home-Phone number "
-                        );
-                      },
-                    })}
-                  />
-                  {errors.details?.hoursPerWeek && (
-                    <Errors>{errors.details?.hoursPerWeek?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Reports to <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("details.reportsTo", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    })}
-                  />
-                  {errors.details?.reportsTo && (
-                    <Errors>{errors.details?.reportsTo?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-              <FlexContaierForm
-                style={{ width: "50%", gap: "46px", marginTop: "16px" }}
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <EmployeeBody>
+          <BodyHeader>
+            <BodyHeaderTitle>
+              <span
+                style={{ color: "#8B8B8B", cursor: "pointer" }}
+                onClick={() => Navigate("/add-new-employee/personal-info")}
               >
-                <FlexColumnForm>
-                  <AlignFlex>
-                    <input
-                      type="checkbox"
-                      {...register("details.isBebEligible", {})}
-                    />
-                    <InputLabel style={{ marginBottom: "0px" }}>
-                      Is BEB Eligible?<InputSpan>*</InputSpan>
-                    </InputLabel>
-                  </AlignFlex>
-                  {/* {errors.isBebEligible && (
-                    <Errors>{errors.isBebEligible?.message}</Errors>
-                  )} */}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <AlignFlex>
-                    <input
-                      type="checkbox"
-                      {...register("details.isActive", {})}
-                    />
-                    <InputLabel style={{ marginBottom: "0px" }}>
-                      Is Active <InputSpan>*</InputSpan>
-                    </InputLabel>
-                  </AlignFlex>
-                </FlexColumnForm>
-              </FlexContaierForm>
-            </FormContainer>
-
-            <BodyMainHeading
-              style={{ marginBottom: "25px", marginTop: "50px" }}
-            >
-              Position History
+                {" "}
+                Personal Information{" "}
+              </span>
+              &#62; Job Details
+            </BodyHeaderTitle>
+          </BodyHeader>
+          <BodyMain>
+            <BodyMainHeading style={{ marginBottom: "25px" }}>
+              Job Details
             </BodyMainHeading>
-            {fields.map((field, index) => (
-              <FormContainer key={field.id}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormContainer>
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Position Title<InputSpan>*</InputSpan>
+                      Department<InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register(`positions.${index}.title`, {
-                        // required: {
-                        //   value: true,
-                        //   message: "Required",
-                        // },
-                      })}
-                    />
-                    <Errors></Errors>
-                  </FlexColumnForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Department <InputSpan>*</InputSpan>
-                    </InputLabel>
-                  
                     <Controller
-                      name= {`positions.${index}.department`}
+                      name="details.department"
                       control={control}
-                
+                      rules={{ required: true }}
                       render={({ field }) => (
                         <Select {...field}>
                           <Option>Select</Option>
@@ -485,71 +261,365 @@ const JobDetails = () => {
                         </Select>
                       )}
                     />
+                    {errors.details?.department && <Errors> required </Errors>}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Position Title <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("details.title", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.details?.title && (
+                      <Errors> {errors.details?.title?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Position Start Date<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("details.startDate", {
+                        valueAsDate: true,
+
+                        required: {
+                          value: true,
+                          message: " Required",
+                        },
+                      })}
+                    />
+                    {errors.details?.startDate && (
+                      <Errors>{errors.details?.startDate?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Position End Date <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("details.endDate", {
+                        valueAsDate: true,
+
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          const startDate = new Date(
+                            getValues("details.startDate")
+                          );
+                          const endDate = new Date(fieldValue);
+                          return (
+                            startDate <= endDate ||
+                            "End Date must not be earlier than Start Date"
+                          );
+                        },
+                      })}
+                    />
+                    {errors.details?.endDate && (
+                      <Errors>{errors.details?.endDate?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Salary Scale From <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("details.salaryScaleFrom", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.details?.salaryScaleFrom && (
+                      <Errors>
+                        {errors.details?.salaryScaleFrom?.message}
+                      </Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Salary Scale To<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("details.salaryScaleTo", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.details?.salaryScaleTo && (
+                      <Errors>{errors.details?.salaryScaleTo?.message}</Errors>
+                    )}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      From<InputSpan>*</InputSpan>
+                      Actual Salary amounts<InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
-                      type="date"
-                      {...register(`positions.${index}.startDate`, {
-                        // required: {
-                        //   value: true,
-                        //   message: "Required",
-                        // },
+                      type="text"
+                      {...register("details.salary", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
                       })}
                     />
-                    <Errors></Errors>
+                    {errors.details?.salary && (
+                      <Errors>{errors.details?.salary?.message}</Errors>
+                    )}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      To<InputSpan>*</InputSpan>
+                      Salary rate per
+                      <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
-                      type="date"
-                      {...register(`positions.${index}.endDate`, {
-                        // required: {
-                        //   value: true,
-                        //   message: "Required",
-                        // },
+                      type="text"
+                      {...register("details.ratePer", {
+                        required: {
+                          value: true,
+                          message: " Required",
+                        },
                       })}
                     />
-                    <Errors></Errors>
+                    {errors.details?.ratePer && (
+                      <Errors>{errors.details?.ratePer?.message}</Errors>
+                    )}
                   </FlexColumnForm>
                 </FlexContaierForm>
-                { getValues("positions").length > 1 && (
-                  <DeleteIcon
-                    onClick={() => remove(index)}
-                    src="/images/icons/Alert-Circle.svg"
-                  />
-                )}
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Hours per week<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("details.hoursPerWeek", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Invalid Home-Phone number "
+                          );
+                        },
+                      })}
+                    />
+                    {errors.details?.hoursPerWeek && (
+                      <Errors>{errors.details?.hoursPerWeek?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Reports to <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("details.reportsTo", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.details?.reportsTo && (
+                      <Errors>{errors.details?.reportsTo?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm
+                  style={{ width: "50%", gap: "46px", marginTop: "16px" }}
+                >
+                  <FlexColumnForm>
+                    <AlignFlex>
+                      <input
+                        type="checkbox"
+                        {...register("details.isBebEligible", {})}
+                      />
+                      <InputLabel style={{ marginBottom: "0px" }}>
+                        Is BEB Eligible?<InputSpan>*</InputSpan>
+                      </InputLabel>
+                    </AlignFlex>
+                    {/* {errors.isBebEligible && (
+                    <Errors>{errors.isBebEligible?.message}</Errors>
+                  )} */}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <AlignFlex>
+                      <input
+                        type="checkbox"
+                        {...register("details.isActive", {})}
+                      />
+                      <InputLabel style={{ marginBottom: "0px" }}>
+                        Is Active <InputSpan>*</InputSpan>
+                      </InputLabel>
+                    </AlignFlex>
+                  </FlexColumnForm>
+                </FlexContaierForm>
               </FormContainer>
-            ))}
 
-            <FlexContaier>
-              <BluePara onClick={() => append(initialPosition)}>
-                {" "}
-                Add New Position
-              </BluePara>
-            </FlexContaier>
-
-            <FlexContaier>
-              <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
-              <ButtonBlue
-                type="submit"
-                onClick={() => {
-                  handleSubmit(onSubmit);
-                }}
+              <BodyMainHeading
+                style={{ marginBottom: "25px", marginTop: "50px" }}
               >
-                Continue
-              </ButtonBlue>
-            </FlexContaier>
-          </form>
-        </BodyMain>
-      </EmployeeBody>
-      <DevTool control={control} />
+                Position History
+              </BodyMainHeading>
+              {fields.map((field, index) => (
+                <FormContainer key={field.id}>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Position Title<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register(`positions.${index}.title`, {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        as={<Errors />}
+                        errors={errors}
+                        name={`positions.${index}.title`}
+                      />
+                    </FlexColumnForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Department <InputSpan>*</InputSpan>
+                      </InputLabel>
+
+                      <Controller
+                        name={`positions.${index}.department`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Option>Select</Option>
+                            {departmentData?.map((data) => (
+                              <Option value={data._id}>{data.name}</Option>
+                            ))}
+                          </Select>
+                        )}
+                      />
+                      <ErrorMessage
+                        as={<Errors />}
+                        errors={errors}
+                        name={`positions.${index}.department`}
+                      />
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        From<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register(`positions.${index}.startDate`, {
+                          valueAsDate: true,
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        as={<Errors />}
+                        errors={errors}
+                        name={`positions.${index}.startDate`}
+                      />
+                    </FlexColumnForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        To<InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="date"
+                        {...register(`positions.${index}.endDate`, {
+                          valueAsDate: true,
+
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                          validate: (fieldValue) => {
+                            const startDate = new Date(
+                              getValues(`positions.${index}.startDate`)
+                            );
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Must not be earlier than Start Date"
+                            );
+                          },
+                        })}
+                      />
+                      <ErrorMessage
+                        as={<Errors />}
+                        errors={errors}
+                        name={`positions.${index}.endDate`}
+                      />
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                  {getValues("positions").length > 1 && (
+                    <DeleteIcon
+                      onClick={() => remove(index)}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  )}
+                </FormContainer>
+              ))}
+
+              <FlexContaier>
+                <BluePara onClick={() => append(initialPosition)}>
+                  {" "}
+                  Add New Position
+                </BluePara>
+              </FlexContaier>
+
+              <FlexContaier>
+                {!edit && (
+                  <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+                )}
+                <ButtonBlue
+                  type="submit"
+                  onClick={() => {
+                    handleSubmit(onSubmit);
+                  }}
+                >
+                  {edit ? "Update" : "Continue"}
+                </ButtonBlue>
+              </FlexContaier>
+            </form>
+          </BodyMain>
+        </EmployeeBody>
+      )}
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

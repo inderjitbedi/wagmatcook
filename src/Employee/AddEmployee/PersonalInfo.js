@@ -37,13 +37,70 @@ import {
 
 const PersonalInfo = () => {
   const Navigate = useNavigate();
-  const { employeeid } = useParams();
+  const { employeeid, edit } = useParams();
+  console.log(edit, "check the value ");
   const [isLoading, setIsLoading] = useState(false);
 
   console.log(employeeid, "getting id from url", typeof employeeid);
-  const [formData, setFormData] = useState([]);
-  const [result, setResult] = useState(null);
+  const [file, setFile] = useState(null);
+  const [formData, setFormData] = useState({
+    file:"",
+  });
+   const [error, setErrors] = useState({
+       fileError: "",
+   });
+  const handleFileChange = (e) => {
+    setErrors({ ...error, fileError: "" });
+    const file = e.target.files[0];
+    handleUpload(file);
+  };
 
+  const removeFile = (e) => {
+    setErrors({ ...error, fileError: "" });
+    setFile(null);
+    setFormData({ ...formData, file: null });
+  };
+   const handleUpload = (file) => {
+     if (file) {
+       const binary = new FormData();
+       binary.append("file", file);
+
+       httpClient({
+         method: "post",
+         url: "/organization/file/upload/image",
+         data: binary, // Use 'data' to send the FormData
+         headers: {
+           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+         },
+       })
+         .then((data) => {
+           console.log(data);
+
+           if (data?.result) {
+             console.log(data?.result);
+             setFile(data?.result?.file);
+             setFormData({ ...formData, file: data?.result.file._id });
+           } else {
+             setErrors({ ...errors, fileError: data?.error?.error });
+           }
+         })
+         .catch((error) => {
+           console.error("Error:", error);
+         });
+     }
+   };
+  const [result, setResult] = useState(null);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm({
+    mode: "all",
+    defaultValues: result,
+  });
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -55,15 +112,16 @@ const PersonalInfo = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result.personalInfo);
-
-          if (result.personalInfo) {
-            let valueArray = []
-            Object.keys(result.personalInfo).forEach((key) => {
-              valueArray.push({ [key]: result.personalInfo[key] })
-            })
-            console.log(valueArray);
-            setValue(valueArray)
-          }
+          reset(result.personalInfo);
+          console.log(result, "this is api result ");
+          // if (result.personalInfo) {
+          //   let valueArray = []
+          //   Object.keys(result.personalInfo).forEach((key) => {
+          //     valueArray.push({ [key]: result.personalInfo[key] })
+          //   })
+          //   console.log(valueArray);
+          //   setValue("valueArray", "[...valueArray]")
+          // }
           // return result.personalInfo;
         } else {
           //toast.warn("something went wrong ");
@@ -80,20 +138,8 @@ const PersonalInfo = () => {
   };
   useEffect(() => {
     GetEmployeesPersonalInfo();
-  }, []);
+  }, [reset]);
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors }, setValue
-  } = useForm({
-    mode: "all",
-    defaultValues: async () => {
-      return {
-      };
-    },
-  });
   //get Employee Personal Info
 
   const HandleSubmitPersonalInfo = (data) => {
@@ -111,7 +157,13 @@ const PersonalInfo = () => {
       .then(({ result }) => {
         if (result) {
           console.log(result);
-          Navigate(`/organization-admin/employee/job-details/${employeeid}`);
+          if (edit) {
+            // Navigate(`/organization-admin/employee/list`);
+            Navigate(-1);
+
+          } else {
+            Navigate(`/organization-admin/employee/job-details/${employeeid}`);
+          }
           setFormData(result);
         } else {
           toast.warn("something went wrong ");
@@ -151,10 +203,14 @@ const PersonalInfo = () => {
             <IconsEmployee src="/images/icons/ArrowLeft.svg" />
             Back
           </BackButton>
-          <HeaderTitle>Add New Employee</HeaderTitle>
+          <HeaderTitle>
+            {" "}
+            {edit ? "Update Personal Info " : "Add New Employee "}
+          </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
       </HeaderEmployee>
+
       {isLoading ? (
         <div
           style={{
@@ -183,16 +239,37 @@ const PersonalInfo = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 <ImgUpload>
-                  <PersonImg />
+                { file ? (<PersonImg
+                  src={ 
+                    "http://hrapi.chantsit.com/" +
+                    file?.destination +
+                    "/" +
+                      file?.name
+                      
+                  }
+                  alt=""
+                />): (<PersonImg  src="/images/User.jpg"   alt=""
+                />)}
                   <FlexColumn>
                     <FlexContaier>
-                      <UploadImgButton>
-                        {" "}
-                        <IconsEmployee src="/images/icons/UploadIcon.svg" />{" "}
-                        Upload image
-                      </UploadImgButton>
-                      <LightPara>Remove</LightPara>
+                      <FlexContaier>
+                        <input
+                          type="file"
+                          accept="image/*,capture=camera"
+                          name="photo"
+                          id="photo"
+                          className="custom"
+                          onChange={handleFileChange}
+                        />
+                        <UploadImgButton htmlFor="photo">
+                          {" "}
+                          <IconsEmployee src="/images/icons/UploadIcon.svg" />{" "}
+                          Upload image
+                        </UploadImgButton>
+                      </FlexContaier>
+                      <LightPara onClick={removeFile}>Remove</LightPara>
                     </FlexContaier>
+
                     <UploadPara>
                       *png *jpeg up to 10MB at least 400px by 400px
                     </UploadPara>
@@ -510,7 +587,7 @@ const PersonalInfo = () => {
                   handleSubmit(onSubmit);
                 }}
               >
-                Continue
+                {edit ? "Update" : "Continue"}
               </ButtonBlue>
             </form>
           </BodyMain>

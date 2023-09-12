@@ -170,12 +170,12 @@ export const ImgUpload = styled.div`
   gap: 16px;
   margin: 24px 0px;
 `;
-export const PersonImg = styled.div`
+export const PersonImg = styled.img`
   display: inline-block;
   width: 92px;
   height: 92px;
-  fill: #f8f8f8;
-  background-color: #7b7b7b;
+  /* fill: #f8f8f8;
+  background-color: #7b7b7b; */
   border-radius: 50%;
 `;
 export const LightPara = styled.p`
@@ -186,8 +186,9 @@ export const LightPara = styled.p`
   font-weight: 500;
   line-height: normal;
   letter-spacing: -0.28px;
+  cursor: pointer;
 `;
-export const UploadImgButton = styled.button`
+export const UploadImgButton = styled.label`
   color: #595959;
   font-family: Inter;
   font-size: 14px;
@@ -203,6 +204,7 @@ export const UploadImgButton = styled.button`
   display: flex;
   align-items: center;
   gap: 4px;
+  cursor:pointer;
 `;
 export const UploadPara = styled.p`
   color: #8c8c8c;

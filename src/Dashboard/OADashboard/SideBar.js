@@ -45,6 +45,7 @@ const SideBar = () => {
     {
       Title: "Benefits",
       src: "/svg/Benefits.svg",
+      to: "/organization-admin/benefits",
     },
     {
       Title: "Disciplinary",

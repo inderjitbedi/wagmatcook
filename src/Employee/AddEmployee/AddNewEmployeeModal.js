@@ -60,6 +60,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
     register,
     clearErrors,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ mode: "all" });
 
@@ -76,9 +77,9 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
     })
       .then(({ result }) => { 
         if (result) {
-          // console.log(result, "Employee Added ", result.employee._id, "this is the employee id  fetced ");
           HandleCloseEmployee()
           Navigate(`/organization-admin/personal-info/${result.employee._id}`);
+          reset()
         } else {
           toast.warn("something went wrong ");
         }
@@ -112,6 +113,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       onClose={() => {
         HandleCloseEmployee();
         clearErrors();
+        reset()
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -122,7 +124,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
           <ModalIcon
             onClick={() => {
               HandleCloseEmployee();
-              // setError("");
+              reset()
               clearErrors();
             }}
             src="/images/icons/Alert-Circle.svg"
@@ -222,7 +224,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
               </FlexColumnForm>
             </FlexContaierForm> */}
-            <ButtonBlue type="submit">Submit</ButtonBlue>
+            <ButtonBlue style={{marginTop:"25px"}} type="submit">Submit</ButtonBlue>
           </ModalFormContainer>
         </form>
       </Box>

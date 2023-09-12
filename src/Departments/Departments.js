@@ -46,6 +46,7 @@ import {
   ModalThanksImg,
   ModalThanksHeading,
   Errors,
+  LoadMore
 } from "./DepartmentsStyles";
 
 const style = {
@@ -416,8 +417,9 @@ const Departments = () => {
     handleCloseMenu();
     Navigate("/");
   };
+  
   return (
-    <>
+    <div style={{ height: "100%" }}>
       <>
         <DashHeader>
           <DashHeaderDepartment>
@@ -598,9 +600,11 @@ const Departments = () => {
           </DepartmentCardContainer>
         )}
         {result.totalPages > result.currentPage && (
-          <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
-            Load More
-          </AddNewButton>
+          <div
+            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+          >
+            <LoadMore onClick={HandleLoadMore}>Load More</LoadMore>
+          </div>
         )}{" "}
       </>
       {/* modal to edit  */}
@@ -657,9 +661,10 @@ const Departments = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
+        message="Are you sure you want to delete this department?"
         isLoading={isLoading}
       />
-    </>
+    </div>
   );
 };
 

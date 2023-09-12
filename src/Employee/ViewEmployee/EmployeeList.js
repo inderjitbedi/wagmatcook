@@ -15,6 +15,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
+import { RotatingLines } from "react-loader-spinner";
+
 import {
   DashHeader,
   DashHeaderSearch,
@@ -82,7 +84,7 @@ const Employee = () => {
 
   // get employees
   const GetEmployees = () => {
-    // setIsLoading(true); api serach - &searchKey=search_keyword
+    setIsLoading(true);
 
     let url = `employee/list?page=1&limit=10`;
     httpClient({
@@ -98,11 +100,11 @@ const Employee = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error creating Employee. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
   console.log("result of the fetch api ", result);
@@ -127,7 +129,7 @@ const Employee = () => {
     "Students",
     "Other",
   ];
- 
+
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -141,6 +143,33 @@ const Employee = () => {
     handleCloseMenu();
     Navigate("/");
   };
+  const HandleDelete = () => {
+    setIsLoading(true);
+    let url = `/employee/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          HandleCloseDelete();
+          GetEmployees();
+          toast.success("Entry Deleted successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting employee. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const [Id, setId] = useState("");
+
   return (
     <>
       <DashHeader>
@@ -196,111 +225,145 @@ const Employee = () => {
             <SearchInput
               type="text"
               placeholder="Search..."
-              value={searchValue}
-              onChange={(e) => HandleSearchCahnge(e)}
+              // value={searchValue}
+              // onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
         </DashHeaderSearch>
       </HeaderDiv>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow
-              sx={{
-                background: "#FBFBFB",
-              }}
-            >
-              <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
-                Sr.No
-              </TableCell>
-              <TableCell sx={{ ...CellStyle, maxWidth: "188" }} align="left">
-                Name
-              </TableCell>
-              <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">
-                Employee&nbsp;Id
-              </TableCell>
-              <TableCell sx={{ ...CellStyle, maxWidth: "114px" }} align="left">
-                Phone
-              </TableCell>
-              <TableCell sx={{ ...CellStyle, maxWidth: "88px" }} align="left">
-                Join&nbsp;Date
-              </TableCell>
-              <TableCell sx={{ ...CellStyle, maxWidth: "105px" }} align="left">
-                Role
-              </TableCell>
-              <TableCell sx={{ ...CellStyle }} align="left">
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {result.employees?.map((data, index) => (
+
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
               <TableRow
-                key={data.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                style={{ background: "#fff" }}
+                sx={{
+                  background: "#FBFBFB",
+                }}
               >
-                <TableCell align="center" sx={Celllstyle2}>
-                  {index + 1}
+                <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
+                  Sr.No
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  <TabelDiv>
-                    <TabelImg src="/images/Oval Copy 2.jpg" />
-                    <TabelParaContainer>
-                      <TabelDarkPara>
-                        {data.personalInfo[0]?.firstName +
-                          data.personalInfo[0]?.lastName}
-                      </TabelDarkPara>
-                      <TabelLightPara>{data.email}</TabelLightPara>
-                    </TabelParaContainer>
-                  </TabelDiv>
+                <TableCell sx={{ ...CellStyle, maxWidth: "188" }} align="left">
+                  Name
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  {data.personalInfo[0].employeeId}
+                <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">
+                  Employee&nbsp;Id
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  {data.personalInfo[0].mobile}
+                <TableCell
+                  sx={{ ...CellStyle, maxWidth: "114px" }}
+                  align="left"
+                >
+                  Phone
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                  {data.jobDetails[0]?.startDate.slice(0, 10)}
-                  {/* </Moment> */}
+                <TableCell sx={{ ...CellStyle, maxWidth: "88px" }} align="left">
+                  Join&nbsp;Date
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  {data.role}
+                <TableCell
+                  sx={{ ...CellStyle, maxWidth: "105px" }}
+                  align="left"
+                >
+                  Role
                 </TableCell>
-                <TableCell align="left" sx={Celllstyle2}>
-                  <IconContainer>
-                    <Icons
-                      onClick={() =>
-                        Navigate(`/organization-admin/employee/details/personal-info/${data._id}`)
-                      }
-                      src="/images/icons/eye.svg"
-                    />
-                    <Icons
-                      onClick={() =>
-                        Navigate(
-                          `/organization-admin/employee/personal-info/${data._id}`
-                        )
-                      }
-                      src="/images/icons/Pendown.svg"
-                    />
-                    <Icons
-                      onClick={() => HandleOpenDelete()}
-                      src="/images/icons/Trash-2.svg"
-                    />
-                  </IconContainer>
+                <TableCell sx={{ ...CellStyle }} align="left">
+                  Actions
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {result.employees?.map((data, index) => (
+                <TableRow
+                  key={data.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  style={{ background: "#fff" }}
+                >
+                  <TableCell align="center" sx={Celllstyle2}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    <TabelDiv>
+                      <TabelImg src="/images/Oval Copy 2.jpg" />
+                      <TabelParaContainer>
+                        <TabelDarkPara>
+                          {data.personalInfo[0]?.firstName}{" "}
+                          {data.personalInfo[0]?.lastName}
+                        </TabelDarkPara>
+                        <TabelLightPara>{data.email || " - "}</TabelLightPara>
+                      </TabelParaContainer>
+                    </TabelDiv>
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    {data.personalInfo[0].employeeId || " - "}
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    {data.personalInfo[0].mobile || " - "}
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    {/* <Moment format="YYYY/MM/DD"> */}{" "}
+                    {data.jobDetails[0]?.startDate.slice(0, 10) || " - "}
+                    {/* </Moment> */}
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    {data.role || " - "}
+                  </TableCell>
+                  <TableCell align="left" sx={Celllstyle2}>
+                    <IconContainer>
+                      <Icons
+                        onClick={() =>
+                          Navigate(
+                            `/organization-admin/employee/details/personal-info/${data._id}`
+                          )
+                        }
+                        src="/images/icons/eye.svg"
+                      />
+                      <Icons
+                        onClick={() =>
+                          Navigate(
+                            `/organization-admin/employee/personal-info/${data._id}`
+                          )
+                        }
+                        src="/images/icons/Pendown.svg"
+                      />
+                      <Icons
+                        onClick={() => {
+                          setId(data._id)
+                          HandleOpenDelete();
+                        }}
+                        src="/images/icons/Trash-2.svg"
+                      />
+                    </IconContainer>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <DeleteModal
         openDelete={openDelete}
+        message="Are you sure you want to delete this employee?"
         HandleCloseDelete={HandleCloseDelete}
-        // HandleDelete={HandleDelete}
+        isLoading={isLoading}
+        HandleDelete={HandleDelete}
       />
       <AddNewEmployeeModal
         openEmployee={openEmployee}

@@ -15,9 +15,6 @@ import { RotatingLines } from "react-loader-spinner";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router";
 import {
-  DashMain,
-  Dashboard,
-  DashNav,
   DashHeader,
   DashHeaderTitle,
   DashHeaderSearch,
@@ -26,7 +23,7 @@ import {
   SearchIcon,
   DashNotification,
 } from "../Dashboard/OADashboard/OADashBoardStyles";
-import SideBar from "../Dashboard/OADashboard/SideBar";
+
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -47,6 +44,7 @@ import {
   Select,
   Option,
   Errors,
+  LoadMore,
 } from "./DisciplinaryStyles";
 
 const style = {
@@ -87,6 +85,7 @@ const CellStyle2 = {
 
 const Disciplinary = () => {
   const Navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
   const HandleClose = () => setOpen(false);
@@ -132,7 +131,7 @@ const Disciplinary = () => {
   };
   //Delete function
   const HandleDelete = () => {
-      setIsLoading(true);
+    setIsLoading(true);
 
     let url = `/disciplinary/delete/${Id}`;
     httpClient({
@@ -200,7 +199,7 @@ const Disciplinary = () => {
     // if (!isLoggedIn) {
     //   Navigate("/");
     // } else {
-      GetDisciplinary();
+    GetDisciplinary();
     // }
   }, []);
 
@@ -345,7 +344,7 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-setDescriptionLenght(value.length)
+      setDescriptionLenght(value.length);
       // validation: Description should not be empty and should have a minimum length of 10 characters
       if (!value) {
         setErrors({
@@ -432,6 +431,7 @@ setDescriptionLenght(value.length)
         toast.error("Error creating department. Please try again.");
       });
   };
+
   const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
     clearTimeout(searchTimer);
@@ -473,7 +473,6 @@ setDescriptionLenght(value.length)
   };
   return (
     <>
-    
       <>
         <DashHeader>
           <DashHeaderTitle>Disciplinary</DashHeaderTitle>
@@ -490,7 +489,6 @@ setDescriptionLenght(value.length)
             <DashNotification src="/images/icons/Notifications.svg" />
           </DashHeaderSearch>
         </DashHeader>
-        
         <DisciplinaryDiv>
           <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
@@ -695,9 +693,11 @@ setDescriptionLenght(value.length)
           </DragDropContext>
         )}
         {result.totalPages > result.currentPage && (
-          <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
-            Load More
-          </AddNewButton>
+          <div
+            style={{ display: "flex", width: "100%", justifyContent: "center" }}
+          >
+            <LoadMore onClick={HandleLoadMore}>Load More</LoadMore>
+          </div>
         )}{" "}
       </>
       {/* modal fo editing  */}
@@ -774,6 +774,7 @@ setDescriptionLenght(value.length)
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
         HandleReorder={HandleReorder}
+        message="Are you sure you want to delete this ?"
         isLoading={isLoading}
       />
     </>

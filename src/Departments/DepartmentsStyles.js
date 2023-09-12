@@ -32,6 +32,22 @@ export const AddNewButton = styled.button`
   border: none;
   cursor: pointer;
 `;
+export const LoadMore = styled.button`
+  background: none;
+  border: none;
+  margin-top: 35px;
+  color: #222b45;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  &:hover {
+    color: #279af1;
+    text-decoration: underline #279af1;
+  }
+  transition: all 0.5 ease-in-out;
+  cursor: pointer;
+`;
 export const DepartmentFilterdiv = styled.div`
 display: flex;
 gap:24px;

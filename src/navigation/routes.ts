@@ -34,6 +34,7 @@ import OADashBoardLayout from "../Dashboard/OADashboard/OADashBoardLayout";
 import EmployeeDetailLayout from "../Employee/ViewEmployee/EmployeeDetailLayout";
 import AddEmployeeLayout from "../Employee/AddEmployee/AddEmployeeLayout";
 import EmployeeLayout from "../Employee/EmployeeLayout";
+import OABenefits from "../Benefits/OABenefits";
 const Routes: any = [
   {
     component: signup,
@@ -101,6 +102,14 @@ const Routes: any = [
       },
 
       {
+        component: OABenefits,
+        path: "benefits",
+        title: "Benefits",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+        {
         component: Departments,
         path: "departments",
         title: "Departments",
@@ -220,7 +229,7 @@ const Routes: any = [
           },
           {
             component: JobDetails,
-            path: "job-details/:employeeid",
+            path: "job-details/:employeeid/:edit?",
             title: "JobDetails ",
             to: "/",
             type: "private",
@@ -228,7 +237,7 @@ const Routes: any = [
           },
           {
             component: PersonalInfo,
-            path: "personal-info/:employeeid",
+            path: "personal-info/:employeeid/:edit?",
             title: "PersonalInfo ",
             to: "/",
             type: "private",
