@@ -212,8 +212,9 @@ const EmployeePersonal = () => {
                       <ViewPara> Female</ViewPara>
                     )}
                   </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
+                  </FlexSpaceBetween>
+                  {/* band number and is status */}
+                {/* <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Is Status </TitlePara>
                     <ViewPara>Yes</ViewPara>
@@ -222,7 +223,7 @@ const EmployeePersonal = () => {
                     <TitlePara>Band Number</TitlePara>
                     <ViewPara>JHGTRYSG4542DES</ViewPara>
                   </FlexColumn>
-                </FlexSpaceBetween>
+                </FlexSpaceBetween> */}
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

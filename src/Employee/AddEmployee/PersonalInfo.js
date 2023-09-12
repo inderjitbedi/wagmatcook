@@ -273,7 +273,8 @@ const PersonalInfo = () => {
                       *png *jpeg up to 10MB at least 400px by 400px
                     </UploadPara>
                   </FlexColumn>
-                </ImgUpload>
+                  </ImgUpload>
+                  <Errors>{ error?.fileError}</Errors>
                 {/* first name and last name  */}
 
                 <FlexContaierForm>

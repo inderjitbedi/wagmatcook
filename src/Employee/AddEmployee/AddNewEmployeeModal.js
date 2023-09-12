@@ -28,7 +28,7 @@ const style = {
   borderRadius: "8px",
 };
 const ModalContainer = styled.div`
-  padding: 20px 12px 15px 29px;
+  padding: 0px 12px 15px 29px;
   border-bottom: 1px solid #f3f3f5;
   display: flex;
   align-items: center;
@@ -78,7 +78,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       .then(({ result }) => { 
         if (result) {
           HandleCloseEmployee()
-          Navigate(`/organization-admin/personal-info/${result.employee._id}`);
+          Navigate(`/organization-admin/employee/personal-info/${result.employee._id}`);
           reset()
         } else {
           toast.warn("something went wrong ");
@@ -137,29 +137,29 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 <InputLabel>First Name</InputLabel>
                 <Input
                   type="text"
-                  {...register("firstname", {
+                  {...register("firstName", {
                     required: {
                       value: true,
                       message: "Required",
                     },
                   })}
                 />
-                {errors.firstname && (
-                  <Errors>{errors.firstname?.message}</Errors>
+                {errors.firstName && (
+                  <Errors>{errors.firstName?.message}</Errors>
                 )}
               </FlexColumnForm>
               <FlexColumnForm>
                 <InputLabel>Last Name</InputLabel>
                 <Input
                   type="text"
-                  {...register("lastname", {
+                  {...register("lastName", {
                     required: {
                       value: true,
                       message: "Required",
                     },
                   })}
                 />
-                {errors.lastname && <Errors>{errors.lastname?.message}</Errors>}
+                {errors.lastName && <Errors>{errors.lastName?.message}</Errors>}
               </FlexColumnForm>
             </FlexContaierForm>
             <FlexContaierForm>
