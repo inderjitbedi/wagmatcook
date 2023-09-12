@@ -22,7 +22,6 @@ const EmployeeSidebar = () => {
       src: "/svg/Dashboard.svg",
       
     },
-
     {
       Title: "Employee",
       src: "/svg/Employee.svg",

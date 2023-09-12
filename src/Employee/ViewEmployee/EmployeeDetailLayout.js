@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import EmployeeSideBar from "./EmployeeSideBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import SideBar from "../../Dashboard/OADashboard/SideBar";
 import Menu from "@mui/material/Menu";
@@ -29,6 +29,7 @@ const EmployeeDetailLayout = () => {
   const Navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
+  const { employeeid } = useParams();
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -93,7 +94,7 @@ const EmployeeDetailLayout = () => {
         </BodyHeader>
         <BodyContainer>
           <SideBarContainer>
-            <EmployeeSideBar />
+            <EmployeeSideBar employeeId={employeeid} />
           </SideBarContainer>
           <Outlet />
         </BodyContainer>

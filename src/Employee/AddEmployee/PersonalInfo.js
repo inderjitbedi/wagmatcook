@@ -55,6 +55,15 @@ const PersonalInfo = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result.personalInfo);
+
+          if (result.personalInfo) {
+            let valueArray = []
+            Object.keys(result.personalInfo).forEach((key) => {
+              valueArray.push({ [key]: result.personalInfo[key] })
+            })
+            console.log(valueArray);
+            setValue(valueArray)
+          }
           // return result.personalInfo;
         } else {
           //toast.warn("something went wrong ");
@@ -62,30 +71,26 @@ const PersonalInfo = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error GetEmployeesPersonalInfo. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
         setIsLoading(false);
       });
   };
-  console.log(result, "this is result of get api")
   useEffect(() => {
     GetEmployeesPersonalInfo();
   }, []);
-  
+
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }, setValue
   } = useForm({
     mode: "all",
     defaultValues: async () => {
       return {
-        firstName: result?.firstName,
-
-        lastName: "kumar",
       };
     },
   });

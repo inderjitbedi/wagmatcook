@@ -17,7 +17,7 @@ import Benefits from "../Employee/AddEmployee/Benefits";
 import CertificatesInfo from "../Employee/AddEmployee/CertificatesInfo";
 import JobDetails from "../Employee/AddEmployee/JobDetails";
 import PersonalInfo from "../Employee/AddEmployee/PersonalInfo";
-import Employee from "../Employee/ViewEmployee/Employee";
+import EmployeeList from "../Employee/ViewEmployee/EmployeeList";
 import EmployeeJobDetails from "../Employee/ViewEmployee/EmployeeJobDetails";
 import EmployeePersonal from "../Employee/ViewEmployee/EmployeePersonal";
 import EVBenefits from "../Employee/ViewEmployee/EVBenefits";
@@ -124,7 +124,7 @@ const Routes: any = [
         type: "private",
         children: [
           {
-            component: Employee,
+            component: EmployeeList,
             path: "list",
             title: "Employee ",
             to: "/",

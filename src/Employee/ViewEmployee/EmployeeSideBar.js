@@ -29,41 +29,41 @@ const SideBarListTitle = styled.p`
   line-height: 0px;
   cursor: pointer;
 `;
-const EmployeeSideBar = () => {
+const EmployeeSideBar = (props) => {
      const location = useLocation();
   const SideBarData = [
     {
       Title: "Personal",
-      to: "/organization-admin/employee/details/personal-info/:employeeid",
+      to: "/organization-admin/employee/details/personal-info/"+props.employeeId,
     },
     {
       Title: "Job Details",
-      to: "/organization-admin/employee/details/job-details/:employeeid",
+      to: "/organization-admin/employee/details/job-details/"+props.employeeId,
     },
 
     {
       Title: "Benefits",
-      to: "/organization-admin/employee/details/benefits/:employeeid",
+      to: "/organization-admin/employee/details/benefits/"+props.employeeId,
     },
     {
       Title: "Leave History",
-      to: "/organization-admin/employee/details/leave-history/:employeeid",
+      to: "/organization-admin/employee/details/leave-history/"+props.employeeId,
     },
     {
       Title: "Certificates",
-      to: "/organization-admin/employee/details/certificates/:employeeid",
+      to: "/organization-admin/employee/details/certificates/"+props.employeeId,
     },
     {
       Title: "Discipline",
-      to: "/organization-admin/employee/details/discipline/:employeeid",
+      to: "/organization-admin/employee/details/discipline/"+props.employeeId,
     },
     {
       Title: "Performance",
-      to: "/organization-admin/employee/details/performance/:employeeid",
+      to: "/organization-admin/employee/details/performance/"+props.employeeId,
     },
     {
       Title: "Documents",
-      to: "/organization-admin/employee/details/documents/:employeeid",
+      to: "/organization-admin/employee/details/documents/"+props.employeeId,
     },
   ];
       const style = {
