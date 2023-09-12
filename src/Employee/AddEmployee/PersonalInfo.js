@@ -244,8 +244,7 @@ const PersonalInfo = () => {
                     "http://hrapi.chantsit.com/" +
                     file?.destination +
                     "/" +
-                      file?.name
-                      
+                      file?.name   
                   }
                   alt=""
                 />): (<PersonImg  src="/images/User.jpg"   alt=""
