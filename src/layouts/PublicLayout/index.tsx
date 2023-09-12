@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import { useLocation } from "react-router-dom";
+import ScrollToTop from "../../auth/pages/scrollTop";
 
 const PublicLayout = ({ component: Component }: any) => {
   const componentImageMap: any = {
@@ -12,9 +13,14 @@ const PublicLayout = ({ component: Component }: any) => {
   // 
   const imageUrl = location.pathname.indexOf('/organization-admin/complete-signup') > -1 ? './../../../assets/login-image.svg' : './../assets/login-image.svg';
   // console.log(Component.name, imageUrl);
+  const { pathname } = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top of the page on route change
+  }, [pathname]);
   return (
     <>
+
       <main role="main">
         <Grid container spacing={2}>
           <Grid item xs={3}>

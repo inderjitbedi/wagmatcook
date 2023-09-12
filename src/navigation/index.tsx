@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Route,
   Navigate,
@@ -31,41 +31,74 @@ const Navigation = () => {
   //useAppSelector((!!(localStorage.getItem("user") && localStorage.getItem("token")))LoggedIn);
   // const showSpinner = useAppSelector(fetchAccountStorageSpinnerState);
 
+
+  const renderNestedRoutes = (routes:any) => {
+    return (
+      <>
+        {routes.map(({ component, path, type, to, title, children }:any) => (
+          <React.Fragment key={path}>
+            {type === 'public' && (
+              <Route
+                path={path}
+                element={<PublicLayout component={component} />}
+              />
+            )}
+            {type === 'private' && (
+              <Route
+                path={path}
+                element={<PrivateLayout component={component} />}
+              >
+                {children && children.length && renderNestedRoutes(children)}
+              </Route>
+            )}
+            {((type === 'public') || (type === 'private')) && (
+              <Route path={path} element={<Navigate replace to={to} />} />
+            )}
+          </React.Fragment>
+        ))}
+      </>
+    );
+  };
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <>
+      <>  
         <Route path="/landing.html" />
-        {routes.map(({ component: Component, path, type, to, title, children }) => (
-          <React.Fragment key={Date.now()}>
-             {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token")))  */}
-            {type === "public"&& (
+
+        {renderNestedRoutes(routes)}
+        {/* {routes.map(({ component: Component, path, type, to, title, children }) => (
+          <React.Fragment key={Date.now()}> */}
+
+            {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token")))  */}
+            {/* {type === "public" && (
               <Route
                 path={path}
                 key={Date.now()}
-                element={<PublicLayout component={Component}></PublicLayout>}
+                element={
+                  <PublicLayout component={Component}></PublicLayout>}
               ></Route>
-            )}
-{/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            {type === "private"  && (
+            )} */}
+            {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+            {/* {type === "private" && (
               <Route
                 path={path}
                 key={Date.now()}
-                element={<PrivateLayout component={Component}></PrivateLayout>}
+                element={
+                 <PrivateLayout component={Component}></PrivateLayout>}
               >
                 {children && children.length && children.map((e) => (
                   <Route path={e.path} index={e.index ? true : undefined} key={Date.now()} element={<e.component />} />
                 ))}
               </Route>
-            )}
+            )} */}
 
             {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            {((type === "public" ) || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}>
-            {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            </Route>}
+            {/* {((type === "public") || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}> */}
+              {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+            {/* </Route>} */}
 
 
-          </React.Fragment>
-        ))}
+          {/* </React.Fragment> */}
+        {/* ))} */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </>
     )

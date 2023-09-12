@@ -148,7 +148,7 @@ const EmployeePersonal = () => {
                 </FlexColumn>
                 <FlexColumn>
                   <TitlePara>Date of Birth</TitlePara>
-                  <ViewPara>{result.personalInfo?.dob.slice(0, 10)}</ViewPara>
+                  <ViewPara>{result.personalInfo?.dob?.slice(0, 10)}</ViewPara>
                 </FlexColumn>
               </FlexSpaceBetween>
               <FlexSpaceBetween>

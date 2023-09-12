@@ -106,7 +106,7 @@ const PersonalInfo = () => {
       .then(({ result }) => {
         if (result) {
           console.log(result);
-          Navigate(`/organization-admin/job-details/${employeeid}`);
+          Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           setFormData(result);
         } else {
           toast.warn("something went wrong ");

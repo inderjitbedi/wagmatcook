@@ -17,12 +17,29 @@ const employeeController = {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
-
             let filters = { isDeleted: false, role: roles.EMPLOYEE }
+            // {
+            //     $match: {
+            //         'userorganization.organization': req.organization._id,
+            //     },
+            // },
             const employees = await User.aggregate([
                 {
                     $match: filters,
                 },
+                {
+                    $lookup: {
+                        from: 'userorganizations',
+                        localField: '_id',
+                        foreignField: 'user',
+                        as: 'userOrganizations',
+                    },
+                },
+                {
+                        $match: {
+                            'userOrganizations.organization': req.organization._id,
+                        },
+                    },
                 {
                     $lookup: {
                         from: 'employeepersonalinfos',
@@ -33,13 +50,13 @@ const employeeController = {
                 },
                 {
                     $lookup: {
-                        from: 'employeejobdetails', 
+                        from: 'employeejobdetails',
                         localField: '_id',
                         foreignField: 'employee',
                         as: 'jobDetails',
                     },
                 },
-                
+
                 {
                     $skip: startIndex,
                 },

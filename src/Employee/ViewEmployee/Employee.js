@@ -139,7 +139,7 @@ const Employee = () => {
   const HandleLogout = () => {
     localStorage.clear();
     handleCloseMenu();
-    Navigate("/signin");
+    Navigate("/");
   };
   return (
     <>
@@ -274,14 +274,14 @@ const Employee = () => {
                   <IconContainer>
                     <Icons
                       onClick={() =>
-                        Navigate(`/employee-details/personal/${data._id}`)
+                        Navigate(`/organization-admin/employee/details/personal-info/${data._id}`)
                       }
                       src="/images/icons/eye.svg"
                     />
                     <Icons
                       onClick={() =>
                         Navigate(
-                          `/organization-admin/personal-info/${data._id}`
+                          `/organization-admin/employee/personal-info/${data._id}`
                         )
                       }
                       src="/images/icons/Pendown.svg"

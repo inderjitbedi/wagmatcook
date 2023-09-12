@@ -31,9 +31,10 @@ import VerifyOTP from "../Shared/Auth/VerifyOTP";
 import SALayout from "../SuperAdmin/SALayout";
 import CompleteSignup from "../OrgAdmin/CompleteSignup";
 import OADashBoardLayout from "../Dashboard/OADashboard/OADashBoardLayout";
-import EmployeeLayout from "../Employee/ViewEmployee/EmployeeLayout";
+import EmployeeDetailLayout from "../Employee/ViewEmployee/EmployeeDetailLayout";
 import AddEmployeeLayout from "../Employee/AddEmployee/AddEmployeeLayout";
-const Routes = [
+import EmployeeLayout from "../Employee/EmployeeLayout";
+const Routes: any = [
   {
     component: signup,
     path: "/complete-signup",
@@ -113,126 +114,131 @@ const Routes = [
         title: "Disciplinary ",
         to: "/",
         type: "private",
-
         index: true,
       },
       {
-        component: Employee,
+        component: EmployeeLayout,
         path: "employee",
         title: "Employee ",
         to: "/",
         type: "private",
-        index: true,
-      },
-      {
-        component: Benefits,
-        path: "benefits/:employeeid",
-        title: "Benefits ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: CertificatesInfo,
-        path: "certificates-info/:employeeid",
-        title: "CertificatesInfo ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: JobDetails,
-        path: "job-details/:employeeid",
-        title: "JobDetails ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: PersonalInfo,
-        path: "personal-info/:employeeid",
-        title: "PersonalInfo ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
+        children: [
+          {
+            component: Employee,
+            path: "list",
+            title: "Employee ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: EmployeeDetailLayout,
+            path: "details",
+            title: "Employee ",
+            to: "/",
+            type: "private",
+            children: [
+
+              {
+                component: EmployeePersonal,
+                path: "personal-info/:employeeid",
+                title: "EmployeePersonal ",
+                to: "/",
+                type: "private",
+                index: true,
+              },
+
+              {
+                component: EmployeeJobDetails,
+                path: "job-details/:employeeid",
+                title: "EmployeeJobDetails ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVBenefits,
+                path: "benefits/:employeeid",
+                title: "Benefits ",
+                to: "/",
+                type: "private",
+              },
+
+              {
+                component: EVLeaveHistory,
+                path: "leave-history/:employeeid",
+                title: "EVLeaveHistory ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVCertificates,
+                path: "certificates/:employeeid",
+                title: "EVCertificates ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVDiscipline,
+                path: "discipline/:employeeid",
+                title: "EVDiscipline ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVDocuments,
+                path: "documents/:employeeid",
+                title: "EVDocuments ",
+                to: "/",
+                type: "private",
+
+              },
+              {
+                component: EVPerformance,
+                path: "performance/:employeeid",
+                title: "EVPerformance ",
+                to: "/",
+                type: "private",
+
+              },
+            ],
+          },
+          {
+            component: Benefits,
+            path: "benefits/:employeeid",
+            title: "Benefits ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: CertificatesInfo,
+            path: "certificates-info/:employeeid",
+            title: "CertificatesInfo ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: JobDetails,
+            path: "job-details/:employeeid",
+            title: "JobDetails ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: PersonalInfo,
+            path: "personal-info/:employeeid",
+            title: "PersonalInfo ",
+            to: "/",
+            type: "private",
+
+          },
+        ],
+      }
     ],
   },
-  {
-    component: EmployeeLayout,
-    path: "/employee-details",
-    title: "Disciplinary ",
-    to: "/",
-    type: "private",
-    children: [
-      {
-        component: EmployeePersonal,
-        path: "personal/:employeeid",
-        title: "EmployeePersonal ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
 
-      {
-        component: EmployeeJobDetails,
-        path: "job-details/:employeeid",
-        title: "EmployeeJobDetails ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: EVBenefits,
-        path: "benefits/:employeeid",
-        title: "Benefits ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-
-      {
-        component: EVLeaveHistory,
-        path: "leave-history/:employeeid",
-        title: "EVLeaveHistory ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: EVCertificates,
-        path: "certificates/:employeeid",
-        title: "EVCertificates ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: EVDiscipline,
-        path: "discipline/:employeeid",
-        title: "EVDiscipline ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: EVDocuments,
-        path: "documents/:employeeid",
-        title: "EVDocuments ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-      {
-        component: EVPerformance,
-        path: "performance/:employeeid",
-        title: "EVPerformance ",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-    ],
-  },
 
   {
     component: SAUserList,

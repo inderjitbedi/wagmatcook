@@ -4,7 +4,7 @@ import FooterLayout from "../footer";
 
 const PrivateLayout = ({ component: Component }: any) => (
   <>
-    <main role="main">
+    <main role="main" style={{ width: '100%' }}>
       {/* <Header /> */}
       <div className="mainBodyWrapper" id="mainBodyWrapper">
         <Component></Component>

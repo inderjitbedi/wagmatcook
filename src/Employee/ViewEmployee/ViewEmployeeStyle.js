@@ -192,7 +192,7 @@ export const SideBarContainer = styled.div`
   border-right: 1px solid #eff4fa;
 `;
 export const MainBodyContainer = styled.div`
-  width: 80%;
+  width: 100%;
 `;
 export const PersonalInfo = styled.div`
   width: 100%;
