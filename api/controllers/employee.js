@@ -17,6 +17,8 @@ const employeeController = {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
+            console.log(req.user.name, req.user.email, req.user._id);
+            console.log(req.organization.name, req.organization._id);
             let filters = { isDeleted: false, role: roles.EMPLOYEE }
             // {
             //     $match: {
@@ -36,10 +38,10 @@ const employeeController = {
                     },
                 },
                 {
-                        $match: {
-                            'userOrganizations.organization': req.organization._id,
-                        },
+                    $match: {
+                        'userOrganizations.organization': req.organization._id,
                     },
+                },
                 {
                     $lookup: {
                         from: 'employeepersonalinfos',
@@ -117,6 +119,18 @@ const employeeController = {
     },
 
 
+    async delete(req, res) {
+        try {
+            const user = await User.findOneAndUpdate({ _id: req.params.id }, { isDeleted: true })
+            res.status(200).json({
+                message: 'Employee deleted successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
 
     async updatePersonalInfo(req, res) {
         try {
