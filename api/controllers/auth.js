@@ -208,7 +208,14 @@ const authController = {
             const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();
             delete user.password
-            res.status(200).json({ user, token, message: 'User signed in successfully' });
+
+            const relation = await UserOrganization.findOne({ user: user._id }).populate({
+                path: 'organization',
+                populate: {
+                  path: 'logo',
+                },
+              });
+            res.status(200).json({ user, organization: relation.organization, token, message: 'User signed in successfully' });
         } catch (error) {
             console.error("authController:register:error -", error);
             res.status(400).json(error);
@@ -234,7 +241,7 @@ const authController = {
             delete user.password
 
 
-            let relation = await UserOrganization.findOne({ user: user._id,  isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
+            let relation = await UserOrganization.findOne({ user: user._id, isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
 
 
             res.status(200).json({ user, organization: relation.organization, token, message: 'User signup completed successfully' });

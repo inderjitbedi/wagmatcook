@@ -50,6 +50,7 @@ const employeeController = {
                         as: 'personalInfo',
                     },
                 },
+
                 {
                     $lookup: {
                         from: 'employeejobdetails',
@@ -65,7 +66,6 @@ const employeeController = {
                 {
                     $limit: limit,
                 }
-
 
             ]);
 
@@ -147,9 +147,11 @@ const employeeController = {
                 console.log(req.body.photo);
             }
             const personalInfo = await EmployeePersonalInfo.findOneAndUpdate({ employee: req.params.id }, req.body, { new: true })
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
 
             res.status(200).json({
                 personalInfo,
+                jobDetails,
                 message: 'Employee personal info updated successfully'
             });
 
@@ -183,7 +185,7 @@ const employeeController = {
             if (!user) {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
-            req.body.details.reportsTo = req.user._id
+            // req.body.details.reportsTo = req.user._id
             req.body.details.employee = req.params.id
             const details = await EmployeeJobDetails.findOneAndUpdate({ employee: req.params.id }, req.body.details, { upsert: true, new: true })
             let positions = req.body.positions
@@ -212,6 +214,22 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+
+    async addPosition(req, res) {
+        try {
+            const position = new EmployeePositionHistory({ ...req.body, employee: req.params.id });
+            await position.save();
+
+            res.status(200).json({
+                position,
+                message: 'Employee position added successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
     async getJobDetails(req, res) {
         try {
             const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
