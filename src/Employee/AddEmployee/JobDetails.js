@@ -67,7 +67,7 @@ const JobDetails = () => {
         isActive: false,
         isBebEligible: false,
         ratePer: "",
-        reportsTo: "",
+        reportsTo: employeeid,
         salary: "",
         salaryScaleFrom: "",
         salaryScaleTo: "",
@@ -119,7 +119,7 @@ const JobDetails = () => {
           if (result.details?.department)
             result.details.department = result.details?.department?._id;
 
-          console.log(result, "updates in results")
+          console.log(result, "updates in results");
           // Object.keys(result).forEach((key) => {
           //   console.log(key, result[key], "this is what we have now ");
           //   setValue(key, result[key]);
@@ -135,7 +135,7 @@ const JobDetails = () => {
           setValue("department");
           // adding if no position added
           if (!result.positions?.length) {
-            append(initialPosition)
+            append(initialPosition);
           }
         } else {
           //toast.warn("something went wrong ");
@@ -154,8 +154,7 @@ const JobDetails = () => {
   useEffect(() => {
     GetDepartments();
     GetEmployeesJobDetails();
-  }, [edit,reset]);
-
+  }, [edit, reset]);
 
   const HandleSubmitJobDetails = (data) => {
     // e.preventDefault();
@@ -512,16 +511,17 @@ const JobDetails = () => {
                     </InputLabel>
                     <Input
                       type="text"
-                      {...register("details.reportsTo", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
+                      value={employeeid}
+                      // {...register("details.reportsTo", {
+                      //   required: {
+                      //     value: true,
+                      //     message: "Required",
+                      //   },
+                      // })}
                     />
-                    {errors.details?.reportsTo && (
+                    {/* {errors.details?.reportsTo && (
                       <Errors>{errors.details?.reportsTo?.message}</Errors>
-                    )}
+                    )} */}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm
