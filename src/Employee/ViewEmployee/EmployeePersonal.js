@@ -81,14 +81,11 @@ const EmployeePersonal = () => {
       ) : (
         <MainBodyContainer>
           <PersonalInfo>
-            <PersonalImg src="/images/Oval Copy.jpg" />
+            <PersonalImg src={result.personalInfo?.photo ? "http://hrapi.chantsit.com/" + result.personalInfo.photo?.path : "/images/User.jpg"} />
             <FlexColumn>
-              <PersonalName>
-                {result?.personalInfo?.firstName}{" "}
-                {result?.personalInfo?.lastName}
-              </PersonalName>
-              <PersonalTitle>Team Manager</PersonalTitle>
-              <PersonalDepartment>Design Department</PersonalDepartment>
+              <PersonalName>{[result.personalInfo?.firstName, result.personalInfo?.lastName].join(' ')}</PersonalName>
+              <PersonalTitle>{result.details?.title || '-'}</PersonalTitle>
+              <PersonalDepartment>{result.details?.department?.name || '-'}</PersonalDepartment>
             </FlexColumn>
           </PersonalInfo>
 
@@ -212,8 +209,8 @@ const EmployeePersonal = () => {
                       <ViewPara> Female</ViewPara>
                     )}
                   </FlexColumn>
-                  </FlexSpaceBetween>
-                  {/* band number and is status */}
+                </FlexSpaceBetween>
+                {/* band number and is status */}
                 {/* <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Is Status </TitlePara>

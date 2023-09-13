@@ -77,7 +77,7 @@ const PersonalInfo = () => {
           if (data?.result) {
             console.log(data?.result);
             setFile(data?.result?.file);
-            setFormData({ ...formData, file: data?.result.file._id });
+            // setFormData({ ...formData, file: data?.result.file._id });
           } else {
             setErrors({ ...errors, fileError: data?.error?.error });
           }
@@ -115,6 +115,9 @@ const PersonalInfo = () => {
           Object.keys(result.personalInfo).forEach((key) => {
             setValue(key, result.personalInfo[key])
           })
+          if (result.personalInfo?.photo)
+            setFile(result.personalInfo?.photo)
+
         } else {
           //toast.warn("something went wrong ");
         }
@@ -181,6 +184,11 @@ const PersonalInfo = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
+      console.log(file);
+      if (file) {
+        data.photo = file._id
+      }
+
       HandleSubmitPersonalInfo(data);
     }
     console.log("form submmited", data);
@@ -265,8 +273,8 @@ const PersonalInfo = () => {
                       *png *jpeg up to 10MB at least 400px by 400px
                     </UploadPara>
                   </FlexColumn>
-                  </ImgUpload>
-                  <Errors>{ error?.fileError}</Errors>
+                </ImgUpload>
+                <Errors>{error?.fileError}</Errors>
                 {/* first name and last name  */}
 
                 <FlexContaierForm>

@@ -205,7 +205,7 @@ const EVLeaveHistory = () => {
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
         <PersonalInfo>
-          <PersonalImg src="/images/Oval Copy.jpg" />
+          <PersonalImg src="/images/User.jpg" />
           <FlexColumn style={{ gap: "5px" }}>
             <PersonalName>Hattie Watkins</PersonalName>
             <PersonalTitle>Team Manager</PersonalTitle>

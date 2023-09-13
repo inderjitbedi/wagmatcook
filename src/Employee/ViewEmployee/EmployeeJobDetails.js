@@ -133,12 +133,11 @@ const EmployeeJobDetails = () => {
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <PersonalInfo>
-              <PersonalImg src="/images/Oval Copy.jpg" />
-
+              <PersonalImg src={result.personalInfo?.photo ? "http://hrapi.chantsit.com/" + result.personalInfo.photo?.path : "/images/User.jpg"} />
               <FlexColumn>
-                <PersonalName>Hattie Watkins</PersonalName>
-                <PersonalTitle>Team Manager</PersonalTitle>
-                <PersonalDepartment>Design Department</PersonalDepartment>
+                <PersonalName>{[result.personalInfo?.firstName, result.personalInfo?.lastName].join(' ')}</PersonalName>
+                <PersonalTitle>{result.details?.title || '-'}</PersonalTitle>
+                <PersonalDepartment>{result.details?.department?.name || '-'}</PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
 
@@ -165,7 +164,7 @@ const EmployeeJobDetails = () => {
                   <FlexColumn>
                     <TitlePara>Department</TitlePara>
                     <ViewPara>
-                      {result.details?.department || " - " || " - "}
+                      {result.details?.department?.name || " - "}
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
@@ -177,13 +176,13 @@ const EmployeeJobDetails = () => {
                   <FlexColumn>
                     <TitlePara>Position Start Date</TitlePara>
                     <ViewPara>
-                      {result.details?.startDate.slice(0, 10) || " - "}
+                      {result.details?.startDate?.slice(0, 10) || " - "}
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Position End Date</TitlePara>
                     <ViewPara>
-                      {result.details?.endDate.slice(0, 10) || "-"}
+                      {result.details?.endDate?.slice(0, 10) || "-"}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
@@ -235,16 +234,16 @@ const EmployeeJobDetails = () => {
                     {result.details?.isActive ? (
                       <ViewPara style={{ color: "#34A853" }}>Active</ViewPara>
                     ) : (
-                      <ViewPara style={{ color: "red" }}>inActive</ViewPara>
+                      <ViewPara style={{ color: "red" }}>Inactive</ViewPara>
                     )}
                   </FlexColumn>
                 </FlexSpaceBetween>
-                <FlexSpaceBetween>
+                {/* <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Duration of Employment</TitlePara>
                     <ViewPara>2 Years 3 months</ViewPara>
                   </FlexColumn>
-                </FlexSpaceBetween>
+                </FlexSpaceBetween> */}
                 <FlexSpaceBetween>
                   <BasicHeading
                     style={{ marginTop: "53px", marginBottom: "24px" }}
@@ -390,13 +389,13 @@ const EmployeeJobDetails = () => {
                         <FlexColumn style={{ gap: "4px" }}>
                           <ViewPara> {data.title || " - "} </ViewPara>
 
-                          <TitlePara> {data.department || " - "}</TitlePara>
+                          <TitlePara> {data.department?.name || " - "}</TitlePara>
                         </FlexColumn>
                         <TitlePara>
-                          From: {data.startDate.slice(0, 10) || " - "}
+                          From: {data.startDate?.slice(0, 10) || " - "}
                           <span style={{ marginLeft: "14px" }}>
                             {" "}
-                            To:{data.endDate.slice(0, 10) || " - "}
+                            To:{data.endDate?.slice(0, 10) || " - "}
                           </span>{" "}
                         </TitlePara>
                       </TimelineDiv>

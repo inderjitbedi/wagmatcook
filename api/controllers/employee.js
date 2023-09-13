@@ -104,7 +104,7 @@ const employeeController = {
 
 
             const { firstName, lastName } = req.body
-            console.log(req.body,firstName, lastName);
+            console.log(req.body, firstName, lastName);
             const personalInfo = new EmployeePersonalInfo({ employee: user._id, firstName, lastName });
             await personalInfo.save()
 
@@ -141,9 +141,10 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            let file = await File.findOne({ _id: req.body.file });
+            let file = await File.findOne({ _id: req.body.photo });
             if (file) {
-                req.body.photo = await fileController.moveToUploads(file)
+                req.body.photo = await fileController.moveToUploads(req, file)
+                console.log(req.body.photo);
             }
             const personalInfo = await EmployeePersonalInfo.findOneAndUpdate({ employee: req.params.id }, req.body, { new: true })
 
@@ -215,8 +216,8 @@ const employeeController = {
         try {
             const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
             const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department')
-           
-           
+
+
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
             res.status(200).json({

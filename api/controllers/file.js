@@ -33,9 +33,9 @@ const fileController = {
 
     async moveToUploads(req, file) {
         if (!file) {
-            return null; 
+            return null;
         }
-
+        console.log("Moving file .. ");
         const tempFilePath = [file.destination, file.name].join('/');
         const newFilePath = 'uploads/';
         const newFileName = Date.now() + '_' + req.user._id + '_' + file.originalName.replaceAll(' ', '_');
