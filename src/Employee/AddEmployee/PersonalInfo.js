@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
+import InputMask from "react-input-mask";
 
 import {
   HeaderEmployee,
@@ -111,20 +112,20 @@ const PersonalInfo = () => {
         if (result) {
           setResult(result.personalInfo);
           if (result.personalInfo?.dob)
-            result.personalInfo.dob = new Date(result.personalInfo.dob).toISOString().split("T")[0]
+            result.personalInfo.dob = new Date(result.personalInfo.dob)
+              .toISOString()
+              .split("T")[0];
           Object.keys(result.personalInfo).forEach((key) => {
-            setValue(key, result.personalInfo[key])
-          })
-          if (result.personalInfo?.photo)
-            setFile(result.personalInfo?.photo)
-
+            setValue(key, result.personalInfo[key]);
+          });
+          if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error GetEmployeesPersonalInfo. Please try again.");
+        toast.error("Error fetchi personal info. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
@@ -155,7 +156,6 @@ const PersonalInfo = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
-
           } else {
             Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           }
@@ -186,13 +186,27 @@ const PersonalInfo = () => {
     if (isEmptyObject(errors)) {
       console.log(file);
       if (file) {
-        data.photo = file._id
+        data.photo = file._id;
       }
 
       HandleSubmitPersonalInfo(data);
     }
     console.log("form submmited", data);
   };
+const inputStyles = {
+  fontSize: "13px",
+  fontWeight: 400,
+  lineHeight: "16px",
+  width: "100%",
+  border: "1px solid #dcdcdc",
+  borderRadius: "8px",
+  padding: "1em",
+  marginBottom: "10px",
+  color: "#222b45",
+  background: "#fff",
+  boxSizing: "border-box",
+  outline: "none", // Removed outline color
+};
 
   return (
     <>
@@ -239,16 +253,19 @@ const PersonalInfo = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 <ImgUpload>
-                  {file ? (<PersonImg
-                    src={
-                      "http://hrapi.chantsit.com/" +
-                      file?.destination +
-                      "/" +
-                      file?.name
-                    }
-                    alt=""
-                  />) : (<PersonImg src="/images/User.jpg" alt=""
-                  />)}
+                  {file ? (
+                    <PersonImg
+                      src={
+                        "http://hrapi.chantsit.com/" +
+                        file?.destination +
+                        "/" +
+                        file?.name
+                      }
+                      alt=""
+                    />
+                  ) : (
+                    <PersonImg src="/images/User.jpg" alt="" />
+                  )}
                   <FlexColumn>
                     <FlexContaier>
                       <FlexContaier>
@@ -412,18 +429,44 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>Personal (mobile)</InputLabel>
-                    <Input
+                    <Controller
+                      name="mobile"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      }}
+                      render={({ ...field }) => (
+                        <InputMask
+                          style={{ ...inputStyles }}
+                          mask="(999) 999-9999"
+                          placeholder="Enter phone number"
+                          id="phone"
+                          type="text"
+                        />
+                      )}
+                    />
+                    {/* <Input
                       type="text"
                       {...register("mobile", {
                         validate: (fieldValue) => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid Mobile number contains a letters  "
+                            "Must be a number"
                           );
                         },
                       })}
-                    />
+                    /> */}
                     {errors.mobile && (
                       <Errors> {errors.mobile?.message} </Errors>
                     )}
@@ -474,7 +517,33 @@ const PersonalInfo = () => {
                     <InputLabel>
                       Emergency Contact number <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
+                    <Controller
+                      name="emergencyContactNumber"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      }}
+                      render={({ ...field }) => (
+                        <InputMask
+                          style={{ ...inputStyles, width: "50%" }}
+                          mask="(999) 999-9999"
+                          placeholder="Enter phone number"
+                          id="phone"
+                          type="text"
+                        />
+                      )}
+                    />
+                    {/* <Input
                       style={{ width: "50%" }}
                       type="text"
                       {...register("emergencyContactNumber", {
@@ -490,7 +559,7 @@ const PersonalInfo = () => {
                           );
                         },
                       })}
-                    />
+                    /> */}
                     {errors.emergencyContactNumber && (
                       <Errors>
                         {" "}
