@@ -11,5 +11,8 @@ router.get('/personal-info/:id', verifyOrgAdmin, employeeController.getPersonalI
 router.put('/job-details/:id', verifyOrgAdmin, employeeController.updateJobDetails);
 router.get('/job-details/:id', verifyOrgAdmin, employeeController.getJobDetails);
 router.post('/job-details/position/:id', verifyOrgAdmin, employeeController.addPosition);
-
+router.put('/benefit/:id', verifyOrgAdmin, employeeController.updateBenefit);
+router.get('/benefit/:id', verifyOrgAdmin, employeeController.getBenefit);
+router.put('/certificates/:id', verifyOrgAdmin, employeeController.updateCertificates);
+router.get('/certificates/:id', verifyOrgAdmin, employeeController.getCertificates);
 module.exports = router;

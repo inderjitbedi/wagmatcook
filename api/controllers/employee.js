@@ -7,6 +7,8 @@ const File = require("../models/file");
 const EmployeeJobDetails = require("../models/employeeJobDetails");
 const EmployeePositionHistory = require("../models/employeePositionHistory");
 const fileController = require('../controllers/file');
+const EmployeeBenefits = require("../models/employeeBenefits");
+const EmployeeCertificates = require("../models/employeeCertificates");
 
 
 const employeeController = {
@@ -17,14 +19,9 @@ const employeeController = {
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
-            console.log(req.user.name, req.user.email, req.user._id);
-            console.log(req.organization.name, req.organization._id);
+
             let filters = { isDeleted: false, role: roles.EMPLOYEE }
-            // {
-            //     $match: {
-            //         'userorganization.organization': req.organization._id,
-            //     },
-            // },
+
             const employees = await User.aggregate([
                 {
                     $match: filters,
@@ -122,7 +119,12 @@ const employeeController = {
 
     async delete(req, res) {
         try {
-            const user = await User.findOneAndUpdate({ _id: req.params.id }, { isDeleted: true })
+            let user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            user = await User.findOneAndUpdate({ _id: req.params.id }, { isDeleted: true })
             res.status(200).json({
                 message: 'Employee deleted successfully'
             });
@@ -162,12 +164,16 @@ const employeeController = {
     },
     async getPersonalInfo(req, res) {
         try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
             res.status(200).json({
                 personalInfo,
-                message: 'Employee presonal info fetched successfully'
+                message: 'Employee personal info fetched successfully'
             });
 
         } catch (error) {
@@ -215,23 +221,13 @@ const employeeController = {
         }
     },
 
-    async addPosition(req, res) {
-        try {
-            const position = new EmployeePositionHistory({ ...req.body, employee: req.params.id });
-            await position.save();
-
-            res.status(200).json({
-                position,
-                message: 'Employee position added successfully'
-            });
-        } catch (error) {
-            console.error("employeeController:update:error -", error);
-            res.status(400).json(error);
-        }
-    },
-
     async getJobDetails(req, res) {
         try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
             const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
             const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department')
 
@@ -250,8 +246,125 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+    async addPosition(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const position = new EmployeePositionHistory({ ...req.body, employee: req.params.id });
+            await position.save();
+
+            res.status(200).json({
+                position,
+                message: 'Employee position added successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
+    async updateBenefit(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const benefit = await EmployeeBenefits.findOneAndUpdate({ employee: req.params.id }, req.body, { new: true })
 
 
+            res.status(200).json({
+                benefit,
+                message: 'Employee benefit updated successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:updateBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async getBenefit(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const benefit = await EmployeeBenefits.findOne({ employee: req.params.id }).populate('employee')
+
+            res.status(200).json({
+                benefit,
+                message: 'Employee benefit fetched successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
+
+    async updateCertificates(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            let { certificates } = req.body
+            let updatedCertificates = []
+
+            await certificates.forEach(async certificate => {
+                let file = await File.findOne({ _id: certificate.file });
+                if (file) {
+                    certificate.file = await fileController.moveToUploads(req, file)
+                }
+                if (certificate._id) {
+                    const existingCertificate = await EmployeeCertificates.findByIdAndUpdate(certificate._id, { $set: { ...certificate, employee: req.params.id } }, { new: true });
+                    updatedCertificates.push(existingCertificate)
+                } else {
+                    const newCertificate = new EmployeeCertificates({ ...certificate, employee: req.params.id });
+                    await newCertificate.save();
+                    updatedCertificates.push(newCertificate)
+                }
+            });
+
+
+            const existingCertificateIds = updatedCertificates.map((code) => code._id);
+            await EmployeeCertificates.updateMany({ _id: { $nin: existingCertificateIds } }, { isDeleted: true }, { new: true });
+
+
+            res.status(200).json({
+                message: 'Employee certificates updated successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async getCertificates(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+            const certificates = await EmployeeCertificates.find({ employee: req.params.id, isDeleted: false }).populate('file employee')
+            res.status(200).json({
+                certificates,
+                message: 'Employee certificates fetched successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
 
 
 
