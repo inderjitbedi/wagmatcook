@@ -104,6 +104,7 @@ const employeeController = {
 
 
             const { firstName, lastName } = req.body
+            console.log(req.body,firstName, lastName);
             const personalInfo = new EmployeePersonalInfo({ employee: user._id, firstName, lastName });
             await personalInfo.save()
 
@@ -159,7 +160,7 @@ const employeeController = {
     async getPersonalInfo(req, res) {
         try {
 
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id })
+            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
             res.status(200).json({
                 personalInfo,
@@ -212,8 +213,8 @@ const employeeController = {
     },
     async getJobDetails(req, res) {
         try {
-            const details = await EmployeeJobDetails.findOne({ employee: req.params.id })
-            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false })
+            const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department')
             res.status(200).json({
                 details,
                 positions,

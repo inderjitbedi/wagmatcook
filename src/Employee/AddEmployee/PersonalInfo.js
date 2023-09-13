@@ -38,17 +38,15 @@ import {
 const PersonalInfo = () => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
-  console.log(edit, "check the value ");
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(employeeid, "getting id from url", typeof employeeid);
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
-    file:"",
+    file: "",
   });
-   const [error, setErrors] = useState({
-       fileError: "",
-   });
+  const [error, setErrors] = useState({
+    fileError: "",
+  });
   const handleFileChange = (e) => {
     setErrors({ ...error, fileError: "" });
     const file = e.target.files[0];
@@ -60,35 +58,35 @@ const PersonalInfo = () => {
     setFile(null);
     setFormData({ ...formData, file: null });
   };
-   const handleUpload = (file) => {
-     if (file) {
-       const binary = new FormData();
-       binary.append("file", file);
+  const handleUpload = (file) => {
+    if (file) {
+      const binary = new FormData();
+      binary.append("file", file);
 
-       httpClient({
-         method: "post",
-         url: "/organization/file/upload/image",
-         data: binary, // Use 'data' to send the FormData
-         headers: {
-           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
-         },
-       })
-         .then((data) => {
-           console.log(data);
+      httpClient({
+        method: "post",
+        url: "/organization/file/upload/image",
+        data: binary, // Use 'data' to send the FormData
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+        },
+      })
+        .then((data) => {
+          console.log(data);
 
-           if (data?.result) {
-             console.log(data?.result);
-             setFile(data?.result?.file);
-             setFormData({ ...formData, file: data?.result.file._id });
-           } else {
-             setErrors({ ...errors, fileError: data?.error?.error });
-           }
-         })
-         .catch((error) => {
-           console.error("Error:", error);
-         });
-     }
-   };
+          if (data?.result) {
+            console.log(data?.result);
+            setFile(data?.result?.file);
+            setFormData({ ...formData, file: data?.result.file._id });
+          } else {
+            setErrors({ ...errors, fileError: data?.error?.error });
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
   const [result, setResult] = useState(null);
   const {
     register,
@@ -112,17 +110,11 @@ const PersonalInfo = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result.personalInfo);
-          reset(result.personalInfo);
-          console.log(result, "this is api result ");
-          // if (result.personalInfo) {
-          //   let valueArray = []
-          //   Object.keys(result.personalInfo).forEach((key) => {
-          //     valueArray.push({ [key]: result.personalInfo[key] })
-          //   })
-          //   console.log(valueArray);
-          //   setValue("valueArray", "[...valueArray]")
-          // }
-          // return result.personalInfo;
+          if (result.personalInfo?.dob)
+            result.personalInfo.dob = new Date(result.personalInfo.dob).toISOString().split("T")[0]
+          Object.keys(result.personalInfo).forEach((key) => {
+            setValue(key, result.personalInfo[key])
+          })
         } else {
           //toast.warn("something went wrong ");
         }
@@ -239,16 +231,16 @@ const PersonalInfo = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 <ImgUpload>
-                { file ? (<PersonImg
-                  src={ 
-                    "http://hrapi.chantsit.com/" +
-                    file?.destination +
-                    "/" +
-                      file?.name   
-                  }
-                  alt=""
-                />): (<PersonImg  src="/images/User.jpg"   alt=""
-                />)}
+                  {file ? (<PersonImg
+                    src={
+                      "http://hrapi.chantsit.com/" +
+                      file?.destination +
+                      "/" +
+                      file?.name
+                    }
+                    alt=""
+                  />) : (<PersonImg src="/images/User.jpg" alt=""
+                  />)}
                   <FlexColumn>
                     <FlexContaier>
                       <FlexContaier>
