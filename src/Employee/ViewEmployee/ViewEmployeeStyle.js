@@ -432,7 +432,7 @@ export const ButtonBlue = styled.button`
   border: none;
 `;
 export const ModalContainer = styled.div`
-  padding: 20px 29px 15px 29px;
+  padding: 0px 29px 15px 29px;
   border-bottom: 2px solid #f3f3f5;
   display: flex;
   align-items: center;

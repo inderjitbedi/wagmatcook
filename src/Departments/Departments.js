@@ -8,14 +8,16 @@ import { RotatingLines } from "react-loader-spinner";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
+import ReactPaginate from "react-paginate";
 import {
- 
   DashHeader,
   DashHeaderTitle,
   SearchBox,
   SearchInput,
   DashHeaderSearch,
   SearchIcon,
+  Pagination,
+  PaginationButton,
 } from "../Dashboard/OADashboard/OADashBoardStyles";
 // import SideBar from "../Dashboard/OADashboard/SideBar";
 import {
@@ -46,7 +48,7 @@ import {
   ModalThanksImg,
   ModalThanksHeading,
   Errors,
-  LoadMore
+  LoadMore,
 } from "./DepartmentsStyles";
 
 const style = {
@@ -83,7 +85,7 @@ const Departments = () => {
   const HandleOpenThanks = () => setOpenThanks(true);
   const HandleCloseThanks = () => setOpenThanks(false);
   // menu state
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -130,23 +132,18 @@ const Departments = () => {
     description: "",
   });
 
-  const HandleLoadMore = () => {
-    const nextPage = result.currentPage + 1;
+  // const HandleLoadMore = () => {
+  //   const nextPage = result.currentPage + 1;
 
-    setPage(nextPage);
-  };
+  //   setPage(nextPage);
+  // };
   const HandleChange = (e) => {
     const { value, name } = e.target;
 
     // Validation for the Name field
     if (name === "name") {
       if (!value) {
-        setErrors({ ...errors, nameError: "Name cannot be empty" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+        setErrors({ ...errors, nameError: "Required" });
       } else {
         setErrors({ ...errors, nameError: "" });
       }
@@ -156,12 +153,7 @@ const Departments = () => {
       if (!value) {
         setErrors({
           ...errors,
-          descriptionError: "Description cannot be empty",
-        });
-      } else if (value.length < 10) {
-        setErrors({
-          ...errors,
-          descriptionError: "Description should be at least 10 characters long",
+          descriptionError: "Required",
         });
       } else {
         setErrors({ ...errors, descriptionError: "" });
@@ -176,12 +168,7 @@ const Departments = () => {
     // Validation for the Name field
     if (name === "name") {
       if (!value) {
-        setErrors({ ...errors, nameError: "Name cannot be empty" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+        setErrors({ ...errors, nameError: "Required" });
       } else {
         setErrors({ ...errors, nameError: "" });
       }
@@ -191,14 +178,9 @@ const Departments = () => {
       if (!value) {
         setErrors({
           ...errors,
-          descriptionError: "Description cannot be empty",
+          descriptionError: "Required",
         });
-      } else if (value.length < 10) {
-        setErrors({
-          ...errors,
-          descriptionError: "Description should be at least 10 characters long",
-        });
-      } else {
+      }  else {
         setErrors({ ...errors, descriptionError: "" });
       }
     }
@@ -207,7 +189,7 @@ const Departments = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list?page=${page}&limit=2&searchKey=${searchValue}`;
+    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -215,16 +197,7 @@ const Departments = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result);
-          if (page === 1) {
-            console.log("page 1");
-            setDepartmentData(result.departments);
-          } else {
-            console.log("page is not 1 now ");
-            setDepartmentData((prevState) => [
-              ...prevState,
-              ...result.departments,
-            ]);
-          }
+          setDepartmentData(result.departments);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -243,10 +216,11 @@ const Departments = () => {
     // if (!isLoggedIn) {
     //   Navigate("/");
     // } else {
-      GetDepartments();
+    GetDepartments();
     // }
-  }, []);
+  }, [page]);
   console.log(departmentData, "this is out data looks like ");
+  console.log(page, "this our page ");
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -257,7 +231,7 @@ const Departments = () => {
       setErrors((prevState) => {
         return {
           ...prevState,
-          nameError: "Name cannot be empty",
+          nameError: "Required",
         };
       });
       if (!formData.description) {
@@ -265,7 +239,7 @@ const Departments = () => {
           return {
             ...prevState,
 
-            descriptionError: "Description cannot be empty",
+            descriptionError: "Required",
           };
         });
       } else {
@@ -315,7 +289,7 @@ const Departments = () => {
       setErrors((prevState) => {
         return {
           ...prevState,
-          nameError: "Name cannot be empty",
+          nameError: "Required",
         };
       });
       if (!upDateData.description) {
@@ -323,7 +297,7 @@ const Departments = () => {
           return {
             ...prevState,
 
-            descriptionError: "Description cannot be empty",
+            descriptionError: "Required",
           };
         });
       } else {
@@ -417,7 +391,10 @@ const Departments = () => {
     handleCloseMenu();
     Navigate("/");
   };
-  
+
+  const handlePageClick = (selectedPage) => {
+    setPage(selectedPage.selected);
+  };
   return (
     <div style={{ height: "100%" }}>
       <>
@@ -439,12 +416,26 @@ const Departments = () => {
           <DepartmentIconContainer>
             <DepartmentIconImg src="/images/icons/Messages.svg" />
             <DepartmentIconImg src="/images/icons/Notifications.svg" />
-
-            <DepartmentIconImg
-              style={{ cursor: "pointer" }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                gap: "5px",
+              }}
               onClick={(event) => handleClickMenu(event)}
-              src="/images/icons/PersonIcon.svg"
-            />
+            >
+              {" "}
+              <DepartmentIconImg src="/images/icons/Logout.svg" />
+              <img
+                src="/images/icons/arrowdown.svg"
+                style={{
+                  width: "5px",
+                  height: "9px",
+                  transform: anchorEl ? "rotate(180deg)" : undefined,
+                }}
+              />
+            </div>
           </DepartmentIconContainer>
         </DashHeader>
         <Menu
@@ -567,45 +558,77 @@ const Departments = () => {
             />
           </div>
         ) : (
-          <DepartmentCardContainer>
-            {departmentData?.map((data) => (
-              <DepartmentCardDiv>
-                <DepartmentCardImg />
-                <DepartmentCardPara>{data.name}</DepartmentCardPara>
-                <DepartmentCardParaLit>
-                  {" "}
-                  {data.description}{" "}
-                </DepartmentCardParaLit>
-                <DepartmentButtonContainer>
-                  <DepartmentCardButtoncolor
-                    onClick={() => {
-                      setId(data._id);
-                      PopulateUpdateForm(data);
-                      HandleOpenEdit();
-                    }}
-                  >
-                    <img src="/images/icons/Pendown.svg" />
-                  </DepartmentCardButtoncolor>
-                  <DepartmentCardButtongrey
-                    onClick={() => {
-                      HandleOpenDelete();
-                      setId(data._id);
-                    }}
-                  >
-                    <img src="/images/icons/Trash-2.svg" />
-                  </DepartmentCardButtongrey>
-                </DepartmentButtonContainer>
-              </DepartmentCardDiv>
-            ))}
-          </DepartmentCardContainer>
+          <>
+            <DepartmentCardContainer>
+              {departmentData?.map((data) => (
+                <DepartmentCardDiv>
+                  <DepartmentCardImg />
+                  <DepartmentCardPara>{data.name}</DepartmentCardPara>
+                  <DepartmentCardParaLit>
+                    {" "}
+                    {data.description}{" "}
+                  </DepartmentCardParaLit>
+                  <DepartmentButtonContainer>
+                    <DepartmentCardButtoncolor
+                      onClick={() => {
+                        setId(data._id);
+                        PopulateUpdateForm(data);
+                        HandleOpenEdit();
+                      }}
+                    >
+                      <img src="/images/icons/Pendown.svg" />
+                    </DepartmentCardButtoncolor>
+                    <DepartmentCardButtongrey
+                      onClick={() => {
+                        HandleOpenDelete();
+                        setId(data._id);
+                      }}
+                    >
+                      <img src="/images/icons/Trash-2.svg" />
+                    </DepartmentCardButtongrey>
+                  </DepartmentButtonContainer>
+                </DepartmentCardDiv>
+              ))}
+            </DepartmentCardContainer>
+
+            {result?.totalPages > 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-end",
+                }}
+              >
+                {/* <LoadMore onClick={HandleLoadMore}>Load More</LoadMore> */}
+                <Pagination>
+                  <PaginationButton onClick={() => setPage(1)}>
+                    First
+                  </PaginationButton>
+                  {Array.from({ length: result?.totalPages }, (_, index) => (
+                    <PaginationButton
+                      style={{
+                        color:
+                          result?.currentPage === index + 1
+                            ? "#279AF1"
+                            : "#222b45",
+                        background:
+                          result?.currentPage === index + 1
+                            ? "#fff"
+                            : "#e9e9ee",
+                      }}
+                      onClick={() => setPage(index + 1)}
+                    >
+                      {index + 1}
+                    </PaginationButton>
+                  ))}
+                  <PaginationButton onClick={() => setPage(result?.totalPages)}>
+                    Last
+                  </PaginationButton>
+                </Pagination>
+              </div>
+            )}
+          </>
         )}
-        {result.totalPages > result.currentPage && (
-          <div
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
-          >
-            <LoadMore onClick={HandleLoadMore}>Load More</LoadMore>
-          </div>
-        )}{" "}
       </>
       {/* modal to edit  */}
       <Modal

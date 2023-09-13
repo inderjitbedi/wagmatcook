@@ -30,11 +30,8 @@ import {
   DashCardIcons,
   DashCardPri,
   DashCardTitle2,
-
 } from "./OADashBoardStyles";
 import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
-
-
 
 const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,8 +75,8 @@ const OADashBoard = () => {
       src: "/images/icons/Discipliner.svg",
     },
   ];
-  
-  const [anchorEl, setAnchorEl] = useState(null);
+
+  const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -95,7 +92,7 @@ const OADashBoard = () => {
   return (
     <>
       <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-    
+
       <>
         <DashHeader>
           <DashHeaderTitle>Dashboard</DashHeaderTitle>
@@ -105,11 +102,26 @@ const OADashBoard = () => {
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
             <DashNotification src="/images/icons/Notifications.svg" />
-            <DepartmentIconImg
-              style={{ cursor: "pointer" }}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                gap: "5px",
+              }}
               onClick={(event) => handleClickMenu(event)}
-              src="/images/icons/PersonIcon.svg"
-            />
+            >
+              {" "}
+              <DepartmentIconImg src="/images/icons/Logout.svg" />
+              <img
+                src="/images/icons/arrowdown.svg"
+                style={{
+                  width: "5px",
+                  height: "9px",
+                  transform: anchorEl ? "rotate(180deg)" : undefined,
+                }}
+              />
+            </div>
           </DashHeaderSearch>
         </DashHeader>
         <Menu

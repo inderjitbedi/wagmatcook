@@ -73,11 +73,23 @@ const EmployeeJobDetails = () => {
     handleSubmit,
     formState: { errors },
     getValues,
+     clearErrors,
+    reset,
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
-    if (!errors) {
-      setFormData(data);
+ console.log(data);
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors)) {
+      console.log(data)
+      AddNewPosition(data);
     }
     console.log("form submmited", data);
   };
@@ -106,6 +118,33 @@ const EmployeeJobDetails = () => {
         setIsLoading(false);
       });
   };
+  const AddNewPosition = (data) => {
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = `/job-details/position/${employeeid}`;
+      httpClient({
+        method: "put",
+        url,
+        data: dataCopy,
+      })
+        .then(({ result }) => {
+          if (result) {
+            handleClose();
+            GetEmployeesJobDetails();
+            reset();
+          } else {
+            toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          toast.error("Error Adding New Position . Please try again.");
+           setIsLoading(false);
+        })
+        .finally(() => {
+           setIsLoading(false);
+        });
+  };
   useEffect(() => {
     GetEmployeesJobDetails();
   }, []);
@@ -133,11 +172,25 @@ const EmployeeJobDetails = () => {
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <PersonalInfo>
-              <PersonalImg src={result.personalInfo?.photo ? "http://hrapi.chantsit.com/" + result.personalInfo.photo?.path : "/images/User.jpg"} />
+              <PersonalImg
+                src={
+                  result.personalInfo?.photo
+                    ? "http://hrapi.chantsit.com/" +
+                      result.personalInfo.photo?.path
+                    : "/images/User.jpg"
+                }
+              />
               <FlexColumn>
-                <PersonalName>{[result.personalInfo?.firstName, result.personalInfo?.lastName].join(' ')}</PersonalName>
-                <PersonalTitle>{result.details?.title || '-'}</PersonalTitle>
-                <PersonalDepartment>{result.details?.department?.name || '-'}</PersonalDepartment>
+                <PersonalName>
+                  {[
+                    result.personalInfo?.firstName,
+                    result.personalInfo?.lastName,
+                  ].join(" ")}
+                </PersonalName>
+                <PersonalTitle>{result.details?.title || "-"}</PersonalTitle>
+                <PersonalDepartment>
+                  {result.details?.department?.name || "-"}
+                </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
 
@@ -256,7 +309,11 @@ const EmployeeJobDetails = () => {
 
                 <Modal
                   open={open}
-                  onClose={handleClose}
+                    onClose={() => {
+                      handleClose();
+                       reset();
+                       clearErrors();
+                    }}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
@@ -265,7 +322,12 @@ const EmployeeJobDetails = () => {
                       <ModalContainer>
                         <ModalHeading>Add New Employee</ModalHeading>
                         <ModalIcon
-                          onClick={handleClose}
+                            onClick={() => {
+                              handleClose();
+                               reset();
+                               clearErrors();
+                            }}
+                            
                           src="/images/icons/Alert-Circle.svg"
                         />
                       </ModalContainer>
@@ -277,15 +339,15 @@ const EmployeeJobDetails = () => {
                             </InputLabel>
                             <Input
                               type="text"
-                              {...register("positiontitle", {
+                              {...register("title", {
                                 required: {
                                   value: true,
-                                  message: "Position Title is Required",
+                                  message: "Required",
                                 },
                               })}
                             />
-                            {errors.positiontitle && (
-                              <Errors> {errors.positiontitle?.message}</Errors>
+                            {errors.title && (
+                              <Errors> {errors.title?.message}</Errors>
                             )}
                           </FlexColumnForm>
                         </FlexContaierForm>
@@ -296,15 +358,15 @@ const EmployeeJobDetails = () => {
                             </InputLabel>
                             <Input
                               type="date"
-                              {...register("startdate", {
+                              {...register("startDate", {
                                 required: {
                                   value: true,
-                                  message: "Start Date is Required",
+                                  message: "Required",
                                 },
                               })}
                             />
-                            {errors.startdate && (
-                              <Errors>{errors.startdate?.message}</Errors>
+                            {errors.startDate && (
+                              <Errors>{errors.startDate?.message}</Errors>
                             )}
                           </FlexColumnForm>
                         </FlexContaierForm>
@@ -315,14 +377,14 @@ const EmployeeJobDetails = () => {
                             </InputLabel>
                             <Input
                               type="date"
-                              {...register("enddate", {
+                              {...register("endDate", {
                                 required: {
                                   value: true,
-                                  message: "  Position End Date is Required",
+                                  message: "Required",
                                 },
                                 validate: (fieldValue) => {
                                   const startDate = new Date(
-                                    getValues("startdate")
+                                    getValues("startDate")
                                   );
                                   const endDate = new Date(fieldValue);
                                   return (
@@ -332,18 +394,19 @@ const EmployeeJobDetails = () => {
                                 },
                               })}
                             />
-                            {errors.enddate && (
-                              <Errors>{errors.enddate?.message}</Errors>
+                            {errors.endDate && (
+                              <Errors>{errors.endDate?.message}</Errors>
                             )}
                           </FlexColumnForm>
                         </FlexContaierForm>
 
                         <ButtonBlue
                           type="submit"
-                          style={{ marginTop: "25px" }}
-                          onClick={() => {
-                            handleSubmit(onSubmit);
-                          }}
+                            style={{ marginTop: "25px" }}
+                            // disabled={!isDirty}
+                          // onClick={() => {
+                          //   handleSubmit(onSubmit);
+                          // }}
                         >
                           Submit
                         </ButtonBlue>
@@ -389,7 +452,10 @@ const EmployeeJobDetails = () => {
                         <FlexColumn style={{ gap: "4px" }}>
                           <ViewPara> {data.title || " - "} </ViewPara>
 
-                          <TitlePara> {data.department?.name || " - "}</TitlePara>
+                          <TitlePara>
+                            {" "}
+                            {data.department?.name || " - "}
+                          </TitlePara>
                         </FlexColumn>
                         <TitlePara>
                           From: {data.startDate?.slice(0, 10) || " - "}

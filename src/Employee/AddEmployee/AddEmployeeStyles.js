@@ -337,10 +337,25 @@ gap:10px;
 `;
 export const DeleteIcon = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  position: absolute;
+  width: 17px;
+  height: 17px;
+  /* cursor: pointer; */
+  /* position: absolute;
   right: 10px;
-  top: 0px;
+  top: 0px; */
+`;
+export const TrashDiv = styled.div`
+  color: #f61717;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  /* line-height: 18px; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0px 0px 12px 0px;
+  margin-bottom: 24px;
+  border-bottom:1px solid #EAEAEA;
+  cursor: pointer;
 `;

@@ -14,7 +14,9 @@ import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -47,6 +49,7 @@ import {
   LoadMore,
 } from "../Disciplinary/DisciplinaryStyles";
 const OABenefits = () => {
+  const Navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
@@ -58,7 +61,13 @@ const OABenefits = () => {
   // add new modal
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
-  const HandleClose = () => setOpen(false);
+  const HandleClose = () => {
+    setOpen(false);
+    setDetailsLength(500);
+    clearErrors();
+    reset({});
+    console.log("working");
+  };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -71,6 +80,19 @@ const OABenefits = () => {
     searchTimer = setTimeout(() => {
       setDelayedSearchValue(e.target.value);
     }, delayDuration);
+  };
+  const [anchorEl, setAnchorEl] = useState(false);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    Navigate("/");
   };
   const {
     register,
@@ -127,7 +149,7 @@ const OABenefits = () => {
 
   const HandleSubmit = (data) => {
     // e.preventDefault();
-
+    setIsLoading(true);
     let url = "/benefit/create";
 
     setIsLoading(true);
@@ -140,15 +162,16 @@ const OABenefits = () => {
       .then(({ result }) => {
         if (result) {
           HandleClose();
-          GetBenefits();
+          reset();
           toast.success("Entry Added Successfully");
+          GetBenefits();
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating Disciplinary. Please try again.");
+        toast.error("Error feteching benefits. Please try again.");
         HandleClose();
         setIsLoading(false);
       })
@@ -253,6 +276,21 @@ const OABenefits = () => {
     fontWeight: 400,
     lineHeight: "15px",
   };
+
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data?.description?.length);
+    reset(data);
+    HandleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    HandleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  }
+
   return (
     <>
       <DashHeader>
@@ -268,18 +306,38 @@ const OABenefits = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
-          <DashNotification src="/images/icons/Logout.svg" />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              gap: "5px",
+            }}
+            onClick={(event) => handleClickMenu(event)}
+          >
+            <DashNotification src="/images/icons/Logout.svg" />
+            <img
+              src="/images/icons/arrowdown.svg"
+              style={{
+                width: "5px",
+                height: "9px",
+                transform: anchorEl ? "rotate(180deg)" : undefined,
+              }}
+            />
+          </div>
         </DashHeaderSearch>
       </DashHeader>
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
-        <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
+        <DisciplinaryHeading>All Benefits</DisciplinaryHeading>
+        <AddNewButton onClick={() => {
+          HandleOpenAddNewAction();
+        }}>Add New</AddNewButton>
         <Modal
           open={open}
           onClose={() => {
             HandleClose();
             clearErrors();
-            reset();
+            reset({});
             setUpdate(false);
           }}
           aria-labelledby="modal-modal-title"
@@ -287,13 +345,15 @@ const OABenefits = () => {
         >
           <Box sx={style}>
             <ModalUpperDiv>
-              <ModalHeading>Add Benefits</ModalHeading>
+              <ModalHeading>
+                {!update ? "Add Benefits" : "Update Benefits"}
+              </ModalHeading>
               <ModalIcon
                 onClick={() => {
                   HandleClose();
-                  clearErrors();
-                  reset();
                   setUpdate(false);
+                  clearErrors();
+                  reset({});
                 }}
                 src="/images/icons/Alert-Circle.svg"
               />
@@ -325,8 +385,7 @@ const OABenefits = () => {
                     },
                     maxLength: {
                       value: 500,
-                      message:
-                        "Details exceeds the maximum length of 500 characters ",
+                      message: "Details exceeds 500 characters ",
                     },
                     // minLength: {
                     //   value: 10,
@@ -421,6 +480,13 @@ const OABenefits = () => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {result.benefits?.length == 0 && (
+                <TableRow sx={{ height: "200px" }}>
+                  <TableCell align="center" colSpan={3}>
+                    No benefits found
+                  </TableCell>
+                </TableRow>
+              )}
               {result?.benefits?.map((data, index) => (
                 <TableRow
                   sx={{
@@ -442,10 +508,7 @@ const OABenefits = () => {
                     <ActionIconDiv>
                       <ActionIcons
                         onClick={() => {
-                          setId(data._id);
-                          setUpdate(true);
-                          reset(data);
-                          HandleOpen();
+                          HandleUpdateAction(data);
                         }}
                         src="/images/icons/Pendown.svg"
                       />
@@ -471,6 +534,24 @@ const OABenefits = () => {
         message="Are you sure you want to delete this Benefit?"
         isLoading={isLoading}
       />
+      <Menu
+        sx={{ margin: "0px" }}
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+      </Menu>
     </>
   );
 };

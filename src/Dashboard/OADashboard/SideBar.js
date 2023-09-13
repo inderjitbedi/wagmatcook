@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import {
   SidebarTitle,
   SideBarLogoContainer,
@@ -15,7 +15,14 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const location = useLocation();
-
+  const [orgData, setOrgData] = useState();
+ useEffect(() => {
+   let org = localStorage.getItem("org");
+   if (org) {
+     let parsedUser = JSON.parse(org);
+     setOrgData(parsedUser);
+   }
+ }, []);
   const SideBarData = [
     {
       Title: "Dashboard",
@@ -72,9 +79,9 @@ const SideBar = () => {
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
-        <SideBarLogo src="/images/icons/Group-Logo.svg" />
+        <SideBarLogo src="/images/User.jpg" />
         <SideBarLogodiv>
-          <SideBarLogoPara>Organization </SideBarLogoPara>
+          <SideBarLogoPara>{orgData?.name} </SideBarLogoPara>
           <SideBarLogoHead>Figma Inc.</SideBarLogoHead>
         </SideBarLogodiv>
       </SideBarLogoContainer>

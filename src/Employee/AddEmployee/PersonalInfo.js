@@ -166,7 +166,7 @@ const PersonalInfo = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error adding personal info. Please try again.");
         // setIsLoading(false);
       })
       .finally(() => {
@@ -401,7 +401,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid Home-Phone number "
+                            "Must be a number "
                           );
                         },
                       })}
@@ -439,7 +439,7 @@ const PersonalInfo = () => {
                       {...register("personalEmail", {
                         required: {
                           value: true,
-                          message: "Email is Required",
+                          message: "Required",
                         },
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -460,7 +460,7 @@ const PersonalInfo = () => {
                       {...register("emergencyContact", {
                         required: {
                           value: true,
-                          message: "Emergency Contact is Required",
+                          message: "Required",
                         },
                       })}
                     />
@@ -486,7 +486,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid sin "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -554,7 +554,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid sin "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -577,7 +577,7 @@ const PersonalInfo = () => {
                         </Select>
                       )}
                     />
-                    {errors.gender && <Errors> Gender is required</Errors>}
+                    {errors.gender && <Errors>Required</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>

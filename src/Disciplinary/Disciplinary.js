@@ -14,6 +14,8 @@ import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -88,7 +90,11 @@ const Disciplinary = () => {
 
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
-  const HandleClose = () => setOpen(false);
+  const HandleClose = () => {
+    setOpen(false);
+    setDescriptionLenght(500);
+    setErrors("");
+  };
   // update modal var
   const [openEdit, setOpenEdit] = useState(false);
   const HandleOpenEdit = () => setOpenEdit(true);
@@ -101,7 +107,7 @@ const Disciplinary = () => {
   const [page, setPage] = useState(1);
   const [Id, setId] = useState("");
   const [result, setResult] = useState([]);
-  const [descriptionLenght, setDescriptionLenght] = useState(0);
+  const [descriptionLenght, setDescriptionLenght] = useState(500);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
@@ -165,7 +171,7 @@ const Disciplinary = () => {
   // get disciplinary
   const GetDisciplinary = () => {
     setIsLoading(true);
-    let url = `/disciplinary/list?page=${page}&limit=2&searchKey=${searchValue}`;
+    let url = `/disciplinary/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -212,7 +218,7 @@ const Disciplinary = () => {
       setErrors((prevState) => {
         return {
           ...prevState,
-          nameError: "Name cannot be empty",
+          nameError: "Required",
         };
       });
       if (!formData.description) {
@@ -220,7 +226,7 @@ const Disciplinary = () => {
           return {
             ...prevState,
 
-            descriptionError: "Description cannot be empty",
+            descriptionError: "Required",
           };
         });
       } else {
@@ -275,7 +281,7 @@ const Disciplinary = () => {
       setErrors((prevState) => {
         return {
           ...prevState,
-          nameError: "Name cannot be empty",
+          nameError: "Required",
         };
       });
       if (!upDateData.description) {
@@ -283,7 +289,7 @@ const Disciplinary = () => {
           return {
             ...prevState,
 
-            descriptionError: "Description cannot be empty",
+            descriptionError: "Required",
           };
         });
       } else {
@@ -333,28 +339,18 @@ const Disciplinary = () => {
     // Validation for the Name field
     if (name === "name") {
       if (!value) {
-        setErrors({ ...errors, nameError: "Name cannot be empty" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+        setErrors({ ...errors, nameError: "Required" });
       } else {
         setErrors({ ...errors, nameError: "" });
       }
     }
     if (name === "description") {
-      setDescriptionLenght(value.length);
+      setDescriptionLenght( 500 - value.length);
       // validation: Description should not be empty and should have a minimum length of 10 characters
       if (!value) {
         setErrors({
           ...errors,
-          descriptionError: "Details cannot be empty",
-        });
-      } else if (value.length < 10) {
-        setErrors({
-          ...errors,
-          descriptionError: "Details should be at least 10 characters long",
+          descriptionError: "Required",
         });
       } else if (formData.description.length > 500) {
         setErrors({
@@ -374,12 +370,7 @@ const Disciplinary = () => {
     // Validation for the Name field
     if (name === "name") {
       if (!value) {
-        setErrors({ ...errors, nameError: "Name cannot be empty" });
-      } else if (!/^[A-Za-z\s]+$/.test(value)) {
-        setErrors({
-          ...errors,
-          nameError: "Name must not contain numbers or special characters",
-        });
+        setErrors({ ...errors, nameError: "Required" });
       } else {
         setErrors({ ...errors, nameError: "" });
       }
@@ -390,12 +381,7 @@ const Disciplinary = () => {
       if (!value) {
         setErrors({
           ...errors,
-          descriptionError: "Details cannot be empty",
-        });
-      } else if (value.length < 10) {
-        setErrors({
-          ...errors,
-          descriptionError: "Details should be at least 10 characters long",
+          descriptionError: "Required",
         });
       } else if (formData.description.length > 500) {
         setErrors({
@@ -471,6 +457,19 @@ const Disciplinary = () => {
     });
     HandleOpenEdit();
   };
+  const [anchorEl, setAnchorEl] = useState(false);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    Navigate("/");
+  };
   return (
     <>
       <>
@@ -487,6 +486,25 @@ const Disciplinary = () => {
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
             <DashNotification src="/images/icons/Notifications.svg" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                gap: "5px",
+              }}
+              onClick={(event) => handleClickMenu(event)}
+            >
+              <DashNotification src="/images/icons/Logout.svg" />
+              <img
+                src="/images/icons/arrowdown.svg"
+                style={{
+                  width: "5px",
+                  height: "9px",
+                  transform: anchorEl ? "rotate(180deg)" : undefined,
+                }}
+              />
+            </div>
           </DashHeaderSearch>
         </DashHeader>
         <DisciplinaryDiv>
@@ -500,7 +518,7 @@ const Disciplinary = () => {
           >
             <Box sx={style}>
               <ModalUpperDiv>
-                <ModalHeading>Add New Department</ModalHeading>
+                <ModalHeading>Add New Disciplinary</ModalHeading>
                 <ModalIcon
                   onClick={() => {
                     HandleClose();
@@ -536,7 +554,7 @@ const Disciplinary = () => {
                 <InputPara>
                   {" "}
                   <Errors>{errors.descriptionError}</Errors> Max
-                  {500 - descriptionLenght} characters
+                  {descriptionLenght} characters
                 </InputPara>
                 <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -557,6 +575,7 @@ const Disciplinary = () => {
                     HandleSubmit(e);
                   }}
                   disabled={isLoading}
+                  style={{ marginTop: "25px" }}
                 >
                   Submit
                 </AddNewButton>
@@ -617,6 +636,13 @@ const Disciplinary = () => {
                       ref={provided.innerRef}
                       style={getListStyle(snapshot.isDraggingOver)}
                     >
+                      {disciplinaryData?.length == 0 && (
+                        <TableRow sx={{ height: "200px" }}>
+                          <TableCell align="center" colSpan={5}>
+                            No disciplinaries found
+                          </TableCell>
+                        </TableRow>
+                      )}
                       {disciplinaryData?.map((data, index) => (
                         <Draggable
                           key={data._id}
@@ -777,6 +803,24 @@ const Disciplinary = () => {
         message="Are you sure you want to delete this ?"
         isLoading={isLoading}
       />
+      <Menu
+        sx={{ margin: "0px" }}
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={openMenu}
+        onClose={handleCloseMenu}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+      </Menu>
     </>
   );
 };
