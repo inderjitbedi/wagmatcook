@@ -215,9 +215,14 @@ const employeeController = {
         try {
             const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
             const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department')
+           
+           
+            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
+
             res.status(200).json({
                 details,
                 positions,
+                personalInfo,
                 message: 'Employee job details fetched successfully'
             });
 

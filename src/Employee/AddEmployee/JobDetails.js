@@ -35,7 +35,7 @@ import {
 
 const JobDetails = () => {
   const Navigate = useNavigate();
-  const { employeeid ,edit} = useParams();
+  const { employeeid, edit } = useParams();
   const [departmentData, setDepartmentData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +44,7 @@ const JobDetails = () => {
 
   const initialPosition = {
     title: "",
-    department: null,
+    department: '',
     startDate: new Date(),
     endDate: new Date(),
   };
@@ -60,7 +60,7 @@ const JobDetails = () => {
     mode: "all",
     defaultValues: {
       details: {
-        department: null,
+        department: '',
         endDate: null,
         hoursPerWeek: "",
         isActive: false,
@@ -92,8 +92,24 @@ const JobDetails = () => {
       .then(({ result }) => {
         if (result) {
           setResult(result);
-          reset(result);
-          setValue("details.startDate", "result.details.startDate");
+
+
+          if (result.details?.department)
+            result.details.department = result.details?.department?._id
+
+          console.log(result.details.department);
+          Object.keys(result).forEach((key) => {
+            console.log(key, result[key]);
+            setValue(key, result[key])
+          })
+
+
+          // reset(result);
+          // adding if no position added
+          if (!result.positions?.length) {
+            append(initialPosition)
+          }
+          // setValue("details.startDate", "result.details.startDate");
           console.log(result, "we are getting the persnal information ");
         } else {
           //toast.warn("something went wrong ");
@@ -109,7 +125,6 @@ const JobDetails = () => {
       });
   };
   useEffect(() => {
-    GetEmployeesJobDetails();
     GetDepartments();
   }, []);
 
@@ -128,13 +143,13 @@ const JobDetails = () => {
       .then(({ result }) => {
         if (result) {
           console.log(result);
-             if (edit) {
-               // Navigate(`/organization-admin/employee/list`);
-               Navigate(-1);
-             } else {
-               Navigate(`/organization-admin/employee/list`);
-             }
-       
+          if (edit) {
+            // Navigate(`/organization-admin/employee/list`);
+            Navigate(-1);
+          } else {
+            Navigate(`/organization-admin/employee/list`);
+          }
+
           setFormData(result);
         } else {
           toast.warn("something went wrong ");
@@ -160,6 +175,9 @@ const JobDetails = () => {
       .then(({ result }) => {
         if (result) {
           setDepartmentData(result.departments);
+          GetEmployeesJobDetails();
+          console.log(result.departments, "result.departments ");
+
         } else {
           //toast.warn("something went wrong ");
         }
@@ -173,7 +191,6 @@ const JobDetails = () => {
         //  setIsLoading(false);
       });
   };
-  console.log(departmentData, "select option data ");
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
