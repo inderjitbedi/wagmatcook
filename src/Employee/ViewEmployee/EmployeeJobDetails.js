@@ -142,7 +142,14 @@ const EmployeeJobDetails = () => {
               </FlexColumn>
             </PersonalInfo>
 
-            <EditButton style={{ marginRight: "54px" }} onClick={()=> Navigate(`/organization-admin/employee/job-details/${employeeid}/${true}?`)}>
+            <EditButton
+              style={{ marginRight: "54px" }}
+              onClick={() =>
+                Navigate(
+                  `/organization-admin/employee/job-details/${employeeid}/${true}?`
+                )
+              }
+            >
               <ButtonIcon src="/images/icons/Pen 2.svg" />
               Edit
             </EditButton>
@@ -381,8 +388,9 @@ const EmployeeJobDetails = () => {
                     >
                       <TimelineDiv>
                         <FlexColumn style={{ gap: "4px" }}>
-                          <TitlePara>{data.title || " - "}</TitlePara>
-                          <ViewPara>{data.department || " - "}</ViewPara>
+                          <ViewPara> {data.title || " - "} </ViewPara>
+
+                          <TitlePara> {data.department || " - "}</TitlePara>
                         </FlexColumn>
                         <TitlePara>
                           From: {data.startDate.slice(0, 10) || " - "}
