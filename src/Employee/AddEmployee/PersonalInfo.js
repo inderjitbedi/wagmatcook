@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
+import InputMask from "react-input-mask";
 
 import {
   HeaderEmployee,
@@ -111,20 +112,20 @@ const PersonalInfo = () => {
         if (result) {
           setResult(result.personalInfo);
           if (result.personalInfo?.dob)
-            result.personalInfo.dob = new Date(result.personalInfo.dob).toISOString().split("T")[0]
+            result.personalInfo.dob = new Date(result.personalInfo.dob)
+              .toISOString()
+              .split("T")[0];
           Object.keys(result.personalInfo).forEach((key) => {
-            setValue(key, result.personalInfo[key])
-          })
-          if (result.personalInfo?.photo)
-            setFile(result.personalInfo?.photo)
-
+            setValue(key, result.personalInfo[key]);
+          });
+          if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error GetEmployeesPersonalInfo. Please try again.");
+        toast.error("Error fetchi personal info. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
@@ -155,7 +156,6 @@ const PersonalInfo = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
-
           } else {
             Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           }
@@ -166,7 +166,7 @@ const PersonalInfo = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error adding personal info. Please try again.");
         // setIsLoading(false);
       })
       .finally(() => {
@@ -186,12 +186,26 @@ const PersonalInfo = () => {
     if (isEmptyObject(errors)) {
       console.log(file);
       if (file) {
-        data.photo = file._id
+        data.photo = file._id;
       }
 
       HandleSubmitPersonalInfo(data);
     }
     console.log("form submmited", data);
+  };
+  const inputStyles = {
+    fontSize: "13px",
+    fontWeight: 400,
+    lineHeight: "16px",
+    width: "100%",
+    border: "1px solid #dcdcdc",
+    borderRadius: "8px",
+    padding: "1em",
+    marginBottom: "10px",
+    color: "#222b45",
+    background: "#fff",
+    boxSizing: "border-box",
+    outline: "none", // Removed outline color
   };
 
   return (
@@ -239,16 +253,19 @@ const PersonalInfo = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 <ImgUpload>
-                  {file ? (<PersonImg
-                    src={
-                      "http://hrapi.chantsit.com/" +
-                      file?.destination +
-                      "/" +
-                      file?.name
-                    }
-                    alt=""
-                  />) : (<PersonImg src="/images/User.jpg" alt=""
-                  />)}
+                  {file ? (
+                    <PersonImg
+                      src={
+                        "http://hrapi.chantsit.com/" +
+                        file?.destination +
+                        "/" +
+                        file?.name
+                      }
+                      alt=""
+                    />
+                  ) : (
+                    <PersonImg src="/images/User.jpg" alt="" />
+                  )}
                   <FlexColumn>
                     <FlexContaier>
                       <FlexContaier>
@@ -401,7 +418,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid Home-Phone number "
+                            "Must be a number "
                           );
                         },
                       })}
@@ -412,6 +429,32 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>Personal (mobile)</InputLabel>
+                    {/* <Controller
+                      name="mobile"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      }}
+                      render={({ ...field }) => (
+                        <InputMask
+                          style={{ ...inputStyles }}
+                          mask="(999) 999-9999"
+                          placeholder="Enter phone number"
+                          type="text"
+                          name="mobile"
+                        />
+                      )}
+                    /> */}
                     <Input
                       type="text"
                       {...register("mobile", {
@@ -419,7 +462,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid Mobile number contains a letters  "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -439,7 +482,7 @@ const PersonalInfo = () => {
                       {...register("personalEmail", {
                         required: {
                           value: true,
-                          message: "Email is Required",
+                          message: "Required",
                         },
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -460,7 +503,7 @@ const PersonalInfo = () => {
                       {...register("emergencyContact", {
                         required: {
                           value: true,
-                          message: "Emergency Contact is Required",
+                          message: "Required",
                         },
                       })}
                     />
@@ -474,6 +517,32 @@ const PersonalInfo = () => {
                     <InputLabel>
                       Emergency Contact number <InputSpan>*</InputSpan>
                     </InputLabel>
+                    {/* <Controller
+                      name="emergencyContactNumber"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      }}
+                      render={({ ...field }) => (
+                        <InputMask
+                          style={{ ...inputStyles, width: "50%" }}
+                          mask="(999) 999-9999"
+                          placeholder="Enter phone number"
+                          id="phone"
+                          type="text"
+                        />
+                      )}
+                    /> */}
                     <Input
                       style={{ width: "50%" }}
                       type="text"
@@ -486,7 +555,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid sin "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -554,7 +623,7 @@ const PersonalInfo = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid sin "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -574,10 +643,12 @@ const PersonalInfo = () => {
                           <Option>Select</Option>
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
+                          <Option value={3}>Non-Binary</Option>
+                          <Option value={4}>Pronouns</Option>
                         </Select>
                       )}
                     />
-                    {errors.gender && <Errors> Gender is required</Errors>}
+                    {errors.gender && <Errors>Required</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>

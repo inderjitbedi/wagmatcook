@@ -213,7 +213,7 @@ const Routes: any = [
           },
           {
             component: Benefits,
-            path: "benefits/:employeeid",
+            path: "benefits/:employeeid/:edit?",
             title: "Benefits ",
             to: "/",
             type: "private",
@@ -221,7 +221,7 @@ const Routes: any = [
           },
           {
             component: CertificatesInfo,
-            path: "certificates-info/:employeeid",
+            path: "certificates-info/:employeeid/:edit?",
             title: "CertificatesInfo ",
             to: "/",
             type: "private",

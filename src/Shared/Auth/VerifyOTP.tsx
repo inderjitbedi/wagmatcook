@@ -62,6 +62,7 @@ const VerifyOTP = () => {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         localStorage.setItem("token", result?.token);
+                        localStorage.setItem("org", JSON.stringify(result?.organization));
                         redirectToDashboard(result?.user?.role, navigate)
                     }
                 })

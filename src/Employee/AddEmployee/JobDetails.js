@@ -31,6 +31,7 @@ import {
   BluePara,
   AlignFlex,
   DeleteIcon,
+  TrashDiv,
 } from "./AddEmployeeStyles";
 
 const JobDetails = () => {
@@ -44,7 +45,7 @@ const JobDetails = () => {
 
   const initialPosition = {
     title: "",
-    department: '',
+    department: "",
     startDate: new Date(),
     endDate: new Date(),
   };
@@ -60,13 +61,13 @@ const JobDetails = () => {
     mode: "all",
     defaultValues: {
       details: {
-        department: '',
+        department: "",
         endDate: null,
         hoursPerWeek: "",
         isActive: false,
         isBebEligible: false,
         ratePer: "",
-        reportsTo: "",
+        reportsTo: employeeid,
         salary: "",
         salaryScaleFrom: "",
         salaryScaleTo: "",
@@ -81,6 +82,7 @@ const JobDetails = () => {
     name: "positions",
     control,
   });
+
   const GetEmployeesJobDetails = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -91,42 +93,68 @@ const JobDetails = () => {
     })
       .then(({ result }) => {
         if (result) {
+          console.log(result, "this what result Looks like ");
           setResult(result);
-
-
+          if (result.details.startDate || result.details.endDate) {
+            result.details.startDate = new Date(result.details.startDate)
+              .toISOString()
+              .split("T")[0];
+            result.details.endDate = new Date(result.details.endDate)
+              .toISOString()
+              .split("T")[0];
+          }
+          if (result.positions) {
+            result.positions.forEach((data) => {
+              if (data.startDate || data.endDate) {
+                data.startDate = new Date(data.startDate)
+                  .toISOString()
+                  .split("T")[0];
+                data.endDate = new Date(data.endDate)
+                  .toISOString()
+                  .split("T")[0];
+                data.department = data.department._id;
+              }
+            });
+          }
           if (result.details?.department)
-            result.details.department = result.details?.department?._id
+            result.details.department = result.details?.department?._id;
 
-          console.log(result.details.department);
-          Object.keys(result).forEach((key) => {
-            console.log(key, result[key]);
-            setValue(key, result[key])
-          })
+          console.log(result, "updates in results");
+          // Object.keys(result).forEach((key) => {
+          //   console.log(key, result[key], "this is what we have now ");
+          //   setValue(key, result[key]);
+          // });
 
+          // console.log(result.details.department);
+          // Object.keys(result).forEach((key) => {
+          //   console.log(key, result[key]);
+          //   setValue(key, result[key])
+          // })
 
-          // reset(result);
+          reset(result);
+          setValue("department");
           // adding if no position added
           if (!result.positions?.length) {
-            append(initialPosition)
+            append(initialPosition);
           }
-          // setValue("details.startDate", "result.details.startDate");
-          console.log(result, "we are getting the persnal information ");
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        // toast.error("Error Fetching Job Details. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
         setIsLoading(false);
       });
   };
+
   useEffect(() => {
     GetDepartments();
-  }, []);
+    GetEmployeesJobDetails();
+  }, [edit, reset]);
 
   const HandleSubmitJobDetails = (data) => {
     // e.preventDefault();
@@ -142,12 +170,12 @@ const JobDetails = () => {
     })
       .then(({ result }) => {
         if (result) {
-          console.log(result);
+          // console.log(result);
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
           } else {
-            Navigate(`/organization-admin/employee/list`);
+            Navigate(`/organization-admin/employee/benefits/${employeeid}`);
           }
 
           setFormData(result);
@@ -157,7 +185,7 @@ const JobDetails = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error Submiting Job Details. Please try again.");
         // setIsLoading(false);
       })
       .finally(() => {
@@ -176,15 +204,14 @@ const JobDetails = () => {
         if (result) {
           setDepartmentData(result.departments);
           GetEmployeesJobDetails();
-          console.log(result.departments, "result.departments ");
-
+          // console.log(result.departments, "result.departments ");
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error getting department. Please try again.");
         //  setIsLoading(false);
       })
       .finally(() => {
@@ -278,7 +305,7 @@ const JobDetails = () => {
                         </Select>
                       )}
                     />
-                    {errors.details?.department && <Errors> required </Errors>}
+                    {errors.details?.department && <Errors> Required </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -339,7 +366,7 @@ const JobDetails = () => {
                           const endDate = new Date(fieldValue);
                           return (
                             startDate <= endDate ||
-                            "End Date must not be earlier than Start Date"
+                            "End date must not be earlier than start date"
                           );
                         },
                       })}
@@ -362,6 +389,13 @@ const JobDetails = () => {
                           value: true,
                           message: "Required",
                         },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            " Must be a number "
+                          );
+                        },
                       })}
                     />
                     {errors.details?.salaryScaleFrom && (
@@ -380,6 +414,13 @@ const JobDetails = () => {
                         required: {
                           value: true,
                           message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            " Must be a number "
+                          );
                         },
                       })}
                     />
@@ -400,6 +441,13 @@ const JobDetails = () => {
                           value: true,
                           message: "Required",
                         },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            " Must be a number "
+                          );
+                        },
                       })}
                     />
                     {errors.details?.salary && (
@@ -411,18 +459,22 @@ const JobDetails = () => {
                       Salary rate per
                       <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("details.ratePer", {
-                        required: {
-                          value: true,
-                          message: " Required",
-                        },
-                      })}
+                    <Controller
+                      name="details.ratePer"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option>Select</Option>
+                          <Option value={1}>Hour</Option>
+                          <Option value={2}>Day</Option>
+                          <Option value={3}>Week</Option>
+                          <Option value={4}>Biweekly</Option>
+                          <Option value={5}>Annual</Option>
+                        </Select>
+                      )}
                     />
-                    {errors.details?.ratePer && (
-                      <Errors>{errors.details?.ratePer?.message}</Errors>
-                    )}
+                    {errors.details?.ratePer && <Errors>Required</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -441,7 +493,7 @@ const JobDetails = () => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            "Invalid Home-Phone number "
+                            "Must be a number "
                           );
                         },
                       })}
@@ -456,16 +508,17 @@ const JobDetails = () => {
                     </InputLabel>
                     <Input
                       type="text"
-                      {...register("details.reportsTo", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
+                      value={employeeid}
+                      // {...register("details.reportsTo", {
+                      //   required: {
+                      //     value: true,
+                      //     message: "Required",
+                      //   },
+                      // })}
                     />
-                    {errors.details?.reportsTo && (
+                    {/* {errors.details?.reportsTo && (
                       <Errors>{errors.details?.reportsTo?.message}</Errors>
-                    )}
+                    )} */}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm
@@ -591,7 +644,7 @@ const JobDetails = () => {
                             const endDate = new Date(fieldValue);
                             return (
                               startDate <= endDate ||
-                              "Must not be earlier than Start Date"
+                              "Must not be earlier than start date"
                             );
                           },
                         })}
@@ -604,10 +657,9 @@ const JobDetails = () => {
                     </FlexColumnForm>
                   </FlexContaierForm>
                   {getValues("positions").length > 1 && (
-                    <DeleteIcon
-                      onClick={() => remove(index)}
-                      src="/images/icons/Alert-Circle.svg"
-                    />
+                    <TrashDiv onClick={() => remove(index)}>
+                      <DeleteIcon src="/images/icons/trash-empty.svg" /> Remove
+                    </TrashDiv>
                   )}
                 </FormContainer>
               ))}

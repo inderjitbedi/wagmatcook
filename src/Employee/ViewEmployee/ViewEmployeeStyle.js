@@ -253,7 +253,7 @@ width: 100%;
   align-items: center;
   margin-bottom: 24px;
 `;
-export const EditButton = styled.button`
+export const EditButton = styled.label`
   border-radius: 88px;
   border: 1px solid #8f9bb3;
 padding: 0.5em .75em;
@@ -286,7 +286,7 @@ export const BasicHeading = styled.h1`
 export const BasicDetailsDiv = styled.div`
 width: 100%;
 justify-self: flex-start;
-
+padding: 10px;
 `;
 export const TitlePara = styled.p`
   color: #8f9bb3;
@@ -432,7 +432,7 @@ export const ButtonBlue = styled.button`
   border: none;
 `;
 export const ModalContainer = styled.div`
-  padding: 20px 29px 15px 29px;
+  padding: 0px 29px 15px 29px;
   border-bottom: 2px solid #f3f3f5;
   display: flex;
   align-items: center;
@@ -511,4 +511,43 @@ export const ModalThanksHeading = styled.p`
   line-height: 22px;
   width: 70%;
   text-align: center;
+`;
+export const Select = styled.select`
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 24px;
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 10px;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+  outline: #f0f2f6;
+`;
+export const Option = styled.option`
+  color: #222b45;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  padding: 8px 11px;
+`;
+export const CertificateContainer = styled.div`
+  border-radius: 8px;
+  border: 1.5px solid #eff4fa;
+  background: #fff;
+  padding: 16px;
+  width: 100%;
+  margin-bottom: 16px;
+`;
+export const CertificateTitle = styled.div`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px; 
+
 `;

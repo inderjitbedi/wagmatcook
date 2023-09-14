@@ -337,10 +337,55 @@ gap:10px;
 `;
 export const DeleteIcon = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  position: absolute;
+  width: 17px;
+  height: 17px;
+  /* cursor: pointer; */
+  /* position: absolute;
   right: 10px;
-  top: 0px;
+  top: 0px; */
+`;
+export const TrashDiv = styled.div`
+  color: #f61717;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  /* line-height: 18px; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0px 0px 12px 0px;
+  margin-bottom: 24px;
+  border-bottom:1px solid #EAEAEA;
+  cursor: pointer;
+`;
+export const UploadLabel = styled.label`
+  display: flex;
+  width: 184px;
+  padding: 8px 11px;
+  gap: 10px;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid #eff4fa;
+  background: var(--default-white, #fff);
+  box-shadow: 0px 2px 4px 0px rgba(5, 16, 55, 0.06),
+    0px 0px 0px 1px #cdd0dc inset;
+  color: #279af1;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  cursor: pointer;
+`;
+export const UploadIcon = styled.img`
+  width: 21px;
+  height: 21px;
+  display: inline-block;
+`;
+export const RemoveContainer = styled.div`
+display: flex; 
+gap:8px;
+align-items: center;
+
 `;

@@ -142,3 +142,22 @@ export const DashCardPara = styled.p`
 `;
 export const DashCardIcons = styled.img``;
 export const DashCardPri = styled.div``;
+export const Pagination = styled.div`
+display:flex;
+gap:8px;
+align-items: center;
+`
+export const PaginationButton = styled.button`
+  color: #222b45;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  padding: 10px 19.5px;
+  border-radius: 6px;
+  background: #e9e9ee;
+  border:none;
+  cursor: pointer;
+`;

@@ -130,7 +130,7 @@ const Employee = () => {
     "Other",
   ];
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -175,7 +175,7 @@ const Employee = () => {
       <DashHeader>
         <DashHeaderTitle>Employee</DashHeaderTitle>
         <DashHeaderSearch>
-          <SearchBox>
+          {/* <SearchBox>
             <SearchInput
               type="text"
               placeholder="Search..."
@@ -183,13 +183,27 @@ const Employee = () => {
               onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
+          </SearchBox> */}
           <DashNotification src="/images/icons/Notifications.svg" />
-          <DashNotification
-            style={{ cursor: "pointer" }}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              gap: "5px",
+            }}
             onClick={(event) => handleClickMenu(event)}
-            src="/images/icons/PersonIcon.svg"
-          />
+          >
+            <DashNotification src="/images/icons/Logout.svg" />
+            <img
+              src="/images/icons/arrowdown.svg"
+              style={{
+                width: "5px",
+                height: "9px",
+                transform: anchorEl ? "rotate(180deg)" : undefined,
+              }}
+            />
+          </div>
         </DashHeaderSearch>
         <Menu
           sx={{ margin: "0px" }}
@@ -212,16 +226,16 @@ const Employee = () => {
       </DashHeader>
       <DepartmentFilterContainer>
         <DepartmentFilterdiv>
-          {FilterData.map((data) => (
+          {/* {FilterData.map((data) => (
             <DepartmentFilterButton>{data}</DepartmentFilterButton>
-          ))}
+          ))} */}
         </DepartmentFilterdiv>
         <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
       </DepartmentFilterContainer>
       <HeaderDiv>
         <HeaderTitle>Employee List</HeaderTitle>
         <DashHeaderSearch>
-          <SearchBox>
+          {/* <SearchBox>
             <SearchInput
               type="text"
               placeholder="Search..."
@@ -229,7 +243,7 @@ const Employee = () => {
               // onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
+          </SearchBox> */}
         </DashHeaderSearch>
       </HeaderDiv>
 
@@ -241,6 +255,7 @@ const Employee = () => {
             height: "70vh",
             justifyContent: "center",
             alignItems: "center",
+            zIndex: 999,
           }}
         >
           <RotatingLines
@@ -290,6 +305,13 @@ const Employee = () => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {result.employees?.length == 0 && (
+                <TableRow sx={{ height: "200px" }}>
+                  <TableCell align="center" colSpan={7}>
+                    No employee found
+                  </TableCell>
+                </TableRow>
+              )}
               {result.employees?.map((data, index) => (
                 <TableRow
                   key={data.name}
@@ -301,7 +323,7 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <TabelDiv>
-                      <TabelImg src="/images/Oval Copy 2.jpg" />
+                      <TabelImg src="/images/User.jpg" />
                       <TabelParaContainer>
                         <TabelDarkPara>
                           {data.personalInfo[0]?.firstName}{" "}
@@ -345,7 +367,7 @@ const Employee = () => {
                       />
                       <Icons
                         onClick={() => {
-                          setId(data._id)
+                          setId(data._id);
                           HandleOpenDelete();
                         }}
                         src="/images/icons/Trash-2.svg"

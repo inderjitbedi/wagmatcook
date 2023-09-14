@@ -81,11 +81,25 @@ const EmployeePersonal = () => {
       ) : (
         <MainBodyContainer>
           <PersonalInfo>
-            <PersonalImg src={result.personalInfo?.photo ? "http://hrapi.chantsit.com/" + result.personalInfo.photo?.path : "/images/User.jpg"} />
+            <PersonalImg
+              src={
+                result.personalInfo?.photo
+                  ? "http://hrapi.chantsit.com/" +
+                    result.personalInfo.photo?.path
+                  : "/images/User.jpg"
+              }
+            />
             <FlexColumn>
-              <PersonalName>{[result.personalInfo?.firstName, result.personalInfo?.lastName].join(' ')}</PersonalName>
-              <PersonalTitle>{result.details?.title || '-'}</PersonalTitle>
-              <PersonalDepartment>{result.details?.department?.name || '-'}</PersonalDepartment>
+              <PersonalName>
+                {[
+                  result.personalInfo?.firstName,
+                  result.personalInfo?.lastName,
+                ].join(" ")}
+              </PersonalName>
+              <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+              <PersonalDepartment>
+                {result.jobDetails?.department?.name || "-"}
+              </PersonalDepartment>
             </FlexColumn>
           </PersonalInfo>
 
@@ -205,8 +219,12 @@ const EmployeePersonal = () => {
                     <TitlePara>Gender</TitlePara>
                     {result.personalInfo?.gender === 1 ? (
                       <ViewPara> Male</ViewPara>
-                    ) : (
+                    ) : result.personalInfo?.gender === 2 ? (
                       <ViewPara> Female</ViewPara>
+                    ) : result.personalInfo?.gender === 3 ? (
+                      <ViewPara> Non-Binary</ViewPara>
+                    ) : (
+                      <ViewPara> Pronouns</ViewPara>
                     )}
                   </FlexColumn>
                 </FlexSpaceBetween>
