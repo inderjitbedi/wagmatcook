@@ -36,7 +36,7 @@ import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
+  const [user, setUser] = useState();
   // useEffect(() => {
   //   if (!localStorage.getItem('welcomeModelShown')) {
   //     // if (history.action === "PUSH") {
@@ -45,6 +45,13 @@ const OADashBoard = () => {
   //     // }
   //   }
   // }, []);
+   useEffect(() => {
+     let user = localStorage.getItem("user");
+     if (user) {
+       let parsedUser = JSON.parse(user);
+       setUser(parsedUser);
+     }
+   }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -142,7 +149,7 @@ const OADashBoard = () => {
         >
           <MenuItem onClick={HandleLogout}>Logout</MenuItem>
         </Menu>
-        <DashHeading>Welcome Jason Porter!</DashHeading>
+        <DashHeading>Welcome { user?.name || "Jason poter"}!</DashHeading>
         <BannerSection>
           <BannerHeading>
             <BannerTitle>

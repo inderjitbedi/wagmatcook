@@ -1,7 +1,9 @@
-import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-
+import httpClient from "../../api/httpClient";
+import { toast } from "react-toastify";
+import { RotatingLines } from "react-loader-spinner";
 import {
   HeaderEmployee,
   BackButton,
@@ -22,28 +24,148 @@ import {
   Errors,
   ButtonBlue,
   ButtonGrey,
+  Select,
+  Option,
 } from "./AddEmployeeStyles";
 const Benefits = () => {
-
   const Navigate = useNavigate();
+  const { employeeid, edit } = useParams();
 
-   const [formData, setFormData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState([]);
+  const [Id, setId] = useState("");
+  const [formData, setFormData] = useState([]);
+  const [benefits, setBenefits] = useState([]);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+    reset,
+  } = useForm({ mode: "all", defaultValues: result });
 
-   const {
-     register,
-     control,
-     handleSubmit,
-     formState: { errors },
-     getValues,
-   } = useForm({ mode: "all" });
+  const HandleSubmitBenefits = (data) => {
+    // e.preventDefault();
+    let dataCopy = data;
+    let url = `/employee/benefit/${employeeid}`;
 
-   const onSubmit = (data) => {
-     if (!errors) {
-   Navigate("/add-new-employee/certificates-info")
-       setFormData(data);
-     }
-     console.log("form submmited", data);
-   };
+    // setIsLoading(true);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result }) => {
+        if (result) {
+          // console.log(result);
+          if (edit) {
+            // Navigate(`/organization-admin/employee/list`);
+            Navigate(-1);
+          } else {
+            Navigate(`/organization-admin/employee/certificates-info/${employeeid}`);
+          }
+
+          setFormData(result);
+        } else {
+          toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Submiting Job Details. Please try again.");
+        // setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  const onSubmit = (data) => {
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors)) {
+      HandleSubmitBenefits(data);
+    }
+  };
+  // get Benefits
+  const GetBenefits = () => {
+    setIsLoading(true);
+    let url = `/benefit/list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setBenefits(result.benefits);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const GetEmployeesBenefits = () => {
+    setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/benefit/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setResult(result);
+          if (result.benefit.startDate || result.benefit.endDate) {
+            result.benefit.startDate = new Date(result.benefit.startDate)
+              .toISOString()
+              .split("T")[0];
+            result.benefit.endDate = new Date(result.benefit.endDate)
+              .toISOString()
+              .split("T")[0];
+          }
+
+          const findBenefit = benefits.find(
+            (benefit) => benefit._id === result.benefit.benefit
+          );
+          const description = findBenefit?.description;
+          console.log(result.benefit);
+          reset(result.benefit);
+          setValue("benefit", result.benefit.benefit);
+          setValue("description", description);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // toast.error("Error Fetching Job Details. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+    useEffect(() => {
+      GetBenefits();
+      GetEmployeesBenefits();
+    }, [reset, edit]);
   return (
     <>
       <HeaderEmployee>
@@ -53,179 +175,234 @@ const Benefits = () => {
             <IconsEmployee src="/images/icons/ArrowLeft.svg" />
             Back
           </BackButton>
-          <HeaderTitle>Add New Employee</HeaderTitle>
+          <HeaderTitle>
+            {edit ? "Update Benefits " : "Add New Employee"}
+          </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
       </HeaderEmployee>
-      <EmployeeBody style={{ height: "75%" }}>
-        <BodyHeader>
-          <BodyHeaderTitle>
-            <span
-              style={{ color: "#8B8B8B", cursor: "pointer" }}
-              onClick={() => Navigate("/add-new-employee/personal-info")}
-            >
-              {" "}
-              Personal Information &#62;{" "}
-            </span>{" "}
-            <span
-              style={{ color: "#8B8B8B", cursor: "pointer" }}
-              onClick={() => Navigate("/add-new-employee/job-details")}
-            >
-              Job Details &#62;
-            </span>{" "}
-            Benefits
-          </BodyHeaderTitle>
-        </BodyHeader>
-        <BodyMain>
-          <BodyMainHeading style={{ marginBottom: "25px" }}>
-            Benefits
-          </BodyMainHeading>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FormContainer>
-              {/* first name and last name  */}
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Benefits Name<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("benefitname", {
-                      required: {
-                        value: true,
-                        message: "Benefit Name is Required",
-                      },
-                    })}
-                  />
-
-                  {errors.benefitname && (
-                    <Errors>{errors.benefitname?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Description <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("description", {
-                      required: {
-                        value: true,
-                        message: "Description is Required",
-                      },
-                    })}
-                  />
-                  {errors.description && (
-                    <Errors>{errors.description?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-              </FlexContaierForm>
-
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Start Date<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="date"
-                    {...register("startdate", {
-                      required: {
-                        value: true,
-                        message: " Start Date is Required",
-                      },
-                    })}
-                  />
-                  {errors.startdate && (
-                    <Errors>{errors.startdate?.message}</Errors>
-                  )}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    End Date<InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="date"
-                    {...register("enddate", {
-                      required: {
-                        value: true,
-                        message: "End Date is Required",
-                      },
-                      validate: (fieldValue) => {
-                        const startDate = new Date(getValues("startdate"));
-                        const endDate = new Date(fieldValue);
-                        return (
-                          startDate <= endDate ||
-                          "End Date must not be earlier than Start Date"
-                        );
-                      },
-                    })}
-                  />
-                  {errors.enddate && <Errors>{errors.enddate?.message}</Errors>}
-                </FlexColumnForm>
-              </FlexContaierForm>
-
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Cost <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("cost", {
-                      required: {
-                        value: true,
-                        message: "Cost per week is Required",
-                      },
-                      validate: (fieldValue) => {
-                        return (
-                          (!isNaN(parseFloat(fieldValue)) &&
-                            isFinite(fieldValue)) ||
-                          "Invalid Cost"
-                        );
-                      },
-                    })}
-                  />
-                  {errors.cost && <Errors>{errors.cost?.message}</Errors>}
-                </FlexColumnForm>
-                <FlexColumnForm>
-                  <InputLabel>
-                    Employee Contribution rate (%) <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    type="text"
-                    {...register("rate", {
-                      required: {
-                        value: true,
-                        message: "Employee Contribution rate is Required",
-                      },
-                      validate: (fieldValue) => {
-                        return (
-                          (!isNaN(parseFloat(fieldValue)) &&
-                            isFinite(fieldValue)) ||
-                          "Invalid Employee Contribution rate"
-                        );
-                      },
-                    })}
-                  />
-                  {errors.rate && <Errors>{errors.rate?.message}</Errors>}
-                </FlexColumnForm>
-              </FlexContaierForm>
-            </FormContainer>
-
-            <FlexContaier>
-              <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
-              <ButtonBlue
-                type="submit"
-                onClick={() => {
-                  handleSubmit(onSubmit);
-                }}
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <EmployeeBody style={{ height: "75%" }}>
+          <BodyHeader>
+            <BodyHeaderTitle>
+              <span
+                style={{ color: "#8B8B8B", cursor: "pointer" }}
+                onClick={() => Navigate("/add-new-employee/personal-info")}
               >
-                Continue
-              </ButtonBlue>
-            </FlexContaier>
-          </form>
-        </BodyMain>
-      </EmployeeBody>
+                {" "}
+                Personal Information &#62;{" "}
+              </span>{" "}
+              <span
+                style={{ color: "#8B8B8B", cursor: "pointer" }}
+                onClick={() => Navigate("/add-new-employee/job-details")}
+              >
+                Job Details &#62;
+              </span>{" "}
+              Benefits
+            </BodyHeaderTitle>
+          </BodyHeader>
+          <BodyMain>
+            <BodyMainHeading style={{ marginBottom: "25px" }}>
+              Benefits
+            </BodyMainHeading>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormContainer>
+                {/* first name and last name  */}
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Benefits Name<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Controller
+                      name="benefit"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Select
+                          value={value}
+                          onChange={(e) => {
+                            const targetId = e.target.value;
+                            setValue("benefit", e.target.value);
+                            const findBenefit = benefits.find(
+                              (benefit) => benefit._id === targetId
+                            );
+                            if (findBenefit) {
+                              const description = findBenefit.description;
+                              setValue("description", description);
+                              // console.log(`Description: ${description}`);
+                            } else {
+                              console.log(
+                                `Benefit with _id ${targetId} not found.`
+                              );
+                            }
+                          }}
+                        >
+                          <Option>Select</Option>
+                          {benefits?.map((data) => (
+                            <Option value={data._id}>{data.name}</Option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+
+                    {errors.benefit && (
+                      <Errors>{errors.benefit?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Description <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("description", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.description && (
+                      <Errors>{errors.description?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Start Date<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("startDate", {
+                        required: {
+                          value: true,
+                          message: " Required",
+                        },
+                      })}
+                    />
+                    {errors.startDate && (
+                      <Errors>{errors.startDate?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      End Date<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("endDate", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          const startDate = new Date(getValues("startDate"));
+                          const endDate = new Date(fieldValue);
+                          return (
+                            startDate <= endDate ||
+                            "End Date must not be earlier than Start Date"
+                          );
+                        },
+                      })}
+                    />
+                    {errors.endDate && (
+                      <Errors>{errors.endDate?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Cost <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("cost", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      })}
+                    />
+                    {errors.cost && <Errors>{errors.cost?.message}</Errors>}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Employee Contribution rate (%) <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("contributionRate", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                      })}
+                    />
+                    {errors?.contributionRate && (
+                      <Errors>{errors.contributionRate?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+              </FormContainer>
+
+              <FlexContaier style={{ marginTop: "25px" }}>
+                {!edit && (
+                  <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+                )}
+                <ButtonBlue
+                  type="submit"
+                  onClick={() => {
+                    handleSubmit(onSubmit);
+                  }}
+                >
+                  {edit ? "Update" : "Continue"}
+                </ButtonBlue>
+              </FlexContaier>
+            </form>
+          </BodyMain>
+        </EmployeeBody>
+      )}
     </>
   );
 };

@@ -43,6 +43,8 @@ import {
   ModalIcon,
   ModalFormContainer,
   InputSpan,
+  Select,
+  Option,
 } from "./ViewEmployeeStyle";
 const style = {
   position: "absolute",
@@ -66,6 +68,7 @@ const EmployeeJobDetails = () => {
   const { employeeid } = useParams();
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [departmentData, setDepartmentData] = useState([]);
 
   const {
     register,
@@ -118,13 +121,39 @@ const EmployeeJobDetails = () => {
         setIsLoading(false);
       });
   };
+    const GetDepartments = () => {
+       setIsLoading(true);
+
+      let url = `/department/list`;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result }) => {
+          if (result) {
+            setDepartmentData(result.departments);
+            GetEmployeesJobDetails();
+            // console.log(result.departments, "result.departments ");
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error getting department. Please try again.");
+           setIsLoading(false);
+        })
+        .finally(() => {
+           setIsLoading(false);
+        });
+    };
   const AddNewPosition = (data) => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/job-details/position/${employeeid}`;
+    let url = `/employee/job-details/position/${employeeid}`;
       httpClient({
-        method: "put",
+        method: "post",
         url,
         data: dataCopy,
       })
@@ -147,6 +176,8 @@ const EmployeeJobDetails = () => {
   };
   useEffect(() => {
     GetEmployeesJobDetails();
+    GetDepartments();
+
   }, []);
   return (
     <>
@@ -262,7 +293,17 @@ const EmployeeJobDetails = () => {
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Salary rate per</TitlePara>
-                    <ViewPara>{result.details?.ratePer || " - "}</ViewPara>
+                    <ViewPara>
+                      {result.details?.ratePer === 1
+                        ? "Hour"
+                        : result.details?.ratePer === 2
+                        ? "Day"
+                        : result.details?.ratePer === 3
+                        ? "Week"
+                        : result.details?.ratePer === 4
+                        ? "Biweekly "
+                        : result.details?.ratePer === 5 ? "Annual " : " - "}
+                    </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
                 <FlexSpaceBetween>
@@ -309,11 +350,11 @@ const EmployeeJobDetails = () => {
 
                 <Modal
                   open={open}
-                    onClose={() => {
-                      handleClose();
-                       reset();
-                       clearErrors();
-                    }}
+                  onClose={() => {
+                    handleClose();
+                    reset();
+                    clearErrors();
+                  }}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
@@ -322,16 +363,38 @@ const EmployeeJobDetails = () => {
                       <ModalContainer>
                         <ModalHeading>Add New Employee</ModalHeading>
                         <ModalIcon
-                            onClick={() => {
-                              handleClose();
-                               reset();
-                               clearErrors();
-                            }}
-                            
+                          onClick={() => {
+                            handleClose();
+                            reset();
+                            clearErrors();
+                          }}
                           src="/images/icons/Alert-Circle.svg"
                         />
                       </ModalContainer>
                       <ModalFormContainer>
+                        <FlexContaierForm>
+                          <FlexColumnForm>
+                            <InputLabel>
+                              Department<InputSpan>*</InputSpan>
+                            </InputLabel>
+                            <Controller
+                              name="department"
+                              control={control}
+                              rules={{ required: true }}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option>Select</Option>
+                                  {departmentData?.map((data) => (
+                                    <Option value={data._id}>
+                                      {data.name}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              )}
+                            />
+                            {errors.department && <Errors> Required </Errors>}
+                          </FlexColumnForm>
+                        </FlexContaierForm>
                         <FlexContaierForm>
                           <FlexColumnForm>
                             <InputLabel>
@@ -402,8 +465,8 @@ const EmployeeJobDetails = () => {
 
                         <ButtonBlue
                           type="submit"
-                            style={{ marginTop: "25px" }}
-                            // disabled={!isDirty}
+                          style={{ marginTop: "25px" }}
+                          // disabled={!isDirty}
                           // onClick={() => {
                           //   handleSubmit(onSubmit);
                           // }}

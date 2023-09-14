@@ -81,8 +81,8 @@ const SideBar = () => {
       <SideBarLogoContainer>
         <SideBarLogo src="/images/User.jpg" />
         <SideBarLogodiv>
-          <SideBarLogoPara>{orgData?.name} </SideBarLogoPara>
-          <SideBarLogoHead>Figma Inc.</SideBarLogoHead>
+          <SideBarLogoPara> Organization</SideBarLogoPara>
+          <SideBarLogoHead>{orgData?.name}</SideBarLogoHead>
         </SideBarLogodiv>
       </SideBarLogoContainer>
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
@@ -95,9 +95,7 @@ const SideBar = () => {
               </SideBarListLogo>
               <SideBarListTitle
                 style={
-                  location.pathname === data.to 
-                    ? style
-                    : { color: "#5C5C5C" }
+                  location.pathname === data.to ? style : { color: "#5C5C5C" }
                 }
               >
                 {" "}

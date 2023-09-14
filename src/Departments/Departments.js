@@ -180,7 +180,7 @@ const Departments = () => {
           ...errors,
           descriptionError: "Required",
         });
-      }  else {
+      } else {
         setErrors({ ...errors, descriptionError: "" });
       }
     }
@@ -189,7 +189,7 @@ const Departments = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
+    let url = `/department/list?page=${page}&limit=1&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,

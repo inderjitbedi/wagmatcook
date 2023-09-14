@@ -193,20 +193,20 @@ const PersonalInfo = () => {
     }
     console.log("form submmited", data);
   };
-const inputStyles = {
-  fontSize: "13px",
-  fontWeight: 400,
-  lineHeight: "16px",
-  width: "100%",
-  border: "1px solid #dcdcdc",
-  borderRadius: "8px",
-  padding: "1em",
-  marginBottom: "10px",
-  color: "#222b45",
-  background: "#fff",
-  boxSizing: "border-box",
-  outline: "none", // Removed outline color
-};
+  const inputStyles = {
+    fontSize: "13px",
+    fontWeight: 400,
+    lineHeight: "16px",
+    width: "100%",
+    border: "1px solid #dcdcdc",
+    borderRadius: "8px",
+    padding: "1em",
+    marginBottom: "10px",
+    color: "#222b45",
+    background: "#fff",
+    boxSizing: "border-box",
+    outline: "none", // Removed outline color
+  };
 
   return (
     <>
@@ -429,7 +429,7 @@ const inputStyles = {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>Personal (mobile)</InputLabel>
-                    <Controller
+                    {/* <Controller
                       name="mobile"
                       control={control}
                       rules={{
@@ -450,12 +450,12 @@ const inputStyles = {
                           style={{ ...inputStyles }}
                           mask="(999) 999-9999"
                           placeholder="Enter phone number"
-                          id="phone"
                           type="text"
+                          name="mobile"
                         />
                       )}
-                    />
-                    {/* <Input
+                    /> */}
+                    <Input
                       type="text"
                       {...register("mobile", {
                         validate: (fieldValue) => {
@@ -466,7 +466,7 @@ const inputStyles = {
                           );
                         },
                       })}
-                    /> */}
+                    />
                     {errors.mobile && (
                       <Errors> {errors.mobile?.message} </Errors>
                     )}
@@ -517,7 +517,7 @@ const inputStyles = {
                     <InputLabel>
                       Emergency Contact number <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Controller
+                    {/* <Controller
                       name="emergencyContactNumber"
                       control={control}
                       rules={{
@@ -542,8 +542,8 @@ const inputStyles = {
                           type="text"
                         />
                       )}
-                    />
-                    {/* <Input
+                    /> */}
+                    <Input
                       style={{ width: "50%" }}
                       type="text"
                       {...register("emergencyContactNumber", {
@@ -559,7 +559,7 @@ const inputStyles = {
                           );
                         },
                       })}
-                    /> */}
+                    />
                     {errors.emergencyContactNumber && (
                       <Errors>
                         {" "}
@@ -643,6 +643,8 @@ const inputStyles = {
                           <Option>Select</Option>
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
+                          <Option value={3}>Non-Binary</Option>
+                          <Option value={4}>Pronouns</Option>
                         </Select>
                       )}
                     />

@@ -175,7 +175,7 @@ const JobDetails = () => {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
           } else {
-            Navigate(`/organization-admin/employee/list`);
+            Navigate(`/organization-admin/employee/benefits/${employeeid}`);
           }
 
           setFormData(result);
@@ -459,25 +459,22 @@ const JobDetails = () => {
                       Salary rate per
                       <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("details.ratePer", {
-                        required: {
-                          value: true,
-                          message: " Required",
-                        },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            " Must be a number "
-                          );
-                        },
-                      })}
+                    <Controller
+                      name="details.ratePer"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option>Select</Option>
+                          <Option value={1}>Hour</Option>
+                          <Option value={2}>Day</Option>
+                          <Option value={3}>Week</Option>
+                          <Option value={4}>Biweekly</Option>
+                          <Option value={5}>Annual</Option>
+                        </Select>
+                      )}
                     />
-                    {errors.details?.ratePer && (
-                      <Errors>{errors.details?.ratePer?.message}</Errors>
-                    )}
+                    {errors.details?.ratePer && <Errors>Required</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>

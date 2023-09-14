@@ -1,7 +1,9 @@
-import React from 'react'
-
+import React, { useState, useEffect } from "react";
+import httpClient from "../../api/httpClient";
+import { toast } from "react-toastify";
+import { RotatingLines } from "react-loader-spinner";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-
   MainBodyContainer,
   PersonalInfo,
   PersonalImg,
@@ -20,70 +22,147 @@ import {
   ViewPara,
 } from "./ViewEmployeeStyle";
 const EVBenefits = () => {
+  const Navigate = useNavigate();
+  const { employeeid } = useParams();
+  const [result, setResult] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const GetEmployeesBenefits = () => {
+    setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/benefit/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setResult(result);
+          console.log(result, "we are getting the persnal information ");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    GetEmployeesBenefits();
+  }, []);
   return (
-   
-      
+    <>
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <MainBodyContainer>
+          <FlexSpaceBetween style={{ alignItems: "center" }}>
+            <PersonalInfo>
+              <PersonalImg
+                src={
+                  result.personalInfo?.photo
+                    ? "http://hrapi.chantsit.com/" +
+                      result.personalInfo.photo?.path
+                    : "/images/User.jpg"
+                }
+              />
+              <FlexColumn style={{ gap: "5px" }}>
+                <PersonalName>
+                  {[
+                    result.personalInfo?.firstName,
+                    result.personalInfo?.lastName,
+                  ].join(" ")}
+                </PersonalName>
+                <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+                <PersonalDepartment>
+                  {result.jobDetails?.department?.name || "-"}
+                </PersonalDepartment>
+              </FlexColumn>
+            </PersonalInfo>
 
-            <MainBodyContainer>
-              <FlexSpaceBetween style={{ alignItems: "center" }}>
-                <PersonalInfo>
-                  <PersonalImg src="/images/User.jpg" />
-                  <FlexColumn style={{ gap: "5px" }}>
-                    <PersonalName>Hattie Watkins</PersonalName>
-                    <PersonalTitle>Team Manager</PersonalTitle>
-                    <PersonalDepartment>Design Department</PersonalDepartment>
-                  </FlexColumn>
-                </PersonalInfo>
+            <EditButton
+              onClick={() =>
+                Navigate(
+                  `/organization-admin/employee/benefits/${employeeid}/${true}?`
+                )
+              }
+              style={{ marginRight: "54px" }}
+            >
+              <ButtonIcon src="/images/icons/Pen 2.svg" />
+              Edit
+            </EditButton>
+          </FlexSpaceBetween>
 
-                <EditButton style={{ marginRight: "54px" }}>
-                  <ButtonIcon src="/images/icons/Pen 2.svg" />
-                  Edit
-                </EditButton>
+          <BasicInfoContainer>
+            <BasicInfoDiv>
+              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                <BasicHeading>Employee Benefits</BasicHeading>
               </FlexSpaceBetween>
-
-              <BasicInfoContainer>
-                <BasicInfoDiv>
-                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                    <BasicHeading>Employee Benefits</BasicHeading>
-                  </FlexSpaceBetween>
-                  <BasicDetailsDiv>
-                    <FlexSpaceBetween>
-                      <FlexColumn>
-                        <TitlePara>Benefit Name</TitlePara>
-                        <ViewPara>Hattie</ViewPara>
-                      </FlexColumn>
-                      <FlexColumn>
-                        <TitlePara>Description </TitlePara>
-                        <ViewPara>Watkins</ViewPara>
-                      </FlexColumn>
-                    </FlexSpaceBetween>
-                    <FlexSpaceBetween>
-                      <FlexColumn>
-                        <TitlePara>Start Date</TitlePara>
-                        <ViewPara>15-08-2022</ViewPara>
-                      </FlexColumn>
-                      <FlexColumn>
-                        <TitlePara>End Date </TitlePara>
-                        <ViewPara>Present</ViewPara>
-                      </FlexColumn>
-                    </FlexSpaceBetween>
-                    <FlexSpaceBetween>
-                      <FlexColumn>
-                        <TitlePara>Cost</TitlePara>
-                        <ViewPara>$1,200</ViewPara>
-                      </FlexColumn>
-                      <FlexColumn>
-                        <TitlePara>Employee Contribution rate (%)*</TitlePara>
-                        <ViewPara>$16</ViewPara>
-                      </FlexColumn>
-                    </FlexSpaceBetween>
-                  </BasicDetailsDiv>
-                </BasicInfoDiv>
-              </BasicInfoContainer>
-            </MainBodyContainer>
-
-     
+              <BasicDetailsDiv>
+                <FlexSpaceBetween>
+                  <FlexColumn>
+                    <TitlePara>Benefit Name</TitlePara>
+                    <ViewPara>{result.benefit?.benefit || "-"}</ViewPara>
+                  </FlexColumn>
+                  <FlexColumn>
+                    <TitlePara>Description </TitlePara>
+                    <ViewPara>Watkins</ViewPara>
+                  </FlexColumn>
+                </FlexSpaceBetween>
+                <FlexSpaceBetween>
+                  <FlexColumn>
+                    <TitlePara>Start Date</TitlePara>
+                    <ViewPara>
+                      {" "}
+                      {result.benefit?.startDate.slice(0, 10) || " - "}{" "}
+                    </ViewPara>
+                  </FlexColumn>
+                  <FlexColumn>
+                    <TitlePara>End Date </TitlePara>
+                    <ViewPara>
+                      {result.benefit?.endDate.slice(0, 10) || " - "}{" "}
+                    </ViewPara>
+                  </FlexColumn>
+                </FlexSpaceBetween>
+                <FlexSpaceBetween>
+                  <FlexColumn>
+                    <TitlePara>Cost</TitlePara>
+                    <ViewPara>$ {result.benefit?.cost || " - "} </ViewPara>
+                  </FlexColumn>
+                  <FlexColumn>
+                    <TitlePara>Employee Contribution rate (%)*</TitlePara>
+                    <ViewPara>
+                      $ {result.benefit?.contributionRate || " - "}{" "}
+                    </ViewPara>
+                  </FlexColumn>
+                </FlexSpaceBetween>
+              </BasicDetailsDiv>
+            </BasicInfoDiv>
+          </BasicInfoContainer>
+        </MainBodyContainer>
+      )}
+    </>
   );
-}
+};
 
-export default EVBenefits
+export default EVBenefits;
