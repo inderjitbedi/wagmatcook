@@ -48,7 +48,7 @@ const CertificatesInfo = () => {
     provider: "",
     completionDate: "",
     expiryDate: "",
-    file: null,
+    file: "",
   };
   const {
     register,
@@ -71,7 +71,7 @@ const CertificatesInfo = () => {
 
   const HandleSubmitcertificates = (data) => {
     // e.preventDefault();
-    let dataCopy = { ...data };
+    let dataCopy = data;
     let url = `/employee/certificates/${employeeid}`;
 
     setIsLoading(true);
@@ -145,7 +145,19 @@ const CertificatesInfo = () => {
           if (data?.result) {
             console.log(data?.result);
             setFile(data?.result?.file);
-            insert(index, (file = data?.result?.file?._id));
+            // insert(index, (file = data?.result?.file?._id));
+            // const certificatevalue = getValues("certificates")
+            // const newval = certificatevalue[index].file;
+            // console.log(
+            //   "this is certificates value file :",
+            //   certificatevalue[index].file,
+            //   "file id :",
+            //   data?.result?.file?._id
+            // );
+         
+            setValue(getValues("certificates")[index].file, data?.result?.file?._id);
+            
+            
             // setFormData({ ...formData, file: data?.result.file._id });
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
@@ -187,9 +199,9 @@ const CertificatesInfo = () => {
           reset(result.certificates);
 
           // adding if no position added
-          if (!result.certificates?.length) {
-            append(initialPosition);
-          }
+          // if (!result.certificates?.length) {
+          //   append(initialPosition);
+          // }
         } else {
           //toast.warn("something went wrong ");
         }
