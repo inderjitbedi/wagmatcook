@@ -440,6 +440,35 @@ const employeeController = {
         }
     },
 
+    async updateReview(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            let file = await File.findOne({ _id: req.body.file });
+            if (file) {
+                req.body.file = await fileController.moveToUploads(req, file)
+            }
+
+   
+            
+            const review = await EmployeeReviews.findOneAndUpdate({_id:req.params.reviewid},{ ...req.body, employee: req.params.id, completedBy: req.user._id });
+            await review.save();
+
+            res.status(200).json({
+                review,
+                message: 'Employee review added successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
     async getDisciplinaries(req, res) {
         try {
             const user = await User.findOne({ _id: req.params.id })

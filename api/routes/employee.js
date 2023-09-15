@@ -27,6 +27,7 @@ router.get('/types', verifyOrgAdmin, employeeController.getTypes);
 
 router.get('/reviews/:id', verifyOrgAdmin, employeeController.getReviews);
 router.post('/review/:id', verifyOrgAdmin, employeeController.addReview);
+router.post('/review/:id/:reviewid', verifyOrgAdmin, employeeController.updateReview);
 
 
 router.get('/disciplinaries/:id', verifyOrgAdmin, employeeController.getDisciplinaries);
