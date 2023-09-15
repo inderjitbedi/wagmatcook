@@ -6,8 +6,8 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
-import { useNavigate, useParams } from "react-router-dom";
-
+import { useNavigate, useParams ,Link} from "react-router-dom";
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -44,6 +44,9 @@ import {
   InputPara,
   Select,
   Option,
+  LightPara,
+  IconsEmployee,
+  File,
 } from "./ViewEmployeeStyle";
 const style = {
   position: "absolute",
@@ -74,6 +77,8 @@ const EVDiscipline = () => {
   const [formData, setFormData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [disciplinaryData, setDisciplinaryData] = useState([]);
+  const [file, setFile] = useState(null);
+
   const {
     register,
     control,
@@ -85,14 +90,12 @@ const EVDiscipline = () => {
     setValue,
   } = useForm({
     mode: "all",
-    defaultValues: {
-      // file: "6503e8b8e91bbf6de89122c1",
-      disciplinary: "",
-      issueDate: "",
-      expiryDate: "",
-      details: "",
-      bcr: "",
-    },
+    // defaultValues: {
+    //   file: null,
+    //   bcr: "",
+    //   disciplinary: "",
+    //   details:""
+    // }
   });
 
   const onSubmit = (data) => {
@@ -105,7 +108,10 @@ const EVDiscipline = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-      AddNewDisciplinary();
+         if (file) {
+           data.file = file._id;
+         }
+      AddNewDisciplinary(data);
     }
     console.log("form submmited", data);
   };
@@ -159,6 +165,7 @@ const EVDiscipline = () => {
   const AddNewDisciplinary = (data) => {
     setIsLoading(true);
     let dataCopy = data;
+    console.log("api data :", data);
 
     let url = `/employee/disciplinary/${employeeid}`;
     httpClient({
@@ -170,6 +177,7 @@ const EVDiscipline = () => {
         if (result) {
           handleClose();
           GetEmployeesDisciplinary();
+           toast.success("Employee disciplinary added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -182,11 +190,53 @@ const EVDiscipline = () => {
         setIsLoading(false);
       });
   };
+  const handleFileChange = (e, index) => {
+    console.log(index, "file index");
+    const file = e.target.files[0];
+    handleUpload(file, index);
+  };
+  const handleUpload = (file, index) => {
+    if (file) {
+      const binary = new FormData();
+      binary.append("file", file);
+
+      httpClient({
+        method: "post",
+        url: "/organization/file/upload/image",
+        data: binary, // Use 'data' to send the FormData
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+        },
+      })
+        .then((data) => {
+          console.log(data);
+
+          if (data?.result) {
+            console.log(data?.result);
+            setFile(data?.result?.file);
+            //  insert(index, { file: data?.result?.file?._id });
+            // setFormData({ ...formData, file: data?.result.file._id });
+          } else {
+            // setErrors({ ...errors, fileError: data?.error?.error });
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
+  const removeFile = (e) => {
+    setFile(null);
+    setValue("file", null);
+  };
   useEffect(() => {
     setIsLoading(true);
     GetDisciplinary();
     GetEmployeesDisciplinary();
   }, []);
+
+  
+  
 
   return (
     <>
@@ -377,8 +427,7 @@ const EVDiscipline = () => {
                             })}
                           />
                           <InputPara>
-                            {" "}
-                            {<Errors>{errors.details?.message}</Errors>}{" "}
+                            {<Errors>{errors.details?.message}</Errors>}
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
                               Max {detailsLength} characters
@@ -386,6 +435,48 @@ const EVDiscipline = () => {
                           </InputPara>
                         </FlexColumnForm>
                       </FlexContaierForm>
+                      <input
+                        style={{ width: "50%" }}
+                        type="file"
+                        accept="image/*,capture=camera"
+                        {...register(`file`, {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                          onChange: (e) => {
+                            handleFileChange(e);
+                          },
+                        })}
+                        id="upload"
+                        className="custom"
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "16px",
+                          alignItems: "center",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <EditButton
+                          htmlFor="upload"
+                          style={{ width: "max-content" }}
+                        >
+                          {" "}
+                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                          {!file
+                            ? "Upload Documents "
+                            : file?.name.length <= 32
+                            ? file?.name
+                            : file.name.substring(0, 30) + "..."}
+                        </EditButton>
+                        {file && (
+                          <LightPara onClick={removeFile}>Remove</LightPara>
+                        )}
+                      </div>
+                      {errors.file && <Errors> {errors.file?.message} </Errors>}
+
                       <ButtonBlue type="submit">Submit</ButtonBlue>
                     </ModalFormContainer>
                   </form>
@@ -394,84 +485,65 @@ const EVDiscipline = () => {
               {/*modal ends here  */}
 
               <BasicDetailsDiv style={{ width: "80%" }}>
-                <TimelineDiv style={{ padding: "16px", marginBottom: "8px" }}>
-                  <FlexColumn style={{ width: "100%" }}>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                      <TitlePara>Disciplinary Type</TitlePara>
-                      <TitlePara>BCR OPtional</TitlePara>
-                      <TitlePara>issues On: 15-04-2023</TitlePara>
-                    </FlexSpaceBetween>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                      <ViewPara
-                        style={{
-                          fontWeight: 700,
-                          width: "35%",
-                        }}
-                      >
-                        Verbal Warning
-                      </ViewPara>{" "}
-                      <ViewPara
-                        style={{
-                          fontWeight: 700,
-                          width: "61%",
-                        }}
-                      >
-                        Somethings
-                      </ViewPara>
-                    </FlexSpaceBetween>
+                {result?.disciplinaries?.map((data) => (
+                  <TimelineDiv style={{ padding: "16px", marginBottom: "8px" }}>
+                    <FlexColumn style={{ width: "100%" }}>
+                      <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                        <TitlePara>Disciplinary Type</TitlePara>
+                        <TitlePara>BCR OPtional</TitlePara>
+                        <TitlePara>
+                          issues On:{" "}
+                          {moment(data.issueDate).format("DD/MM/YYYY")}
+                        </TitlePara>
+                      </FlexSpaceBetween>
+                      <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                        <ViewPara
+                          style={{
+                            fontWeight: 700,
+                            width: "37%",
+                          }}
+                        >
+                          {data.disciplinary?.name}
+                        </ViewPara>{" "}
+                        <ViewPara
+                          style={{
+                            fontWeight: 700,
+                            width: "60%",
+                          }}
+                        >
+                          {data.bcr || "-"}
+                        </ViewPara>
+                      </FlexSpaceBetween>
 
-                    <TimelinePara>
-                      From a set of data, Hattie is able to establish a
-                      principle, or work out a rule, or suggest a reason for
-                      failure or success. Her analysis is always accurate and
-                      sometimes original. No absences without valid reason in 6
-                      months. Late on fewer than 3 occasions in 6 months. Always
-                      assured and confident in demeanour and presentation of
-                      ideas without being aggressively over-confident.
-                    </TimelinePara>
-
-                    <ReviewsDiv>Expiry Date: 15-07-2023</ReviewsDiv>
-                  </FlexColumn>
-                </TimelineDiv>
-                <TimelineDiv style={{ padding: "16px" }}>
-                  <FlexColumn style={{ width: "100%" }}>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                      <TitlePara>Completed By</TitlePara>
-                      <TitlePara>Completed By</TitlePara>
-                      <TitlePara>issues On: 15-04-2023</TitlePara>
-                    </FlexSpaceBetween>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                      <ViewPara
-                        style={{
-                          fontWeight: 700,
-                          width: "35%",
-                        }}
-                      >
-                        Verbal Warning
-                      </ViewPara>{" "}
-                      <ViewPara
-                        style={{
-                          fontWeight: 700,
-                          width: "61%",
-                        }}
-                      >
-                        Somethings
-                      </ViewPara>
-                    </FlexSpaceBetween>
-
-                    <TimelinePara>
-                      From a set of data, Hattie is able to establish a
-                      principle, or work out a rule, or suggest a reason for
-                      failure or success. Her analysis is always accurate and
-                      sometimes original. No absences without valid reason in 6
-                      months. Late on fewer than 3 occasions in 6 months. Always
-                      assured and confident in demeanour and presentation of
-                      ideas without being aggressively over-confident.
-                    </TimelinePara>
-
-                    <ReviewsDiv>Next Review on: 15-07-2023</ReviewsDiv>
-                  </FlexColumn>
-                </TimelineDiv>
+                      <TimelinePara>{data.details}</TimelinePara>
+                      <FlexSpaceBetween>
+                        <Link
+                          to={
+                            "http://hrapi.chantsit.com/" +
+                            data.file?.destination +
+                            "/" +
+                            data.file?.name
+                          }
+                          target="blank"
+                          download
+                          style={{ textDecoration: "none" }}
+                        >
+                          <File>
+                            {" "}
+                            <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                            {data.file.name?.length <= 38
+                              ? data.file.name
+                              : data.file.name.substring(0, 38) + "..."}
+                          </File>
+                        </Link>
+                      </FlexSpaceBetween>
+                      <ReviewsDiv>
+                        Expiry Date:{" "}
+                        {moment(data.expiryDate).format("DD/MM/YYYY")}
+                      </ReviewsDiv>
+                    </FlexColumn>
+                  </TimelineDiv>
+                ))}
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

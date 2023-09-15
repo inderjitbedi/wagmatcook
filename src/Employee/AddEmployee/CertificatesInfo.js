@@ -155,7 +155,7 @@ const CertificatesInfo = () => {
               "file id :",
               data?.result?.file?._id
             );
-
+            setValue(`certificates[${index}].file`, data?.result?.file);
             // setFormData({ ...formData, file: data?.result.file._id });
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
@@ -412,7 +412,7 @@ const CertificatesInfo = () => {
                           },
                         })}
                         id="file"
-                        value={file?._id}
+                 
                         className="custom"
                       />
                       <div

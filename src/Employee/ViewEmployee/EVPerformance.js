@@ -177,6 +177,8 @@ const EVPerformance = () => {
           setFile(null);
           GetEmployeesProformance();
           reset();
+           toast.success("Employee proformance added successfully");
+         
         } else {
           toast.warn("something went wrong ");
         }

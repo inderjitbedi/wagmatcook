@@ -504,7 +504,7 @@ export const InputPara = styled.p`
   font-weight: 400;
   line-height: 0px; /* 171.429% */
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
 `;
 export const ModalThanks = styled.div`
   display: flex;
@@ -567,6 +567,7 @@ export const CertificateContainer = styled.div`
   padding: 16px;
   width: 100%;
   margin-bottom: 16px;
+  
 `;
 export const CertificateTitle = styled.div`
   color: #222b45;

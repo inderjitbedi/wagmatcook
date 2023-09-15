@@ -5,7 +5,8 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,Link } from "react-router-dom";
+
 import moment from "moment";
 import {
   MainBodyContainer,
@@ -39,6 +40,8 @@ import {
   CertificateContainer,
   CertificateTitle,
   LightPara,
+  File,
+  IconsEmployee,
 } from "./ViewEmployeeStyle";
 
 const style = {
@@ -145,6 +148,7 @@ const EVCertificates = () => {
           handleClose();
           GetEmployeesCertificates();
           reset();
+          toast.success("Employee certificate added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -242,7 +246,7 @@ const EVCertificates = () => {
                   ].join(" ")}
                 </PersonalName>
                 <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
-               
+
                 <PersonalDepartment>
                   {" "}
                   {result.jobDetails?.department?.name || "-"}
@@ -426,7 +430,7 @@ const EVCertificates = () => {
                     <CertificateTitle style={{ marginBottom: "16px" }}>
                       {data.title}
                     </CertificateTitle>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                    <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Provider</TitlePara>
                         <ViewPara>{data.provider}</ViewPara>
@@ -444,6 +448,25 @@ const EVCertificates = () => {
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
+                      <Link
+                        to={
+                          "http://hrapi.chantsit.com/" +
+                          data.file?.destination +
+                          "/" +
+                          data.file?.name
+                        }
+                        target="blank"
+                        download
+                        style={{textDecoration:"none"}}
+                      >
+                    <File>
+                        {" "}
+                        <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                        {data.file.name?.length <= 38
+                          ? data.file.name
+                          : data.file.name.substring(0, 38) + "..."}
+                    </File>
+                      </Link>
                   </CertificateContainer>
                 ))}
               </BasicDetailsDiv>
