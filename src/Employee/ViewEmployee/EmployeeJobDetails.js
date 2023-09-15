@@ -13,6 +13,7 @@ import {
 
 import "react-vertical-timeline-component/style.min.css";
 import "./Employee.css";
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -76,12 +77,12 @@ const EmployeeJobDetails = () => {
     handleSubmit,
     formState: { errors },
     getValues,
-     clearErrors,
+    clearErrors,
     reset,
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
- console.log(data);
+    console.log(data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -91,7 +92,7 @@ const EmployeeJobDetails = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-      console.log(data)
+      console.log(data);
       AddNewPosition(data);
     }
     console.log("form submmited", data);
@@ -121,63 +122,62 @@ const EmployeeJobDetails = () => {
         setIsLoading(false);
       });
   };
-    const GetDepartments = () => {
-       setIsLoading(true);
+  const GetDepartments = () => {
+    setIsLoading(true);
 
-      let url = `/department/list`;
-      httpClient({
-        method: "get",
-        url,
+    let url = `/department/list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setDepartmentData(result.departments);
+          GetEmployeesJobDetails();
+          // console.log(result.departments, "result.departments ");
+        } else {
+          //toast.warn("something went wrong ");
+        }
       })
-        .then(({ result }) => {
-          if (result) {
-            setDepartmentData(result.departments);
-            GetEmployeesJobDetails();
-            // console.log(result.departments, "result.departments ");
-          } else {
-            //toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error getting department. Please try again.");
-           setIsLoading(false);
-        })
-        .finally(() => {
-           setIsLoading(false);
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error getting department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const AddNewPosition = (data) => {
     setIsLoading(true);
     let dataCopy = data;
 
     let url = `/employee/job-details/position/${employeeid}`;
-      httpClient({
-        method: "post",
-        url,
-        data: dataCopy,
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result }) => {
+        if (result) {
+          handleClose();
+          GetEmployeesJobDetails();
+          reset();
+        } else {
+          toast.warn("something went wrong ");
+        }
       })
-        .then(({ result }) => {
-          if (result) {
-            handleClose();
-            GetEmployeesJobDetails();
-            reset();
-          } else {
-            toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          toast.error("Error Adding New Position . Please try again.");
-           setIsLoading(false);
-        })
-        .finally(() => {
-           setIsLoading(false);
-        });
+      .catch((error) => {
+        toast.error("Error Adding New Position . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   useEffect(() => {
     GetEmployeesJobDetails();
     GetDepartments();
-
   }, []);
   return (
     <>
@@ -260,13 +260,14 @@ const EmployeeJobDetails = () => {
                   <FlexColumn>
                     <TitlePara>Position Start Date</TitlePara>
                     <ViewPara>
-                      {result.details?.startDate?.slice(0, 10) || " - "}
+                      {moment(result.details?.startDate).format("DD/MM/YYYY") ||
+                        "-"}
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Position End Date</TitlePara>
                     <ViewPara>
-                      {result.details?.endDate?.slice(0, 10) || "-"}
+                      {moment(result.details?.endDate).format("DD/MM/YYYY")}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
@@ -302,7 +303,9 @@ const EmployeeJobDetails = () => {
                         ? "Week"
                         : result.details?.ratePer === 4
                         ? "Biweekly "
-                        : result.details?.ratePer === 5 ? "Annual " : " - "}
+                        : result.details?.ratePer === 5
+                        ? "Annual "
+                        : " - "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
@@ -521,10 +524,12 @@ const EmployeeJobDetails = () => {
                           </TitlePara>
                         </FlexColumn>
                         <TitlePara>
-                          From: {data.startDate?.slice(0, 10) || " - "}
+                          From:{" "}
+                          {moment(data.startDate).format("DD/MM/YYYY") || " - "}
                           <span style={{ marginLeft: "14px" }}>
                             {" "}
-                            To:{data.endDate?.slice(0, 10) || " - "}
+                            To:
+                            {moment(data.endDate).format("DD/MM/YYYY") || " - "}
                           </span>{" "}
                         </TitlePara>
                       </TimelineDiv>

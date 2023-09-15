@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-
+import moment from "moment";
 import {
   DashHeader,
   DashHeaderSearch,
@@ -341,7 +341,9 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                    {data.jobDetails[0]?.startDate.slice(0, 10) || " - "}
+                    {moment(data.jobDetails[0]?.startDate).format(
+                      "DD/MM/YYYY"
+                    ) || " - "}
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>

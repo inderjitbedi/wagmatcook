@@ -3,6 +3,7 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import { useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -134,13 +135,15 @@ const EVBenefits = () => {
                     <TitlePara>Start Date</TitlePara>
                     <ViewPara>
                       {" "}
-                      {result.benefit?.startDate.slice(0, 10) || " - "}{" "}
+                      {moment(result.benefit?.startDate).format("DD/MM/YYYY") ||
+                        " - "}{" "}
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>End Date </TitlePara>
                     <ViewPara>
-                      {result.benefit?.endDate.slice(0, 10) || " - "}{" "}
+                      {moment(result.benefit?.endDate).format("DD/MM/YYYY") ||
+                        " - "}{" "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>

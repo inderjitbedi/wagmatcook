@@ -44,14 +44,24 @@ const Benefits = () => {
     getValues,
     setValue,
     reset,
-  } = useForm({ mode: "all", defaultValues: result });
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      benefit: "",
+      contributionRate: "",
+      endDate: "",
+      cost: "",
+      startDate: "",
+      description: "",
+    },
+  });
 
   const HandleSubmitBenefits = (data) => {
     // e.preventDefault();
     let dataCopy = data;
     let url = `/employee/benefit/${employeeid}`;
 
-    // setIsLoading(true);
+    setIsLoading(true);
 
     httpClient({
       method: "put",
@@ -65,7 +75,9 @@ const Benefits = () => {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
           } else {
-            Navigate(`/organization-admin/employee/certificates-info/${employeeid}`);
+            Navigate(
+              `/organization-admin/employee/certificates-info/${employeeid}`
+            );
           }
 
           setFormData(result);
@@ -76,10 +88,10 @@ const Benefits = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Submiting Job Details. Please try again.");
-        // setIsLoading(false);
+        setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
   const onSubmit = (data) => {
@@ -106,6 +118,7 @@ const Benefits = () => {
       .then(({ result }) => {
         if (result) {
           setBenefits(result.benefits);
+          GetEmployeesBenefits(result.benefits);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -113,14 +126,14 @@ const Benefits = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error in fetching benefits. Please try again.");
-        setIsLoading(false);
+        // setIsLoading(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        // setIsLoading(false);
       });
   };
 
-  const GetEmployeesBenefits = () => {
+  const GetEmployeesBenefits = (data) => {
     setIsLoading(true);
     const trimid = employeeid.trim();
     let url = `/employee/benefit/${trimid}`;
@@ -140,7 +153,7 @@ const Benefits = () => {
               .split("T")[0];
           }
 
-          const findBenefit = benefits.find(
+          const findBenefit = data.find(
             (benefit) => benefit._id === result.benefit.benefit
           );
           const description = findBenefit?.description;
@@ -162,10 +175,10 @@ const Benefits = () => {
       });
   };
 
-    useEffect(() => {
-      GetBenefits();
-      GetEmployeesBenefits();
-    }, [reset, edit]);
+  useEffect(() => {
+    GetBenefits();
+    GetEmployeesBenefits();
+  }, [reset, edit]);
   return (
     <>
       <HeaderEmployee>
@@ -205,14 +218,22 @@ const Benefits = () => {
             <BodyHeaderTitle>
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/personal-info")}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/personal-info/${employeeid}`
+                  )
+                }
               >
                 {" "}
                 Personal Information &#62;{" "}
               </span>{" "}
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/job-details")}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/job-details/${employeeid}`
+                  )
+                }
               >
                 Job Details &#62;
               </span>{" "}

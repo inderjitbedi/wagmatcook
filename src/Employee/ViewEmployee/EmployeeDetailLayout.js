@@ -24,6 +24,7 @@ import {
   BodyHeading,
   BodyContainer,
   SideBarContainer,
+  MainBodyContainer,
 } from "./ViewEmployeeStyle";
 const EmployeeDetailLayout = () => {
   const Navigate = useNavigate();
@@ -57,8 +58,8 @@ const EmployeeDetailLayout = () => {
             <SearchInput
               type="text"
               placeholder="Search..."
-            // value={searchValue}
-            // onChange={(e) => HandleSearchCahnge(e)}
+              // value={searchValue}
+              // onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
@@ -96,7 +97,9 @@ const EmployeeDetailLayout = () => {
           <SideBarContainer>
             <EmployeeSideBar employeeId={employeeid} />
           </SideBarContainer>
-          <Outlet />
+          <div style={{ width: "80%" }}>
+            <Outlet />
+          </div>
         </BodyContainer>
       </EmployeeBody>
     </>
