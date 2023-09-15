@@ -5,8 +5,9 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,Link } from "react-router-dom";
 
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -38,6 +39,9 @@ import {
   InputSpan,
   CertificateContainer,
   CertificateTitle,
+  LightPara,
+  File,
+  IconsEmployee,
 } from "./ViewEmployeeStyle";
 
 const style = {
@@ -77,6 +81,7 @@ const EVCertificates = () => {
     getValues,
     reset,
     clearErrors,
+    setValue
   } = useForm({
     mode: "all",
     // defaultValues: {
@@ -143,6 +148,7 @@ const EVCertificates = () => {
           handleClose();
           GetEmployeesCertificates();
           reset();
+          toast.success("Employee certificate added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -190,6 +196,10 @@ const EVCertificates = () => {
         });
     }
   };
+  const removeFile = (e) => {
+    setFile(null);
+    setValue("file", null);
+  };
   console.log(result);
   useEffect(() => {
    GetEmployeesCertificates();
@@ -236,8 +246,11 @@ const EVCertificates = () => {
                   ].join(" ")}
                 </PersonalName>
                 <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
-                {result.jobDetails?.department?.name || "-"}
-                <PersonalDepartment></PersonalDepartment>
+
+                <PersonalDepartment>
+                  {" "}
+                  {result.jobDetails?.department?.name || "-"}
+                </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
 
@@ -379,14 +392,30 @@ const EVCertificates = () => {
                         id="upload"
                         className="custom"
                       />
-                      <EditButton
-                        htmlFor="upload"
-                        style={{ marginBottom: "20px", width: "144px" }}
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "16px",
+                          alignItems: "center",
+                          marginBottom: "20px",
+                        }}
                       >
-                        {" "}
-                        <ButtonIcon src="/images/icons/BlueUpload.svg" /> Upload
-                        Documents
-                      </EditButton>
+                        <EditButton
+                          htmlFor="upload"
+                          style={{ width: "max-content" }}
+                        >
+                          {" "}
+                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                          {!file
+                            ? "Upload Documents "
+                            : file?.name.length <= 32
+                            ? file?.name
+                            : file.name.substring(0, 30) + "..."}
+                        </EditButton>
+                        {file && (
+                          <LightPara onClick={removeFile}>Remove</LightPara>
+                        )}
+                      </div>
                       {errors.file && <Errors> {errors.file?.message} </Errors>}
                       <ButtonBlue type="submit">Submit</ButtonBlue>
                     </ModalFormContainer>
@@ -401,20 +430,43 @@ const EVCertificates = () => {
                     <CertificateTitle style={{ marginBottom: "16px" }}>
                       {data.title}
                     </CertificateTitle>
-                    <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                    <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Provider</TitlePara>
                         <ViewPara>{data.provider}</ViewPara>
                       </FlexColumn>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Completion Date</TitlePara>
-                        <ViewPara>{data.completionDate}</ViewPara>
+                        <ViewPara>
+                          {moment(data.completionDate).format("DD/MM/YYYY")}
+                        </ViewPara>
                       </FlexColumn>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Expriry </TitlePara>
-                        <ViewPara>{data.expiryDate}</ViewPara>
+                        <ViewPara>
+                          {moment(data.expiryDate).format("DD/MM/YYYY")}{" "}
+                        </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
+                      <Link
+                        to={
+                          "http://hrapi.chantsit.com/" +
+                          data.file?.destination +
+                          "/" +
+                          data.file?.name
+                        }
+                        target="blank"
+                        download
+                        style={{textDecoration:"none"}}
+                      >
+                    <File>
+                        {" "}
+                        <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                        {data.file.name?.length <= 38
+                          ? data.file.name
+                          : data.file.name.substring(0, 38) + "..."}
+                    </File>
+                      </Link>
                   </CertificateContainer>
                 ))}
               </BasicDetailsDiv>

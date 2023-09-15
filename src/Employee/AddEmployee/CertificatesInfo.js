@@ -33,6 +33,7 @@ import {
   TrashDiv,
   UploadLabel,
   UploadIcon,
+  LightPara,
   RemoveContainer,
 } from "./AddEmployeeStyles";
 
@@ -146,18 +147,15 @@ const CertificatesInfo = () => {
             console.log(data?.result);
             setFile(data?.result?.file);
             // insert(index, (file = data?.result?.file?._id));
-            // const certificatevalue = getValues("certificates")
-            // const newval = certificatevalue[index].file;
-            // console.log(
-            //   "this is certificates value file :",
-            //   certificatevalue[index].file,
-            //   "file id :",
-            //   data?.result?.file?._id
-            // );
-         
-            setValue(getValues("certificates")[index].file, data?.result?.file?._id);
-            
-            
+            const certificatevalue = getValues("certificates");
+            const newval = certificatevalue[index].file;
+            console.log(
+              "this is certificates value file :",
+              certificatevalue[index].file,
+              "file id :",
+              data?.result?.file?._id
+            );
+            setValue(`certificates[${index}].file`, data?.result?.file);
             // setFormData({ ...formData, file: data?.result.file._id });
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
@@ -168,10 +166,13 @@ const CertificatesInfo = () => {
         });
     }
   };
+  const removeFile = (e) => {
+    setFile(null);
+  };
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/job-details/${trimid}`;
+    let url = `/employee/certificates/${trimid}`;
     httpClient({
       method: "get",
       url,
@@ -182,6 +183,7 @@ const CertificatesInfo = () => {
           setResult(result);
 
           if (result.certificates) {
+            console.log("certificates is working");
             result.certificates.forEach((data) => {
               if (data.completionDate || data.expiryDate) {
                 data.completionDate = new Date(data.completionDate)
@@ -195,8 +197,11 @@ const CertificatesInfo = () => {
               }
             });
           }
-
-          reset(result.certificates);
+          const data = result.certificates.reduce(
+            (acc, curr, index) => ({ ...acc, [index]: curr }),
+            {}
+          );
+          reset(data);
 
           // adding if no position added
           // if (!result.certificates?.length) {
@@ -257,20 +262,32 @@ const CertificatesInfo = () => {
             <BodyHeaderTitle>
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/personal-info")}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/personal-info/${employeeid}`
+                  )
+                }
               >
                 {" "}
                 Personal Information &#62;{" "}
               </span>{" "}
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/job-details")}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/job-details/${employeeid}`
+                  )
+                }
               >
                 Job Details &#62;
               </span>
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/benefits")}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/benefits/${employeeid}`
+                  )
+                }
               >
                 {" "}
                 Benefits &#62;{" "}
@@ -395,15 +412,32 @@ const CertificatesInfo = () => {
                           },
                         })}
                         id="file"
+                 
                         className="custom"
                       />
-                      <UploadLabel
-                        style={{ marginBottom: "10px" }}
-                        htmlFor="file"
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "16px",
+                          alignItems: "center",
+                          marginBottom: "20px",
+                        }}
                       >
-                        Upload Document{" "}
-                        <UploadIcon src="/images/icons/BlueUpload.svg" />{" "}
-                      </UploadLabel>
+                        <UploadLabel
+                          style={{ marginBottom: "10px" }}
+                          htmlFor="file"
+                        >
+                          {!file
+                            ? "Upload Documents "
+                            : file?.name.length <= 32
+                            ? file?.name
+                            : file.name.substring(0, 30) + "..."}
+                          <UploadIcon src="/images/icons/BlueUpload.svg" />{" "}
+                        </UploadLabel>
+                        {file && (
+                          <LightPara onClick={removeFile}>Remove</LightPara>
+                        )}
+                      </div>
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}

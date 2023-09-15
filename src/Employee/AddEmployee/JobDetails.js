@@ -273,7 +273,7 @@ const JobDetails = () => {
             <BodyHeaderTitle>
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate("/add-new-employee/personal-info")}
+                onClick={() => Navigate(`/organization-admin/employee/personal-info/${employeeid}`)}
               >
                 {" "}
                 Personal Information{" "}

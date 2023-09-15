@@ -27,6 +27,7 @@ export const DashHeaderTitle = styled.p`
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
+  text-transform: capitalize;
 `;
 export const DashHeaderSearch = styled.div`
   display: flex;
@@ -77,6 +78,7 @@ export const DepartmentFilterButton = styled.div`
   line-height: 16px;
   color: #8f9bb3;
   cursor: pointer;
+  text-transform: capitalize;
 `;
 export const AddNewButton = styled.button`
   border-radius: 8px;
@@ -88,6 +90,7 @@ export const AddNewButton = styled.button`
   padding: 1em 2em;
   border: none;
   cursor: pointer;
+  text-transform: capitalize;
 `;
 export const HeaderDiv = styled.div`
   display: flex;
@@ -104,6 +107,7 @@ export const HeaderTitle = styled.h1`
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
+  text-transform: capitalize;
 `;
 export const IconContainer = styled.div`
   display: flex;
@@ -132,6 +136,7 @@ export const TabelDarkPara = styled.p`
   font-style: normal;
   font-weight: 600;
   line-height: 10px;
+  text-transform: capitalize;
 `;
 export const TabelLightPara = styled.p`
   color: #8f9bb3;
@@ -140,6 +145,7 @@ export const TabelLightPara = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const TabelParaContainer = styled.div``;
 export const BackButton = styled.button`
@@ -155,6 +161,7 @@ export const BackButton = styled.button`
   gap: 4px;
   align-items: center;
   cursor: pointer;
+  text-transform: capitalize;
 `;
 export const IconsEmployee = styled.img`
   display: inline-block;
@@ -181,6 +188,7 @@ export const BodyHeading = styled.h1`
   font-style: normal;
   font-weight: 700;
   line-height: 16px;
+  text-transform: capitalize;
 `;
 export const BodyContainer = styled.div`
   width: 100%;
@@ -220,6 +228,7 @@ export const PersonalName = styled.h1`
   font-style: normal;
   font-weight: 700;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const PersonalTitle = styled.h2`
   color: #8f9bb3;
@@ -228,6 +237,7 @@ export const PersonalTitle = styled.h2`
   font-style: normal;
   font-weight: 500;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 
 export const PersonalDepartment = styled.h3`
@@ -237,6 +247,7 @@ export const PersonalDepartment = styled.h3`
   font-style: normal;
   font-weight: 400;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const BasicInfoContainer = styled.div`
   width: 100%;
@@ -256,7 +267,7 @@ width: 100%;
 export const EditButton = styled.label`
   border-radius: 88px;
   border: 1px solid #8f9bb3;
-padding: 0.5em .75em;
+  padding: 0.5em 0.75em;
   color: #279af1;
   font-family: Inter;
   font-size: 13px;
@@ -266,9 +277,9 @@ padding: 0.5em .75em;
   display: flex;
   align-items: center;
   background-color: #fff;
-  gap:4px;
+  gap: 4px;
   cursor: pointer;
-
+  text-transform: capitalize;
 `;
 export const ButtonIcon = styled.img`
   width: 17px;
@@ -282,6 +293,7 @@ export const BasicHeading = styled.h1`
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
+  text-transform: capitalize;
 `;
 export const BasicDetailsDiv = styled.div`
 width: 100%;
@@ -295,6 +307,7 @@ export const TitlePara = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const ViewPara = styled.p`
   color: #222b45;
@@ -303,6 +316,7 @@ export const ViewPara = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const TimelineDiv = styled.div`
   border-radius: 8px;
@@ -312,6 +326,7 @@ export const TimelineDiv = styled.div`
   align-items: center;
   width: 100%;
   padding: 8px 16px;
+  text-transform: capitalize;
 `;
 export const TimelinePara = styled.p`
   color: #222b45;
@@ -320,6 +335,7 @@ export const TimelinePara = styled.p`
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
+  text-transform: capitalize;
 `;
 export const File = styled.div`
   border-radius: 88px;
@@ -333,8 +349,9 @@ export const File = styled.div`
   padding: 8px 16px 8px 9px;
   display: flex;
   align-items: center;
-  gap:2px;
-width: max-content;
+  gap: 2px;
+  width: max-content;
+  text-transform: capitalize;
 `;
 export const ReviewsDiv = styled.div`
   color: #0d7d0b;
@@ -349,6 +366,7 @@ export const ReviewsDiv = styled.div`
   padding: 0.5em 1em;
   width: max-content;
   margin-top: 10px;
+  text-transform: capitalize;
 `;
 
 export const LeaveDiv = styled.div`
@@ -359,10 +377,11 @@ export const LeaveDiv = styled.div`
   font-weight: 600;
   line-height: 16px;
   padding: 14px 22px;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #EFF4FA;
+  border: 1px solid #eff4fa;
+  text-transform: capitalize;
 `;
 export const FlexContaierForm = styled.div`
   display: flex;
@@ -386,6 +405,7 @@ export const InputLabel = styled.label`
   line-height: normal;
   margin-bottom: 10px;
   display: block;
+  /* text-transform: capitalize; */
 `;
 export const InputSpan = styled.span`
   color: red;
@@ -405,6 +425,7 @@ export const Input = styled.input`
   background: #fff;
   box-sizing: border-box;
   outline: #dcdcdc;
+  /* text-transform: capitalize; */
 `;
 export const Errors = styled.p`
   display: block;
@@ -413,6 +434,7 @@ export const Errors = styled.p`
   font-weight: 300;
   line-height: 0px;
   margin-top: 2px;
+ 
 `;
 export const ButtonBlue = styled.button`
   border-radius: 6px;
@@ -430,6 +452,7 @@ export const ButtonBlue = styled.button`
   font-weight: 600;
   line-height: normal;
   border: none;
+  text-transform: capitalize;
 `;
 export const ModalContainer = styled.div`
   padding: 0px 29px 15px 29px;
@@ -446,6 +469,7 @@ export const ModalHeading = styled.h1`
   font-style: normal;
   font-weight: 600;
   line-height: 0px;
+  text-transform: capitalize;
 `;
 export const ModalIcon = styled.img`
 width: 24px;
@@ -471,6 +495,7 @@ export const TextArea = styled.textarea`
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
+
 `;
 export const InputPara = styled.p`
   color: #737992;
@@ -511,6 +536,7 @@ export const ModalThanksHeading = styled.p`
   line-height: 22px;
   width: 70%;
   text-align: center;
+  text-transform: capitalize;
 `;
 export const Select = styled.select`
   font-size: 13px;
@@ -541,6 +567,7 @@ export const CertificateContainer = styled.div`
   padding: 16px;
   width: 100%;
   margin-bottom: 16px;
+  
 `;
 export const CertificateTitle = styled.div`
   color: #222b45;
@@ -548,6 +575,16 @@ export const CertificateTitle = styled.div`
   font-size: 14px;
   font-style: normal;
   font-weight: 700;
-  line-height: 16px; 
-
+  line-height: 16px;
+  text-transform: capitalize;
+`;
+export const LightPara = styled.p`
+  color: #8b8b8b;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  cursor: pointer;
 `;

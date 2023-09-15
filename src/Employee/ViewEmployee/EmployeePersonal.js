@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -206,7 +206,8 @@ const EmployeePersonal = () => {
                   <FlexColumn>
                     <TitlePara>Date of Birth</TitlePara>
                     <ViewPara>
-                      {result.personalInfo?.dob?.slice(0, 10) || " - "}
+                      {moment(result.personalInfo?.dob).format("DD/MM/YYYY") ||
+                        " - "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>

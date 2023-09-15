@@ -163,8 +163,9 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success("Entry Added Successfully");
+          toast.success("Benefit created successfully.");
           GetBenefits();
+
         } else {
           //toast.warn("something went wrong ");
         }
@@ -191,7 +192,7 @@ const OABenefits = () => {
           HandleCloseDelete();
           setId("");
           GetBenefits();
-          toast.success("Entry Deleted successfully");
+          toast.success("Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }

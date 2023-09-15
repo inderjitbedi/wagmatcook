@@ -334,7 +334,7 @@ const Departments = () => {
             setId("");
             setUpDateData("");
             setErrors("");
-            toast.success("Entry Updated Successfully");
+            toast.success("Departments Updated Successfully");
             console.log(result?.department, "updated entry");
           } else {
             //toast.warn("something went wrong ");
