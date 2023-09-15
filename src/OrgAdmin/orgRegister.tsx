@@ -107,7 +107,7 @@ export default function RegisterOrganization() {
                 data: formData,
             }).then(({ result }) => {
                 if (result) {
-                    toast.success("Account successfully created.")
+                    toast.success(result.message);//Account successfully created.")
                     navigate('/organization-admin/dashboard');
                 }
             }).catch((error: any) => {

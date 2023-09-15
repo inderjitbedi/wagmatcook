@@ -148,7 +148,7 @@ const EVCertificates = () => {
           handleClose();
           GetEmployeesCertificates();
           reset();
-          toast.success("Employee certificate added successfully");
+          toast.success(result.message);//Employee certificate added successfully");
         } else {
           toast.warn("something went wrong ");
         }

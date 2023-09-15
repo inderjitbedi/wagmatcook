@@ -50,6 +50,7 @@ import {
   Errors,
   LoadMore,
 } from "./DepartmentsStyles";
+import { InputLabel, InputSpan } from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
   position: "absolute",
@@ -68,7 +69,15 @@ const Departments = () => {
   const Navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
+  const HandleOpen = () => {
+    setFormData({
+      name: "",
+      description: "",
+    })
+    setErrors("");
+    setOpen(true)
+  }
+    ;
   const HandleClose = () => setOpen(false);
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
@@ -189,7 +198,7 @@ const Departments = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list?page=${page}&limit=1&searchKey=${searchValue}`;
+    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -327,14 +336,13 @@ const Departments = () => {
               const UpdatedData = departmentData;
               UpdatedData[indexToReplace] = result.department;
               setDepartmentData(UpdatedData);
-              console.log(UpdatedData, "is working");
             }
             HandleCloseEdit();
             // GetDepartments();
             setId("");
             setUpDateData("");
             setErrors("");
-            toast.success("Departments Updated Successfully");
+            toast.success(result.message);//Departments Updated Successfully");
             console.log(result?.department, "updated entry");
           } else {
             //toast.warn("something went wrong ");
@@ -364,7 +372,7 @@ const Departments = () => {
           setId("");
           HandleCloseDelete();
 
-          toast.success("Entry Deleted successfully");
+          toast.success(result.message);//Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -482,6 +490,9 @@ const Departments = () => {
               </ModalUpperDiv>
 
               <ModalUpperMid>
+                <InputLabel>
+                  Department Name <InputSpan>*</InputSpan>
+                </InputLabel>
                 <Input
                   placeholder="Department Name"
                   onChange={HandleChange}
@@ -490,6 +501,10 @@ const Departments = () => {
                   type="text"
                 />
                 <Errors>{errors.nameError}</Errors>
+
+                <InputLabel>
+                  Description <InputSpan>*</InputSpan>
+                </InputLabel>
                 <TextArea
                   placeholder="Description"
                   onChange={HandleChange}
@@ -510,7 +525,7 @@ const Departments = () => {
                 >
                   Add New
                 </AddNewButton>
-                <CancelButton onClick={HandleClose}>Cancel</CancelButton>
+                <CancelButton onClick={HandleClose} style={{cursor:"pointer"}}>Cancel</CancelButton>
               </ModalBottom>
             </Box>
           </Modal>
@@ -560,9 +575,15 @@ const Departments = () => {
         ) : (
           <>
             <DepartmentCardContainer>
+              {departmentData.length === 0 && <div style={{
+                width: '100%',
+                height: '500px',
+                textAlign: 'center',
+                margin: '100px auto',
+              }}>No departments found</div>}
               {departmentData?.map((data) => (
                 <DepartmentCardDiv>
-                  <DepartmentCardImg />
+                  {/* <DepartmentCardImg /> */}
                   <DepartmentCardPara>{data.name}</DepartmentCardPara>
                   <DepartmentCardParaLit>
                     {" "}

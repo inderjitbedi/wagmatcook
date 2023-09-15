@@ -163,7 +163,7 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success("Benefit created successfully.");
+          toast.success(result.message);//Benefit created successfully.");
           GetBenefits();
 
         } else {
@@ -192,7 +192,7 @@ const OABenefits = () => {
           HandleCloseDelete();
           setId("");
           GetBenefits();
-          toast.success("Benefit deleted successfully.");
+          toast.success(result.message);//Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -225,7 +225,7 @@ const OABenefits = () => {
           setUpdate(false);
           HandleClose();
           reset();
-          toast.success("Entry Updated Successfully");
+          toast.success(result.message);//Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -347,7 +347,7 @@ const OABenefits = () => {
           <Box sx={style}>
             <ModalUpperDiv>
               <ModalHeading>
-                {!update ? "Add Benefits" : "Update Benefits"}
+                {!update ? "Add Benefit" : "Update Benefit"}
               </ModalHeading>
               <ModalIcon
                 onClick={() => {
@@ -362,7 +362,7 @@ const OABenefits = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <ModalUpperMid>
                 <InputLabel>
-                  Benefits Category<InputSpan>*</InputSpan>
+                  Benefit Name<InputSpan>*</InputSpan>
                 </InputLabel>
                 <Input
                   type="text"
@@ -375,7 +375,7 @@ const OABenefits = () => {
                 />
                 {errors.name && <Errors>{errors.name?.message}</Errors>}
                 <InputLabel>
-                  Add Benefits <InputSpan>*</InputSpan>
+                  Description <InputSpan>*</InputSpan>
                 </InputLabel>
                 <TextArea
                   type="text"
@@ -403,7 +403,7 @@ const OABenefits = () => {
                   {<Errors>{errors.description?.message}</Errors>}{" "}
                   <span style={{ justifySelf: "flex-end" }}>
                     {" "}
-                    Max {detailsLength} characters
+                    Max {detailsLength > -1 ? detailsLength : 0} characters
                   </span>
                 </InputPara>
 
@@ -461,14 +461,14 @@ const OABenefits = () => {
                   style={{ minWidth: "300px" }}
                   align="left"
                 >
-                  Benefits Category
+                  Benefit Name
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
                   style={{ minWidth: "500px" }}
                   align="left"
                 >
-                  Benefits
+                  Description
                 </TableCell>
 
                 <TableCell
@@ -532,7 +532,7 @@ const OABenefits = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this Benefit?"
+        message="Are you sure you want to delete this benefit?"
         isLoading={isLoading}
       />
       <Menu

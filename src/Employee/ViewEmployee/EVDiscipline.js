@@ -177,7 +177,7 @@ const EVDiscipline = () => {
         if (result) {
           handleClose();
           GetEmployeesDisciplinary();
-           toast.success("Employee disciplinary added successfully");
+           toast.success(result.message);//Employee disciplinary added successfully");
         } else {
           toast.warn("something went wrong ");
         }

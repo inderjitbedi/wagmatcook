@@ -89,10 +89,18 @@ const Disciplinary = () => {
   const Navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
+  const HandleOpen = () => {
+
+    setFormData({
+      name: "",
+      description: "",
+      requiredBcr: "",
+    })
+    setOpen(true)
+  };
   const HandleClose = () => {
     setOpen(false);
-    setDescriptionLenght(500);
+    setdescriptionLength(500);
     setErrors("");
   };
   // update modal var
@@ -107,7 +115,7 @@ const Disciplinary = () => {
   const [page, setPage] = useState(1);
   const [Id, setId] = useState("");
   const [result, setResult] = useState([]);
-  const [descriptionLenght, setDescriptionLenght] = useState(500);
+  const [descriptionLength, setdescriptionLength] = useState(500);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
@@ -154,7 +162,7 @@ const Disciplinary = () => {
           setId("");
           HandleCloseDelete();
 
-          toast.success("Entry Deleted Successfully");
+          toast.success(result.message); //"Entry Deleted Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -256,7 +264,7 @@ const Disciplinary = () => {
             GetDisciplinary();
             setFormData("");
             setErrors("");
-            toast.success("Entry Added Successfully");
+            toast.success(result.message); //"Entry Added Successfully");
           } else {
             //toast.warn("something went wrong ");
           }
@@ -318,7 +326,7 @@ const Disciplinary = () => {
             HandleCloseEdit();
             setupDateData("");
             setErrors("");
-            toast.success("Entry Updated Successfully");
+            toast.success(result.message); //"Entry Updated Successfully");
           } else {
             //toast.warn("something went wrong ");
           }
@@ -345,14 +353,14 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      setDescriptionLenght( 500 - value.length);
+      setdescriptionLength(500 - value.length);
       // validation: Description should not be empty and should have a minimum length of 10 characters
       if (!value) {
         setErrors({
           ...errors,
           descriptionError: "Required",
         });
-      } else if (formData.description.length > 500) {
+      } else if (formData.description?.length > 500) {
         setErrors({
           ...errors,
           descriptionError: "Details cannot exceed 500 characters",
@@ -364,7 +372,6 @@ const Disciplinary = () => {
 
     setFormData({ ...formData, [name]: value });
   };
-  console.log(result, "type of result ", typeof result);
   const HandleChangesEdit = (e) => {
     const { value, name } = e.target;
     // Validation for the Name field
@@ -376,14 +383,13 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      setDescriptionLenght(value.length);
-      // validation: Description should not be empty and should have a minimum length of 10 characters
+      setdescriptionLength(value.length);
       if (!value) {
         setErrors({
           ...errors,
           descriptionError: "Required",
         });
-      } else if (formData.description.length > 500) {
+      } else if (formData?.description?.length > 500) {
         setErrors({
           ...errors,
           descriptionError: "Details cannot exceed 500 characters",
@@ -474,7 +480,7 @@ const Disciplinary = () => {
     <>
       <>
         <DashHeader>
-          <DashHeaderTitle>Disciplinary</DashHeaderTitle>
+          <DashHeaderTitle>Disciplinary Types</DashHeaderTitle>
           <DashHeaderSearch>
             <SearchBox>
               <SearchInput
@@ -508,7 +514,7 @@ const Disciplinary = () => {
           </DashHeaderSearch>
         </DashHeader>
         <DisciplinaryDiv>
-          <DisciplinaryHeading>All Disciplinary</DisciplinaryHeading>
+          <DisciplinaryHeading>All Disciplinary Types</DisciplinaryHeading>
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
@@ -518,7 +524,7 @@ const Disciplinary = () => {
           >
             <Box sx={style}>
               <ModalUpperDiv>
-                <ModalHeading>Add New Disciplinary</ModalHeading>
+                <ModalHeading>Add New Disciplinary Type</ModalHeading>
                 <ModalIcon
                   onClick={() => {
                     HandleClose();
@@ -530,14 +536,14 @@ const Disciplinary = () => {
               </ModalUpperDiv>
               <ModalUpperMid>
                 <InputLabel>
-                  Disciplinary Name <InputSpan>*</InputSpan>
+                  Disciplinary Type Name <InputSpan>*</InputSpan>
                 </InputLabel>
                 <Input
                   type="text"
                   name="name"
                   onChange={HandleChanges}
                   value={formData.name}
-                  placeholder="name"
+
                 />
                 <Errors>{errors.nameError}</Errors>
                 <InputLabel>
@@ -548,13 +554,11 @@ const Disciplinary = () => {
                   name="description"
                   onChange={HandleChanges}
                   value={formData.description}
-                  placeholder="Write Something.."
                 />
 
                 <InputPara>
                   {" "}
-                  <Errors>{errors.descriptionError}</Errors> Max
-                  {descriptionLenght} characters
+                  <Errors>{errors.descriptionError}</Errors> Max {descriptionLength > -1 ? 500-descriptionLength : 0} characters
                 </InputPara>
                 <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -565,7 +569,7 @@ const Disciplinary = () => {
                   name="requiredBcr"
                   onChange={HandleChanges}
                 >
-                  <Option value={false}>Select an option</Option>
+                  <Option>Select an option</Option>
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select>
@@ -639,7 +643,7 @@ const Disciplinary = () => {
                       {disciplinaryData?.length == 0 && (
                         <TableRow sx={{ height: "200px" }}>
                           <TableCell align="center" colSpan={5}>
-                            No disciplinaries found
+                            No disciplinary types found
                           </TableCell>
                         </TableRow>
                       )}
@@ -735,7 +739,7 @@ const Disciplinary = () => {
       >
         <Box sx={style}>
           <ModalUpperDiv>
-            <ModalHeading> Update Disciplinary</ModalHeading>
+            <ModalHeading> Update Disciplinary Type</ModalHeading>
             <ModalIcon
               onClick={() => {
                 HandleCloseEdit();
@@ -746,14 +750,14 @@ const Disciplinary = () => {
           </ModalUpperDiv>
           <ModalUpperMid>
             <InputLabel>
-              Disciplinary Name <InputSpan>*</InputSpan>
+              Disciplinary Type Name <InputSpan>*</InputSpan>
             </InputLabel>
             <Input
               type="text"
               name="name"
               onChange={HandleChangesEdit}
               value={upDateData.name}
-              // placeholder={name}
+            // placeholder={name}
             />
             <Errors>{errors.nameError}</Errors>
             <InputLabel>
@@ -764,12 +768,15 @@ const Disciplinary = () => {
               name="description"
               onChange={HandleChangesEdit}
               value={upDateData.description}
-              // placeholder={descriptio}
+            // placeholder={descriptio}
             />
             <Errors style={{ display: "inline-block" }}>
               {errors.descriptionError}
             </Errors>
-            <InputPara> Max 500 characters</InputPara>
+            <InputPara>
+              {" "}
+              <Errors>{errors.descriptionError}</Errors> Max {descriptionLength > -1 ? 500-descriptionLength : 0} characters
+            </InputPara>
             <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>
             </InputLabel>
@@ -800,7 +807,7 @@ const Disciplinary = () => {
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
         HandleReorder={HandleReorder}
-        message="Are you sure you want to delete this ?"
+        message="Are you sure you want to delete this disciplinary type?"
         isLoading={isLoading}
       />
       <Menu

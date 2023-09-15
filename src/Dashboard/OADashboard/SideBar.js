@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   SidebarTitle,
   SideBarLogoContainer,
@@ -16,13 +16,13 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   const [orgData, setOrgData] = useState();
- useEffect(() => {
-   let org = localStorage.getItem("org");
-   if (org) {
-     let parsedUser = JSON.parse(org);
-     setOrgData(parsedUser);
-   }
- }, []);
+  useEffect(() => {
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+    }
+  }, []);
   const SideBarData = [
     {
       Title: "Dashboard",
@@ -95,7 +95,7 @@ const SideBar = () => {
               </SideBarListLogo>
               <SideBarListTitle
                 style={
-                  location.pathname === data.to ? style : { color: "#5C5C5C" }
+                  location.pathname.indexOf(data.to) > -1 ? style : { color: "#5C5C5C" }
                 }
               >
                 {" "}

@@ -45,41 +45,45 @@ const OADashBoard = () => {
   //     // }
   //   }
   // }, []);
-   useEffect(() => {
-     let user = localStorage.getItem("user");
-     if (user) {
-       let parsedUser = JSON.parse(user);
-       setUser(parsedUser);
-     }
-   }, []);
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+  }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
   const CardData = [
     {
-      Title: "Leaves",
-      SubTitle: "Add Leaves",
-      Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
-      src: "/images/icons/AddLeaves.svg",
-    },
-    {
-      Title: "Employee",
-      SubTitle: "Add Employee",
-      Para: "Add Employee by clicking add button and provide the name, email and other details. ",
-      src: "/images/icons/Employees.svg",
-    },
-    {
       Title: "Departments",
       SubTitle: "Add Departments",
       Para: "Add new department by clicking add button and Add Name, description. ",
       src: "/images/icons/Department.svg",
+      to:"/organization-admin/departments"
     },
     {
       Title: "Disciplinary Types",
       SubTitle: "Add Disciplinary Types",
       Para: "Add new department by clicking add button and Add Name, description. ",
       src: "/images/icons/Discipliner.svg",
+      to:"/organization-admin/disciplinary"
+    },
+    {
+      Title: "Employee",
+      SubTitle: "Add Employee",
+      Para: "Add Employee by clicking add button and provide the name, email and other details. ",
+      src: "/images/icons/Employees.svg",
+      to:"/organization-admin/employee/list"
+    },
+    {
+      Title: "Leaves",
+      SubTitle: "Add Leaves",
+      Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
+      src: "/images/icons/AddLeaves.svg",
+      to:"/organization-admin/disciplinary"
     },
   ];
 
@@ -149,7 +153,7 @@ const OADashBoard = () => {
         >
           <MenuItem onClick={HandleLogout}>Logout</MenuItem>
         </Menu>
-        <DashHeading>Welcome { user?.name || "Jason poter"}!</DashHeading>
+        <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
         <BannerSection>
           <BannerHeading>
             <BannerTitle>
@@ -169,7 +173,9 @@ const OADashBoard = () => {
                   <DashCardTitle2>{data.SubTitle}</DashCardTitle2>
                   {data.Para}
                   <DashCardPara></DashCardPara>
-                  <DashCardButon> Add Leaves</DashCardButon>
+                  <Link to={data.to} key={data.to}>
+                    <DashCardButon style={{cursor:"pointer"}}> Add {data.Title}</DashCardButon>
+                  </Link>
                 </DashCardPri>
               </DashCardsub>
             </DashCard>
