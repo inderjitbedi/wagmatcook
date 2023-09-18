@@ -11,8 +11,8 @@ import "./Employee.css";
 import { useForm } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import moment from "moment";
 
 import {
@@ -76,6 +76,7 @@ const EVPerformance = () => {
     clearErrors();
     reset({});
     setFile(null);
+    setDetailsLength(500);
   };
   const [openFollow, setOpenFollow] = useState(false);
   const handleOpenFollow = () => setOpenFollow(true);
@@ -86,6 +87,8 @@ const EVPerformance = () => {
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   const {
     register,
     control,
@@ -98,7 +101,7 @@ const EVPerformance = () => {
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
-       console.log("form submmited", data);
+    console.log("form submmited", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -108,13 +111,12 @@ const EVPerformance = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-      console.log(file,":this is file ");
+      console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
       }
       AddNewProformance(data);
     }
-   
   };
   // const onSubmitFollow = (data) => {
   //   if (!errors) {
@@ -128,6 +130,8 @@ const EVPerformance = () => {
     handleUpload(file, index);
   };
   const handleUpload = (file, index) => {
+    setIsUploading(true);
+
     if (file) {
       const binary = new FormData();
       binary.append("file", file);
@@ -146,14 +150,15 @@ const EVPerformance = () => {
           if (data?.result) {
             console.log(data?.result);
             setFile(data?.result?.file);
-            //  insert(index, { file: data?.result?.file?._id });
-            // setFormData({ ...formData, file: data?.result.file._id });
+
+            setIsUploading(false);
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
         })
         .catch((error) => {
           console.error("Error:", error);
+          setIsUploading(false);
         });
     }
   };
@@ -177,8 +182,7 @@ const EVPerformance = () => {
           setFile(null);
           GetEmployeesProformance();
           reset();
-           toast.success("Employee proformance added successfully");
-         
+          toast.success(result.message); //Employee proformance added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -373,7 +377,8 @@ const EVPerformance = () => {
                             {<Errors>{errors.details?.message}</Errors>}{" "}
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
-                              Max {detailsLength} characters
+                              Max {detailsLength > -1 ? detailsLength : 0}{" "}
+                              characters
                             </span>
                           </InputPara>
                         </FlexColumnForm>
@@ -438,11 +443,22 @@ const EVPerformance = () => {
                         >
                           {" "}
                           <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {!file
-                            ? "Upload Documents "
-                            : file?.name.length <= 32
-                            ? file?.name
-                            : file.name.substring(0, 30) + "..."}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file ? (
+                            "Upload Documents "
+                          ) : file?.name.length <= 32 ? (
+                            file?.name
+                          ) : (
+                            file.name.substring(0, 30) + "..."
+                          )}
                         </EditButton>
                         {file && (
                           <LightPara onClick={removeFile}>Remove</LightPara>
@@ -492,10 +508,14 @@ const EVPerformance = () => {
                       style={{ margin: "0px" }}
                     >
                       <TimelineDiv style={{ padding: "16px" }}>
-                        <FlexColumn style={{ width: "100%",gap:"0px" }}>
+                        <FlexColumn style={{ width: "100%", gap: "0px" }}>
                           <FlexSpaceBetween style={{ marginBottom: "0px" }}>
                             <TitlePara>Completed By</TitlePara>
-                            <TitlePara>Date of Review: { moment(data.reviewDate).format("DD/MM/YYYY")}</TitlePara>
+                            <TitlePara>
+                              Date of Review:{" "}
+                              {moment(data.reviewDate).format("DD/MM/YYYY") ||
+                                " - "}
+                            </TitlePara>
                           </FlexSpaceBetween>
                           <ViewPara
                             style={{
@@ -509,20 +529,45 @@ const EVPerformance = () => {
                           >
                             Tom Holland
                           </ViewPara>
-                          <TimelinePara style={{ width: "90%", overflowX: "hidden", marginBottom: "16px"}}>
-                       {data.details}
+                          <TimelinePara
+                            style={{
+                              width: "90%",
+                              overflowX: "hidden",
+                              marginBottom: "16px",
+                            }}
+                          >
+                            {data.details || " - "}
                           </TimelinePara>
                           <FlexSpaceBetween>
-                            <File>
-                              {" "}
-                              <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                             {data.file.name?.length <=38 ? data.file.name : data.file.name.substring(0,38) +"..." }
-                            </File>
+                            <Link
+                              to={
+                                "http://hrapi.chantsit.com/" +
+                                data.file?.destination +
+                                "/" +
+                                data.file?.name
+                              }
+                              target="blank"
+                              download
+                              style={{ textDecoration: "none" }}
+                            >
+                              <File>
+                                {" "}
+                                <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                {data.file.name?.length <= 38
+                                  ? data.file.name
+                                  : data.file.name.substring(0, 38) + "..." ||
+                                    " - "}
+                              </File>
+                            </Link>
                             {/* <AddNewButton onClick={handleOpenFollow}>
                               Add Follow-up
                             </AddNewButton> */}
                           </FlexSpaceBetween>
-                          <ReviewsDiv>Next Review on: { moment(data.nextReviewDate).format("DD/MM/YYYY")}</ReviewsDiv>
+                          <ReviewsDiv>
+                            Next Review on:{" "}
+                            {moment(data.nextReviewDate).format("DD/MM/YYYY") ||
+                              " - "}
+                          </ReviewsDiv>
                         </FlexColumn>
                       </TimelineDiv>
                     </VerticalTimelineElement>

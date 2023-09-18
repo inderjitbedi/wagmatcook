@@ -49,7 +49,9 @@ import {
   ModalThanksHeading,
   Errors,
   LoadMore,
+  InputPara,
 } from "./DepartmentsStyles";
+import { InputLabel, InputSpan } from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
   position: "absolute",
@@ -68,8 +70,19 @@ const Departments = () => {
   const Navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
-  const HandleClose = () => setOpen(false);
+  const HandleOpen = () => {
+    setFormData({
+      name: "",
+      description: "",
+    });
+    setErrors("");
+    setOpen(true);
+  };
+  const HandleClose = () => {
+    setOpen(false);
+    setErrors("");
+    setdescriptionLength(500);
+  };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -77,9 +90,14 @@ const Departments = () => {
   //update modal variable
   const [openEdit, setOpenEdit] = useState(false);
   const HandleOpenEdit = () => setOpenEdit(true);
-  const HandleCloseEdit = () => setOpenEdit(false);
+  const HandleCloseEdit = () => {
+    setErrors("");
+    setdescriptionLength(500);
+    setOpenEdit(false);
+  };
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [descriptionLength, setdescriptionLength] = useState(500);
 
   const [openThanks, setOpenThanks] = useState(false);
   const HandleOpenThanks = () => setOpenThanks(true);
@@ -149,7 +167,8 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      // Example validation: Description should not be empty and should have a minimum length of 10 characters
+      setdescriptionLength(value.length);
+
       if (!value) {
         setErrors({
           ...errors,
@@ -162,7 +181,6 @@ const Departments = () => {
 
     setFormData({ ...formData, [name]: value });
   };
-  // const isSubmitDisabled = errors.nameError || errors.descriptionError;
   const HandleChangeEdit = (e) => {
     const { value, name } = e.target;
     // Validation for the Name field
@@ -174,7 +192,8 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      //validation: Description should not be empty and should have a minimum length of 10 characters
+      setdescriptionLength(value.length);
+
       if (!value) {
         setErrors({
           ...errors,
@@ -189,7 +208,7 @@ const Departments = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list?page=${page}&limit=1&searchKey=${searchValue}`;
+    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -327,14 +346,13 @@ const Departments = () => {
               const UpdatedData = departmentData;
               UpdatedData[indexToReplace] = result.department;
               setDepartmentData(UpdatedData);
-              console.log(UpdatedData, "is working");
             }
             HandleCloseEdit();
             // GetDepartments();
             setId("");
             setUpDateData("");
             setErrors("");
-            toast.success("Departments Updated Successfully");
+            toast.success(result.message); //Departments Updated Successfully");
             console.log(result?.department, "updated entry");
           } else {
             //toast.warn("something went wrong ");
@@ -364,7 +382,7 @@ const Departments = () => {
           setId("");
           HandleCloseDelete();
 
-          toast.success("Entry Deleted successfully");
+          toast.success(result.message); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -384,6 +402,8 @@ const Departments = () => {
       description: data.description,
       requiredBcr: data.requiredBcr,
     });
+      setdescriptionLength(data.description.length);
+
     HandleOpenEdit();
   };
   const HandleLogout = () => {
@@ -400,7 +420,10 @@ const Departments = () => {
       <>
         <DashHeader>
           <DashHeaderDepartment>
-            <DashHeaderTitle>Dashboard</DashHeaderTitle>
+            <DashHeaderTitle>Departments</DashHeaderTitle>
+          </DashHeaderDepartment>
+
+          <DepartmentIconContainer>
             <DashHeaderSearch>
               <SearchBox>
                 <SearchInput
@@ -412,9 +435,7 @@ const Departments = () => {
                 <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
             </DashHeaderSearch>
-          </DashHeaderDepartment>
-          <DepartmentIconContainer>
-            <DepartmentIconImg src="/images/icons/Messages.svg" />
+            {/* <DepartmentIconImg src="/images/icons/Messages.svg" /> */}
             <DepartmentIconImg src="/images/icons/Notifications.svg" />
             <div
               style={{
@@ -482,6 +503,9 @@ const Departments = () => {
               </ModalUpperDiv>
 
               <ModalUpperMid>
+                <InputLabel>
+                  Department Name <InputSpan>*</InputSpan>
+                </InputLabel>
                 <Input
                   placeholder="Department Name"
                   onChange={HandleChange}
@@ -490,6 +514,10 @@ const Departments = () => {
                   type="text"
                 />
                 <Errors>{errors.nameError}</Errors>
+
+                <InputLabel>
+                  Description <InputSpan>*</InputSpan>
+                </InputLabel>
                 <TextArea
                   placeholder="Description"
                   onChange={HandleChange}
@@ -497,8 +525,12 @@ const Departments = () => {
                   type="text"
                   name="description"
                 />
-
-                <Errors>{errors.descriptionError}</Errors>
+                <InputPara>
+                  {" "}
+                  <Errors>{errors.descriptionError}</Errors>Max{" "}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
+                  characters
+                </InputPara>
               </ModalUpperMid>
               <ModalBottom>
                 <AddNewButton
@@ -510,7 +542,12 @@ const Departments = () => {
                 >
                   Add New
                 </AddNewButton>
-                <CancelButton onClick={HandleClose}>Cancel</CancelButton>
+                <CancelButton
+                  onClick={HandleClose}
+                  style={{ cursor: "pointer" }}
+                >
+                  Cancel
+                </CancelButton>
               </ModalBottom>
             </Box>
           </Modal>
@@ -560,9 +597,21 @@ const Departments = () => {
         ) : (
           <>
             <DepartmentCardContainer>
+              {departmentData.length === 0 && (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "500px",
+                    textAlign: "center",
+                    margin: "100px auto",
+                  }}
+                >
+                  No departments found
+                </div>
+              )}
               {departmentData?.map((data) => (
                 <DepartmentCardDiv>
-                  <DepartmentCardImg />
+                  <DepartmentCardImg src="/images/User.jpg" />
                   <DepartmentCardPara>{data.name}</DepartmentCardPara>
                   <DepartmentCardParaLit>
                     {" "}
@@ -643,20 +692,24 @@ const Departments = () => {
             <ModalIcon
               onClick={() => {
                 HandleCloseEdit();
-                setErrors("");
               }}
               src="/images/icons/alert-circle.svg"
             />
           </ModalUpperDiv>
           <ModalUpperMid>
+            <InputLabel>
+              Department Name <InputSpan>*</InputSpan>
+            </InputLabel>
             <Input
-              // placeholder={nameEdit}
               onChange={HandleChangeEdit}
               value={upDateData.name}
               name="name"
               type="text"
             />
             <Errors>{errors.nameError}</Errors>
+            <InputLabel>
+              Description <InputSpan>*</InputSpan>
+            </InputLabel>
             <TextArea
               // placeholder={descriptionEdit}
               onChange={HandleChangeEdit}
@@ -664,7 +717,11 @@ const Departments = () => {
               type="text"
               name="description"
             />
-            <Errors>{errors.descriptionError}</Errors>
+            <InputPara>
+              {" "}
+              <Errors>{errors.descriptionError}</Errors> Max{" "}
+              {descriptionLength > -1 ? 500 - descriptionLength : 0} characters
+            </InputPara>
           </ModalUpperMid>
           <ModalBottom>
             <AddNewButton

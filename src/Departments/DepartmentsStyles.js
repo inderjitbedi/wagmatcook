@@ -83,7 +83,6 @@ align-items: center;
 export const DepartmentCardImg = styled.img`
   display: block;
   border-radius: 50%;
-  background-color: grey;
   width: 74px;
   height: 74px;
   margin-bottom: 15px;
@@ -256,7 +255,15 @@ export const Errors = styled.p`
   margin-top: 2px;
 `;
 
-
+export const InputPara = styled.p`
+  color: #737992;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0px; /* 171.429% */
+  display: flex;
+  justify-content: space-between;
+`;
 
 
 

@@ -74,6 +74,7 @@ const Benefits = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
+            toast.success(result.message);
           } else {
             Navigate(
               `/organization-admin/employee/certificates-info/${employeeid}`
@@ -409,8 +410,15 @@ const Benefits = () => {
 
               <FlexContaier style={{ marginTop: "25px" }}>
                 {!edit && (
-                  <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+                  <ButtonGrey
+                    onClick={() => {
+                      Navigate(-1);
+                    }}
+                  >
+                    Back
+                  </ButtonGrey>
                 )}
+
                 <ButtonBlue
                   type="submit"
                   onClick={() => {

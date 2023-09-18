@@ -18,7 +18,7 @@ const departmentController = {
             req.body.updatedBy = req.user._id;
             req.body.organization = req.organization._id
             const department = await Department.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            res.status(200).json({ department, message: 'Department deleted successfully' });
+            res.status(200).json({ department, message: 'Department updated successfully' });
         } catch (error) {
             console.error("departmentController:update:error -", error);
             res.status(400).json(error);

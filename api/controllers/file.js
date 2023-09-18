@@ -32,41 +32,47 @@ const fileController = {
     },
 
     async moveToUploads(req, file) {
-        if (!file) {
-            return null;
-        }
-        console.log("Moving file .. ");
-        const tempFilePath = [file.destination, file.name].join('/');
-        const newFilePath = 'uploads/';
-        const newFileName = Date.now() + '_' + req.user._id + '_' + file.originalName.replaceAll(' ', '_');
-        const destFilePath = newFilePath + newFileName;
+        try {
 
-        createDirectoryIfNotExists(path.join(__dirname, '../', newFilePath));
+            if (!file) {
+                return null;
+            }
+            console.log("Moving file .. ");
+            const tempFilePath = [file.destination, file.name].join('/');
+            const newFilePath = 'uploads/';
+            const newFileName = Date.now() + '_' + req.user._id + '_' + file.originalName.replaceAll(' ', '_');
+            const destFilePath = newFilePath + newFileName;
 
-        await fs.renameSync(
-            path.join(__dirname, '../' + tempFilePath),
-            path.join(__dirname, '../' + destFilePath)
-        );
+            createDirectoryIfNotExists(path.join(__dirname, '../', newFilePath));
 
-        console.log('Saved File:', {
-            ...file.toObject(),
-            destination: newFilePath,
-            path: destFilePath,
-            name: newFileName,
-        });
+            await fs.renameSync(
+                path.join(__dirname, '../' + tempFilePath),
+                path.join(__dirname, '../' + destFilePath)
+            );
 
-        const updatedFile = await File.findOneAndUpdate(
-            { _id: file._id },
-            {
+            console.log('Saved File:', {
                 ...file.toObject(),
                 destination: newFilePath,
                 path: destFilePath,
                 name: newFileName,
-            },
-            { new: true }
-        );
+            });
 
-        return updatedFile._id;
+            const updatedFile = await File.findOneAndUpdate(
+                { _id: file._id },
+                {
+                    ...file.toObject(),
+                    destination: newFilePath,
+                    path: destFilePath,
+                    name: newFileName,
+                },
+                { new: true }
+            );
+
+            return updatedFile._id;
+
+        } catch (error) {
+            return file._id;
+        }
     }
 
 }

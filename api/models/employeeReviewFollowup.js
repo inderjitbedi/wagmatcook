@@ -9,6 +9,10 @@ const infoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'EmployeeReviews', required: true
+    },
     file: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'File',
@@ -39,6 +43,6 @@ const infoSchema = new mongoose.Schema({
 });
 
 
-const EmployeeReviews = mongoose.model('EmployeeReviews', infoSchema);
+const EmployeeReviewFollowups = mongoose.model('EmployeeReviewFollowups', infoSchema);
 
-module.exports = EmployeeReviews;
+module.exports = EmployeeReviewFollowups;

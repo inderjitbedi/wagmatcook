@@ -4,8 +4,10 @@ import { useForm, Controller, useFieldArray, set } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
+import SuccessfullModal from "./SuccessfullModal";
+
 import {
   HeaderEmployee,
   BackButton,
@@ -41,15 +43,19 @@ const CertificatesInfo = () => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [result, setResult] = useState([]);
-  const [file, setFile] = useState(null);
+  const [file, setFiles] = useState([]);
+  const [openThanks, setOpenThanks] = useState(false);
+  const HandleOpenThanks = () => setOpenThanks(true);
+  const HandleCloseThanks = () => setOpenThanks(false);
 
   const initialPosition = {
     title: "",
     provider: "",
     completionDate: "",
     expiryDate: "",
-    file: "",
+    file: null,
   };
   const {
     register,
@@ -72,7 +78,17 @@ const CertificatesInfo = () => {
 
   const HandleSubmitcertificates = (data) => {
     // e.preventDefault();
-    let dataCopy = data;
+    let dataCopy = {
+      certificates: data.certificates.map((certificate, index) => {
+        const fileId = file[index];
+        if (fileId && fileId._id) {
+          certificate.file = fileId._id;
+        }
+        return certificate;
+      }),
+    };
+
+    console.log(dataCopy, "data which goes into put api certificates   ");
     let url = `/employee/certificates/${employeeid}`;
 
     setIsLoading(true);
@@ -89,7 +105,8 @@ const CertificatesInfo = () => {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
           } else {
-            Navigate(`/organization-admin/employee/list`);
+            // Navigate(`/organization-admin/employee/list`);
+            HandleOpenThanks();
           }
         } else {
           toast.warn("something went wrong ");
@@ -123,11 +140,13 @@ const CertificatesInfo = () => {
   };
 
   const handleFileChange = (e, index) => {
-    console.log(index, "file index");
+    // e.preventDefault();
+
     const file = e.target.files[0];
     handleUpload(file, index);
   };
   const handleUpload = (file, index) => {
+    setIsUploading(true);
     if (file) {
       const binary = new FormData();
       binary.append("file", file);
@@ -144,31 +163,35 @@ const CertificatesInfo = () => {
           console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
-            setFile(data?.result?.file);
-            // insert(index, (file = data?.result?.file?._id));
-            const certificatevalue = getValues("certificates");
-            const newval = certificatevalue[index].file;
-            console.log(
-              "this is certificates value file :",
-              certificatevalue[index].file,
-              "file id :",
-              data?.result?.file?._id
-            );
-            setValue(`certificates[${index}].file`, data?.result?.file);
-            // setFormData({ ...formData, file: data?.result.file._id });
+            console.log("upload api results :", data?.result);
+
+            setFiles((prevFiles) => {
+              const updatedFiles = [...prevFiles];
+              updatedFiles[index] = data?.result?.file;
+              return updatedFiles;
+            });
+            setIsUploading(false);
+
+            // setValue(`certificates[${index}].file`, data?.result?.file);
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
         })
         .catch((error) => {
           console.error("Error:", error);
+          setIsUploading(false);
         });
     }
   };
-  const removeFile = (e) => {
-    setFile(null);
+  const removeFile = (e, index) => {
+    // e.preventDefault();
+    setFiles((prevFiles) => {
+      const updatedFiles = [...prevFiles];
+      updatedFiles.splice(index, 1);
+      return updatedFiles;
+    });
   };
+  console.log(file, "values in files array ");
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -179,11 +202,13 @@ const CertificatesInfo = () => {
     })
       .then(({ result }) => {
         if (result) {
-          console.log(result, "this what result Looks like ");
+          // console.log(result, "this what result Looks like ");
           setResult(result);
-
+          const resetfile = result.certificates.map((data) => data.file);
+          console.log("files data to reset :", resetfile);
+          setFiles(resetfile);
           if (result.certificates) {
-            console.log("certificates is working");
+            // console.log("certificates is working");
             result.certificates.forEach((data) => {
               if (data.completionDate || data.expiryDate) {
                 data.completionDate = new Date(data.completionDate)
@@ -192,16 +217,14 @@ const CertificatesInfo = () => {
                 data.expiryDate = new Date(data.expiryDate)
                   .toISOString()
                   .split("T")[0];
-
                 data.file = data.file._id;
               }
             });
           }
-          const data = result.certificates.reduce(
-            (acc, curr, index) => ({ ...acc, [index]: curr }),
-            {}
-          );
-          reset(data);
+
+          const resetData = { certificates: result.certificates };
+          console.log("result of get :", result.certificates);
+          reset(resetData);
 
           // adding if no position added
           // if (!result.certificates?.length) {
@@ -222,7 +245,7 @@ const CertificatesInfo = () => {
   };
   useEffect(() => {
     GetEmployeesCertificates();
-  }, [reset, edit]);
+  }, [edit]);
   return (
     <>
       <HeaderEmployee>
@@ -351,6 +374,7 @@ const CertificatesInfo = () => {
                       <Input
                         type="date"
                         {...register(`certificates.${index}.completionDate`, {
+                          valueAsDate: true,
                           required: {
                             value: true,
                             message: "Required",
@@ -360,7 +384,7 @@ const CertificatesInfo = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`certificates.${index}.copletionDate`}
+                        name={`certificates.${index}.completionDate`}
                       />
                     </FlexColumnForm>
                     <FlexColumnForm>
@@ -370,23 +394,21 @@ const CertificatesInfo = () => {
                       <Input
                         type="date"
                         {...register(`certificates.${index}.expiryDate`, {
+                          valueAsDate: true,
                           required: {
                             value: true,
                             message: "Required",
                           },
-                          // validate: (fieldValue) => {
-                          // console.log(
-                          //   getValues(`certificates[0].completionDate`),"is it working"
-                          // );
-                          //   const startDate = new Date(
-                          //     getValues(`certificates.${index}.completionDate`)
-                          //   );
-                          //   const endDate = new Date(fieldValue);
-                          //   return (
-                          //     startDate <= endDate ||
-                          //     "Must not be earlier than completion date"
-                          //   );
-                          // },
+                          validate: (fieldValue) => {
+                            const startDate = new Date(
+                              getValues(`certificates.${index}.completionDate`)
+                            );
+                            const endDate = new Date(fieldValue);
+                            return (
+                              startDate <= endDate ||
+                              "Must not be earlier than completion date"
+                            );
+                          },
                         })}
                       />
                       <ErrorMessage
@@ -404,15 +426,17 @@ const CertificatesInfo = () => {
                         accept="image/*,capture=camera"
                         {...register(`certificates.${index}.file`, {
                           required: {
-                            value: true,
+                            value: edit ? false : true,
                             message: "Required",
                           },
+
                           onChange: (e) => {
                             handleFileChange(e, index);
                           },
                         })}
-                        id="file"
-                 
+                        // onChange={(e) => handleFileChange(e,index)}
+                        name={`certificates.${index}.file`}
+                        id={`file${index}`}
                         className="custom"
                       />
                       <div
@@ -424,18 +448,31 @@ const CertificatesInfo = () => {
                         }}
                       >
                         <UploadLabel
-                          style={{ marginBottom: "10px" }}
-                          htmlFor="file"
+                          style={{ marginBottom: "10px", width: "max-content" }}
+                          htmlFor={`file${index}`}
                         >
-                          {!file
-                            ? "Upload Documents "
-                            : file?.name.length <= 32
-                            ? file?.name
-                            : file.name.substring(0, 30) + "..."}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file[index] ? (
+                            "Upload Documents "
+                          ) : file[index]?.name?.length <= 32 ? (
+                            file[index]?.name
+                          ) : (
+                            file[index].name?.substring(0, 30) + "..."
+                          )}
                           <UploadIcon src="/images/icons/BlueUpload.svg" />{" "}
                         </UploadLabel>
-                        {file && (
-                          <LightPara onClick={removeFile}>Remove</LightPara>
+                        {file[index] && (
+                          <LightPara onClick={() => removeFile(index)}>
+                            Remove
+                          </LightPara>
                         )}
                       </div>
                       <ErrorMessage
@@ -444,7 +481,7 @@ const CertificatesInfo = () => {
                         name={`certificates.${index}.file`}
                       />
                     </FlexColumnForm>{" "}
-                    {getValues("certificates").length > 1 && (
+                    {getValues("certificates")?.length > 1 && (
                       <RemoveContainer onClick={() => remove(index)}>
                         <DeleteIcon src="/images/icons/trash-empty.svg" />{" "}
                         <span>Remove</span>
@@ -462,12 +499,7 @@ const CertificatesInfo = () => {
                 {!edit && (
                   <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
                 )}
-                <ButtonBlue
-                  type="submit"
-                  onClick={() => {
-                    handleSubmit(onSubmit);
-                  }}
-                >
+                <ButtonBlue type="submit">
                   {edit ? "Update" : "Continue"}
                 </ButtonBlue>
               </FlexContaier>
@@ -475,6 +507,11 @@ const CertificatesInfo = () => {
           </BodyMain>
         </EmployeeBody>
       )}
+      <SuccessfullModal
+        openThanks={openThanks}
+        HandleCloseThanks={HandleCloseThanks}
+      />
+      <DevTool control={control} />
     </>
   );
 };

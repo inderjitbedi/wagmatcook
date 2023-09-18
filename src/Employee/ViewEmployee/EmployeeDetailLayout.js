@@ -64,11 +64,25 @@ const EmployeeDetailLayout = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
           <DashNotification src="/images/icons/Notifications.svg" />
-          <DashNotification
-            style={{ cursor: "pointer" }}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              gap: "5px",
+            }}
             onClick={(event) => handleClickMenu(event)}
-            src="/images/icons/PersonIcon.svg"
-          />
+          >
+            <DashNotification src="/images/icons/Logout.svg" />
+            <img
+              src="/images/icons/arrowdown.svg"
+              style={{
+                width: "5px",
+                height: "9px",
+                transform: anchorEl ? "rotate(180deg)" : undefined,
+              }}
+            />
+          </div>
           <Menu
             sx={{ margin: "0px" }}
             id="demo-positioned-menu"

@@ -4,9 +4,9 @@ import Modal from "@mui/material/Modal";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
-import { useNavigate, useParams ,Link} from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import moment from "moment";
 import {
   MainBodyContainer,
@@ -65,10 +65,13 @@ const EVDiscipline = () => {
   const Navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
     reset({});
     clearErrors();
+    setFile(null);
     setDetailsLength(500);
   };
   const [result, setResult] = useState([]);
@@ -108,9 +111,9 @@ const EVDiscipline = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-         if (file) {
-           data.file = file._id;
-         }
+      if (file) {
+        data.file = file._id;
+      }
       AddNewDisciplinary(data);
     }
     console.log("form submmited", data);
@@ -177,7 +180,7 @@ const EVDiscipline = () => {
         if (result) {
           handleClose();
           GetEmployeesDisciplinary();
-           toast.success("");
+          toast.success(result.message); //Employee disciplinary added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -196,6 +199,8 @@ const EVDiscipline = () => {
     handleUpload(file, index);
   };
   const handleUpload = (file, index) => {
+    setIsUploading(true);
+
     if (file) {
       const binary = new FormData();
       binary.append("file", file);
@@ -216,12 +221,14 @@ const EVDiscipline = () => {
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
+            setIsUploading(false);
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
         })
         .catch((error) => {
           console.error("Error:", error);
+          setIsUploading(false);
         });
     }
   };
@@ -234,9 +241,6 @@ const EVDiscipline = () => {
     GetDisciplinary();
     GetEmployeesDisciplinary();
   }, []);
-
-  
-  
 
   return (
     <>
@@ -430,7 +434,8 @@ const EVDiscipline = () => {
                             {<Errors>{errors.details?.message}</Errors>}
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
-                              Max {detailsLength} characters
+                              Max {detailsLength > -1 ? detailsLength : 0}{" "}
+                              characters
                             </span>
                           </InputPara>
                         </FlexColumnForm>
@@ -465,11 +470,22 @@ const EVDiscipline = () => {
                         >
                           {" "}
                           <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {!file
-                            ? "Upload Documents "
-                            : file?.name.length <= 32
-                            ? file?.name
-                            : file.name.substring(0, 30) + "..."}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file ? (
+                            "Upload Documents "
+                          ) : file?.name.length <= 32 ? (
+                            file?.name
+                          ) : (
+                            file.name.substring(0, 30) + "..."
+                          )}
                         </EditButton>
                         {file && (
                           <LightPara onClick={removeFile}>Remove</LightPara>
@@ -503,7 +519,7 @@ const EVDiscipline = () => {
                             width: "37%",
                           }}
                         >
-                          {data.disciplinary?.name}
+                          {data.disciplinary?.name || " - "}
                         </ViewPara>{" "}
                         <ViewPara
                           style={{
@@ -533,13 +549,14 @@ const EVDiscipline = () => {
                             <IconsEmployee src="/images/icons/File Text.svg" />{" "}
                             {data.file.name?.length <= 38
                               ? data.file.name
-                              : data.file.name.substring(0, 38) + "..."}
+                              : data.file.name.substring(0, 38) + "..." ||
+                                " - "}
                           </File>
                         </Link>
                       </FlexSpaceBetween>
                       <ReviewsDiv>
                         Expiry Date:{" "}
-                        {moment(data.expiryDate).format("DD/MM/YYYY")}
+                        {moment(data.expiryDate).format("DD/MM/YYYY") || " - "}
                       </ReviewsDiv>
                     </FlexColumn>
                   </TimelineDiv>

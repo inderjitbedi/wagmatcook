@@ -143,7 +143,7 @@ const PersonalInfo = () => {
     let dataCopy = data;
     let url = `/employee/personal-info/${employeeid}`;
 
-    // setIsLoading(true);
+    setIsLoading(true);
 
     httpClient({
       method: "put",
@@ -156,21 +156,22 @@ const PersonalInfo = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
+            toast.success(result.message);
           } else {
             Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           }
           setFormData(result);
         } else {
-          toast.warn("something went wrong ");
+          // toast.warn("something went wrong");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error adding personal info. Please try again.");
-        // setIsLoading(false);
+        setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
 
@@ -395,6 +396,10 @@ const PersonalInfo = () => {
                           value: true,
                           message: "Required",
                         },
+                        pattern: {
+                          value: /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/,
+                          message: "Please enter valid postal code",
+                        },
                       })}
                     />
                     {errors.postalCode && (
@@ -407,21 +412,33 @@ const PersonalInfo = () => {
                     <InputLabel>
                       Home Phone <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("homePhone", {
+                    <Controller
+                      name="homePhone"
+                      control={control}
+                      rules={{
                         required: {
                           value: true,
                           message: "Required",
                         },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number "
-                          );
-                        },
-                      })}
+                      }}
+                      render={({ field }) => (
+                        <InputMask
+                          {...field}
+                          style={{ ...inputStyles }}
+                          mask="(999) 999-9999"
+                          type="text"
+                          name="homePhone"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const numericPhoneNumber = value.replace(/\D/g, "");
+                            const numericValue = parseInt(
+                              numericPhoneNumber,
+                              10
+                            );
+                            setValue("homePhone", numericValue);
+                          }}
+                        />
+                      )}
                     />
                     {errors.homePhone && (
                       <Errors> {errors.homePhone?.message} </Errors>
@@ -429,7 +446,7 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>Personal (mobile)</InputLabel>
-                    {/* <Controller
+                    <Controller
                       name="mobile"
                       control={control}
                       rules={{
@@ -437,36 +454,27 @@ const PersonalInfo = () => {
                           value: true,
                           message: "Required",
                         },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
                       }}
-                      render={({ ...field }) => (
+                      render={({ field }) => (
                         <InputMask
-                          style={{ ...inputStyles }}
-                          mask="(999) 999-9999"
-                          placeholder="Enter phone number"
+                          {...field}
                           type="text"
                           name="mobile"
+                          style={{ ...inputStyles }}
+                          mask="(999) 999-9999"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const numericPhoneNumber = value.replace(/\D/g, "");
+                            const numericValue = parseInt(
+                              numericPhoneNumber,
+                              10
+                            );
+                            setValue("mobile", numericValue);
+                          }}
                         />
                       )}
-                    /> */}
-                    <Input
-                      type="text"
-                      {...register("mobile", {
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
-                      })}
                     />
+
                     {errors.mobile && (
                       <Errors> {errors.mobile?.message} </Errors>
                     )}
@@ -517,7 +525,7 @@ const PersonalInfo = () => {
                     <InputLabel>
                       Emergency Contact number <InputSpan>*</InputSpan>
                     </InputLabel>
-                    {/* <Controller
+                    <Controller
                       name="emergencyContactNumber"
                       control={control}
                       rules={{
@@ -525,41 +533,28 @@ const PersonalInfo = () => {
                           value: true,
                           message: "Required",
                         },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
                       }}
-                      render={({ ...field }) => (
+                      render={({ field }) => (
                         <InputMask
+                          {...field}
                           style={{ ...inputStyles, width: "50%" }}
                           mask="(999) 999-9999"
-                          placeholder="Enter phone number"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const numericPhoneNumber = value.replace(/\D/g, "");
+                            const numericValue = parseInt(
+                              numericPhoneNumber,
+                              10
+                            );
+                            setValue("emergencyContactNumber", numericValue);
+                          }}
                           id="phone"
                           type="text"
+                          name="emergencyContactNumber"
                         />
                       )}
-                    /> */}
-                    <Input
-                      style={{ width: "50%" }}
-                      type="text"
-                      {...register("emergencyContactNumber", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
-                      })}
                     />
+
                     {errors.emergencyContactNumber && (
                       <Errors>
                         {" "}
@@ -619,12 +614,10 @@ const PersonalInfo = () => {
                           value: true,
                           message: "Required",
                         },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
+                        validate: (Value) => {
+                          let compareLength = Value.length === 9;
+
+                          return compareLength || "Please enter a valid sin";
                         },
                       })}
                     />
@@ -664,7 +657,7 @@ const PersonalInfo = () => {
           </BodyMain>
         </EmployeeBody>
       )}
-      {/* <DevTool control={control} /> */}
+      <DevTool control={control} />
     </>
   );
 };

@@ -161,7 +161,7 @@ const JobDetails = () => {
     let dataCopy = { ...data };
     let url = `/employee/job-details/${employeeid}`;
 
-    // setIsLoading(true);
+    setIsLoading(true);
 
     httpClient({
       method: "put",
@@ -174,6 +174,8 @@ const JobDetails = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
+          toast.success(result.message);
+
           } else {
             Navigate(`/organization-admin/employee/benefits/${employeeid}`);
           }
@@ -186,10 +188,10 @@ const JobDetails = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Submiting Job Details. Please try again.");
-        // setIsLoading(false);
+        setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
   const GetDepartments = () => {
@@ -273,7 +275,11 @@ const JobDetails = () => {
             <BodyHeaderTitle>
               <span
                 style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() => Navigate(`/organization-admin/employee/personal-info/${employeeid}`)}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/personal-info/${employeeid}`
+                  )
+                }
               >
                 {" "}
                 Personal Information{" "}
@@ -339,6 +345,15 @@ const JobDetails = () => {
                         required: {
                           value: true,
                           message: " Required",
+                        },
+                        validate: (fieldValue) => {
+                          const selectedDate = new Date(fieldValue);
+                          const currentDate = new Date();
+
+                          if (selectedDate > currentDate) {
+                            return "Start date must not be greater than today's date";
+                          }
+                          return true;
                         },
                       })}
                     />
@@ -416,11 +431,17 @@ const JobDetails = () => {
                           message: "Required",
                         },
                         validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            " Must be a number "
+                          const salaryFrom = parseFloat(
+                            getValues("details.salaryScaleFrom")
                           );
+                          const salaryTo = parseFloat(fieldValue);
+                          if (!isNaN(salaryFrom) && !isNaN(salaryTo)) {
+                            return (
+                              salaryTo >= salaryFrom ||
+                              "Salary to must be greater than or equal to Salary From"
+                            );
+                          }
+                          return true;
                         },
                       })}
                     />
@@ -441,11 +462,37 @@ const JobDetails = () => {
                           value: true,
                           message: "Required",
                         },
+                        // validate: (fieldValue) => {
+                        //   return (
+                        //     (!isNaN(parseFloat(fieldValue)) &&
+                        //       isFinite(fieldValue)) ||
+                        //     "Must be a number"
+                        //   );
+                        // },
                         validate: (fieldValue) => {
+                          const salaryFrom = parseFloat(
+                            getValues("details.salaryScaleFrom")
+                          );
+                          const salaryTo = parseFloat(
+                            getValues("details.salaryScaleTo")
+                          );
+                          const actualSalary = parseFloat(fieldValue);
+
+                          if (
+                            !isNaN(salaryFrom) &&
+                            !isNaN(salaryTo) &&
+                            !isNaN(actualSalary)
+                          ) {
+                            return (
+                              (actualSalary >= salaryFrom &&
+                                actualSalary <= salaryTo) ||
+                              "Actual Salary must be between Salary From and Salary To"
+                            );
+                          }
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
                               isFinite(fieldValue)) ||
-                            " Must be a number "
+                            "Must be a number"
                           );
                         },
                       })}
@@ -495,6 +542,10 @@ const JobDetails = () => {
                               isFinite(fieldValue)) ||
                             "Must be a number "
                           );
+                        },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid hours",
                         },
                       })}
                     />

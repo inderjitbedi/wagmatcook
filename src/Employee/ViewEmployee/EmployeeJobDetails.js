@@ -290,7 +290,7 @@ const EmployeeJobDetails = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Actual Salary amounts</TitlePara>
-                    <ViewPara> ${result.details?.salary || " - "}</ViewPara>
+                    <ViewPara> $ {result.details?.salary || " - "}</ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Salary rate per</TitlePara>

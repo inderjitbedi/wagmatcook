@@ -8,7 +8,7 @@ const infoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    certificate: {
+    file: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'File',
         required:true
@@ -38,6 +38,6 @@ const infoSchema = new mongoose.Schema({
 });
 
 
-const EmployeeBenefits = mongoose.model('EmployeeBenefits', infoSchema);
+const EmployeeCertificates = mongoose.model('EmployeeCertificate', infoSchema);
 
-module.exports = EmployeeBenefits;
+module.exports = EmployeeCertificates;

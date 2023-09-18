@@ -1,11 +1,11 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
-import { useNavigate, useParams,Link } from "react-router-dom";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 import moment from "moment";
 import {
@@ -63,10 +63,13 @@ const EVCertificates = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleClose = () => {
-    reset({})
+    reset({});
     clearErrors();
-    setOpen(false)
+    setOpen(false);
+    setFile(null)
   };
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +84,7 @@ const EVCertificates = () => {
     getValues,
     reset,
     clearErrors,
-    setValue
+    setValue,
   } = useForm({
     mode: "all",
     // defaultValues: {
@@ -148,7 +151,7 @@ const EVCertificates = () => {
           handleClose();
           GetEmployeesCertificates();
           reset();
-          toast.success("Employee certificate added successfully");
+          toast.success(result.message); //Employee certificate added successfully");
         } else {
           toast.warn("something went wrong ");
         }
@@ -167,6 +170,8 @@ const EVCertificates = () => {
     handleUpload(file, index);
   };
   const handleUpload = (file, index) => {
+    setIsUploading(true);
+
     if (file) {
       const binary = new FormData();
       binary.append("file", file);
@@ -187,12 +192,14 @@ const EVCertificates = () => {
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
+            setIsUploading(false);
           } else {
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
         })
         .catch((error) => {
           console.error("Error:", error);
+          setIsUploading(false);
         });
     }
   };
@@ -202,7 +209,7 @@ const EVCertificates = () => {
   };
   console.log(result);
   useEffect(() => {
-   GetEmployeesCertificates();
+    GetEmployeesCertificates();
   }, []);
 
   return (
@@ -406,11 +413,22 @@ const EVCertificates = () => {
                         >
                           {" "}
                           <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {!file
-                            ? "Upload Documents "
-                            : file?.name.length <= 32
-                            ? file?.name
-                            : file.name.substring(0, 30) + "..."}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file ? (
+                            "Upload Documents "
+                          ) : file?.name.length <= 32 ? (
+                            file?.name
+                          ) : (
+                            file.name.substring(0, 30) + "..."
+                          )}
                         </EditButton>
                         {file && (
                           <LightPara onClick={removeFile}>Remove</LightPara>
@@ -428,45 +446,47 @@ const EVCertificates = () => {
                 {result?.certificates?.map((data) => (
                   <CertificateContainer>
                     <CertificateTitle style={{ marginBottom: "16px" }}>
-                      {data.title}
+                      {data.title || " - "}
                     </CertificateTitle>
                     <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Provider</TitlePara>
-                        <ViewPara>{data.provider}</ViewPara>
+                        <ViewPara>{data.provider || " - "}</ViewPara>
                       </FlexColumn>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Completion Date</TitlePara>
                         <ViewPara>
-                          {moment(data.completionDate).format("DD/MM/YYYY")}
+                          {moment(data.completionDate).format("DD/MM/YYYY") ||
+                            " - "}
                         </ViewPara>
                       </FlexColumn>
                       <FlexColumn style={{ gap: "0px" }}>
                         <TitlePara>Expriry </TitlePara>
                         <ViewPara>
-                          {moment(data.expiryDate).format("DD/MM/YYYY")}{" "}
+                          {moment(data.expiryDate).format("DD/MM/YYYY") ||
+                            " - "}{" "}
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
-                      <Link
-                        to={
-                          "http://hrapi.chantsit.com/" +
-                          data.file?.destination +
-                          "/" +
-                          data.file?.name
-                        }
-                        target="blank"
-                        download
-                        style={{textDecoration:"none"}}
-                      >
-                    <File>
+                    <Link
+                      to={
+                        "http://hrapi.chantsit.com/" +
+                        data.file?.destination +
+                        "/" +
+                        data.file?.name
+                      }
+                      target="blank"
+                      download
+                      style={{ textDecoration: "none" }}
+                    >
+                      <File>
                         {" "}
                         <IconsEmployee src="/images/icons/File Text.svg" />{" "}
                         {data.file.name?.length <= 38
                           ? data.file.name
-                          : data.file.name.substring(0, 38) + "..."}
-                    </File>
-                      </Link>
+                          : data.file.name.substring(0, 38) + "..." || " - "}
+                      </File>
+                    </Link>
                   </CertificateContainer>
                 ))}
               </BasicDetailsDiv>

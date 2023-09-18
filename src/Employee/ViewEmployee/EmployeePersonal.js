@@ -154,7 +154,7 @@ const EmployeePersonal = () => {
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Postal Code</TitlePara>
-                    <ViewPara>
+                    <ViewPara style={{textTransform:"uppercase"}}>
                       {result?.personalInfo?.postalCode || " - "}
                     </ViewPara>
                   </FlexColumn>

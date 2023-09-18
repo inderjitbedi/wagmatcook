@@ -2,6 +2,7 @@ import React from 'react';
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 const style = {
   position: "absolute",
   top: "50%",
@@ -63,11 +64,12 @@ const ModalThanksHeading = styled.p`
    border: none;
  `;
 
-const SuccessfullModal = () => {
+const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
+  const Navigate = useNavigate()
   return (
     <Modal
-      // open={openDelete}
-      // onClose={HandleCloseDelete}
+      open={openThanks}
+      onClose={HandleCloseThanks}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -79,11 +81,11 @@ const SuccessfullModal = () => {
           />
           <ModalThanksImg src="/images/success.jpg" />
           <ModalThanksHeading>Employee Added Successfully</ModalThanksHeading>
-      <ButtonBlue>Thanks</ButtonBlue>
+          <ButtonBlue onClick={() =>  Navigate(`/organization-admin/employee/list`)}>Thanks</ButtonBlue>
         </ModalThanks>
       </Box>
     </Modal>
   );
-}
+};
 
 export default SuccessfullModal

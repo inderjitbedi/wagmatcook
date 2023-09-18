@@ -18,7 +18,7 @@ const benefitController = {
             req.body.updatedBy = req.user._id;
             req.body.organization = req.organization._id
             const benefit = await Benefit.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            res.status(200).json({ benefit, message: 'Benefit deleted successfully' });
+            res.status(200).json({ benefit, message: 'Benefit updated successfully' });
         } catch (error) {
             console.error("benefitController:update:error -", error);
             res.status(400).json(error);

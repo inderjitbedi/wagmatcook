@@ -1,5 +1,8 @@
 
 
+
+
+
 const mongoose = require('mongoose');
 
 const infoSchema = new mongoose.Schema({
@@ -7,28 +10,29 @@ const infoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    benefit: {
+    file: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Benefit',
+        ref: 'File',
+        required: true
     },
-    // description: {
-    //     type: String,
-    //     default: null
-    // },
-    startDate: {
+    disciplinary: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Disciplinary',
+    },
+    details: {
+        type: String,
+        default: null
+    },
+    bcr: {
+        type: String,
+        default: null
+    },
+    issueDate: {
         type: Date,
         default: null
     },
-    endDate: {
+    expiryDate: {
         type: Date,
-        default: null
-    },
-    cost: {
-        type: Number,
-        default: null
-    },
-    contributionRate: {
-        type: Number,
         default: null
     },
     isDeleted: {
@@ -40,6 +44,6 @@ const infoSchema = new mongoose.Schema({
 });
 
 
-const EmployeeBenefits = mongoose.model('EmployeeBenefits', infoSchema);
+const EmployeeDisciplinaries = mongoose.model('EmployeeDisciplinaries', infoSchema);
 
-module.exports = EmployeeBenefits;
+module.exports = EmployeeDisciplinaries;

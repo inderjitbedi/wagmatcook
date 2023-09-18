@@ -7,7 +7,7 @@ const disciplinaryController = {
             req.body.organization = '64e43ba127e762b8eee50d47'
             const disciplinary = new Disciplinary(req.body);
             await disciplinary.save();
-            res.status(201).json({ disciplinary, message: 'Disciplinary created successfully.' });
+            res.status(201).json({ disciplinary, message: 'Disciplinary type created successfully.' });
         } catch (error) {
             console.error("disciplinaryController:create:error -", error);
             res.status(400).json(error);
@@ -18,7 +18,7 @@ const disciplinaryController = {
             req.body.updatedBy = req.user._id;
             req.body.organization = '64e43ba127e762b8eee50d47'
             const disciplinary = await Disciplinary.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            res.status(200).json({ disciplinary, message: 'Disciplinary deleted successfully' });
+            res.status(200).json({ disciplinary, message: 'Disciplinary type updated successfully' });
         } catch (error) {
             console.error("disciplinaryController:update:error -", error);
             res.status(400).json(error);
@@ -28,7 +28,7 @@ const disciplinaryController = {
         try {
             req.body.updatedBy = req.user._id;
             const disciplinary = await Disciplinary.findByIdAndUpdate(req.params.id, { isDeleted: true });
-            res.status(200).json({ message: 'Disciplinary deleted successfully' });
+            res.status(200).json({ message: 'Disciplinary type deleted successfully' });
         } catch (error) {
             console.error("disciplinaryController:delete:error -", error);
             res.status(400).json(error);

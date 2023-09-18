@@ -83,6 +83,7 @@ export default function RegisterOrganization() {
                 });
         }
     }
+    
     const handleSizeChange = (e: any) => {
         const newSize = parseInt(e.target.value, 10); // Parse the input value as an integer
 
@@ -107,7 +108,7 @@ export default function RegisterOrganization() {
                 data: formData,
             }).then(({ result }) => {
                 if (result) {
-                    toast.success("Account successfully created.")
+                    toast.success(result.message);//Account successfully created.")
                     navigate('/organization-admin/dashboard');
                 }
             }).catch((error: any) => {

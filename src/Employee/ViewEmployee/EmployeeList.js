@@ -154,14 +154,14 @@ const Employee = () => {
         if (result) {
           HandleCloseDelete();
           GetEmployees();
-          toast.success("Entry Deleted successfully");
+          toast.success(result.message);//Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error Deleting employee. Please try again.");
+        toast.error("Error in deleting employee. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
