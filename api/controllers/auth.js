@@ -208,14 +208,16 @@ const authController = {
             const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
             user = user.toObject();
             delete user.password
-
-            const relation = await UserOrganization.findOne({ user: user._id }).populate({
-                path: 'organization',
-                populate: {
-                  path: 'logo',
-                },
-              });
-            res.status(200).json({ user, organization: relation.organization, token, message: 'User signed in successfully' });
+            let relation = {};
+            if (user.role != roles.SUPER_ADMIN) {
+                relation = await UserOrganization.findOne({ user: user._id }).populate({
+                    path: 'organization',
+                    populate: {
+                        path: 'logo',
+                    },
+                });
+            }
+            res.status(200).json({ user, organization: relation?.organization || {}, token, message: 'User signed in successfully' });
         } catch (error) {
             console.error("authController:register:error -", error);
             res.status(400).json(error);

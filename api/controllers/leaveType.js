@@ -1,15 +1,15 @@
-const Disciplinary = require("../models/disciplinary");
+const LeaveType = require("../models/leaveType");
 
-const disciplinaryController = {
+const leaveTypeController = {
     async create(req, res) {
         try {
             req.body.createdBy = req.user._id;
             req.body.organization = req.organization?._id || null
-            const disciplinary = new Disciplinary(req.body);
-            await disciplinary.save();
-            res.status(201).json({ disciplinary, message: 'Disciplinary type created successfully.' });
+            const leaveType = new LeaveType(req.body);
+            await leaveType.save();
+            res.status(201).json({ leaveType, message: 'Leave type created successfully.' });
         } catch (error) {
-            console.error("disciplinaryController:create:error -", error);
+            console.error("leaveTypeController:create:error -", error);
             res.status(400).json(error);
         }
     },
@@ -17,30 +17,30 @@ const disciplinaryController = {
         try {
             req.body.updatedBy = req.user._id;
             req.body.organization = req.organization?._id || null
-            const disciplinary = await Disciplinary.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            res.status(200).json({ disciplinary, message: 'Disciplinary type updated successfully' });
+            const leaveType = await LeaveType.findByIdAndUpdate(req.params.id, req.body, { new: true })
+            res.status(200).json({ leaveType, message: 'Leave type updated successfully' });
         } catch (error) {
-            console.error("disciplinaryController:update:error -", error);
+            console.error("leaveTypeController:update:error -", error);
             res.status(400).json(error);
         }
     },
     async delete(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            const disciplinary = await Disciplinary.findByIdAndUpdate(req.params.id, { isDeleted: true });
-            res.status(200).json({ message: 'Disciplinary type deleted successfully' });
+            const leaveType = await LeaveType.findByIdAndUpdate(req.params.id, { isDeleted: true });
+            res.status(200).json({ message: 'Leave type deleted successfully' });
         } catch (error) {
-            console.error("disciplinaryController:delete:error -", error);
+            console.error("leaveTypeController:delete:error -", error);
             res.status(400).json(error);
         }
     },
     async detail(req, res) {
         try {
-            let disciplinary = await Disciplinary.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
-            await disciplinary.save();
-            res.status(201).json({ disciplinary, message: 'Disciplinary created successfully.' });
+            let leaveType = await LeaveType.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
+            await leaveType.save();
+            res.status(201).json({ leaveType, message: 'Leave type details fetched successfully.' });
         } catch (error) {
-            console.error("disciplinaryController:detail:error -", error);
+            console.error("leaveTypeController:detail:error -", error);
             res.status(400).json(error);
         }
     },
@@ -61,32 +61,32 @@ const disciplinaryController = {
                     { description: { $regex: req.query.searchKey, $options: 'i' } }
                 ];
             }
-            const disciplinaries = await Disciplinary.find(filters)
+            const leaveTypes = await LeaveType.find(filters)
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
 
-            const totalDisciplinaries = await Disciplinary.countDocuments(filters);
-            const totalPages = Math.ceil(totalDisciplinaries / req.query.limit);
+            const totalLeaveTypes = await LeaveType.countDocuments(filters);
+            const totalPages = Math.ceil(totalLeaveTypes / req.query.limit);
 
             res.status(200).json({
-                disciplinaries,
-                totalDisciplinaries,
+                leaveTypes,
+                totalLeaveTypes,
                 currentPage: page,
                 totalPages,
-                message: 'Disciplinaries fetched successfully'
+                message: 'Leave types fetched successfully'
             });
         } catch (error) {
-            console.error("disciplinaryController:list:error -", error);
+            console.error("leaveTypeController:list:error -", error);
             res.status(400).json(error);
         }
     },
     async reorder(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            let disciplinaries = req.body.disciplinaries
-            disciplinaries.forEach(async (disciplinary, i) => {
-                await Disciplinary.findByIdAndUpdate(disciplinary, { order: i + 1 });
+            let leaveTypes = req.body.leaveTypes
+            leaveTypes.forEach(async (leaveType, i) => {
+                await LeaveType.findByIdAndUpdate(leaveType, { order: i + 1 });
             });
             const page = 1;
             const limit = 10;
@@ -100,24 +100,24 @@ const disciplinaryController = {
                     { description: { $regex: req.query.searchKey, $options: 'i' } }
                 ];
             }
-            disciplinaries = await Disciplinary.find(filters)
+            leaveTypes = await LeaveType.find(filters)
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
 
-            const totalDisciplinaries = await Disciplinary.countDocuments(filters);
-            const totalPages = Math.ceil(totalDisciplinaries / req.query.limit);
+            const totalLeaveTypes = await LeaveType.countDocuments(filters);
+            const totalPages = Math.ceil(totalLeaveTypes / req.query.limit);
 
             res.status(200).json({
-                disciplinaries,
-                totalDisciplinaries,
+                leaveTypes,
+                totalLeaveTypes,
                 currentPage: page,
-                totalPages, message: 'Disciplinaries reordered successfully'
+                totalPages, message: 'Leave types reordered successfully'
             });
         } catch (error) {
-            console.error("\n\disciplinaryController:reorder:error -", error);
+            console.error("\n\leaveTypeController:reorder:error -", error);
             res.status(400).json({ message: error.toString() });;
         }
     },
 }
-module.exports = disciplinaryController
+module.exports = leaveTypeController

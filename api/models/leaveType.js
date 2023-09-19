@@ -6,6 +6,18 @@ const schema = new mongoose.Schema({
         default: null,
         required: true,
     },
+    description: {
+        type: String,
+        default: null,
+    },
+    order: {
+        type: Number,
+        default: null,
+    },
+    maxCarryOver: {
+        type: Number,
+        default: null,
+    },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',

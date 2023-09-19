@@ -27,4 +27,11 @@ module.exports = Object.freeze({
         MIME_TYPES: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/tiff'],
         FOLDER_NAME: 'image'
     },
+    XLSX_CONFIG: {
+        MAX_SIZE: 10 * 1024 * 1024, 
+        ALLOWED_EXTENSIONS: ['xlsx'],
+        ALLOWED_EXTENSIONS_REGEX: /xlsx/,
+        MIME_TYPES: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+        FOLDER_NAME: 'xlsx'
+    },
 });

@@ -51,7 +51,7 @@ const infoSchema = new mongoose.Schema({
         default: null
     },
     employeeId: {
-        type: Number,
+        type: String,
         default: null
     },
     sin: {
