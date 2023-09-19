@@ -39,7 +39,7 @@ const employeeController = {
                 },
                 {
                     $match: {
-                        'userOrganizations.organization': req.organization._id,
+                        'userOrganizations.organization': req.organization?._id || null,
                     },
                 },
                 {
@@ -99,7 +99,7 @@ const employeeController = {
             // user.invitationTokenExpiry = Date.now() + (3600000 * 24);
             await user.save();
 
-            const relation = new UserOrganization({ user: user._id, organization: req.organization._id });
+            const relation = new UserOrganization({ user: user._id, organization: req.organization?._id || null });
             await relation.save()
 
 
@@ -517,7 +517,7 @@ const employeeController = {
     },
     async addType(req, res) {
         try {
-            const employeeType = new EmployeeType({ ...req.body, organization: req.organization._id })
+            const employeeType = new EmployeeType({ ...req.body, organization: req.organization?._id || null })
             await employeeType.save()
             res.status(200).json({
                 employeeType,
@@ -530,7 +530,7 @@ const employeeController = {
     },
     async updateType(req, res) {
         try {
-            const employeeType = await EmployeeType.findOneAndUpdate({ _id: req.params.id }, { ...req.body, organization: req.organization._id })
+            const employeeType = await EmployeeType.findOneAndUpdate({ _id: req.params.id }, { ...req.body, organization: req.organization?._id || null })
             res.status(200).json({
                 employeeType,
                 message: 'Employee type updated successfully'
@@ -542,7 +542,7 @@ const employeeController = {
     },
     async getTypes(req, res) {
         try {
-            const types = await EmployeeType.find({ organization: req.organization._id, isDeleted: false })
+            const types = await EmployeeType.find({ organization: req.organization?._id || null, isDeleted: false })
 
             res.status(200).json({
                 types,

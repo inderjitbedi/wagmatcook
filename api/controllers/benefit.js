@@ -4,7 +4,7 @@ const benefitController = {
     async create(req, res) {
         try {
             req.body.createdBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const benefit = new Benefit(req.body);
             await benefit.save();
             res.status(201).json({ benefit, message: 'Benefit created successfully.' });
@@ -16,7 +16,7 @@ const benefitController = {
     async update(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const benefit = await Benefit.findByIdAndUpdate(req.params.id, req.body, { new: true })
             res.status(200).json({ benefit, message: 'Benefit updated successfully' });
         } catch (error) {
@@ -51,7 +51,7 @@ const benefitController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization : req.organization._id };
+            let filters = { isDeleted: false, organization : req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [

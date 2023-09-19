@@ -4,7 +4,7 @@ const departmentController = {
     async create(req, res) {
         try {
             req.body.createdBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const department = new Department(req.body);
             await department.save();
             res.status(201).json({ department, message: 'Department created successfully.' });
@@ -16,7 +16,7 @@ const departmentController = {
     async update(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const department = await Department.findByIdAndUpdate(req.params.id, req.body, { new: true })
             res.status(200).json({ department, message: 'Department updated successfully' });
         } catch (error) {
@@ -54,7 +54,7 @@ const departmentController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization : req.organization._id };
+            let filters = { isDeleted: false, organization : req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [

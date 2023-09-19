@@ -10,6 +10,8 @@ const orgRoute = require('./routes/organization')
 const departmentRoute = require('./routes/department')
 const benefitRoute = require('./routes/benefit')
 const disciplinaryRoute = require('./routes/disciplinary')
+const leaveTypeRoute = require('./routes/leaveType')
+
 const superAdminRoute = require('./routes/superAdmin')
 const orgAdminRoute = require('./routes/orgAdmin')
 const employeeRoute = require('./routes/employee')
@@ -61,6 +63,7 @@ app.use('/api/organization', orgRoute);
 app.use('/api/department', departmentRoute);
 app.use('/api/benefit', benefitRoute);
 app.use('/api/employee-type', employeeTypeRoute);
+app.use('/api/leave-type', leaveTypeRoute);
 app.use('/api/disciplinary', disciplinaryRoute);
 app.use('/api/super-admin', superAdminRoute);
 app.use('/api/organization-admin', orgAdminRoute);

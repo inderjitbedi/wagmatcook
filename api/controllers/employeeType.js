@@ -4,7 +4,7 @@ const employeeTypeController = {
     async create(req, res) {
         try {
             req.body.createdBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const employeeType = new EmployeeType(req.body);
             await employeeType.save();
             res.status(201).json({ employeeType, message: 'Employee Type created successfully.' });
@@ -16,7 +16,7 @@ const employeeTypeController = {
     async update(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            req.body.organization = req.organization._id
+            req.body.organization = req.organization?._id || null
             const employeeType = await EmployeeType.findByIdAndUpdate(req.params.id, req.body, { new: true })
             res.status(200).json({ employeeType, message: 'Employee Type updated successfully' });
         } catch (error) {
@@ -51,7 +51,7 @@ const employeeTypeController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization : req.organization._id };
+            let filters = { isDeleted: false, organization : req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [
