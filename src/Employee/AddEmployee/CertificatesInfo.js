@@ -425,10 +425,10 @@ const CertificatesInfo = () => {
                         type="file"
                         accept="image/*,capture=camera"
                         {...register(`certificates.${index}.file`, {
-                          required: {
-                            value: edit ? false : true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: edit ? false : true,
+                          //   message: "Required",
+                          // },
 
                           onChange: (e) => {
                             handleFileChange(e, index);
