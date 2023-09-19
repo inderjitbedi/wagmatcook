@@ -220,7 +220,7 @@ const PersonalInfo = () => {
           </BackButton>
           <HeaderTitle>
             {" "}
-            {edit ? "Update Personal Info " : "Add New Employee "}
+            {edit ? "Update  Employee  Personal Info " : "Add New Employee "}
           </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
@@ -309,9 +309,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.firstName && (
-                      <Errors>{errors.firstName?.message}</Errors>
-                    )}
+                    {<Errors>{errors.firstName?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -326,9 +324,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.lastName && (
-                      <Errors>{errors.lastName?.message}</Errors>
-                    )}
+                    {<Errors>{errors.lastName?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -346,9 +342,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.address && (
-                      <Errors>{errors.address?.message}</Errors>
-                    )}
+                    {<Errors>{errors.address?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -363,7 +357,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.city && <Errors> {errors.city?.message} </Errors>}
+                    {<Errors> {errors.city?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -381,9 +375,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.province && (
-                      <Errors> {errors.province?.message} </Errors>
-                    )}
+                    {<Errors> {errors.province?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -402,9 +394,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.postalCode && (
-                      <Errors>{errors.postalCode?.message}</Errors>
-                    )}
+                    {<Errors>{errors.postalCode?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -440,21 +430,13 @@ const PersonalInfo = () => {
                         />
                       )}
                     />
-                    {errors.homePhone && (
-                      <Errors> {errors.homePhone?.message} </Errors>
-                    )}
+                    {<Errors> {errors.homePhone?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>Personal (mobile)</InputLabel>
                     <Controller
                       name="mobile"
                       control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      }}
                       render={({ field }) => (
                         <InputMask
                           {...field}
@@ -475,9 +457,7 @@ const PersonalInfo = () => {
                       )}
                     />
 
-                    {errors.mobile && (
-                      <Errors> {errors.mobile?.message} </Errors>
-                    )}
+                    {<Errors> {errors.mobile?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -498,9 +478,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.personalEmail && (
-                      <Errors> {errors.personalEmail?.message} </Errors>
-                    )}
+                    {<Errors> {errors.personalEmail?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -515,9 +493,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.emergencyContact && (
-                      <Errors> {errors.emergencyContact?.message} </Errors>
-                    )}
+                    {<Errors> {errors.emergencyContact?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -555,12 +531,12 @@ const PersonalInfo = () => {
                       )}
                     />
 
-                    {errors.emergencyContactNumber && (
+                    {
                       <Errors>
                         {" "}
                         {errors.emergencyContactNumber?.message}{" "}
                       </Errors>
-                    )}
+                    }
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>
@@ -582,9 +558,7 @@ const PersonalInfo = () => {
                         },
                       })}
                     />
-                    {errors.employeeId && (
-                      <Errors> {errors.employeeId?.message} </Errors>
-                    )}
+                    {<Errors> {errors.employeeId?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -597,9 +571,17 @@ const PersonalInfo = () => {
                           value: true,
                           message: "Required",
                         },
+                        validate: (fieldValue) => {
+                          const selectedDate = Date.parse(fieldValue);
+                          const currentDate = new Date().setHours(0, 0, 0, 0);
+                          if (selectedDate > currentDate) {
+                            return "Date of Birth must not be greater than today's date";
+                          }
+                          return true;
+                        },
                       })}
                     />
-                    {errors.dob && <Errors> {errors.dob?.message} </Errors>}
+                    {<Errors> {errors.dob?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -607,21 +589,35 @@ const PersonalInfo = () => {
                     <InputLabel>
                       Sin <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("sin", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        validate: (Value) => {
-                          let compareLength = Value.length === 9;
-
-                          return compareLength || "Please enter a valid sin";
-                        },
-                      })}
+                    <Controller
+                      name="sin"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <InputMask
+                          {...field}
+                          type="text"
+                          name="sin"
+                          defaultValue={null}
+                          style={{ ...inputStyles }}
+                          mask="999-999-999"
+                          onChange={(e) => {
+                            field.onChange(e);
+                            const numericValue = parseInt(
+                              e.target.value.replace(/\D/g, ""),
+                              10
+                            );
+                            console.log(
+                              numericValue,
+                              typeof numericValue,
+                              "sin value "
+                            );
+                            setValue("sin", numericValue);
+                          }}
+                        />
+                      )}
                     />
-                    {errors.sin && <Errors> {errors.sin?.message} </Errors>}
+                    {<Errors> {errors.sin?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -630,18 +626,22 @@ const PersonalInfo = () => {
                     <Controller
                       name="gender"
                       control={control}
-                      rules={{ required: true }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
                       render={({ field }) => (
                         <Select {...field}>
                           <Option>Select</Option>
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
                           <Option value={3}>Non-Binary</Option>
-                          <Option value={4}>Pronouns</Option>
                         </Select>
                       )}
                     />
-                    {errors.gender && <Errors>Required</Errors>}
+                    {<Errors>{errors.gender?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>

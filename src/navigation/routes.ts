@@ -35,6 +35,7 @@ import EmployeeDetailLayout from "../Employee/ViewEmployee/EmployeeDetailLayout"
 import AddEmployeeLayout from "../Employee/AddEmployee/AddEmployeeLayout";
 import EmployeeLayout from "../Employee/EmployeeLayout";
 import OABenefits from "../Benefits/OABenefits";
+import EmployeeTypes from "../Employee/EmployeeType/EmployeeTypes";
 const Routes: any = [
   {
     component: signup,
@@ -105,6 +106,14 @@ const Routes: any = [
         component: OABenefits,
         path: "benefits",
         title: "Benefits",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: EmployeeTypes,
+        path: "employee-types",
+        title: "Employee Types",
         to: "/",
         type: "private",
         index: true,

@@ -54,7 +54,7 @@ const EmployeeDetailLayout = () => {
         </FlexContaier>
 
         <DashHeaderSearch>
-          <SearchBox>
+          {/* <SearchBox>
             <SearchInput
               type="text"
               placeholder="Search..."
@@ -62,7 +62,7 @@ const EmployeeDetailLayout = () => {
               // onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
+          </SearchBox> */}
           <DashNotification src="/images/icons/Notifications.svg" />
           <div
             style={{

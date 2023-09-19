@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import moment from "moment";
-
+import NoDocumentfound from "../NoDocumentfound";
 import {
   IconsEmployee,
   MainBodyContainer,
@@ -65,6 +65,8 @@ const style = {
   boxShadow: 45,
   padding: "8px 0px",
   borderRadius: "8px",
+  height: "597px",
+  overflowY: "scroll",
 };
 const EVPerformance = () => {
   const { employeeid } = useParams();
@@ -98,6 +100,7 @@ const EVPerformance = () => {
     reset,
     setValue,
     clearErrors,
+    setError,
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
@@ -270,10 +273,10 @@ const EVPerformance = () => {
               </FlexColumn>
             </PersonalInfo>
 
-            <EditButton style={{ marginRight: "54px" }}>
+            {/* <EditButton style={{ marginRight: "54px" }}>
               <ButtonIcon src="/images/icons/Pen 2.svg" />
               Edit
-            </EditButton>
+            </EditButton> */}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>
@@ -311,6 +314,24 @@ const EVPerformance = () => {
                                 value: true,
                                 message: "Required",
                               },
+                              onChange: (e) => {
+                                const endDate = new Date(
+                                  getValues("nextReviewDate")
+                                );
+                                const startDate = new Date(e.target.value);
+                                if (startDate >= endDate) {
+                                  setError("nextReviewDate", {
+                                    type: "custom",
+                                    message:
+                                      "Next Review must not be earlier than  Date",
+                                  });
+                                } else {
+                                  setError("nextReviewDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
+                              },
                             })}
                           />
                           {errors.reviewDate && (
@@ -318,7 +339,7 @@ const EVPerformance = () => {
                           )}
                         </FlexColumnForm>
                       </FlexContaierForm>
-                      <FlexContaierForm>
+                      {/* <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
                             Completed By <InputSpan>*</InputSpan>
@@ -347,7 +368,7 @@ const EVPerformance = () => {
                             <Errors>{errors.byDate?.message}</Errors>
                           )}
                         </FlexColumnForm>
-                      </FlexContaierForm>
+                      </FlexContaierForm> */}
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
@@ -377,8 +398,8 @@ const EVPerformance = () => {
                             {<Errors>{errors.details?.message}</Errors>}{" "}
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
-                              Max {detailsLength > -1 ? detailsLength : 0}{" "}
-                              characters
+                              {detailsLength > -1 ? detailsLength : 0}{" "}
+                              Characters left
                             </span>
                           </InputPara>
                         </FlexColumnForm>
@@ -453,11 +474,11 @@ const EVPerformance = () => {
                               visible={true}
                             />
                           ) : !file ? (
-                            "Upload Documents "
-                          ) : file?.name.length <= 32 ? (
-                            file?.name
+                            "Upload Document "
+                          ) : file?.originalName.length <= 32 ? (
+                            file?.originalName
                           ) : (
-                            file.name.substring(0, 30) + "..."
+                            file?.originalName.substring(0, 30) + "..."
                           )}
                         </EditButton>
                         {file && (
@@ -475,104 +496,109 @@ const EVPerformance = () => {
 
               <BasicDetailsDiv>
                 {/* dot and circle  */}
-                <VerticalTimeline
-                  layout={"1-column-left"}
-                  lineColor={"#EFF4FA"}
-                  style={{
-                    padding: "0px",
-                    margin: "0px",
-                    maxWidth: "100%",
-                  }}
-                >
-                  {result?.reviews?.map((data) => (
-                    <VerticalTimelineElement
-                      className="vertical-timeline-element--work"
-                      contentStyle={{
-                        outine: "none",
-                        boxShadow: "none",
-                        border: "none",
-                      }}
-                      iconStyle={{
-                        width: "18px",
-                        height: "18px",
-                        background: "#fff",
-                        border: "1.5px solid #8F9BB3",
-                        borderRadius: "50%",
-                        boxShadow: "none",
-                        outine: "none",
-                        marginLeft: "10px",
-                      }}
-                      intersectionObserverProps={{
-                        margin: "0px 0px 0px 0px",
-                      }}
-                      style={{ margin: "0px" }}
-                    >
-                      <TimelineDiv style={{ padding: "16px" }}>
-                        <FlexColumn style={{ width: "100%", gap: "0px" }}>
-                          <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                            <TitlePara>Completed By</TitlePara>
-                            <TitlePara>
-                              Date of Review:{" "}
-                              {moment(data.reviewDate).format("DD/MM/YYYY") ||
-                                " - "}
-                            </TitlePara>
-                          </FlexSpaceBetween>
-                          <ViewPara
-                            style={{
-                              color: "#222B45",
-                              fontFamily: "Inter",
-                              fontSize: "14px",
-                              fontStyle: "normal",
-                              fontWeight: 700,
-                              lineHeight: "1px",
-                            }}
-                          >
-                            Tom Holland
-                          </ViewPara>
-                          <TimelinePara
-                            style={{
-                              width: "90%",
-                              overflowX: "hidden",
-                              marginBottom: "16px",
-                            }}
-                          >
-                            {data.details || " - "}
-                          </TimelinePara>
-                          <FlexSpaceBetween>
-                            <Link
-                              to={
-                                "http://hrapi.chantsit.com/" +
-                                data.file?.destination +
-                                "/" +
-                                data.file?.name
-                              }
-                              target="blank"
-                              download
-                              style={{ textDecoration: "none" }}
+                {!result?.review?.length ? (
+                  <NoDocumentfound />
+                ) : (
+                  <VerticalTimeline
+                    layout={"1-column-left"}
+                    lineColor={"#EFF4FA"}
+                    style={{
+                      padding: "0px",
+                      margin: "0px",
+                      maxWidth: "100%",
+                    }}
+                  >
+                    {result?.reviews?.map((data) => (
+                      <VerticalTimelineElement
+                        className="vertical-timeline-element--work"
+                        contentStyle={{
+                          outine: "none",
+                          boxShadow: "none",
+                          border: "none",
+                        }}
+                        iconStyle={{
+                          width: "18px",
+                          height: "18px",
+                          background: "#fff",
+                          border: "1.5px solid #8F9BB3",
+                          borderRadius: "50%",
+                          boxShadow: "none",
+                          outine: "none",
+                          marginLeft: "10px",
+                        }}
+                        intersectionObserverProps={{
+                          margin: "0px 0px 0px 0px",
+                        }}
+                        style={{ margin: "0px" }}
+                      >
+                        <TimelineDiv style={{ padding: "16px" }}>
+                          <FlexColumn style={{ width: "100%", gap: "0px" }}>
+                            <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                              <TitlePara>Completed By</TitlePara>
+                              <TitlePara>
+                                Date of Review:{" "}
+                                {moment(data.reviewDate).format("DD/MM/YYYY") ||
+                                  " - "}
+                              </TitlePara>
+                            </FlexSpaceBetween>
+                            <ViewPara
+                              style={{
+                                color: "#222B45",
+                                fontFamily: "Inter",
+                                fontSize: "14px",
+                                fontStyle: "normal",
+                                fontWeight: 700,
+                                lineHeight: "1px",
+                              }}
                             >
-                              <File>
-                                {" "}
-                                <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                                {data.file.name?.length <= 38
-                                  ? data.file.name
-                                  : data.file.name.substring(0, 38) + "..." ||
-                                    " - "}
-                              </File>
-                            </Link>
-                            {/* <AddNewButton onClick={handleOpenFollow}>
+                              Tom Holland
+                            </ViewPara>
+                            <TimelinePara
+                              style={{
+                                width: "90%",
+                                overflowX: "hidden",
+                                marginBottom: "16px",
+                              }}
+                            >
+                              {data.details || " - "}
+                            </TimelinePara>
+                            <FlexSpaceBetween>
+                              <Link
+                                to={
+                                  "http://hrapi.chantsit.com/" +
+                                  data.file?.destination +
+                                  "/" +
+                                  data.file?.name
+                                }
+                                target="blank"
+                                download
+                                style={{ textDecoration: "none" }}
+                              >
+                                <File>
+                                  {" "}
+                                  <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                  {data.file.originalName?.length <= 38
+                                    ? data.file?.originalName
+                                    : data.file?.originalName.substring(0, 38) +
+                                        "..." || " - "}
+                                </File>
+                              </Link>
+                              {/* <AddNewButton onClick={handleOpenFollow}>
                               Add Follow-up
                             </AddNewButton> */}
-                          </FlexSpaceBetween>
-                          <ReviewsDiv>
-                            Next Review on:{" "}
-                            {moment(data.nextReviewDate).format("DD/MM/YYYY") ||
-                              " - "}
-                          </ReviewsDiv>
-                        </FlexColumn>
-                      </TimelineDiv>
-                    </VerticalTimelineElement>
-                  ))}
-                </VerticalTimeline>
+                            </FlexSpaceBetween>
+                            <ReviewsDiv>
+                              Next Review on:{" "}
+                              {moment(data.nextReviewDate).format(
+                                "DD/MM/YYYY"
+                              ) || " - "}
+                            </ReviewsDiv>
+                          </FlexColumn>
+                        </TimelineDiv>
+                      </VerticalTimelineElement>
+                    ))}
+                  </VerticalTimeline>
+                )}
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>
@@ -656,7 +682,7 @@ const EVPerformance = () => {
                                 }{" "}
                                 <span style={{ justifySelf: "flex-end" }}>
                                   {" "}
-                                  Max {followLength} characters
+                                   {followLength} characters left
                                 </span>
                               </InputPara>
                             </FlexColumnForm>

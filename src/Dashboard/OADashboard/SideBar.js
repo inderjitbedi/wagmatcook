@@ -67,6 +67,11 @@ const SideBar = () => {
       Title: "Report",
       src: "/svg/Reports.svg",
     },
+    {
+      Title: "Employee Types",
+      src: "/svg/Reports.svg",
+      to: "/organization-admin/employee-types",
+    },
   ];
   console.log(location.pathname);
   const style = {

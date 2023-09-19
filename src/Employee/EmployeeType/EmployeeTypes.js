@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
+import httpClient from "../../api/httpClient";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
-import DeleteModal from "../Modals/DeleteModal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -16,7 +15,7 @@ import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import DeleteModal from "../../Modals/DeleteModal";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -25,7 +24,8 @@ import {
   SearchInput,
   SearchIcon,
   DashNotification,
-} from "../Dashboard/OADashboard/OADashBoardStyles";
+} from "../../Dashboard/OADashboard/OADashBoardStyles";
+
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -47,33 +47,60 @@ import {
   Option,
   Errors,
   LoadMore,
-} from "../Disciplinary/DisciplinaryStyles";
-const OABenefits = () => {
+} from "../../Disciplinary/DisciplinaryStyles";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 446,
+  bgcolor: "background.paper",
+  border: "none",
+  boxShadow: 45,
+  padding: "20px 0px",
+  borderRadius: "8px",
+};
+const CellHeadStyles = {
+  color: "#8F9BB3",
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "16px",
+};
+
+const CellStyle = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "15px",
+  textTransform: "capitalize",
+};
+const CellStyle2 = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 400,
+  lineHeight: "15px",
+};
+const EmployeeTypes = () => {
   const Navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [update, setUpdate] = useState(false);
+  const [detailsLength, setDetailsLength] = useState(500);
+
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
-  const [update, setUpdate] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
   let searchTimer;
-  // add new modal
-  const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
-  const HandleClose = () => {
-    setOpen(false);
-    setDetailsLength(500);
-    clearErrors();
-    reset({});
-    console.log("working");
-  };
-  //Delete Modal Delete
+
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
-  const [detailsLength, setDetailsLength] = useState(500);
-
   const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
     clearTimeout(searchTimer);
@@ -118,10 +145,9 @@ const OABenefits = () => {
     }
     console.log("form submmited", data);
   };
-
-  const GetBenefits = () => {
+  const GetEmployeeTypes = () => {
     setIsLoading(true);
-    let url = `/benefit/list?page=1&limit=10&searchKey=${searchValue}`;
+    let url = `/employee-type/list?page=1&limit=10&searchKey=${searchValue}`;
     httpClient({
       method: "get",
       url,
@@ -142,15 +168,32 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
-
-  useEffect(() => {
-    GetBenefits();
-  }, [delayedSearchValue]);
-
+  const [open, setOpen] = useState(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => {
+    setOpen(false);
+    setDetailsLength(500);
+    clearErrors();
+    reset({});
+    console.log("working");
+  };
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data?.description?.length);
+    reset(data);
+    HandleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    HandleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  };
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = "/benefit/create";
+    let url = "/employee-type/create";
 
     setIsLoading(true);
     let dataCopy = data;
@@ -163,9 +206,8 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success(result.message);//Benefit created successfully.");
-          GetBenefits();
-
+          toast.success(result.message); //Benefit created successfully.");
+          GetEmployeeTypes();
         } else {
           //toast.warn("something went wrong ");
         }
@@ -182,7 +224,7 @@ const OABenefits = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/benefit/delete/${Id}`;
+    let url = `/employee-type/delete/${Id}`;
     httpClient({
       method: "put",
       url,
@@ -191,8 +233,8 @@ const OABenefits = () => {
         if (result) {
           HandleCloseDelete();
           setId("");
-          GetBenefits();
-          toast.success(result.message);//Benefit deleted successfully.");
+          GetEmployeeTypes();
+          toast.success(result.message); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -209,7 +251,7 @@ const OABenefits = () => {
   const HandleUpdate = (data) => {
     let dataCopy = data;
 
-    let url = `/benefit/update/${Id}`;
+    let url = `/employee-type/update/${Id}`;
 
     setIsLoading(true);
 
@@ -221,11 +263,11 @@ const OABenefits = () => {
       .then(({ result }) => {
         if (result) {
           setId("");
-          GetBenefits();
+          GetEmployeeTypes();
           setUpdate(false);
           HandleClose();
           reset();
-          toast.success(result.message);//Entry Updated Successfully");
+          toast.success(result.message); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -239,63 +281,13 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
-  // console.log(result, "the benefits data");
-  console.log(update, "this is the value ");
-
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 446,
-    bgcolor: "background.paper",
-    border: "none",
-    boxShadow: 45,
-    padding: "20px 0px",
-    borderRadius: "8px",
-  };
-  const CellHeadStyles = {
-    color: "#8F9BB3",
-    fontFamily: "Inter",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "16px",
-  };
-
-  const CellStyle = {
-    color: "#222B45",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 600,
-    lineHeight: "15px",
-  };
-  const CellStyle2 = {
-    color: "#222B45",
-    fontSize: "14px",
-    fontStyle: "normal",
-    fontWeight: 400,
-    lineHeight: "15px",
-  };
-
-  const HandleUpdateAction = (data) => {
-    setUpdate(true);
-    setId(data._id);
-    setDetailsLength(500 - data?.description?.length);
-    reset(data);
-    HandleOpen();
-  };
-  const HandleOpenAddNewAction = () => {
-    HandleOpen();
-    reset({});
-    clearErrors();
-    setDetailsLength(500);
-  }
-
+  useEffect(() => {
+    GetEmployeeTypes();
+  }, [delayedSearchValue]);
   return (
     <>
       <DashHeader>
-        <DashHeaderTitle>Benefits</DashHeaderTitle>
+        <DashHeaderTitle>Employee Types</DashHeaderTitle>
         <DashHeaderSearch>
           <SearchBox>
             <SearchInput
@@ -329,10 +321,14 @@ const OABenefits = () => {
         </DashHeaderSearch>
       </DashHeader>
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Benefits</DisciplinaryHeading>
-        <AddNewButton onClick={() => {
-          HandleOpenAddNewAction();
-        }}>Add New</AddNewButton>
+        <DisciplinaryHeading>All Employee Types</DisciplinaryHeading>
+        <AddNewButton
+          onClick={() => {
+            HandleOpenAddNewAction();
+          }}
+        >
+          Add New
+        </AddNewButton>
         <Modal
           open={open}
           onClose={() => {
@@ -345,36 +341,57 @@ const OABenefits = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <ModalUpperDiv>
-              <ModalHeading>
-                {!update ? "Add Benefit" : "Update Benefit"}
-              </ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  HandleClose();
-                  setUpdate(false);
-                  clearErrors();
-                  reset({});
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "70vh",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
-                src="/images/icons/Alert-Circle.svg"
-              />
-            </ModalUpperDiv>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <ModalUpperMid>
-                <InputLabel>
-                  Benefit Name<InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="text"
-                  {...register("name", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                  })}
+              >
+                <RotatingLines
+                  strokeColor="#279AF1"
+                  strokeWidth="3"
+                  animationDuration="0.75"
+                  width="52"
+                  visible={true}
                 />
-                {errors.name && <Errors>{errors.name?.message}</Errors>}
-                <InputLabel>
+              </div>
+            ) : (
+              <>
+                <ModalUpperDiv>
+                  <ModalHeading>
+                    {!update ? "Add Employee Type" : "Update Employee Type"}
+                  </ModalHeading>
+                  <ModalIcon
+                    onClick={() => {
+                      HandleClose();
+                      setUpdate(false);
+                      clearErrors();
+                      reset({});
+                    }}
+                    src="/images/icons/Alert-Circle.svg"
+                  />
+                </ModalUpperDiv>
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <ModalUpperMid>
+                    <InputLabel>
+                      Employee Type<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("name", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    {/* <InputLabel>
                   Description <InputSpan>*</InputSpan>
                 </InputLabel>
                 <TextArea
@@ -388,10 +405,7 @@ const OABenefits = () => {
                       value: 500,
                       message: "Details exceeds 500 characters ",
                     },
-                    // minLength: {
-                    //   value: 10,
-                    //   message: "Atleast write  10 characters ",
-                    // },
+
                     onChange: (value) => {
                       setDetailsLength(500 - value.target.value.length);
                     },
@@ -405,27 +419,29 @@ const OABenefits = () => {
                     {" "}
                     {detailsLength > -1 ? detailsLength : 0} characters left
                   </span>
-                </InputPara>
+                </InputPara> */}
 
-                {!update ? (
-                  <AddNewButton
-                    type="submit"
-                    disabled={isLoading}
-                    style={{ marginTop: "25px" }}
-                  >
-                    Submit
-                  </AddNewButton>
-                ) : (
-                  <AddNewButton
-                    type="submit"
-                    disabled={isLoading}
-                    style={{ marginTop: "25px" }}
-                  >
-                    Update
-                  </AddNewButton>
-                )}
-              </ModalUpperMid>
-            </form>
+                    {!update ? (
+                      <AddNewButton
+                        type="submit"
+                        disabled={isLoading}
+                        style={{ marginTop: "25px" }}
+                      >
+                        Submit
+                      </AddNewButton>
+                    ) : (
+                      <AddNewButton
+                        type="submit"
+                        disabled={isLoading}
+                        style={{ marginTop: "25px" }}
+                      >
+                        Update
+                      </AddNewButton>
+                    )}
+                  </ModalUpperMid>
+                </form>
+              </>
+            )}
           </Box>
         </Modal>
       </DisciplinaryDiv>
@@ -461,14 +477,14 @@ const OABenefits = () => {
                   style={{ minWidth: "300px" }}
                   align="left"
                 >
-                  Benefit Name
+                  Employee Type
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
                   style={{ minWidth: "500px" }}
                   align="left"
                 >
-                  Description
+                  {/* Description */}
                 </TableCell>
 
                 <TableCell
@@ -481,14 +497,14 @@ const OABenefits = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {!result.benefits?.length && (
+              {!result.employeeTypes?.length && (
                 <TableRow sx={{ height: "200px" }}>
                   <TableCell align="center" colSpan={3}>
-                    No benefits found
+                    No Employee Types Found
                   </TableCell>
                 </TableRow>
               )}
-              {result?.benefits?.map((data, index) => (
+              {result?.employeeTypes?.map((data, index) => (
                 <TableRow
                   sx={{
                     "&:last-child td, &:last-child th": {
@@ -502,7 +518,7 @@ const OABenefits = () => {
                     {data.name}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
-                    {data.description}
+                    {/* {data.description} */}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
                     {" "}
@@ -532,7 +548,7 @@ const OABenefits = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this benefit?"
+        message="Are you sure you want to delete this Employee Type?"
         isLoading={isLoading}
       />
       <Menu
@@ -557,4 +573,4 @@ const OABenefits = () => {
   );
 };
 
-export default OABenefits;
+export default EmployeeTypes;

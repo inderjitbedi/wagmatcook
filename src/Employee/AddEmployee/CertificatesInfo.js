@@ -48,7 +48,10 @@ const CertificatesInfo = () => {
   const [file, setFiles] = useState([]);
   const [openThanks, setOpenThanks] = useState(false);
   const HandleOpenThanks = () => setOpenThanks(true);
-  const HandleCloseThanks = () => setOpenThanks(false);
+  const HandleCloseThanks = () => {
+    Navigate(`/organization-admin/employee/list`);
+    setOpenThanks(false);
+  };
 
   const initialPosition = {
     title: "",
@@ -65,6 +68,7 @@ const CertificatesInfo = () => {
     getValues,
     reset,
     setValue,
+    setError,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -185,6 +189,7 @@ const CertificatesInfo = () => {
   };
   const removeFile = (e, index) => {
     // e.preventDefault();
+
     setFiles((prevFiles) => {
       const updatedFiles = [...prevFiles];
       updatedFiles.splice(index, 1);
@@ -224,8 +229,9 @@ const CertificatesInfo = () => {
 
           const resetData = { certificates: result.certificates };
           console.log("result of get :", result.certificates);
-          reset(resetData);
-
+          if (result.certificates?.length) {
+            reset(resetData);
+          }
           // adding if no position added
           // if (!result.certificates?.length) {
           //   append(initialPosition);
@@ -245,6 +251,9 @@ const CertificatesInfo = () => {
   };
   useEffect(() => {
     GetEmployeesCertificates();
+    if (!getValues("certificates").length) {
+      append(initialPosition);
+    }
   }, [edit]);
   return (
     <>
@@ -256,7 +265,7 @@ const CertificatesInfo = () => {
             Back
           </BackButton>
           <HeaderTitle>
-            {edit ? "Update Certificates " : "Add New Employee"}
+            {edit ? "Update  Employee Certificates " : "Add New Employee"}
           </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
@@ -328,7 +337,7 @@ const CertificatesInfo = () => {
                   <FlexContaierForm>
                     <FlexColumnForm>
                       <InputLabel>
-                        Certificates Title <InputSpan>*</InputSpan>
+                        Certificate Title <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
                         type="text"
@@ -379,6 +388,32 @@ const CertificatesInfo = () => {
                             value: true,
                             message: "Required",
                           },
+                          validate: (fieldValue) => {
+                            const selectedDate = Date.parse(fieldValue);
+                            const currentDate = new Date().setHours(0, 0, 0, 0);
+                            if (selectedDate > currentDate) {
+                              return "Completion Date must not be greater than today's date";
+                            }
+                            return true;
+                          },
+                          onChange: (e) => {
+                            const endDate = new Date(
+                              getValues(`certificates.${index}.expiryDate`)
+                            );
+                            const startDate = new Date(e.target.value);
+                            if (startDate >= endDate) {
+                              setError(`certificates.${index}.expiryDate`, {
+                                type: "custom",
+                                message:
+                                  " Must not be earlier than completion date",
+                              });
+                            } else {
+                              setError(`certificates.${index}.expiryDate`, {
+                                type: "custom",
+                                message: "",
+                              });
+                            }
+                          },
                         })}
                       />
                       <ErrorMessage
@@ -425,10 +460,10 @@ const CertificatesInfo = () => {
                         type="file"
                         accept="image/*,capture=camera"
                         {...register(`certificates.${index}.file`, {
-                          // required: {
-                          //   value: edit ? false : true,
-                          //   message: "Required",
-                          // },
+                          required: {
+                            value: edit ? false : true,
+                            message: "Required",
+                          },
 
                           onChange: (e) => {
                             handleFileChange(e, index);
@@ -462,10 +497,10 @@ const CertificatesInfo = () => {
                             />
                           ) : !file[index] ? (
                             "Upload Documents "
-                          ) : file[index]?.name?.length <= 32 ? (
-                            file[index]?.name
+                          ) : file[index]?.originalName?.length <= 32 ? (
+                            file[index]?.originalName
                           ) : (
-                            file[index].name?.substring(0, 30) + "..."
+                            file[index].originalName?.substring(0, 30) + "..."
                           )}
                           <UploadIcon src="/images/icons/BlueUpload.svg" />{" "}
                         </UploadLabel>
@@ -497,7 +532,15 @@ const CertificatesInfo = () => {
               </BluePara>
               <FlexContaier>
                 {!edit && (
-                  <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
+                  <ButtonGrey
+                    onClick={() =>
+                      Navigate(
+                        `/organization-admin/employee/benefits/${employeeid}`
+                      )
+                    }
+                  >
+                    Back
+                  </ButtonGrey>
                 )}
                 <ButtonBlue type="submit">
                   {edit ? "Update" : "Continue"}

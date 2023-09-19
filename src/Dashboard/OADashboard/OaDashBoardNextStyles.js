@@ -71,6 +71,7 @@ export const MainCardPara = styled.p`
   line-height: 0px;
   font-weight: 600;
   color: #222b45;
+  text-transform: capitalize;
 `;
 export const MainCardParaLight = styled.p`
   font-size: 14px;

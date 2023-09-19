@@ -144,13 +144,21 @@ export const Select = styled.select`
   font-weight: 400;
   line-height: 24px;
   width: 100%;
+
   border: 1px solid #dcdcdc;
   border-radius: 8px;
-  padding: 8px 11px;
+  /* padding: 8px 11px; */
+  padding: 0.72em;
   margin-bottom: 10px;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("/images/icons/arrowdown.svg") no-repeat right center;
+  background-size: 12px 10px;
+  background-position: calc(100% - 15px) center;
 `;
 export const Option = styled.option`
   color: #222b45;

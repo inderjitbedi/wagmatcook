@@ -38,6 +38,7 @@ const JobDetails = () => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const [departmentData, setDepartmentData] = useState([]);
+  const [employeeTypes, setEmployeeTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState([]);
@@ -57,6 +58,7 @@ const JobDetails = () => {
     getValues,
     reset,
     setValue,
+    setError,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -73,6 +75,7 @@ const JobDetails = () => {
         salaryScaleTo: "",
         startDate: "",
         title: "",
+        employeeType: "",
       },
       positions: [initialPosition],
     },
@@ -92,6 +95,7 @@ const JobDetails = () => {
       url,
     })
       .then(({ result }) => {
+
         if (result) {
           console.log(result, "this what result Looks like ");
           setResult(result);
@@ -112,12 +116,23 @@ const JobDetails = () => {
                 data.endDate = new Date(data.endDate)
                   .toISOString()
                   .split("T")[0];
+                
                 data.department = data.department._id;
+
+                
               }
             });
           }
-          if (result.details?.department)
-            result.details.department = result.details?.department?._id;
+          if (result.details?.department) {
+                result.details.department = result.details?.department?._id;
+          }
+          if (result.details?.employeeType) {
+            result.details.employeeType= result.details?.employeeType?._id
+          }
+        
+
+         
+            
 
           console.log(result, "updates in results");
           // Object.keys(result).forEach((key) => {
@@ -153,6 +168,7 @@ const JobDetails = () => {
 
   useEffect(() => {
     GetDepartments();
+    GetEmployeeTypes();
     GetEmployeesJobDetails();
   }, [edit, reset]);
 
@@ -174,8 +190,7 @@ const JobDetails = () => {
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
-          toast.success(result.message);
-
+            toast.success(result.message);
           } else {
             Navigate(`/organization-admin/employee/benefits/${employeeid}`);
           }
@@ -220,6 +235,29 @@ const JobDetails = () => {
         //  setIsLoading(false);
       });
   };
+  const GetEmployeeTypes = () => {
+    setIsLoading(true);
+    let url = `/employee-type/list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result }) => {
+        if (result) {
+          setEmployeeTypes(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -246,7 +284,7 @@ const JobDetails = () => {
           </BackButton>
           <HeaderTitle>
             {" "}
-            {edit ? "Update JobDetails " : "Add New Employee "}
+            {edit ? "Update Employee Job Details " : "Add New Employee "}
           </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
@@ -301,17 +339,22 @@ const JobDetails = () => {
                     <Controller
                       name="details.department"
                       control={control}
-                      rules={{ required: true }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option>Select</Option>
+                          <Option value="">Select</Option>
                           {departmentData?.map((data) => (
                             <Option value={data._id}>{data.name}</Option>
                           ))}
                         </Select>
                       )}
                     />
-                    {errors.details?.department && <Errors> Required </Errors>}
+                    {<Errors> {errors?.details?.department?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -326,9 +369,7 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.title && (
-                      <Errors> {errors.details?.title?.message}</Errors>
-                    )}
+                    {<Errors> {errors.details?.title?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -346,20 +387,27 @@ const JobDetails = () => {
                           value: true,
                           message: " Required",
                         },
-                        validate: (fieldValue) => {
-                          const selectedDate = new Date(fieldValue);
-                          const currentDate = new Date();
-
-                          if (selectedDate > currentDate) {
-                            return "Start date must not be greater than today's date";
+                        onChange: (e) => {
+                          const endDate = new Date(
+                            getValues("details.endDate")
+                          );
+                          const startDate = new Date(e.target.value);
+                          if (startDate >= endDate) {
+                            setError("details.endDate", {
+                              type: "custom",
+                              message:
+                                "End date must not be earlier than start date",
+                            });
+                          } else {
+                            setError("details.endDate", {
+                              type: "custom",
+                              message: "",
+                            });
                           }
-                          return true;
                         },
                       })}
                     />
-                    {errors.details?.startDate && (
-                      <Errors>{errors.details?.startDate?.message}</Errors>
-                    )}
+                    {<Errors>{errors.details?.startDate?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -386,9 +434,7 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.endDate && (
-                      <Errors>{errors.details?.endDate?.message}</Errors>
-                    )}
+                    {<Errors>{errors.details?.endDate?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -404,6 +450,10 @@ const JobDetails = () => {
                           value: true,
                           message: "Required",
                         },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid salary",
+                        },
                         validate: (fieldValue) => {
                           return (
                             (!isNaN(parseFloat(fieldValue)) &&
@@ -413,11 +463,11 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.salaryScaleFrom && (
+                    {
                       <Errors>
                         {errors.details?.salaryScaleFrom?.message}
                       </Errors>
-                    )}
+                    }
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -429,6 +479,10 @@ const JobDetails = () => {
                         required: {
                           value: true,
                           message: "Required",
+                        },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid salary",
                         },
                         validate: (fieldValue) => {
                           const salaryFrom = parseFloat(
@@ -445,9 +499,7 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.salaryScaleTo && (
-                      <Errors>{errors.details?.salaryScaleTo?.message}</Errors>
-                    )}
+                    {<Errors>{errors.details?.salaryScaleTo?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -461,6 +513,10 @@ const JobDetails = () => {
                         required: {
                           value: true,
                           message: "Required",
+                        },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid salary",
                         },
                         // validate: (fieldValue) => {
                         //   return (
@@ -497,9 +553,7 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.salary && (
-                      <Errors>{errors.details?.salary?.message}</Errors>
-                    )}
+                    {<Errors>{errors.details?.salary?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -509,7 +563,12 @@ const JobDetails = () => {
                     <Controller
                       name="details.ratePer"
                       control={control}
-                      rules={{ required: true }}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
                       render={({ field }) => (
                         <Select {...field}>
                           <Option>Select</Option>
@@ -521,7 +580,7 @@ const JobDetails = () => {
                         </Select>
                       )}
                     />
-                    {errors.details?.ratePer && <Errors>Required</Errors>}
+                    {<Errors>{errors?.details?.ratePer?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
@@ -549,9 +608,7 @@ const JobDetails = () => {
                         },
                       })}
                     />
-                    {errors.details?.hoursPerWeek && (
-                      <Errors>{errors.details?.hoursPerWeek?.message}</Errors>
-                    )}
+                    {<Errors>{errors.details?.hoursPerWeek?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -567,9 +624,38 @@ const JobDetails = () => {
                       //   },
                       // })}
                     />
-                    {/* {errors.details?.reportsTo && (
-                      <Errors>{errors.details?.reportsTo?.message}</Errors>
-                    )} */}
+                    {<Errors>{errors.details?.reportsTo?.message}</Errors>}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm style={{width:"50%"}}>
+                    <InputLabel>
+                      Employee Type<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Controller
+                      name="details.employeeType"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option value="">Select</Option>
+                          {employeeTypes?.employeeTypes?.map((data) => (
+                            <Option value={data._id}>{data.name}</Option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                    {
+                      <Errors>
+                        {" "}
+                        {errors?.details?.employeeType?.message}{" "}
+                      </Errors>
+                    }
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm
@@ -610,7 +696,7 @@ const JobDetails = () => {
               </BodyMainHeading>
               {fields.map((field, index) => (
                 <FormContainer key={field.id}>
-                  <FlexContaierForm>
+                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
                         Position Title<InputSpan>*</InputSpan>
@@ -638,9 +724,15 @@ const JobDetails = () => {
                       <Controller
                         name={`positions.${index}.department`}
                         control={control}
+                        rules={{
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option>Select</Option>
+                            <Option value="">Select</Option>
                             {departmentData?.map((data) => (
                               <Option value={data._id}>{data.name}</Option>
                             ))}
@@ -654,7 +746,7 @@ const JobDetails = () => {
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
-                  <FlexContaierForm>
+                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
                         From<InputSpan>*</InputSpan>
@@ -666,6 +758,24 @@ const JobDetails = () => {
                           required: {
                             value: true,
                             message: "Required",
+                          },
+                          onChange: (e) => {
+                            const endDate = new Date(
+                              getValues(`positions.${index}.endDate`)
+                            );
+                            const startDate = new Date(e.target.value);
+                            if (startDate >= endDate) {
+                              setError(`positions.${index}.endDate`, {
+                                type: "custom",
+                                message:
+                                  "End date must not be earlier than start date",
+                              });
+                            } else {
+                              setError(`positions.${index}.endDate`, {
+                                type: "custom",
+                                message: "",
+                              });
+                            }
                           },
                         })}
                       />
@@ -684,10 +794,10 @@ const JobDetails = () => {
                         {...register(`positions.${index}.endDate`, {
                           valueAsDate: true,
 
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
                           validate: (fieldValue) => {
                             const startDate = new Date(
                               getValues(`positions.${index}.startDate`)

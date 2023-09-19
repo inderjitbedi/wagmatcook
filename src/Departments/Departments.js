@@ -719,8 +719,8 @@ const Departments = () => {
             />
             <InputPara>
               {" "}
-              <Errors>{errors.descriptionError}</Errors> Max{" "}
-              {descriptionLength > -1 ? 500 - descriptionLength : 0} characters
+              <Errors>{errors.descriptionError}</Errors> {" "}
+              {descriptionLength > -1 ? 500 - descriptionLength : 0} Characters left
             </InputPara>
           </ModalUpperMid>
           <ModalBottom>
