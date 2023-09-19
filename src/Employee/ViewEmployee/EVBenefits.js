@@ -123,11 +123,11 @@ const EVBenefits = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Benefit Name</TitlePara>
-                    <ViewPara>{result.benefit?.benefit || "-"}</ViewPara>
+                    <ViewPara>{result.benefit?.benefit.name || "-"}</ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Description </TitlePara>
-                    <ViewPara>Watkins</ViewPara>
+                    <ViewPara>{result.benefit?.benefit.description || "-"}</ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
                 <FlexSpaceBetween>

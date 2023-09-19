@@ -20,7 +20,7 @@ const employeeController = {
     async list(req, res) {
         try {
             const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
             let filters = { isDeleted: false, role: roles.EMPLOYEE }
@@ -171,7 +171,7 @@ const employeeController = {
             }
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 personalInfo,
@@ -231,8 +231,8 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
-            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department')
+            const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
+            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department').sort({'startDate':-1})
 
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
@@ -296,9 +296,9 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const benefit = await EmployeeBenefits.findOne({ employee: req.params.id }).populate('employee')
+            const benefit = await EmployeeBenefits.findOne({ employee: req.params.id }).populate('employee benefit')
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 benefit, personalInfo, jobDetails,
@@ -377,10 +377,10 @@ const employeeController = {
             if (!user) {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
-            const certificates = await EmployeeCertificates.find({ employee: req.params.id, isDeleted: false }).populate('file employee')
+            const certificates = await EmployeeCertificates.find({ employee: req.params.id, isDeleted: false }).populate('file employee').sort({completionDate:-1})
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 certificates, personalInfo, jobDetails,
@@ -402,7 +402,7 @@ const employeeController = {
             const reviews = await EmployeeReviews.find({ employee: req.params.id, isDeleted: false }).populate('file employee completedBy')
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 reviews, personalInfo, jobDetails,
@@ -478,7 +478,7 @@ const employeeController = {
             const disciplinaries = await EmployeeDisciplinaries.find({ employee: req.params.id, isDeleted: false }).populate('file employee disciplinary')
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee')
+            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 disciplinaries, personalInfo, jobDetails,

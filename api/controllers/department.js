@@ -51,7 +51,7 @@ const departmentController = {
             //     return res.status(400).json({ message: 'Please provide Organization Id' });
             // }
             const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
             let filters = { isDeleted: false, organization : req.organization._id };

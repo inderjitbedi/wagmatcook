@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const infoSchema = new mongoose.Schema({
 
-  
+
     employee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -47,6 +47,11 @@ const infoSchema = new mongoose.Schema({
     reportsTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        default: null
+    },
+    employeeType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'EmployeeType',
         default: null
     },
     isBebEligible: {

@@ -50,7 +50,7 @@ const disciplinaryController = {
             //     return res.status(400).json({ message: 'Please provide Organization Id' });
             // }
             const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
             let filters = { isDeleted: false, organization : '64e43ba127e762b8eee50d47' };
