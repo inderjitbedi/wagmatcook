@@ -4,6 +4,7 @@ import OADAashModal from "./OADAashModal.js";
 import { Link, useNavigate } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import OADashBoardNext from "./OADashBoardNext.js";
 import {
   Dashboard,
   DashNav,
@@ -35,6 +36,8 @@ import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 const OADashBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [orgData, setOrgData] = useState();
+
   const navigate = useNavigate();
   const [user, setUser] = useState();
   // useEffect(() => {
@@ -51,6 +54,11 @@ const OADashBoard = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
+     let org = localStorage.getItem("org");
+     if (org) {
+       let parsedUser = JSON.parse(org);
+       setOrgData(parsedUser);
+     }
   }, []);
 
   const closeModal = () => {
@@ -102,86 +110,92 @@ const OADashBoard = () => {
   };
   return (
     <>
-      <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-
-      <>
-        <DashHeader>
-          <DashHeaderTitle>Dashboard</DashHeaderTitle>
-          <DashHeaderSearch>
-            <SearchBox>
-              <SearchInput type="text" placeholder="Search..."></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-            </SearchBox>
-            <DashNotification src="/images/icons/Notifications.svg" />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                gap: "5px",
-              }}
-              onClick={(event) => handleClickMenu(event)}
-            >
-              {" "}
-              <DepartmentIconImg src="/images/icons/Logout.svg" />
-              <img
-                src="/images/icons/arrowdown.svg"
+      {orgData ? (
+        <OADashBoardNext orgData={orgData} user ={user} />
+      ) : (
+        <>
+          <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
+          <DashHeader>
+            <DashHeaderTitle>Dashboard</DashHeaderTitle>
+            <DashHeaderSearch>
+              <SearchBox>
+                <SearchInput type="text" placeholder="Search..."></SearchInput>
+                <SearchIcon src="/images/icons/searchIcon.svg" />
+              </SearchBox>
+              <DashNotification src="/images/icons/Notifications.svg" />
+              <div
                 style={{
-                  width: "5px",
-                  height: "9px",
-                  transform: anchorEl ? "rotate(180deg)" : undefined,
+                  display: "flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  gap: "5px",
                 }}
-              />
-            </div>
-          </DashHeaderSearch>
-        </DashHeader>
-        <Menu
-          sx={{ margin: "0px" }}
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
-        </Menu>
-        <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
-        <BannerSection>
-          <BannerHeading>
-            <BannerTitle>
-              Add your Organization’s details to complete your profile.{" "}
-            </BannerTitle>
-            <BannerButton>Update Profile</BannerButton>
-          </BannerHeading>
-          <BannerImage src="/images/image10.jpg" />
-        </BannerSection>
-        <DashCardContainer>
-          {CardData.map((data) => (
-            <DashCard>
-              <DashCardTitle>{data.SubTitle}</DashCardTitle>
-              <DashCardsub>
-                <DashCardIcons src={data.src} />
-                <DashCardPri>
-                  <DashCardTitle2>{data.SubTitle}</DashCardTitle2>
-                  {data.Para}
-                  <DashCardPara></DashCardPara>
-                  <Link to={data.to} key={data.to}>
-                    <DashCardButon style={{cursor:"pointer"}}> Add {data.Title}</DashCardButon>
-                  </Link>
-                </DashCardPri>
-              </DashCardsub>
-            </DashCard>
-          ))}
-        </DashCardContainer>
-      </>
+                onClick={(event) => handleClickMenu(event)}
+              >
+                {" "}
+                <DepartmentIconImg src="/images/icons/Logout.svg" />
+                <img
+                  src="/images/icons/arrowdown.svg"
+                  style={{
+                    width: "5px",
+                    height: "9px",
+                    transform: anchorEl ? "rotate(180deg)" : undefined,
+                  }}
+                />
+              </div>
+            </DashHeaderSearch>
+          </DashHeader>
+          <Menu
+            sx={{ margin: "0px" }}
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={handleCloseMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+          </Menu>
+          <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
+          <BannerSection>
+            <BannerHeading>
+              <BannerTitle>
+                Add your Organization’s details to complete your profile.{" "}
+              </BannerTitle>
+              <BannerButton>Update Profile</BannerButton>
+            </BannerHeading>
+            <BannerImage src="/images/image10.jpg" />
+          </BannerSection>
+          <DashCardContainer>
+            {CardData.map((data) => (
+              <DashCard>
+                <DashCardTitle>{data.SubTitle}</DashCardTitle>
+                <DashCardsub>
+                  <DashCardIcons src={data.src} />
+                  <DashCardPri>
+                    <DashCardTitle2>{data.SubTitle}</DashCardTitle2>
+                    {data.Para}
+                    <DashCardPara></DashCardPara>
+                    <Link to={data.to} key={data.to}>
+                      <DashCardButon style={{ cursor: "pointer" }}>
+                        {" "}
+                        Add {data.Title}
+                      </DashCardButon>
+                    </Link>
+                  </DashCardPri>
+                </DashCardsub>
+              </DashCard>
+            ))}
+          </DashCardContainer>
+        </>
+      )}
     </>
   );
 };

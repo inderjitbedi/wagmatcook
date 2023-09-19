@@ -6,7 +6,7 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { useNavigate, useParams, Link } from "react-router-dom";
-
+import NoDocumentfound from "../NoDocumentfound";
 import moment from "moment";
 import {
   MainBodyContainer,
@@ -85,6 +85,7 @@ const EVCertificates = () => {
     reset,
     clearErrors,
     setValue,
+    setError
   } = useForm({
     mode: "all",
     // defaultValues: {
@@ -347,6 +348,37 @@ const EVCertificates = () => {
                                 value: true,
                                 message: "Required",
                               },
+                              validate: (fieldValue) => {
+                                const selectedDate = Date.parse(fieldValue);
+                                const currentDate = new Date().setHours(
+                                  0,
+                                  0,
+                                  0,
+                                  0
+                                );
+                                if (selectedDate > currentDate) {
+                                  return "Completion Date must not be greater than today's date";
+                                }
+                                return true;
+                              },
+                              onChange: (e) => {
+                                const endDate = new Date(
+                                  getValues("expiryDate")
+                                );
+                                const startDate = new Date(e.target.value);
+                                if (startDate >= endDate) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message:
+                                      " Must not be earlier than completion date",
+                                  });
+                                } else {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
+                              },
                             })}
                           />
                           {errors.completionDate && (
@@ -423,11 +455,11 @@ const EVCertificates = () => {
                               visible={true}
                             />
                           ) : !file ? (
-                            "Upload Documents "
-                          ) : file?.name.length <= 32 ? (
+                            "Upload Document "
+                          ) : file?.name?.length <= 32 ? (
                             file?.name
                           ) : (
-                            file.name.substring(0, 30) + "..."
+                            file.name?.substring(0, 30) + "..."
                           )}
                         </EditButton>
                         {file && (
@@ -443,52 +475,60 @@ const EVCertificates = () => {
               {/*modal ends here  */}
 
               <BasicDetailsDiv>
-                {result?.certificates?.map((data) => (
-                  <CertificateContainer>
-                    <CertificateTitle style={{ marginBottom: "16px" }}>
-                      {data.title || " - "}
-                    </CertificateTitle>
-                    <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                      <FlexColumn style={{ gap: "0px" }}>
-                        <TitlePara>Provider</TitlePara>
-                        <ViewPara>{data.provider || " - "}</ViewPara>
-                      </FlexColumn>
-                      <FlexColumn style={{ gap: "0px" }}>
-                        <TitlePara>Completion Date</TitlePara>
-                        <ViewPara>
-                          {moment(data.completionDate).format("DD/MM/YYYY") ||
-                            " - "}
-                        </ViewPara>
-                      </FlexColumn>
-                      <FlexColumn style={{ gap: "0px" }}>
-                        <TitlePara>Expriry </TitlePara>
-                        <ViewPara>
-                          {moment(data.expiryDate).format("DD/MM/YYYY") ||
-                            " - "}{" "}
-                        </ViewPara>
-                      </FlexColumn>
-                    </FlexSpaceBetween>
-                    <Link
-                      to={
-                        "http://hrapi.chantsit.com/" +
-                        data.file?.destination +
-                        "/" +
-                        data.file?.name
-                      }
-                      target="blank"
-                      download
-                      style={{ textDecoration: "none" }}
-                    >
-                      <File>
-                        {" "}
-                        <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                        {data.file.name?.length <= 38
-                          ? data.file.name
-                          : data.file.name.substring(0, 38) + "..." || " - "}
-                      </File>
-                    </Link>
-                  </CertificateContainer>
-                ))}
+                {!result?.certificates?.length ? (
+                  <NoDocumentfound />
+                ) : (
+                  <>
+                    {result?.certificates?.map((data) => (
+                      <CertificateContainer>
+                        <CertificateTitle style={{ marginBottom: "16px" }}>
+                          {data.title || " - "}
+                        </CertificateTitle>
+                        <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                          <FlexColumn style={{ gap: "0px" }}>
+                            <TitlePara>Provider</TitlePara>
+                            <ViewPara>{data.provider || " - "}</ViewPara>
+                          </FlexColumn>
+                          <FlexColumn style={{ gap: "0px" }}>
+                            <TitlePara>Completion Date</TitlePara>
+                            <ViewPara>
+                              {moment(data.completionDate).format(
+                                "DD/MM/YYYY"
+                              ) || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn style={{ gap: "0px" }}>
+                            <TitlePara>Expriry </TitlePara>
+                            <ViewPara>
+                              {moment(data.expiryDate).format("DD/MM/YYYY") ||
+                                " - "}{" "}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <Link
+                          to={
+                            "http://hrapi.chantsit.com/" +
+                            data.file?.destination +
+                            "/" +
+                            data.file?.name
+                          }
+                          target="blank"
+                          download
+                          style={{ textDecoration: "none" }}
+                        >
+                          <File>
+                            {" "}
+                            <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                            {data.file.name?.length <= 38
+                              ? data.file.name
+                              : data.file.name.substring(0, 38) + "..." ||
+                                " - "}
+                          </File>
+                        </Link>
+                      </CertificateContainer>
+                    ))}
+                  </>
+                )}
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

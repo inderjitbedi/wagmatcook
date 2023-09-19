@@ -163,6 +163,7 @@ const EmployeeJobDetails = () => {
           handleClose();
           GetEmployeesJobDetails();
           reset();
+          toast.success(result.message);
         } else {
           toast.warn("something went wrong ");
         }
@@ -364,7 +365,7 @@ const EmployeeJobDetails = () => {
                   <Box sx={style}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <ModalContainer>
-                        <ModalHeading>Add New Employee</ModalHeading>
+                        <ModalHeading>Add Position</ModalHeading>
                         <ModalIcon
                           onClick={() => {
                             handleClose();

@@ -174,7 +174,7 @@ const EmployeePersonal = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Email - Personal</TitlePara>
-                    <ViewPara>
+                    <ViewPara style={{textTransform:"none"}}>
                       {result?.personalInfo?.personalEmail || " - "}
                     </ViewPara>
                   </FlexColumn>

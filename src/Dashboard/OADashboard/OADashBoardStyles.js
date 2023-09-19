@@ -16,7 +16,8 @@ export const DashMain = styled.div`
   width: 82%;
   padding: 0px 30px 80px 20px;
   background: #f3f3f5;
-  height: 90%;
+  height: max-content;
+  min-height: 100vh;
 `;
 export const DashHeader = styled.div`
   display: flex;

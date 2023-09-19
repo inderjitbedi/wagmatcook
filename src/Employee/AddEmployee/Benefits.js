@@ -44,6 +44,8 @@ const Benefits = () => {
     getValues,
     setValue,
     reset,
+    watch,
+    setError
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -55,7 +57,7 @@ const Benefits = () => {
       description: "",
     },
   });
-
+const watchStartDate = watch("startDate","")
   const HandleSubmitBenefits = (data) => {
     // e.preventDefault();
     let dataCopy = data;
@@ -190,7 +192,7 @@ const Benefits = () => {
             Back
           </BackButton>
           <HeaderTitle>
-            {edit ? "Update Benefits " : "Add New Employee"}
+            {edit ? "Update  Employee  Benefits " : "Add New Employee"}
           </HeaderTitle>
         </FlexContaier>
         <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
@@ -279,10 +281,11 @@ const Benefits = () => {
                               console.log(
                                 `Benefit with _id ${targetId} not found.`
                               );
+                              setValue("description", "");
                             }
                           }}
                         >
-                          <Option>Select</Option>
+                          <Option value="">Select</Option>
                           {benefits?.map((data) => (
                             <Option value={data._id}>{data.name}</Option>
                           ))}
@@ -290,9 +293,7 @@ const Benefits = () => {
                       )}
                     />
 
-                    {errors.benefit && (
-                      <Errors>{errors.benefit?.message}</Errors>
-                    )}
+                    {<Errors>{errors.benefit?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -307,9 +308,7 @@ const Benefits = () => {
                         },
                       })}
                     />
-                    {errors.description && (
-                      <Errors>{errors.description?.message}</Errors>
-                    )}
+                    {<Errors>{errors.description?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -325,11 +324,25 @@ const Benefits = () => {
                           value: true,
                           message: " Required",
                         },
+                        onChange: (e) => {
+                          const endDate = new Date(getValues("endDate"));
+                          const startDate = new Date(e.target.value);
+                          if (startDate >= endDate) {
+                            setError("endDate", {
+                              type: "custom",
+                              message:
+                                "End date must not be earlier than start date",
+                            });
+                          } else {
+                            setError("endDate", {
+                              type: "custom",
+                              message: "",
+                            });
+                          }
+                        },
                       })}
                     />
-                    {errors.startDate && (
-                      <Errors>{errors.startDate?.message}</Errors>
-                    )}
+                    {<Errors>{errors.startDate?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -352,9 +365,7 @@ const Benefits = () => {
                         },
                       })}
                     />
-                    {errors.endDate && (
-                      <Errors>{errors.endDate?.message}</Errors>
-                    )}
+                    {<Errors>{errors.endDate?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 
@@ -377,9 +388,13 @@ const Benefits = () => {
                             "Must be a number"
                           );
                         },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid cost",
+                        },
                       })}
                     />
-                    {errors.cost && <Errors>{errors.cost?.message}</Errors>}
+                    {<Errors>{errors.cost?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -399,11 +414,14 @@ const Benefits = () => {
                             "Must be a number"
                           );
                         },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message:
+                            "Please enter valid employee contribution rate",
+                        },
                       })}
                     />
-                    {errors?.contributionRate && (
-                      <Errors>{errors.contributionRate?.message}</Errors>
-                    )}
+                    {<Errors>{errors.contributionRate?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>
@@ -412,7 +430,7 @@ const Benefits = () => {
                 {!edit && (
                   <ButtonGrey
                     onClick={() => {
-                      Navigate(-1);
+                     Navigate(`/organization-admin/employee/job-details/${employeeid}`)
                     }}
                   >
                     Back

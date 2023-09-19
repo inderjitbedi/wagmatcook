@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import NoDocumentfound from "../NoDocumentfound";
 import moment from "moment";
 import {
   MainBodyContainer,
@@ -59,6 +60,8 @@ const style = {
   boxShadow: 45,
   padding: "0px 0px",
   borderRadius: "8px",
+  height: "597px",
+  overflowY: "scroll",
 };
 const EVDiscipline = () => {
   const { employeeid } = useParams();
@@ -91,6 +94,7 @@ const EVDiscipline = () => {
     reset,
     clearErrors,
     setValue,
+    setError,
   } = useForm({
     mode: "all",
     // defaultValues: {
@@ -193,12 +197,16 @@ const EVDiscipline = () => {
         setIsLoading(false);
       });
   };
-  const handleFileChange = (e, index) => {
-    console.log(index, "file index");
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    handleUpload(file, index);
+    console.log(e.target.files[0]);
+    const inputString = e.target.files[0].type;
+    const parts = inputString?.split("/");
+    const type = parts[parts?.length - 1];
+    console.log("this file type:", type);
+    handleUpload(file, type);
   };
-  const handleUpload = (file, index) => {
+  const handleUpload = (file, type) => {
     setIsUploading(true);
 
     if (file) {
@@ -207,7 +215,7 @@ const EVDiscipline = () => {
 
       httpClient({
         method: "post",
-        url: "/organization/file/upload/image",
+        url: `/organization-admin/file/upload/${type}`,
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -228,6 +236,9 @@ const EVDiscipline = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
+          setIsUploading(false);
+        })
+        .finally(() => {
           setIsUploading(false);
         });
     }
@@ -290,17 +301,17 @@ const EVDiscipline = () => {
               </FlexColumn>
             </PersonalInfo>
 
-            <EditButton style={{ marginRight: "54px" }}>
+            {/* <EditButton style={{ marginRight: "54px" }}>
               <ButtonIcon src="/images/icons/Pen 2.svg" />
               Edit
-            </EditButton>
+            </EditButton> */}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Disciplinary Details</BasicHeading>
-                <AddNewButton onClick={handleOpen}>Add New Review</AddNewButton>
+                <AddNewButton onClick={handleOpen}>Add New </AddNewButton>
               </FlexSpaceBetween>
               {/* modal add disciplinary */}
               <Modal
@@ -354,6 +365,23 @@ const EVDiscipline = () => {
                               required: {
                                 value: true,
                                 message: "Required",
+                              },
+                              onChange: (e) => {
+                                const endDate = new Date(
+                                  getValues("expiryDate")
+                                );
+                                const startDate = new Date(e.target.value);
+                                if (startDate >= endDate) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: " Must not be earlier than  date",
+                                  });
+                                } else {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
                               },
                             })}
                           />
@@ -434,8 +462,8 @@ const EVDiscipline = () => {
                             {<Errors>{errors.details?.message}</Errors>}
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
-                              Max {detailsLength > -1 ? detailsLength : 0}{" "}
-                              characters
+                              {detailsLength > -1 ? detailsLength : 0}{" "}
+                              characters left
                             </span>
                           </InputPara>
                         </FlexColumnForm>
@@ -443,7 +471,7 @@ const EVDiscipline = () => {
                       <input
                         style={{ width: "50%" }}
                         type="file"
-                        accept="image/*,capture=camera"
+                        // accept="image/*,capture=camera"
                         {...register(`file`, {
                           required: {
                             value: true,
@@ -480,11 +508,11 @@ const EVDiscipline = () => {
                               visible={true}
                             />
                           ) : !file ? (
-                            "Upload Documents "
-                          ) : file?.name.length <= 32 ? (
-                            file?.name
+                            "Upload Document "
+                          ) : file?.originalName.length <= 32 ? (
+                            file?.originalName
                           ) : (
-                            file.name.substring(0, 30) + "..."
+                            file.originalName.substring(0, 30) + "..."
                           )}
                         </EditButton>
                         {file && (
@@ -501,66 +529,75 @@ const EVDiscipline = () => {
               {/*modal ends here  */}
 
               <BasicDetailsDiv style={{ width: "80%" }}>
-                {result?.disciplinaries?.map((data) => (
-                  <TimelineDiv style={{ padding: "16px", marginBottom: "8px" }}>
-                    <FlexColumn style={{ width: "100%" }}>
-                      <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                        <TitlePara>Disciplinary Type</TitlePara>
-                        <TitlePara>BCR OPtional</TitlePara>
-                        <TitlePara>
-                          issues On:{" "}
-                          {moment(data.issueDate).format("DD/MM/YYYY")}
-                        </TitlePara>
-                      </FlexSpaceBetween>
-                      <FlexSpaceBetween style={{ marginBottom: "0px" }}>
-                        <ViewPara
-                          style={{
-                            fontWeight: 700,
-                            width: "37%",
-                          }}
-                        >
-                          {data.disciplinary?.name || " - "}
-                        </ViewPara>{" "}
-                        <ViewPara
-                          style={{
-                            fontWeight: 700,
-                            width: "60%",
-                          }}
-                        >
-                          {data.bcr || "-"}
-                        </ViewPara>
-                      </FlexSpaceBetween>
+                {!result?.disciplinaries?.length ? (
+                  <NoDocumentfound />
+                ) : (
+                  <>
+                    {result?.disciplinaries?.map((data) => (
+                      <TimelineDiv
+                        style={{ padding: "16px", marginBottom: "8px" }}
+                      >
+                        <FlexColumn style={{ width: "100%" }}>
+                          <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                            <TitlePara>Disciplinary Type</TitlePara>
+                            <TitlePara>BCR OPtional</TitlePara>
+                            <TitlePara>
+                              issued On:{" "}
+                              {moment(data.issueDate).format("DD/MM/YYYY")}
+                            </TitlePara>
+                          </FlexSpaceBetween>
+                          <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                            <ViewPara
+                              style={{
+                                fontWeight: 700,
+                                width: "37%",
+                              }}
+                            >
+                              {data.disciplinary?.name || " - "}
+                            </ViewPara>{" "}
+                            <ViewPara
+                              style={{
+                                fontWeight: 700,
+                                width: "60%",
+                              }}
+                            >
+                              {data.bcr || "-"}
+                            </ViewPara>
+                          </FlexSpaceBetween>
 
-                      <TimelinePara>{data.details}</TimelinePara>
-                      <FlexSpaceBetween>
-                        <Link
-                          to={
-                            "http://hrapi.chantsit.com/" +
-                            data.file?.destination +
-                            "/" +
-                            data.file?.name
-                          }
-                          target="blank"
-                          download
-                          style={{ textDecoration: "none" }}
-                        >
-                          <File>
-                            {" "}
-                            <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                            {data.file.name?.length <= 38
-                              ? data.file.name
-                              : data.file.name.substring(0, 38) + "..." ||
-                                " - "}
-                          </File>
-                        </Link>
-                      </FlexSpaceBetween>
-                      <ReviewsDiv>
-                        Expiry Date:{" "}
-                        {moment(data.expiryDate).format("DD/MM/YYYY") || " - "}
-                      </ReviewsDiv>
-                    </FlexColumn>
-                  </TimelineDiv>
-                ))}
+                          <TimelinePara>{data.details}</TimelinePara>
+                          <FlexSpaceBetween>
+                            <Link
+                              to={
+                                "http://hrapi.chantsit.com/" +
+                                data.file?.destination +
+                                "/" +
+                                data.file?.name
+                              }
+                              target="blank"
+                              download
+                              style={{ textDecoration: "none" }}
+                            >
+                              <File>
+                                {" "}
+                                <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                {data.file.originalName?.length <= 38
+                                  ? data.file.originalName
+                                  : data.file.originalName.substring(0, 38) +
+                                      "..." || " - "}
+                              </File>
+                            </Link>
+                          </FlexSpaceBetween>
+                          <ReviewsDiv>
+                            Expiry Date:{" "}
+                            {moment(data.expiryDate).format("DD/MM/YYYY") ||
+                              " - "}
+                          </ReviewsDiv>
+                        </FlexColumn>
+                      </TimelineDiv>
+                    ))}
+                  </>
+                )}
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

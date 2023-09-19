@@ -56,8 +56,8 @@ export const SearchInput = styled.input`
   }
 `;
 export const SearchIcon = styled.img`
-width: 20px;
-height: 20px;
+  width: 20px;
+  height: 20px;
 `;
 export const DepartmentFilterContainer = styled.div`
   display: flex;
@@ -218,7 +218,7 @@ export const PersonalImg = styled.img`
 export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap:8px;
+  gap: 8px;
   width: 50%;
 `;
 export const PersonalName = styled.h1`
@@ -258,7 +258,7 @@ export const BasicInfoDiv = styled.div`
   width: 71%;
 `;
 export const FlexSpaceBetween = styled.div`
-width: 100%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -284,7 +284,7 @@ export const EditButton = styled.label`
 export const ButtonIcon = styled.img`
   width: 17px;
   height: 17px;
-  display:inline-block;
+  display: inline-block;
 `;
 export const BasicHeading = styled.h1`
   color: #222b45;
@@ -296,9 +296,9 @@ export const BasicHeading = styled.h1`
   text-transform: capitalize;
 `;
 export const BasicDetailsDiv = styled.div`
-width: 100%;
-justify-self: flex-start;
-padding: 10px;
+  width: 100%;
+  justify-self: flex-start;
+  padding: 10px;
 `;
 export const TitlePara = styled.p`
   color: #8f9bb3;
@@ -434,7 +434,6 @@ export const Errors = styled.p`
   font-weight: 300;
   line-height: 0px;
   margin-top: 2px;
- 
 `;
 export const ButtonBlue = styled.button`
   border-radius: 6px;
@@ -472,10 +471,10 @@ export const ModalHeading = styled.h1`
   text-transform: capitalize;
 `;
 export const ModalIcon = styled.img`
-width: 24px;
-height: 24px;
-display:inline-block;
-cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  cursor: pointer;
 `;
 export const ModalFormContainer = styled.div`
   padding: 20px 29px 15px 29px;
@@ -495,7 +494,6 @@ export const TextArea = styled.textarea`
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
-
 `;
 export const InputPara = styled.p`
   color: #737992;
@@ -545,12 +543,18 @@ export const Select = styled.select`
   width: 100%;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
-  padding: 1em;
+  padding: 0.72em;
   margin-bottom: 10px;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
   outline: #f0f2f6;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("/images/icons/arrowdown.svg") no-repeat right center;
+  background-size: 12px 10px;
+  background-position: calc(100% - 15px) center;
 `;
 export const Option = styled.option`
   color: #222b45;
@@ -567,7 +571,6 @@ export const CertificateContainer = styled.div`
   padding: 16px;
   width: 100%;
   margin-bottom: 16px;
-  
 `;
 export const CertificateTitle = styled.div`
   color: #222b45;

@@ -2,11 +2,10 @@ import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-
 const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
-  padding:  0px 24px;
+  padding: 0px 24px;
   gap: 12px;
 `;
 const SideBarListContainer = styled.div`
@@ -30,58 +29,60 @@ const SideBarListTitle = styled.p`
   cursor: pointer;
 `;
 const EmployeeSideBar = (props) => {
-     const location = useLocation();
+  const location = useLocation();
   const SideBarData = [
     {
       Title: "Personal",
-      to: "/organization-admin/employee/details/personal-info/"+props.employeeId,
+      to:
+        "/organization-admin/employee/details/personal-info/" +
+        props.employeeId,
     },
     {
       Title: "Job Details",
-      to: "/organization-admin/employee/details/job-details/"+props.employeeId,
+      to:
+        "/organization-admin/employee/details/job-details/" + props.employeeId,
     },
 
     {
       Title: "Benefits",
-      to: "/organization-admin/employee/details/benefits/"+props.employeeId,
+      to: "/organization-admin/employee/details/benefits/" + props.employeeId,
     },
     {
       Title: "Leave History",
-      to: "/organization-admin/employee/details/leave-history/"+props.employeeId,
+      to:
+        "/organization-admin/employee/details/leave-history/" +
+        props.employeeId,
     },
     {
       Title: "Certificates",
-      to: "/organization-admin/employee/details/certificates/"+props.employeeId,
+      to:
+        "/organization-admin/employee/details/certificates/" + props.employeeId,
     },
     {
-      Title: "Discipline",
-      to: "/organization-admin/employee/details/discipline/"+props.employeeId,
+      Title: "Disciplinary",
+      to: "/organization-admin/employee/details/discipline/" + props.employeeId,
     },
     {
       Title: "Performance",
-      to: "/organization-admin/employee/details/performance/"+props.employeeId,
+      to:
+        "/organization-admin/employee/details/performance/" + props.employeeId,
     },
     {
       Title: "Documents",
-      to: "/organization-admin/employee/details/documents/"+props.employeeId,
+      to: "/organization-admin/employee/details/documents/" + props.employeeId,
     },
   ];
-      const style = {
-        textDecoration: "none",
-        color: "#279AF1",
-      };
+  const style = {
+    textDecoration: "none",
+    color: "#279AF1",
+  };
   return (
     <>
       {" "}
       <SideBarList>
         {SideBarData.map((data) => (
-          <Link
-            style={{ textDecoration: "none",  }}
-            to={data.to}
-            key={data.to}
-          >
-            <SideBarListContainer style={{zIndex:"56"}}>
-            
+          <Link style={{ textDecoration: "none" }} to={data.to} key={data.to}>
+            <SideBarListContainer style={{ zIndex: "56" }}>
               <SideBarListTitle
                 style={
                   location.pathname === data.to ? style : { color: "#5C5C5C" }
