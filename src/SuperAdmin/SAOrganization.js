@@ -116,14 +116,13 @@ const SAOrganization = () => {
     if (name === "name") {
       if (!value) {
         setErrors({ ...errors, nameError: "Required" });
-      // } else if (!/^[A-Za-z\s]+$/.test(value)) {
-      //   setErrors({
-      //     ...errors,
-      //     nameError: "Name must not contain numbers or special characters",
-      //   });
+        // } else if (!/^[A-Za-z\s]+$/.test(value)) {
+        //   setErrors({
+        //     ...errors,
+        //     nameError: "Name must not contain numbers or special characters",
+        //   });
       } else {
         setErrors({ ...errors, nameError: "" });
-
       }
     }
 
@@ -136,14 +135,13 @@ const SAOrganization = () => {
         setErrors({ ...errors, emailError: "" });
       } else {
         setErrors({ ...errors, emailError: "Invalid email address" });
-
       }
     }
     setFormData({ ...formData, [name]: value });
   };
 
   const GetOrganizationList = () => {
-    console.log('called');
+    console.log("called");
     let url = `${API_URLS.adminOrganizationList}?page=1&limit=10`;
     httpClient({
       method: "get",
@@ -242,8 +240,8 @@ const SAOrganization = () => {
             <SearchInput
               type="text"
               placeholder="Search..."
-            // value={searchValue}
-            // onChange={(e) => setSearchValue(e.target.value)}
+              // value={searchValue}
+              // onChange={(e) => setSearchValue(e.target.value)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox>
@@ -365,12 +363,11 @@ const SAOrganization = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {result?.organizations?.length == 0 &&
-              <TableRow  >
-                <TableCell rowSpan={3}>
-                  No organizations found
-                </TableCell>
-              </TableRow>}
+            {result?.organizations?.length == 0 && (
+              <TableRow>
+                <TableCell rowSpan={3}>No organizations found</TableCell>
+              </TableRow>
+            )}
             {result.organizations?.map((data) => (
               <TableRow
                 sx={{
@@ -382,7 +379,7 @@ const SAOrganization = () => {
                   {data.name}
                 </TableCell>
                 <TableCell sx={CellStyle2} align="left">
-                  {data.primaryUser?.email || '-'}
+                  {data.primaryUser?.email || "-"}
                 </TableCell>
                 <TableCell sx={CellStyle} align="left">
                   {data.primaryUser?.isSignedup ? "Yes" : "No"}
@@ -410,7 +407,6 @@ const SAOrganization = () => {
                 </TableCell> */}
               </TableRow>
             ))}
-
           </TableBody>
         </Table>
       </TableContainer>

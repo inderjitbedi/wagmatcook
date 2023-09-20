@@ -93,7 +93,6 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
   };
 
   const onSubmit = (data) => {
-    console.log(data, "buton active and working ", errors, "errorss showing ")
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {

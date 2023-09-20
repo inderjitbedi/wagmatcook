@@ -54,7 +54,7 @@ export default function SignIn() {
     };
     function handleSubmit(event: any) {
         event.preventDefault();
-        console.log(validateEmail(formData.email));
+        // console.log(validateEmail(formData.email));
 
         if (formData.email && formData.password
             && validateEmail(formData.email)) {

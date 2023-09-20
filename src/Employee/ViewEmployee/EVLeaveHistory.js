@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Table from "@mui/material/Table";
@@ -10,7 +10,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ButtonBlue } from "../AddEmployee/AddEmployeeStyles";
 import { useForm, Controller } from "react-hook-form";
-
 
 import {
   MainBodyContainer,
@@ -177,30 +176,49 @@ const ApprovedStyles = {
 };
 const EVLeaveHistory = () => {
   const [open, setOpen] = useState(false);
+  const [Id, setId] = useState("");
+  const [update, setUpdate] = useState(false);
+  const [detailsLength, setDetailsLength] = useState(500);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-    const [openThanks, setOpenThanks] = useState(false);
-    const handleOpenThanks = () => setOpenThanks(true);
+  const [openThanks, setOpenThanks] = useState(false);
+  const handleOpenThanks = () => setOpenThanks(true);
   const handleCloseThanks = () => setOpenThanks(false);
 
-    const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState([]);
 
-    const {
-      register,
-      control,
-      handleSubmit,
-      formState: { errors },
-      getValues,
-    } = useForm({ mode: "all" });
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    reset,
+    setError,
+    clearErrors,
+  } = useForm({ mode: "all" });
 
-    const onSubmit = (data) => {
-      if (!errors) {
-       
-        setFormData(data);
-        handleOpenThanks();
-      } 
-      console.log("form submmited", data);
-    };
+  const onSubmit = (data) => {
+    if (!errors) {
+      setFormData(data);
+      handleOpenThanks();
+    }
+    console.log("form submmited", data);
+  };
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data?.description?.length);
+    reset(data);
+    handleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    handleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  };
   return (
     <MainBodyContainer>
       <FlexSpaceBetween style={{ alignItems: "center" }}>
@@ -215,7 +233,9 @@ const EVLeaveHistory = () => {
       </FlexSpaceBetween>
       <LeaveDiv>
         Leaves History
-        <ButtonBlue onClick={handleOpen}>New Request</ButtonBlue>
+        <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+          New Request
+        </ButtonBlue>
       </LeaveDiv>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -294,7 +314,13 @@ const EVLeaveHistory = () => {
                   </span>
                 </TableCell>
                 <TableCell align="center" sx={Celllstyle2}>
-                  <Icons src="/images/icons/eye.svg" />
+                  <Icons
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      HandleUpdateAction(data);
+                    }}
+                    src="/images/icons/eye.svg"
+                  />
                 </TableCell>
               </TableRow>
             ))}
@@ -310,7 +336,9 @@ const EVLeaveHistory = () => {
       >
         <Box sx={style}>
           <ModalContainer>
-            <ModalHeading>Applying for Leaves</ModalHeading>
+            <ModalHeading>
+              {!update ? "Applying for Leaves" : "View Leaves"}
+            </ModalHeading>
             <ModalIcon
               onClick={handleClose}
               src="/images/icons/Alert-Circle.svg"
@@ -329,27 +357,25 @@ const EVLeaveHistory = () => {
                   </InputLabel>
                   <Input
                     type="date"
-                    {...register("startdate", {
+                    {...register("startDate", {
                       required: {
                         value: true,
-                        message: "Start Date is Required",
+                        message: "Required",
                       },
                     })}
                   />
-                  {errors.startdate && (
-                    <Errors>{errors.startdate?.message}</Errors>
-                  )}
+                  {<Errors>{errors.startDate?.message}</Errors>}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
-                    To<InputSpan>*</InputSpan>
+                    To <InputSpan>*</InputSpan>
                   </InputLabel>
                   <Input
                     type="date"
-                    {...register("enddate", {
+                    {...register("endDate", {
                       required: {
                         value: true,
-                        message: "End Date is Required",
+                        message: " Required",
                       },
                       validate: (fieldValue) => {
                         const startDate = new Date(getValues("startdate"));
@@ -361,35 +387,35 @@ const EVLeaveHistory = () => {
                       },
                     })}
                   />
-                  {errors.enddate && <Errors>{errors.enddate?.message}</Errors>}
+                  {<Errors>{errors.endDate?.message}</Errors>}
                 </FlexColumnForm>
               </FlexContaierForm>
               <FlexContaierForm>
                 <FlexColumnForm>
                   <InputLabel>
-                    Leave Type<InputSpan>*</InputSpan>{" "}
+                    Leave Type <InputSpan>*</InputSpan>{" "}
                   </InputLabel>
                   <Input
                     type="text"
                     {...register("type", {
                       required: {
                         value: true,
-                        message: "Leave Type  is Required",
+                        message: "Required",
                       },
                     })}
                   />
-                  {errors.type && <Errors>{errors.type?.message}</Errors>}
+                  {<Errors>{errors.type?.message}</Errors>}
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
-                    Hours<InputSpan>*</InputSpan>
+                    Hours <InputSpan>*</InputSpan>
                   </InputLabel>
                   <Input
                     type="text"
                     {...register("hours", {
                       required: {
                         value: true,
-                        message: "Hours are Required",
+                        message: "Required",
                       },
                       validate: (fieldValue) => {
                         return (
@@ -400,7 +426,7 @@ const EVLeaveHistory = () => {
                       },
                     })}
                   />
-                  {errors.hours && <Errors>{errors.hours?.message}</Errors>}
+                  {<Errors>{errors.hours?.message}</Errors>}
                 </FlexColumnForm>
               </FlexContaierForm>
               <FlexContaierForm>
@@ -417,20 +443,28 @@ const EVLeaveHistory = () => {
                   </InputLabel>
                   <Input
                     type="password"
-                    {...register("reportto", {
+                    {...register("reportTo", {
                       required: {
                         value: true,
-                        message: "Report To is Required",
+                        message: "Required",
                       },
                     })}
                   />
-                  {errors.reportto && (
-                    <Errors>{errors.reportto?.message}</Errors>
-                  )}
+                  {<Errors>{errors.reportTo?.message}</Errors>}
                 </FlexColumnForm>
               </FlexContaierForm>
-
-              <ButtonBlue type="submit">Submit</ButtonBlue>
+              {!update ? (
+                <ButtonBlue type="submit">Submit</ButtonBlue>
+              ) : (
+                <span
+                  style={
+                    rows[0].status === "Pending" ? PendingStyle : ApprovedStyles
+                  }
+                >
+                  {" "}
+                  {rows[0].status}{" "}
+                </span>
+              )}{" "}
             </ModalFormContainer>
           </form>
         </Box>

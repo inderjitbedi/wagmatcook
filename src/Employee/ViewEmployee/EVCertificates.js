@@ -71,7 +71,7 @@ const EVCertificates = () => {
     reset({});
     clearErrors();
     setOpen(false);
-    setFile(null)
+    setFile(null);
   };
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,7 @@ const EVCertificates = () => {
     reset,
     clearErrors,
     setValue,
-    setError
+    setError,
   } = useForm({
     mode: "all",
     // defaultValues: {
@@ -167,12 +167,34 @@ const EVCertificates = () => {
         setIsLoading(false);
       });
   };
-  const handleFileChange = (e, index) => {
-    console.log(index, "file index");
-    const file = e.target.files[0];
-    handleUpload(file, index);
+  const getFileType = (file) => {
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+      return "image";
+    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+      return "video";
+    } else if (fileExtension === "pdf") {
+      return "pdf";
+    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+      return "xlsx";
+    } else if (fileExtension === "doc" || fileExtension === "docx") {
+      return "doc";
+    } else {
+      return "unknown";
+    }
   };
-  const handleUpload = (file, index) => {
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    let type = await getFileType(e.target.files[0]);
+    console.log("this file type:", type);
+    if (type != "unknown") {
+      handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.");
+    }
+  };
+  const handleUpload = (file, type) => {
     setIsUploading(true);
 
     if (file) {
@@ -181,7 +203,7 @@ const EVCertificates = () => {
 
       httpClient({
         method: "post",
-        url: "/organization/file/upload/image",
+        url: `/employee/file/upload/${type}`,
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -242,8 +264,7 @@ const EVCertificates = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? API_URL +
-                    result.personalInfo.photo?.path
+                    ? API_URL + result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -341,7 +362,7 @@ const EVCertificates = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Completion Date<InputSpan>*</InputSpan>
+                            Completion Date <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             type="date"
@@ -391,7 +412,7 @@ const EVCertificates = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Exipiry<InputSpan>*</InputSpan>
+                            Exipiry <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             type="date"
@@ -420,7 +441,6 @@ const EVCertificates = () => {
                       <input
                         style={{ width: "50%" }}
                         type="file"
-                        accept="image/*,capture=camera"
                         {...register(`file`, {
                           required: {
                             value: true,
@@ -507,25 +527,23 @@ const EVCertificates = () => {
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
-                        {data.file && <Link
-                          to={
-                            API_URL +
-                            data.file?.path
-                          }
-                          target="_blank"
-                          download
-                          style={{ textDecoration: "none" }}
-                        >
-
-                          <File>
-                            {" "}
-                            <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                            {data.file?.originalName?.length <= 38
-                              ? data.file?.originalName
-                              : data.file?.originalName.substring(0, 38) + "..." ||
-                              " - "}
-                          </File>
-                        </Link>}
+                        {data.file && (
+                          <Link
+                            to={API_URL + data.file?.path}
+                            target="_blank"
+                            download
+                            style={{ textDecoration: "none" }}
+                          >
+                            <File>
+                              {" "}
+                              <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                              {data.file?.originalName?.length <= 38
+                                ? data.file?.originalName
+                                : data.file?.originalName.substring(0, 38) +
+                                    "..." || " - "}
+                            </File>
+                          </Link>
+                        )}
                       </CertificateContainer>
                     ))}
                   </>

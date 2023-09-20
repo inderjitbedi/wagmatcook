@@ -90,13 +90,12 @@ const Disciplinary = () => {
 
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
-
     setFormData({
       name: "",
       description: "",
       requiredBcr: "",
-    })
-    setOpen(true)
+    });
+    setOpen(true);
   };
   const HandleClose = () => {
     setOpen(false);
@@ -240,7 +239,6 @@ const Disciplinary = () => {
       } else {
         setErrors("");
       }
-      // console.log("in handel submit ", errors);
     }
     if (
       formData.name &&
@@ -303,7 +301,6 @@ const Disciplinary = () => {
       } else {
         setErrors("");
       }
-      // console.log("in handel submit ", errors);
     }
 
     if (
@@ -403,7 +400,6 @@ const Disciplinary = () => {
 
   // Handle reorder
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
     let url = "/disciplinary/reorder";
 
     httpClient({
@@ -437,7 +433,6 @@ const Disciplinary = () => {
     const reorderedData = Array.from(disciplinaryData);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
     setDisciplinaryData(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };
@@ -461,7 +456,7 @@ const Disciplinary = () => {
       description: data.description,
       requiredBcr: data.requiredBcr,
     });
-      setdescriptionLength(data.description.length);
+    setdescriptionLength(data.description.length);
 
     HandleOpenEdit();
   };
@@ -545,7 +540,6 @@ const Disciplinary = () => {
                   name="name"
                   onChange={HandleChanges}
                   value={formData.name}
-
                 />
                 <Errors>{errors.nameError}</Errors>
                 <InputLabel>
@@ -560,7 +554,9 @@ const Disciplinary = () => {
 
                 <InputPara>
                   {" "}
-                  <Errors>{errors.descriptionError}</Errors>  {descriptionLength > -1 ? 500-descriptionLength : 0} Characters left
+                  <Errors>{errors.descriptionError}</Errors>{" "}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
+                  Characters left
                 </InputPara>
                 <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -571,7 +567,7 @@ const Disciplinary = () => {
                   name="requiredBcr"
                   onChange={HandleChanges}
                 >
-                  <Option>Select an option</Option>
+                  <Option disabled>Select an option</Option>
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select>
@@ -759,7 +755,7 @@ const Disciplinary = () => {
               name="name"
               onChange={HandleChangesEdit}
               value={upDateData.name}
-            // placeholder={name}
+              // placeholder={name}
             />
             <Errors>{errors.nameError}</Errors>
             <InputLabel>
@@ -770,14 +766,16 @@ const Disciplinary = () => {
               name="description"
               onChange={HandleChangesEdit}
               value={upDateData.description}
-            // placeholder={descriptio}
+              // placeholder={descriptio}
             />
             <Errors style={{ display: "inline-block" }}>
               {errors.descriptionError}
             </Errors>
             <InputPara>
               {" "}
-              <Errors>{errors.descriptionError}</Errors> {descriptionLength > -1 ? 500-descriptionLength : 0} characters left
+              <Errors>{errors.descriptionError}</Errors>{" "}
+              {descriptionLength > -1 ? 500 - descriptionLength : 0} characters
+              left
             </InputPara>
             <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>

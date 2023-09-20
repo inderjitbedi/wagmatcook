@@ -45,7 +45,7 @@ const Benefits = () => {
     setValue,
     reset,
     watch,
-    setError
+    setError,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -57,7 +57,7 @@ const Benefits = () => {
       description: "",
     },
   });
-const watchStartDate = watch("startDate","")
+  const watchStartDate = watch("startDate", "");
   const HandleSubmitBenefits = (data) => {
     // e.preventDefault();
     let dataCopy = data;
@@ -72,7 +72,6 @@ const watchStartDate = watch("startDate","")
     })
       .then(({ result, error }) => {
         if (result) {
-          // console.log(result);
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
@@ -157,10 +156,11 @@ const watchStartDate = watch("startDate","")
           }
 
           const findBenefit = data.find(
-            (benefit) => benefit._id === result.benefit.benefit
+            (benefit) => benefit._id === result.benefit.benefit._id
           );
           const description = findBenefit?.description;
-          console.log(result.benefit);
+         
+
           reset(result.benefit);
           setValue("benefit", result.benefit.benefit);
           setValue("description", description);
@@ -180,8 +180,8 @@ const watchStartDate = watch("startDate","")
 
   useEffect(() => {
     GetBenefits();
-    GetEmployeesBenefits();
-  }, [reset, edit]);
+    // GetEmployeesBenefits();
+  }, []);
   return (
     <>
       <HeaderEmployee>
@@ -253,7 +253,7 @@ const watchStartDate = watch("startDate","")
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Benefits Name<InputSpan>*</InputSpan>
+                      Benefit Name <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="benefit"
@@ -276,16 +276,15 @@ const watchStartDate = watch("startDate","")
                             if (findBenefit) {
                               const description = findBenefit.description;
                               setValue("description", description);
-                              // console.log(`Description: ${description}`);
                             } else {
-                              console.log(
-                                `Benefit with _id ${targetId} not found.`
-                              );
-                              setValue("description", "");
+                           
+                              // setValue("description", "");
                             }
                           }}
                         >
-                          <Option value="">Select</Option>
+                          <Option value="" disabled>
+                            Select
+                          </Option>
                           {benefits?.map((data) => (
                             <Option value={data._id}>{data.name}</Option>
                           ))}
@@ -301,12 +300,8 @@ const watchStartDate = watch("startDate","")
                     </InputLabel>
                     <Input
                       type="text"
-                      {...register("description", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
+                      readOnly
+                      {...register("description", {})}
                     />
                     {<Errors>{errors.description?.message}</Errors>}
                   </FlexColumnForm>
@@ -315,7 +310,7 @@ const watchStartDate = watch("startDate","")
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Start Date<InputSpan>*</InputSpan>
+                      Start Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="date"
@@ -346,7 +341,7 @@ const watchStartDate = watch("startDate","")
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      End Date<InputSpan>*</InputSpan>
+                      End Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="date"
@@ -430,7 +425,9 @@ const watchStartDate = watch("startDate","")
                 {!edit && (
                   <ButtonGrey
                     onClick={() => {
-                     Navigate(`/organization-admin/employee/job-details/${employeeid}`)
+                      Navigate(
+                        `/organization-admin/employee/job-details/${employeeid}`
+                      );
                     }}
                   >
                     Back

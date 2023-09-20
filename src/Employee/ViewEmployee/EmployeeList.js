@@ -325,13 +325,21 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <TabelDiv>
-                      <TabelImg src={data.personalInfo[0]?.photo ? API_URL + data.personalInfo[0]?.photo?.path : "/images/User.jpg"} />
+                      <TabelImg
+                        src={
+                          data.personalInfo[0]?.photo
+                            ? API_URL + data.personalInfo[0]?.photo?.path
+                            : "/images/User.jpg"
+                        }
+                      />
                       <TabelParaContainer>
                         <TabelDarkPara>
                           {data.personalInfo[0]?.firstName}{" "}
                           {data.personalInfo[0]?.lastName}
                         </TabelDarkPara>
-                        <TabelLightPara>{data.email || " - "}</TabelLightPara>
+                        <TabelLightPara style={{ textTransform: "none" }}>
+                          {data.email || " - "}
+                        </TabelLightPara>
                       </TabelParaContainer>
                     </TabelDiv>
                   </TableCell>
@@ -339,7 +347,7 @@ const Employee = () => {
                     {data.personalInfo[0].employeeId || " - "}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
-                    {data.personalInfo[0].mobile || " - "}
+                    {data.personalInfo[0].homePhone || " - "}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     {/* <Moment format="YYYY/MM/DD"> */}{" "}

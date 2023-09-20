@@ -66,7 +66,7 @@ const OABenefits = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
-    console.log("working");
+  
   };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
@@ -116,7 +116,7 @@ const OABenefits = () => {
     } else if (update && isEmptyObject(errors)) {
       HandleUpdate(data);
     }
-    console.log("form submmited", data);
+    
   };
 
   const GetBenefits = () => {
@@ -163,9 +163,8 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success(result.message);//Benefit created successfully.");
+          toast.success(result.message); //Benefit created successfully.");
           GetBenefits();
-
         } else {
           //toast.warn("something went wrong ");
         }
@@ -192,7 +191,7 @@ const OABenefits = () => {
           HandleCloseDelete();
           setId("");
           GetBenefits();
-          toast.success(result.message);//Benefit deleted successfully.");
+          toast.success(result.message); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -225,7 +224,7 @@ const OABenefits = () => {
           setUpdate(false);
           HandleClose();
           reset();
-          toast.success(result.message);//Entry Updated Successfully");
+          toast.success(result.message); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -239,8 +238,7 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
-  // console.log(result, "the benefits data");
-  console.log(update, "this is the value ");
+ 
 
   const style = {
     position: "absolute",
@@ -290,7 +288,7 @@ const OABenefits = () => {
     reset({});
     clearErrors();
     setDetailsLength(500);
-  }
+  };
 
   return (
     <>
@@ -330,9 +328,13 @@ const OABenefits = () => {
       </DashHeader>
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Benefits</DisciplinaryHeading>
-        <AddNewButton onClick={() => {
-          HandleOpenAddNewAction();
-        }}>Add New</AddNewButton>
+        <AddNewButton
+          onClick={() => {
+            HandleOpenAddNewAction();
+          }}
+        >
+          Add New
+        </AddNewButton>
         <Modal
           open={open}
           onClose={() => {
@@ -362,7 +364,7 @@ const OABenefits = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <ModalUpperMid>
                 <InputLabel>
-                  Benefit Name<InputSpan>*</InputSpan>
+                  Benefit Name <InputSpan>*</InputSpan>
                 </InputLabel>
                 <Input
                   type="text"

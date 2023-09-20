@@ -205,12 +205,12 @@ const EVDiscipline = () => {
     // const parts = inputString?.split("/");
     // const type = parts[parts?.length - 1];
 
-    let type = await getFileType(e.target.files[0])
+    let type = await getFileType(e.target.files[0]);
     console.log("this file type:", type);
-    if (type != 'unknown') {
+    if (type != "unknown") {
       handleUpload(file, type);
     } else {
-      toast.error("Unsuported file type.")
+      toast.error("Unsuported file type.");
     }
   };
   const handleUpload = (file, type) => {
@@ -246,7 +246,6 @@ const EVDiscipline = () => {
         .catch((error) => {
           console.error("Error:", error);
           setIsUploading(false);
-
         })
         .finally(() => {
           setIsUploading(false);
@@ -254,20 +253,20 @@ const EVDiscipline = () => {
     }
   };
   const getFileType = (file) => {
-    const fileExtension = file.name.split('.').pop().toLowerCase();
+    const fileExtension = file.name.split(".").pop().toLowerCase();
 
-    if (['jpg', 'jpeg', 'png', 'gif', 'tiff'].includes(fileExtension)) {
-      return 'image';
-    } else if (['mp4', 'ogg', 'webm'].includes(fileExtension)) {
-      return 'video';
-    } else if (fileExtension === 'pdf') {
-      return 'pdf';
-    } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
-      return 'xlsx';
-    } else if (fileExtension === 'doc' || fileExtension === 'docx') {
-      return 'doc';
+    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+      return "image";
+    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+      return "video";
+    } else if (fileExtension === "pdf") {
+      return "pdf";
+    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+      return "xlsx";
+    } else if (fileExtension === "doc" || fileExtension === "docx") {
+      return "doc";
     } else {
-      return 'unknown';
+      return "unknown";
     }
   };
 
@@ -308,8 +307,7 @@ const EVDiscipline = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? API_URL +
-                    result.personalInfo.photo?.path
+                    ? API_URL + result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -368,7 +366,7 @@ const EVDiscipline = () => {
                             control={control}
                             render={({ field }) => (
                               <Select {...field}>
-                                <Option>Select</Option>
+                                <Option disabled>Select</Option>
                                 {disciplinaryData?.map((data) => (
                                   <Option value={data._id}>{data.name}</Option>
                                 ))}
@@ -421,7 +419,7 @@ const EVDiscipline = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            BCR<InputSpan>*</InputSpan>
+                            BCR <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input type="text" {...register("bcr", {})} />
                           {errors.bcr && (
@@ -432,7 +430,7 @@ const EVDiscipline = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Exipiry Date<InputSpan>*</InputSpan>
+                            Exipiry Date <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             type="date"
@@ -462,7 +460,7 @@ const EVDiscipline = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Details<InputSpan>*</InputSpan>
+                            Details <InputSpan>*</InputSpan>
                           </InputLabel>
                           <TextArea
                             type="text"
@@ -602,7 +600,7 @@ const EVDiscipline = () => {
                                 "/" +
                                 data.file?.name
                               }
-                              target="blank"
+                              target="_blank"
                               download
                               style={{ textDecoration: "none" }}
                             >
@@ -612,7 +610,7 @@ const EVDiscipline = () => {
                                 {data.file.originalName?.length <= 38
                                   ? data.file.originalName
                                   : data.file.originalName.substring(0, 38) +
-                                  "..." || " - "}
+                                      "..." || " - "}
                               </File>
                             </Link>
                           </FlexSpaceBetween>

@@ -22,6 +22,23 @@ export const AddNewButton = styled.button`
   border: none;
   cursor: pointer;
 `;
+export const HeaderDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px 8px 0px 0px;
+  border-bottom: 1px solid #eff4fa;
+  background: #fff;
+  padding: 10px 20px;
+`;
+export const HeaderTitle = styled.h1`
+  color: #222b45;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: capitalize;
+`;
 export const LoadMore = styled.button`
 background: none;
 border: none;
@@ -63,6 +80,7 @@ export const ActionIcons = styled.img`
   cursor: pointer;
 `;
 export const ActionIconDiv = styled.div`
+
   display: flex;
   align-items: center;
   gap: 20px;
@@ -175,4 +193,32 @@ export const Errors = styled.p`
   font-weight: 300;
   line-height: 0px;
   margin-top: 2px;
+`;
+export const TabelDarkPara = styled.p`
+  color: #222b45;
+  /* font-family: Inter; */
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 10px;
+  text-transform: capitalize;
+`;
+export const TabelLightPara = styled.p`
+  color: #8f9bb3;
+  /* font-family: Open Sans; */
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0px;
+  text-transform: capitalize;
+`;
+export const TabelDiv = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+export const TabelImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 `;

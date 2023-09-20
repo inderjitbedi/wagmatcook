@@ -34,21 +34,13 @@ const SideBar = () => {
       src: "/svg/Departments.svg",
       to: "/organization-admin/departments",
     },
-
     {
       Title: "Employee",
       src: "/svg/Employee.svg",
       to: "/organization-admin/employee/list",
       active: "employee-details",
     },
-    {
-      Title: "Activities",
-      src: "/svg/flash.svg",
-    },
-    {
-      Title: "Leave",
-      src: "/svg/Leaves.svg",
-    },
+
     {
       Title: "Benefits",
       src: "/svg/Benefits.svg",
@@ -60,6 +52,21 @@ const SideBar = () => {
       to: "/organization-admin/disciplinary",
     },
     {
+      Title: "Leaves",
+      src: "/svg/Leaves.svg",
+      to: "/organization-admin/leaves",
+    },
+    {
+      Title: "Employee Types",
+      src: "/svg/Employee.svg",
+      to: "/organization-admin/employee-types",
+    },
+    {
+      Title: "Activities",
+      src: "/svg/flash.svg",
+    },
+
+    {
       Title: "Account",
       src: "/svg/person.svg",
     },
@@ -67,13 +74,8 @@ const SideBar = () => {
       Title: "Report",
       src: "/svg/Reports.svg",
     },
-    {
-      Title: "Employee Types",
-      src: "/svg/Reports.svg",
-      to: "/organization-admin/employee-types",
-    },
   ];
-  console.log(location.pathname);
+ 
   const style = {
     textDecoration: "none",
     color: "#279AF1",

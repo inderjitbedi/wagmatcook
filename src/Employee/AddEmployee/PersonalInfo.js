@@ -75,10 +75,8 @@ const PersonalInfo = () => {
         },
       })
         .then((data) => {
-          console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
             setFile(data?.result?.file);
             // setFormData({ ...formData, file: data?.result.file._id });
           } else {
@@ -136,7 +134,7 @@ const PersonalInfo = () => {
   };
   useEffect(() => {
     GetEmployeesPersonalInfo();
-  }, [reset]);
+  }, []);
 
   //get Employee Personal Info
 
@@ -154,7 +152,6 @@ const PersonalInfo = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          console.log(result);
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
@@ -258,12 +255,7 @@ const PersonalInfo = () => {
                 <ImgUpload>
                   {file ? (
                     <PersonImg
-                      src={
-                        API_URL +
-                        file?.destination +
-                        "/" +
-                        file?.name
-                      }
+                      src={API_URL + file?.destination + "/" + file?.name}
                       alt=""
                     />
                   ) : (
@@ -333,7 +325,7 @@ const PersonalInfo = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Address<InputSpan>*</InputSpan>
+                      Address <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -348,7 +340,7 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      City<InputSpan>*</InputSpan>
+                      City <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -381,7 +373,7 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Postal Code<InputSpan>*</InputSpan>
+                      Postal Code <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -609,11 +601,7 @@ const PersonalInfo = () => {
                               e.target.value.replace(/\D/g, ""),
                               10
                             );
-                            console.log(
-                              numericValue,
-                              typeof numericValue,
-                              "sin value "
-                            );
+                         
                             setValue("sin", numericValue);
                           }}
                         />
@@ -623,7 +611,7 @@ const PersonalInfo = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Gender<InputSpan>*</InputSpan>
+                      Gender <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="gender"
@@ -636,7 +624,7 @@ const PersonalInfo = () => {
                       }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option>Select</Option>
+                          <Option disabled>Select</Option>
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
                           <Option value={3}>Non-Binary</Option>

@@ -143,7 +143,6 @@ const EmployeeTypes = () => {
     } else if (update && isEmptyObject(errors)) {
       HandleUpdate(data);
     }
-    console.log("form submmited", data);
   };
   const GetEmployeeTypes = () => {
     setIsLoading(true);
@@ -379,7 +378,7 @@ const EmployeeTypes = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <InputLabel>
-                      Employee Type<InputSpan>*</InputSpan>
+                      Employee Type <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -392,7 +391,7 @@ const EmployeeTypes = () => {
                     />
                     {errors.name && <Errors>{errors.name?.message}</Errors>}
                     {/* <InputLabel>
-                  Description <InputSpan>*</InputSpan>
+                  Description  <InputSpan>*</InputSpan>
                 </InputLabel>
                 <TextArea
                   type="text"

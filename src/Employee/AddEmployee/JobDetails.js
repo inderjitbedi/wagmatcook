@@ -95,9 +95,8 @@ const JobDetails = () => {
       url,
     })
       .then(({ result, error }) => {
-
         if (result) {
-          console.log(result, "this what result Looks like ");
+          // console.log(result, "this what result Looks like ");
           setResult(result);
           if (result.details.startDate || result.details.endDate) {
             result.details.startDate = new Date(result.details.startDate)
@@ -116,25 +115,19 @@ const JobDetails = () => {
                 data.endDate = new Date(data.endDate)
                   .toISOString()
                   .split("T")[0];
-                
-                data.department = data.department._id;
 
-                
+                data.department = data.department._id;
               }
             });
           }
           if (result.details?.department) {
-                result.details.department = result.details?.department?._id;
+            result.details.department = result.details?.department?._id;
           }
           if (result.details?.employeeType) {
-            result.details.employeeType= result.details?.employeeType?._id
+            result.details.employeeType = result.details?.employeeType?._id;
           }
-        
 
-         
-            
-
-          console.log(result, "updates in results");
+          // console.log(result, "updates in results");
           // Object.keys(result).forEach((key) => {
           //   console.log(key, result[key], "this is what we have now ");
           //   setValue(key, result[key]);
@@ -169,8 +162,8 @@ const JobDetails = () => {
   useEffect(() => {
     GetDepartments();
     GetEmployeeTypes();
-    GetEmployeesJobDetails();
-  }, [edit, reset]);
+    // GetEmployeesJobDetails();
+  }, []);
 
   const HandleSubmitJobDetails = (data) => {
     // e.preventDefault();
@@ -334,7 +327,7 @@ const JobDetails = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Department<InputSpan>*</InputSpan>
+                      Department <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="details.department"
@@ -347,7 +340,9 @@ const JobDetails = () => {
                       }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option value="">Select</Option>
+                          <Option value="" disabled>
+                            Select
+                          </Option>
                           {departmentData?.map((data) => (
                             <Option value={data._id}>{data.name}</Option>
                           ))}
@@ -376,7 +371,7 @@ const JobDetails = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Position Start Date<InputSpan>*</InputSpan>
+                      Position Start Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="date"
@@ -392,7 +387,7 @@ const JobDetails = () => {
                             getValues("details.endDate")
                           );
                           const startDate = new Date(e.target.value);
-                          if (startDate >= endDate) {
+                          if (endDate && startDate >= endDate) {
                             setError("details.endDate", {
                               type: "custom",
                               message:
@@ -418,19 +413,27 @@ const JobDetails = () => {
                       {...register("details.endDate", {
                         valueAsDate: true,
 
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
+                        // required: {
+                        //   value: true,
+                        //   message: "Required",
+                        // },
                         validate: (fieldValue) => {
                           const startDate = new Date(
                             getValues("details.startDate")
                           );
                           const endDate = new Date(fieldValue);
-                          return (
-                            startDate <= endDate ||
-                            "End date must not be earlier than start date"
-                          );
+                          if (startDate <= endDate && endDate) {
+                            setError("details.endDate", {
+                              type: "custom",
+                              message:
+                                "End date must not be earlier than start date   ",
+                            });
+                          } else {
+                            setError("details.endDate", {
+                              type: "custom",
+                              message: "",
+                            });
+                          }
                         },
                       })}
                     />
@@ -471,7 +474,7 @@ const JobDetails = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Salary Scale To<InputSpan>*</InputSpan>
+                      Salary Scale To <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -505,7 +508,7 @@ const JobDetails = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Actual Salary amounts<InputSpan>*</InputSpan>
+                      Actual Salary amounts <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -571,7 +574,7 @@ const JobDetails = () => {
                       }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option>Select</Option>
+                          <Option disabled>Select</Option>
                           <Option value={1}>Hour</Option>
                           <Option value={2}>Day</Option>
                           <Option value={3}>Week</Option>
@@ -586,7 +589,7 @@ const JobDetails = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Hours per week<InputSpan>*</InputSpan>
+                      Hours per week <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -628,9 +631,9 @@ const JobDetails = () => {
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
-                  <FlexColumnForm style={{width:"50%"}}>
+                  <FlexColumnForm style={{ width: "50%" }}>
                     <InputLabel>
-                      Employee Type<InputSpan>*</InputSpan>
+                      Employee Type <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="details.employeeType"
@@ -643,7 +646,9 @@ const JobDetails = () => {
                       }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option value="">Select</Option>
+                          <Option value="" disabled>
+                            Select
+                          </Option>
                           {employeeTypes?.employeeTypes?.map((data) => (
                             <Option value={data._id}>{data.name}</Option>
                           ))}
@@ -666,9 +671,13 @@ const JobDetails = () => {
                       <input
                         type="checkbox"
                         {...register("details.isBebEligible", {})}
+                        id="isEligible"
                       />
-                      <InputLabel style={{ marginBottom: "0px" }}>
-                        Is BEB Eligible?<InputSpan>*</InputSpan>
+                      <InputLabel
+                        htmlFor="isEligible"
+                        style={{ marginBottom: "0px" }}
+                      >
+                        Is BEB Eligible? <InputSpan>*</InputSpan>
                       </InputLabel>
                     </AlignFlex>
                     {/* {errors.isBebEligible && (
@@ -680,8 +689,12 @@ const JobDetails = () => {
                       <input
                         type="checkbox"
                         {...register("details.isActive", {})}
+                        id="isActive"
                       />
-                      <InputLabel style={{ marginBottom: "0px" }}>
+                      <InputLabel
+                        htmlFor="isActive"
+                        style={{ marginBottom: "0px" }}
+                      >
                         Is Active <InputSpan>*</InputSpan>
                       </InputLabel>
                     </AlignFlex>
@@ -699,7 +712,7 @@ const JobDetails = () => {
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
-                        Position Title<InputSpan>*</InputSpan>
+                        Position Title <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
                         type="text"
@@ -732,7 +745,9 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option value="">Select</Option>
+                            <Option value="" disabled>
+                              Select
+                            </Option>
                             {departmentData?.map((data) => (
                               <Option value={data._id}>{data.name}</Option>
                             ))}
@@ -749,22 +764,22 @@ const JobDetails = () => {
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
-                        From<InputSpan>*</InputSpan>
+                        From <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
                         type="date"
                         {...register(`positions.${index}.startDate`, {
                           valueAsDate: true,
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
                           onChange: (e) => {
                             const endDate = new Date(
                               getValues(`positions.${index}.endDate`)
                             );
                             const startDate = new Date(e.target.value);
-                            if (startDate >= endDate) {
+                            if (endDate && startDate >= endDate) {
                               setError(`positions.${index}.endDate`, {
                                 type: "custom",
                                 message:
@@ -787,7 +802,7 @@ const JobDetails = () => {
                     </FlexColumnForm>
                     <FlexColumnForm>
                       <InputLabel>
-                        To<InputSpan>*</InputSpan>
+                        To <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
                         type="date"
@@ -803,10 +818,18 @@ const JobDetails = () => {
                               getValues(`positions.${index}.startDate`)
                             );
                             const endDate = new Date(fieldValue);
-                            return (
-                              startDate <= endDate ||
-                              "Must not be earlier than start date"
-                            );
+                            if (startDate <= endDate && endDate) {
+                              setError(`positions.${index}.endDate`, {
+                                type: "custom",
+                                message:
+                                  "End date must not be earlier than start date   ",
+                              });
+                            } else {
+                              setError(`positions.${index}.endDate`, {
+                                type: "custom",
+                                message: "",
+                              });
+                            }
                           },
                         })}
                       />

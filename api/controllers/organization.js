@@ -4,181 +4,191 @@ const path = require("path");
 const fs = require("fs");
 const File = require("../models/file");
 const roles = require("../enum/roles");
-const sendGrid = require('../providers/sendGrid.js');
+const sendGrid = require("../providers/sendGrid.js");
 const UserOrganization = require("../models/userOrganization");
-const crypto = require('crypto');
+const crypto = require("crypto");
 const fileController = require("./file");
-
 
 // Function to create a directory if it doesn't exist
 const createDirectoryIfNotExists = (directory) => {
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory, { recursive: true });
-    }
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
 };
 
 const orgController = {
-    async create(req, res) {
-        try {
-            const org = new Organization(req.body);
-            console.log(req.user);
-            let file = await File.findOne({ _id: req.body.file });
+  async create(req, res) {
+    try {
+      const org = new Organization(req.body);
+      console.log(req.user);
+      let file = await File.findOne({ _id: req.body.file });
 
-            if (file) {
-                org.logo = await fileController.moveToUploads(file)
-            }
+      if (file) {
+        org.logo = await fileController.moveToUploads(file);
+      }
 
-            org.createdBy = req.user._id;
-            await org.save();
-            res.status(201).json({ organization: org, message: 'Organization created successfully.' });
-        } catch (error) {
-            console.error("authController:register:error -", error);
-            res.status(400).json(error);
-        }
-    },
-    async checkNameUniqueness(req, res) {
-        try {
-            const { name } = req.params;
-            // Check if user already exists
-            const existingOrg = await Organization.findOne({ name });
-            // if (existingUser) {
-            //     return res.status(409).json({ isUnique: !existingUser, message: 'User already exists' });
-            // }
-            res.json({ isUnique: !existingOrg });
-        } catch (error) {
-            console.error("authController:checkEmailUniqueness:error -", error);
-            res.status(400).json({ message: error.toString() });;
-        }
-    },
-    async list(req, res) {
-        try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 9999;
-            const startIndex = (page - 1) * limit;
-
-            let filters = { isDeleted: false, isActive: true };
-
-            if (req.query.searchKey) {
-                filters.$or = [
-                    { name: { $regex: req.query.searchKey, $options: 'i' } },
-                    // { description: { $regex: req.query.searchKey, $options: 'i' } }
-                ];
-            }
-            const organizations = await Organization.find(filters)
-                .skip(startIndex)
-                .limit(limit)
-                .sort({ createdAt: -1 });
-
-            const totalOrganizations = await Organization.countDocuments(filters);
-            const totalPages = Math.ceil(totalOrganizations / req.query.limit);
-
-            res.status(200).json({
-                organizations,
-                totalOrganizations,
-                currentPage: page,
-                totalPages,
-                message: 'Organizations fetched successfully'
-            });
-        } catch (error) {
-            console.error("organizationController:list:error -", error);
-            res.status(400).json(error);
-        }
-    },
-
-    async listOrganizationsWithPrimaryUsers(req, res) {
-        try {
-            const organizations = await Organization.aggregate([
-                {
-                    $match: { isDeleted: false, isActive: true }, // Match active and non-deleted organizations
-                },
-                {
-                    $lookup: {
-                        from: 'userorganizations', // Name of the UserOrganization collection
-                        localField: '_id',
-                        foreignField: 'organization',
-                        as: 'users',
-                    },
-                },
-                {
-                    $unwind: '$users', // Unwind the users array
-                },
-                {
-                    $match: { 'users.isPrimary': true }, // Filter for users with isPrimary: true
-                },
-                {
-                    $group: {
-                        _id: '$_id',
-                        name: { $first: '$name' },
-                        size: { $first: '$size' },
-                        logo: { $first: '$logo' },
-                        createdBy: { $first: '$createdBy' },
-                        isActive: { $first: '$isActive' },
-                        isDeleted: { $first: '$isDeleted' },
-                        primaryUser: { $first: '$users.user' },
-                    },
-                },
-                {
-                    $lookup: {
-                        from: 'users', // Name of the User collection
-                        localField: 'primaryUser',
-                        foreignField: '_id',
-                        as: 'primaryUser', // Store the populated user in the 'primaryUser' field
-                    },
-                },
-                {
-                    $unwind: '$primaryUser', // Unwind the populated primaryUser
-                },
-            ]);
-
-            res.status(200).json({
-                organizations,
-                message: 'Organizations with primary users fetched successfully',
-            });
-        } catch (error) {
-            console.error('listOrganizationsWithPrimaryUsers:error -', error);
-            res.status(400).json(error);
-        }
-    },
-    async initiate(req, res) {
-        try {
-            console.log(req.body);
-            const organization = await Organization.findOne({ name: req.body.name })
-            if (organization) {
-                return res.status(400).json({ message: 'Organization name already registered' });
-            }
-            console.log(organization);
-            const userExists = await User.findOne({ email: req.body.email })
-            if (userExists) {
-                return res.status(400).json({ message: 'User email already registered' });
-            }
-            console.log(userExists);
-
-            const org = new Organization({
-                name: req.body.name
-                // , createdBy: req.user._id
-            });
-            await org.save();
-
-            const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
-            const token = crypto.randomBytes(20).toString('hex');
-            user.invitationToken = token;
-            user.invitationTokenExpiry = Date.now() + (3600000 * 24);
-            await user.save();
-
-            const relation = new UserOrganization({ user: user._id, organization: org._id, isPrimary: true });
-            await relation.save()
-
-
-            sendGrid.send(user.email, 'invite', { org, user });
-            res.status(200).json({
-                message: 'Invitation sent successfully'
-            });
-
-        } catch (error) {
-            console.error("organizationController:list:error -", error);
-            res.status(400).json(error);
-        }
+      org.createdBy = req.user._id;
+      await org.save();
+      res
+        .status(201)
+        .json({
+          organization: org,
+          message: "Organization created successfully.",
+        });
+    } catch (error) {
+      console.error("authController:register:error -", error);
+      res.status(400).json(error);
     }
-}
+  },
+  async checkNameUniqueness(req, res) {
+    try {
+      const { name } = req.params;
+      // Check if user already exists
+      const existingOrg = await Organization.findOne({ name });
+      // if (existingUser) {
+      //     return res.status(409).json({ isUnique: !existingUser, message: 'User already exists' });
+      // }
+      res.json({ isUnique: !existingOrg });
+    } catch (error) {
+      console.error("authController:checkEmailUniqueness:error -", error);
+      res.status(400).json({ message: error.toString() });
+    }
+  },
+  async list(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+
+      let filters = { isDeleted: false, isActive: true };
+
+      if (req.query.searchKey) {
+        filters.$or = [
+          { name: { $regex: req.query.searchKey, $options: "i" } },
+          // { description: { $regex: req.query.searchKey, $options: 'i' } }
+        ];
+      }
+      const organizations = await Organization.find(filters)
+        .skip(startIndex)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+      const totalOrganizations = await Organization.countDocuments(filters);
+      const totalPages = Math.ceil(totalOrganizations / req.query.limit);
+
+      res.status(200).json({
+        organizations,
+        totalOrganizations,
+        currentPage: page,
+        totalPages,
+        message: "Organizations fetched successfully",
+      });
+    } catch (error) {
+      console.error("organizationController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async listOrganizationsWithPrimaryUsers(req, res) {
+    try {
+      const organizations = await Organization.aggregate([
+        {
+          $match: { isDeleted: false, isActive: true }, // Match active and non-deleted organizations
+        },
+        {
+          $lookup: {
+            from: "userorganizations", // Name of the UserOrganization collection
+            localField: "_id",
+            foreignField: "organization",
+            as: "users",
+          },
+        },
+        {
+          $unwind: "$users", // Unwind the users array
+        },
+        {
+          $match: { "users.isPrimary": true }, // Filter for users with isPrimary: true
+        },
+        {
+          $group: {
+            _id: "$_id",
+            name: { $first: "$name" },
+            size: { $first: "$size" },
+            logo: { $first: "$logo" },
+            createdBy: { $first: "$createdBy" },
+            isActive: { $first: "$isActive" },
+            isDeleted: { $first: "$isDeleted" },
+            primaryUser: { $first: "$users.user" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users", // Name of the User collection
+            localField: "primaryUser",
+            foreignField: "_id",
+            as: "primaryUser", // Store the populated user in the 'primaryUser' field
+          },
+        },
+        {
+          $unwind: "$primaryUser", // Unwind the populated primaryUser
+        },
+      ]);
+
+      res.status(200).json({
+        organizations,
+        message: "Organizations with primary users fetched successfully",
+      });
+    } catch (error) {
+      console.error("listOrganizationsWithPrimaryUsers:error -", error);
+      res.status(400).json(error);
+    }
+  },
+  async initiate(req, res) {
+    try {
+      console.log(req.body);
+      const organization = await Organization.findOne({ name: req.body.name });
+      if (organization) {
+        return res
+          .status(400)
+          .json({ message: "Organization name already registered" });
+      }
+      console.log(organization);
+      const userExists = await User.findOne({ email: req.body.email });
+      if (userExists) {
+        return res
+          .status(400)
+          .json({ message: "User email already registered" });
+      }
+      console.log(userExists);
+
+      const org = new Organization({
+        name: req.body.name,
+        // , createdBy: req.user._id
+      });
+      await org.save();
+
+      const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
+      const token = crypto.randomBytes(20).toString("hex");
+      user.invitationToken = token;
+      user.invitationTokenExpiry = Date.now() + 3600000 * 24;
+      await user.save();
+
+      const relation = new UserOrganization({
+        user: user._id,
+        organization: org._id,
+        isPrimary: true,
+      });
+      await relation.save();
+
+      sendGrid.send(user.email, "invite", { org, user });
+      res.status(200).json({
+        message: "Invitation sent successfully",
+      });
+    } catch (error) {
+      console.error("organizationController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+};
 
 module.exports = orgController;

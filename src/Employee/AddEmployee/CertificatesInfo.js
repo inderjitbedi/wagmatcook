@@ -93,7 +93,6 @@ const CertificatesInfo = () => {
       }),
     };
 
-    console.log(dataCopy, "data which goes into put api certificates   ");
     let url = `/employee/certificates/${employeeid}`;
 
     setIsLoading(true);
@@ -105,7 +104,6 @@ const CertificatesInfo = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          // console.log(result);
           if (edit) {
             // Navigate(`/organization-admin/employee/list`);
             Navigate(-1);
@@ -128,7 +126,6 @@ const CertificatesInfo = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("data and working data:", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -141,16 +138,37 @@ const CertificatesInfo = () => {
     if (isEmptyObject(errors)) {
       HandleSubmitcertificates(data);
     }
-    // console.log("form submmited", data);
   };
+  const getFileType = (file) => {
+    const fileExtension = file.name.split(".").pop().toLowerCase();
 
-  const handleFileChange = (e, index) => {
+    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+      return "image";
+    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+      return "video";
+    } else if (fileExtension === "pdf") {
+      return "pdf";
+    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+      return "xlsx";
+    } else if (fileExtension === "doc" || fileExtension === "docx") {
+      return "doc";
+    } else {
+      return "unknown";
+    }
+  };
+  const handleFileChange = async (e, index) => {
     // e.preventDefault();
 
     const file = e.target.files[0];
-    handleUpload(file, index);
+    let type = await getFileType(e.target.files[0]);
+    if (type != "unknown") {
+      handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.");
+    }
+    handleUpload(file, index, type);
   };
-  const handleUpload = (file, index) => {
+  const handleUpload = (file, index, type) => {
     setIsUploading({ [index]: true });
     if (file) {
       const binary = new FormData();
@@ -158,17 +176,15 @@ const CertificatesInfo = () => {
 
       httpClient({
         method: "post",
-        url: "/organization/file/upload/image",
+        url: `/employee/file/upload/${type}`,
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
         },
       })
         .then((data) => {
-          console.log(data);
 
           if (data?.result) {
-            console.log("upload api results :", data?.result);
 
             setFiles((prevFiles) => {
               const updatedFiles = [...prevFiles];
@@ -190,13 +206,11 @@ const CertificatesInfo = () => {
   };
   const removeFile = (index) => {
     // e.preventDefault();
-console.log(index);
     setFiles((prevFiles) => {
       let updatedFiles = [...prevFiles];
       updatedFiles[index] = null;
       return updatedFiles;
     });
-
   };
   console.log(file, "values in files array ");
   const GetEmployeesCertificates = () => {
@@ -255,7 +269,7 @@ console.log(index);
     if (!getValues("certificates").length) {
       append(initialPosition);
     }
-  }, [edit]);
+  }, []);
   return (
     <>
       <HeaderEmployee>
@@ -335,7 +349,7 @@ console.log(index);
             <form onSubmit={handleSubmit(onSubmit)}>
               {fields.map((field, index) => (
                 <FormContainer key={field.id}>
-                  <FlexContaierForm>
+                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
                         Certificate Title <InputSpan>*</InputSpan>
@@ -376,10 +390,10 @@ console.log(index);
                     </FlexColumnForm>
                   </FlexContaierForm>
 
-                  <FlexContaierForm>
+                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
-                        Completion Date<InputSpan>*</InputSpan>
+                        Completion Date <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
                         type="date"
@@ -459,7 +473,6 @@ console.log(index);
                     <FlexColumnForm>
                       <input
                         type="file"
-                        accept="image/*,capture=camera"
                         {...register(`certificates.${index}.file`, {
                           required: {
                             value: edit ? false : true,

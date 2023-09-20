@@ -209,8 +209,7 @@ const EmployeeJobDetails = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? API_URL +
-                      result.personalInfo.photo?.path
+                    ? API_URL + result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -270,7 +269,9 @@ const EmployeeJobDetails = () => {
                   <FlexColumn>
                     <TitlePara>Position End Date</TitlePara>
                     <ViewPara>
-                      {moment(result.details?.endDate).format("DD/MM/YYYY")}
+                      {result.details?.endDate
+                        ? moment(result.details?.endDate).format("DD/MM/YYYY")
+                        : "Present"}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
@@ -345,6 +346,15 @@ const EmployeeJobDetails = () => {
                   </FlexColumn>
                 </FlexSpaceBetween> */}
                 <FlexSpaceBetween>
+                  <FlexColumn>
+                    <TitlePara>Employee Type</TitlePara>
+                    <ViewPara>
+                      {" "}
+                      {result.details?.employeeType?.name || " - "}{" "}
+                    </ViewPara>
+                  </FlexColumn>
+                </FlexSpaceBetween>
+                <FlexSpaceBetween>
                   <BasicHeading
                     style={{ marginTop: "53px", marginBottom: "24px" }}
                   >
@@ -381,7 +391,7 @@ const EmployeeJobDetails = () => {
                         <FlexContaierForm>
                           <FlexColumnForm>
                             <InputLabel>
-                              Department<InputSpan>*</InputSpan>
+                              Department <InputSpan>*</InputSpan>
                             </InputLabel>
                             <Controller
                               name="department"
@@ -532,7 +542,9 @@ const EmployeeJobDetails = () => {
                           <span style={{ marginLeft: "14px" }}>
                             {" "}
                             To:
-                            {moment(data.endDate).format("DD/MM/YYYY") || " - "}
+                            {data.endDate
+                              ? moment(data.endDate).format("DD/MM/YYYY")
+                              : " - "}
                           </span>{" "}
                         </TitlePara>
                       </TimelineDiv>

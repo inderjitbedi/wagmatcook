@@ -196,7 +196,8 @@ const OADashBoardNext = ({ user, orgData }) => {
           >
             <MenuItem onClick={HandleLogout}>Logout</MenuItem>
           </Menu>
-          <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
+            <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
+            
           <SectionCard>
             <SectionCardContainer>
               <SectionCardTitle>Total Employee</SectionCardTitle>
@@ -216,7 +217,8 @@ const OADashBoardNext = ({ user, orgData }) => {
               <SectionCardTitle>Total Employee</SectionCardTitle>
               <SectionCardNumber>654</SectionCardNumber>
             </SectionCardContainer4>
-          </SectionCard>
+            </SectionCard>
+            
           <MainCardContainer>
             {/* Department card */}
             <MainCard>

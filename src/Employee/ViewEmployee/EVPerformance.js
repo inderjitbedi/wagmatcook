@@ -129,12 +129,35 @@ const EVPerformance = () => {
   //   }
   //   console.log("form submmited", data);
   // };
-  const handleFileChange = (e, index) => {
-    console.log(index, "file index");
-    const file = e.target.files[0];
-    handleUpload(file, index);
+  const getFileType = (file) => {
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+      return "image";
+    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+      return "video";
+    } else if (fileExtension === "pdf") {
+      return "pdf";
+    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+      return "xlsx";
+    } else if (fileExtension === "doc" || fileExtension === "docx") {
+      return "doc";
+    } else {
+      return "unknown";
+    }
   };
-  const handleUpload = (file, index) => {
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    let type = await getFileType(e.target.files[0]);
+    console.log("this file type:", type);
+    if (type != "unknown") {
+      handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.");
+    }
+  };
+
+  const handleUpload = (file, type) => {
     setIsUploading(true);
 
     if (file) {
@@ -143,7 +166,7 @@ const EVPerformance = () => {
 
       httpClient({
         method: "post",
-        url: "/organization/file/upload/image",
+        url: `/employee/file/upload/${type}`,
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -254,8 +277,7 @@ const EVPerformance = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? API_URL +
-                      result.personalInfo.photo?.path
+                    ? API_URL + result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -344,7 +366,7 @@ const EVPerformance = () => {
                       {/* <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Completed By <InputSpan>*</InputSpan>
+                            Completed By  <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             type="date"
@@ -374,7 +396,7 @@ const EVPerformance = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Details<InputSpan>*</InputSpan>
+                            Details <InputSpan>*</InputSpan>
                           </InputLabel>
                           <TextArea
                             type="text"
@@ -409,7 +431,7 @@ const EVPerformance = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Date of Next Review<InputSpan>*</InputSpan>
+                            Date of Next Review <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             type="date"
@@ -439,7 +461,6 @@ const EVPerformance = () => {
                       <input
                         style={{ width: "50%" }}
                         type="file"
-                        accept="image/*,capture=camera"
                         {...register(`file`, {
                           required: {
                             value: true,
@@ -498,8 +519,8 @@ const EVPerformance = () => {
 
               <BasicDetailsDiv>
                 {/* dot and circle  */}
-                {!result?.review?.length ? (
-                  <NoDocumentfound message="No reviews to show"/>
+                {!result?.reviews?.length ? (
+                  <NoDocumentfound message="No reviews to show" />
                 ) : (
                   <VerticalTimeline
                     layout={"1-column-left"}
@@ -572,7 +593,7 @@ const EVPerformance = () => {
                                   "/" +
                                   data.file?.name
                                 }
-                                target="blank"
+                                target="_blank"
                                 download
                                 style={{ textDecoration: "none" }}
                               >
@@ -629,7 +650,7 @@ const EVPerformance = () => {
                           <FlexContaierForm>
                             <FlexColumnForm>
                               <InputLabel>
-                                Follow-up Date <InputSpan>*</InputSpan>
+                                Follow-up Date  <InputSpan>*</InputSpan>
                               </InputLabel>
                               <Input
                                 type="date"
@@ -649,7 +670,7 @@ const EVPerformance = () => {
                           <FlexContaierForm>
                             <FlexColumnForm>
                               <InputLabel>
-                                Details<InputSpan>*</InputSpan>
+                                Details <InputSpan>*</InputSpan>
                               </InputLabel>
                               <TextArea
                                 type="text"

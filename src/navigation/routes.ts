@@ -36,6 +36,10 @@ import AddEmployeeLayout from "../Employee/AddEmployee/AddEmployeeLayout";
 import EmployeeLayout from "../Employee/EmployeeLayout";
 import OABenefits from "../Benefits/OABenefits";
 import EmployeeTypes from "../Employee/EmployeeType/EmployeeTypes";
+import OALeaves from "../Leaves/OaLeaves/OALeaves";
+import ManagerLeaves from "../Leaves/ManagerLeaves/ManagerLeaves";
+import ManagerSideBar from "../Dashboard/ManagerDashboard/ManagerSideBar";
+import ManagerLayout from "../Dashboard/ManagerDashboard/ManagerLayout";
 const Routes: any = [
   {
     component: signup,
@@ -106,6 +110,14 @@ const Routes: any = [
         component: OABenefits,
         path: "benefits",
         title: "Benefits",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+        {
+        component: OALeaves,
+        path: "leaves",
+        title: "Leaves",
         to: "/",
         type: "private",
         index: true,
@@ -327,6 +339,24 @@ const Routes: any = [
       },
     ],
   },
+    {
+    component: ManagerLayout,
+    path: "/manager-management",
+    title: "Manager",
+    to: "/",
+    type: "private",
+    children: [
+      {
+        component: ManagerLeaves,
+        path: "leaves",
+        title: "Leaves",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+    ],
+  },
+
   {
     component: RegisterOrganization,
     path: "/organization-admin/organization-profile",

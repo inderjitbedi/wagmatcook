@@ -238,8 +238,7 @@ const Departments = () => {
     GetDepartments();
     // }
   }, [page]);
-  console.log(departmentData, "this is out data looks like ");
-  console.log(page, "this our page ");
+
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -264,7 +263,7 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-      // console.log("in handel submit ", errors);
+    
     }
     if (
       formData.name &&
@@ -322,7 +321,7 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-      // console.log("in handel submit ", errors);
+    
     }
     if (
       upDateData.description &&
@@ -353,7 +352,7 @@ const Departments = () => {
             setUpDateData("");
             setErrors("");
             toast.success(result.message); //Departments Updated Successfully");
-            console.log(result?.department, "updated entry");
+            
           } else {
             //toast.warn("something went wrong ");
           }
@@ -402,7 +401,7 @@ const Departments = () => {
       description: data.description,
       requiredBcr: data.requiredBcr,
     });
-      setdescriptionLength(data.description.length);
+    setdescriptionLength(data.description.length);
 
     HandleOpenEdit();
   };
@@ -719,8 +718,9 @@ const Departments = () => {
             />
             <InputPara>
               {" "}
-              <Errors>{errors.descriptionError}</Errors> {" "}
-              {descriptionLength > -1 ? 500 - descriptionLength : 0} Characters left
+              <Errors>{errors.descriptionError}</Errors>{" "}
+              {descriptionLength > -1 ? 500 - descriptionLength : 0} Characters
+              left
             </InputPara>
           </ModalUpperMid>
           <ModalBottom>
