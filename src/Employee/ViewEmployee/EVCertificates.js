@@ -512,7 +512,7 @@ const EVCertificates = () => {
                             API_URL +
                             data.file?.path
                           }
-                          target="blank"
+                          target="_blank"
                           download
                           style={{ textDecoration: "none" }}
                         >
