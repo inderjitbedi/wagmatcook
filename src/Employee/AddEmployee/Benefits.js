@@ -70,7 +70,7 @@ const watchStartDate = watch("startDate","")
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           // console.log(result);
           if (edit) {
@@ -118,7 +118,7 @@ const watchStartDate = watch("startDate","")
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setBenefits(result.benefits);
           GetEmployeesBenefits(result.benefits);
@@ -144,7 +144,7 @@ const watchStartDate = watch("startDate","")
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
           if (result.benefit.startDate || result.benefit.endDate) {

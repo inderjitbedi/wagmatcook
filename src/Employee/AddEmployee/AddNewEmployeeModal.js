@@ -75,7 +75,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => { 
+      .then(({ result, error }) => { 
         if (result) {
           HandleCloseEmployee()
           Navigate(`/organization-admin/employee/personal-info/${result.employee._id}`);

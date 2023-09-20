@@ -43,7 +43,7 @@ const CertificatesInfo = () => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState({});
   const [result, setResult] = useState([]);
   const [file, setFiles] = useState([]);
   const [openThanks, setOpenThanks] = useState(false);
@@ -84,9 +84,10 @@ const CertificatesInfo = () => {
     // e.preventDefault();
     let dataCopy = {
       certificates: data.certificates.map((certificate, index) => {
-        const fileId = file[index];
-        if (fileId && fileId._id) {
-          certificate.file = fileId._id;
+        const selectedFile = file[index];
+        certificate.file = null;
+        if (selectedFile && selectedFile._id) {
+          certificate.file = selectedFile._id;
         }
         return certificate;
       }),
@@ -102,7 +103,7 @@ const CertificatesInfo = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           // console.log(result);
           if (edit) {
@@ -150,7 +151,7 @@ const CertificatesInfo = () => {
     handleUpload(file, index);
   };
   const handleUpload = (file, index) => {
-    setIsUploading(true);
+    setIsUploading({ [index]: true });
     if (file) {
       const binary = new FormData();
       binary.append("file", file);
@@ -174,7 +175,7 @@ const CertificatesInfo = () => {
               updatedFiles[index] = data?.result?.file;
               return updatedFiles;
             });
-            setIsUploading(false);
+            setIsUploading({ [index]: false });
 
             // setValue(`certificates[${index}].file`, data?.result?.file);
           } else {
@@ -183,18 +184,19 @@ const CertificatesInfo = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          setIsUploading(false);
+          setIsUploading({ [index]: false });
         });
     }
   };
-  const removeFile = (e, index) => {
+  const removeFile = (index) => {
     // e.preventDefault();
-
+console.log(index);
     setFiles((prevFiles) => {
-      const updatedFiles = [...prevFiles];
-      updatedFiles.splice(index, 1);
+      let updatedFiles = [...prevFiles];
+      updatedFiles[index] = null;
       return updatedFiles;
     });
+
   };
   console.log(file, "values in files array ");
   const GetEmployeesCertificates = () => {
@@ -205,12 +207,11 @@ const CertificatesInfo = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           // console.log(result, "this what result Looks like ");
           setResult(result);
           const resetfile = result.certificates.map((data) => data.file);
-          console.log("files data to reset :", resetfile);
           setFiles(resetfile);
           if (result.certificates) {
             // console.log("certificates is working");
@@ -222,7 +223,7 @@ const CertificatesInfo = () => {
                 data.expiryDate = new Date(data.expiryDate)
                   .toISOString()
                   .split("T")[0];
-                data.file = data.file._id;
+                data.file = data.file?._id;
               }
             });
           }
@@ -486,7 +487,7 @@ const CertificatesInfo = () => {
                           style={{ marginBottom: "10px", width: "max-content" }}
                           htmlFor={`file${index}`}
                         >
-                          {isUploading ? (
+                          {isUploading[index] ? (
                             <ThreeDots
                               height="8"
                               width="80"
@@ -496,11 +497,11 @@ const CertificatesInfo = () => {
                               visible={true}
                             />
                           ) : !file[index] ? (
-                            "Upload Documents "
+                            "Upload Document "
                           ) : file[index]?.originalName?.length <= 32 ? (
                             file[index]?.originalName
                           ) : (
-                            file[index].originalName?.substring(0, 30) + "..."
+                            file[index]?.originalName?.substring(0, 30) + "..."
                           )}
                           <UploadIcon src="/images/icons/BlueUpload.svg" />{" "}
                         </UploadLabel>

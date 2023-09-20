@@ -94,7 +94,7 @@ const JobDetails = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
 
         if (result) {
           console.log(result, "this what result Looks like ");
@@ -184,7 +184,7 @@ const JobDetails = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           // console.log(result);
           if (edit) {
@@ -217,7 +217,7 @@ const JobDetails = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setDepartmentData(result.departments);
           GetEmployeesJobDetails();
@@ -242,7 +242,7 @@ const JobDetails = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setEmployeeTypes(result);
         } else {

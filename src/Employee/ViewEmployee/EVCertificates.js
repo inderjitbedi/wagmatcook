@@ -58,6 +58,8 @@ const style = {
 };
 
 const EVCertificates = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const { employeeid } = useParams();
   const Navigate = useNavigate();
 
@@ -120,7 +122,7 @@ const EVCertificates = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -147,7 +149,7 @@ const EVCertificates = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           handleClose();
           GetEmployeesCertificates();
@@ -240,8 +242,8 @@ const EVCertificates = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? "http://hrapi.chantsit.com/" +
-                      result.personalInfo.photo?.path
+                    ? API_URL +
+                    result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -456,8 +458,8 @@ const EVCertificates = () => {
                             />
                           ) : !file ? (
                             "Upload Document "
-                          ) : file?.name?.length <= 32 ? (
-                            file?.name
+                          ) : file?.originalName?.length <= 32 ? (
+                            file?.originalName
                           ) : (
                             file.name?.substring(0, 30) + "..."
                           )}
@@ -505,26 +507,25 @@ const EVCertificates = () => {
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
-                        <Link
+                        {data.file && <Link
                           to={
-                            "http://hrapi.chantsit.com/" +
-                            data.file?.destination +
-                            "/" +
-                            data.file?.name
+                            API_URL +
+                            data.file?.path
                           }
                           target="blank"
                           download
                           style={{ textDecoration: "none" }}
                         >
+
                           <File>
                             {" "}
                             <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                            {data.file.name?.length <= 38
-                              ? data.file.name
-                              : data.file.name.substring(0, 38) + "..." ||
-                                " - "}
+                            {data.file?.originalName?.length <= 38
+                              ? data.file?.originalName
+                              : data.file?.originalName.substring(0, 38) + "..." ||
+                              " - "}
                           </File>
-                        </Link>
+                        </Link>}
                       </CertificateContainer>
                     ))}
                   </>

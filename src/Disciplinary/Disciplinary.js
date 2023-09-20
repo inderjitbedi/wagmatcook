@@ -152,7 +152,7 @@ const Disciplinary = () => {
       method: "put",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           let FilteredArray = disciplinaryData.filter(
             (data) => data._id !== Id
@@ -184,7 +184,7 @@ const Disciplinary = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
           if (page === 1) {
@@ -258,7 +258,7 @@ const Disciplinary = () => {
         url,
         data: dataCopy,
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result) {
             HandleClose();
             GetDisciplinary();
@@ -319,7 +319,7 @@ const Disciplinary = () => {
         url,
         data: dataCopy,
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result) {
             GetDisciplinary();
             setId("");
@@ -411,7 +411,7 @@ const Disciplinary = () => {
       url,
       data: { disciplinaries: reOrder },
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           GetDisciplinary();
         } else {

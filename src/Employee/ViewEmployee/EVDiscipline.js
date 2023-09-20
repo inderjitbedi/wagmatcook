@@ -64,12 +64,13 @@ const style = {
   overflowY: "scroll",
 };
 const EVDiscipline = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const { employeeid } = useParams();
   const Navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const [isUploading, setIsUploading] = useState(false);
-
   const handleClose = () => {
     setOpen(false);
     reset({});
@@ -129,7 +130,7 @@ const EVDiscipline = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setDisciplinaryData(result.disciplinaries);
         } else {
@@ -153,7 +154,7 @@ const EVDiscipline = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -180,7 +181,7 @@ const EVDiscipline = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           handleClose();
           GetEmployeesDisciplinary();
@@ -197,14 +198,20 @@ const EVDiscipline = () => {
         setIsLoading(false);
       });
   };
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(e.target.files[0]);
-    const inputString = e.target.files[0].type;
-    const parts = inputString?.split("/");
-    const type = parts[parts?.length - 1];
+    // console.log(e.target.files[0]);
+    // const inputString = e.target.files[0].type;
+    // const parts = inputString?.split("/");
+    // const type = parts[parts?.length - 1];
+
+    let type = await getFileType(e.target.files[0])
     console.log("this file type:", type);
-    handleUpload(file, type);
+    if (type != 'unknown') {
+      handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.")
+    }
   };
   const handleUpload = (file, type) => {
     setIsUploading(true);
@@ -215,10 +222,10 @@ const EVDiscipline = () => {
 
       httpClient({
         method: "post",
-        url: `/organization-admin/file/upload/${type}`,
-        data: binary, // Use 'data' to send the FormData
+        url: `/employee/file/upload/${type}`,
+        data: binary,
         headers: {
-          "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+          "Content-Type": "multipart/form-data",
         },
       })
         .then((data) => {
@@ -231,18 +238,39 @@ const EVDiscipline = () => {
             // setFormData({ ...formData, file: data?.result.file._id });
             setIsUploading(false);
           } else {
+            console.log(data.error);
+            toast.error(data.error.error);
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
         })
         .catch((error) => {
           console.error("Error:", error);
           setIsUploading(false);
+
         })
         .finally(() => {
           setIsUploading(false);
         });
     }
   };
+  const getFileType = (file) => {
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'tiff'].includes(fileExtension)) {
+      return 'image';
+    } else if (['mp4', 'ogg', 'webm'].includes(fileExtension)) {
+      return 'video';
+    } else if (fileExtension === 'pdf') {
+      return 'pdf';
+    } else if (fileExtension === 'xlsx' || fileExtension === 'xls') {
+      return 'xlsx';
+    } else if (fileExtension === 'doc' || fileExtension === 'docx') {
+      return 'doc';
+    } else {
+      return 'unknown';
+    }
+  };
+
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
@@ -280,8 +308,8 @@ const EVDiscipline = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? "http://hrapi.chantsit.com/" +
-                      result.personalInfo.photo?.path
+                    ? API_URL +
+                    result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
@@ -569,7 +597,7 @@ const EVDiscipline = () => {
                           <FlexSpaceBetween>
                             <Link
                               to={
-                                "http://hrapi.chantsit.com/" +
+                                API_URL +
                                 data.file?.destination +
                                 "/" +
                                 data.file?.name
@@ -584,7 +612,7 @@ const EVDiscipline = () => {
                                 {data.file.originalName?.length <= 38
                                   ? data.file.originalName
                                   : data.file.originalName.substring(0, 38) +
-                                      "..." || " - "}
+                                  "..." || " - "}
                               </File>
                             </Link>
                           </FlexSpaceBetween>

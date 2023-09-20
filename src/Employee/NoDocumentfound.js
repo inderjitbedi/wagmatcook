@@ -23,11 +23,11 @@ const Img = styled.img`
 
 `;
 
-const NoDocumentfound = () => {
+const NoDocumentfound = (props) => {
   return (
     <Container>
       <Img src="/images/Nodocument.svg" />
-      No Documents to show
+      {props.message || 'No documents to show'}
     </Container>
   );
 }

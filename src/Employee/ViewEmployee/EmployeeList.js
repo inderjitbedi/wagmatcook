@@ -57,6 +57,8 @@ const Celllstyle2 = {
 };
 
 const Employee = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
@@ -91,7 +93,7 @@ const Employee = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -150,7 +152,7 @@ const Employee = () => {
       method: "put",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           HandleCloseDelete();
           GetEmployees();
@@ -323,7 +325,7 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <TabelDiv>
-                      <TabelImg src="/images/User.jpg" />
+                      <TabelImg src={data.personalInfo[0]?.photo ? API_URL + data.personalInfo[0]?.photo?.path : "/images/User.jpg"} />
                       <TabelParaContainer>
                         <TabelDarkPara>
                           {data.personalInfo[0]?.firstName}{" "}

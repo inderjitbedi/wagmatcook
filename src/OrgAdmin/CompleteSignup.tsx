@@ -94,7 +94,7 @@ export default function CompleteSignup() {
         url,
         data,
       })
-        .then(({ result }: any) => {
+        .then(({ result, error }: any) => {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem("organization", JSON.stringify(result?.organization));

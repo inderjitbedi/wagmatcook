@@ -61,6 +61,8 @@ const style = {
 };
 
 const EmployeeJobDetails = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -105,7 +107,7 @@ const EmployeeJobDetails = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
           console.log(result, "we are getting the persnal information ");
@@ -130,7 +132,7 @@ const EmployeeJobDetails = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setDepartmentData(result.departments);
           GetEmployeesJobDetails();
@@ -158,7 +160,7 @@ const EmployeeJobDetails = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           handleClose();
           GetEmployeesJobDetails();
@@ -207,7 +209,7 @@ const EmployeeJobDetails = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? "http://hrapi.chantsit.com/" +
+                    ? API_URL +
                       result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }

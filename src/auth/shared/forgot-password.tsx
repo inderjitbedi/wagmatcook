@@ -55,7 +55,7 @@ export default function ForgotPassword() {
                 url,
                 data: dataCopy,
             })
-                .then(({ result }) => {
+                .then(({ result, error }) => {
                     if (result?.user) {
                         toast.info("Reset Password link successfully sent.")
                         navigate("/");

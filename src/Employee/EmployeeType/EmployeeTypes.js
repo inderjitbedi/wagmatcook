@@ -152,7 +152,7 @@ const EmployeeTypes = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -202,7 +202,7 @@ const EmployeeTypes = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           HandleClose();
           reset();
@@ -229,7 +229,7 @@ const EmployeeTypes = () => {
       method: "put",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           HandleCloseDelete();
           setId("");
@@ -260,7 +260,7 @@ const EmployeeTypes = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setId("");
           GetEmployeeTypes();

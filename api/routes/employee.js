@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { verifyOrgAdmin } = require('../middlewares/jwtMiddleware');
 const employeeController = require('../controllers/employee');
+const { handleMulterError } = require('../middlewares/jwtMiddleware');
+const upload = require('../providers/uploadFile');
+
+const fileController = require('../controllers/file');
 
 router.post('/add', verifyOrgAdmin, employeeController.add);
 router.get('/list', verifyOrgAdmin, employeeController.list);
@@ -33,6 +37,7 @@ router.post('/review/:id/:reviewid', verifyOrgAdmin, employeeController.updateRe
 router.get('/disciplinaries/:id', verifyOrgAdmin, employeeController.getDisciplinaries);
 router.post('/disciplinary/:id', verifyOrgAdmin, employeeController.addDisciplinary);
 
+router.post('/file/upload/:type', verifyOrgAdmin, upload.single('file'), handleMulterError, fileController.upload);
 
 
 module.exports = router;

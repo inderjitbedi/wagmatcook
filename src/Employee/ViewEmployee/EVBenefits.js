@@ -23,6 +23,8 @@ import {
   ViewPara,
 } from "./ViewEmployeeStyle";
 const EVBenefits = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const { employeeid } = useParams();
   const [result, setResult] = useState([]);
@@ -35,7 +37,7 @@ const EVBenefits = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
           console.log(result, "we are getting the persnal information ");
@@ -82,7 +84,7 @@ const EVBenefits = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? "http://hrapi.chantsit.com/" +
+                    ? API_URL +
                       result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }

@@ -37,6 +37,8 @@ import {
 } from "./AddEmployeeStyles";
 
 const PersonalInfo = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -108,7 +110,7 @@ const PersonalInfo = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result.personalInfo);
           if (result.personalInfo?.dob)
@@ -150,7 +152,7 @@ const PersonalInfo = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           console.log(result);
           if (edit) {
@@ -257,7 +259,7 @@ const PersonalInfo = () => {
                   {file ? (
                     <PersonImg
                       src={
-                        "http://hrapi.chantsit.com/" +
+                        API_URL +
                         file?.destination +
                         "/" +
                         file?.name

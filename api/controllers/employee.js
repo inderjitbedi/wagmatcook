@@ -59,6 +59,20 @@ const employeeController = {
                         as: 'jobDetails',
                     },
                 },
+                {
+                    $lookup: {
+                      from: 'files', // Assuming the collection name for Files is 'files'
+                      localField: 'personalInfo.photo', // Field to match in 'employeepersonalinfos'
+                      foreignField: '_id', // Field to match in 'files'
+                      as: 'photoInfo', // Alias for the fetched photo information
+                    },
+                  },
+                  {
+                    $addFields: {
+                      'personalInfo.photo': { $arrayElemAt: ['$photoInfo', 0] }, // Get the first element from the array
+                    },
+                  },
+
 
                 {
                     $skip: startIndex,

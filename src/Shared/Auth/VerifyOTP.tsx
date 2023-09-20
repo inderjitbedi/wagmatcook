@@ -41,7 +41,7 @@ const VerifyOTP = () => {
                 method: "post",
                 url: url.replace(":email", formData.email),
             })
-                .then(({ result }) => {
+                .then(({ result, error }) => {
                     toast.info(result.message);
                 })
                 .catch((error: any) => {
@@ -58,7 +58,7 @@ const VerifyOTP = () => {
             httpClient({
                 method: "post", url, data
             })
-                .then(({ result }: any) => {
+                .then(({ result, error }: any) => {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         localStorage.setItem("token", result?.token);

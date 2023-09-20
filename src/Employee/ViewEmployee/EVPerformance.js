@@ -69,6 +69,8 @@ const style = {
   overflowY: "scroll",
 };
 const EVPerformance = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const { employeeid } = useParams();
   const Navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -179,7 +181,7 @@ const EVPerformance = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           handleClose();
           setFile(null);
@@ -206,7 +208,7 @@ const EVPerformance = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -252,7 +254,7 @@ const EVPerformance = () => {
               <PersonalImg
                 src={
                   result.personalInfo?.photo
-                    ? "http://hrapi.chantsit.com/" +
+                    ? API_URL +
                       result.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
@@ -497,7 +499,7 @@ const EVPerformance = () => {
               <BasicDetailsDiv>
                 {/* dot and circle  */}
                 {!result?.review?.length ? (
-                  <NoDocumentfound />
+                  <NoDocumentfound message="No reviews to show"/>
                 ) : (
                   <VerticalTimeline
                     layout={"1-column-left"}
@@ -565,7 +567,7 @@ const EVPerformance = () => {
                             <FlexSpaceBetween>
                               <Link
                                 to={
-                                  "http://hrapi.chantsit.com/" +
+                                  API_URL +
                                   data.file?.destination +
                                   "/" +
                                   data.file?.name

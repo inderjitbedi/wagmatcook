@@ -66,7 +66,7 @@ export default function SignIn() {
                 url,
                 data: dataCopy,
             })
-                .then(({ result }: any) => {
+                .then(({ result, error }: any) => {
                     if (result?.user) {
                         localStorage.setItem("user", JSON.stringify(result?.user));
                         localStorage.setItem("token", result?.token);

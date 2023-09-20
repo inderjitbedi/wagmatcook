@@ -76,7 +76,7 @@ export default function ResetPassword() {
                 url: url.replace(":token", token),
                 data: dataCopy,
             })
-                .then(({ result }) => {
+                .then(({ result, error }) => {
                     if (result?.user) {
                         toast.info("Password successfully updated.")
                         navigate("/");

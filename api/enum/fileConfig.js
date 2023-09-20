@@ -29,9 +29,23 @@ module.exports = Object.freeze({
     },
     XLSX_CONFIG: {
         MAX_SIZE: 10 * 1024 * 1024, 
-        ALLOWED_EXTENSIONS: ['xlsx'],
-        ALLOWED_EXTENSIONS_REGEX: /xlsx/,
+        ALLOWED_EXTENSIONS: ['xlsx','xls'],
+        ALLOWED_EXTENSIONS_REGEX: /xlsx|xls/,
         MIME_TYPES: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
         FOLDER_NAME: 'xlsx'
+    },
+    DOC_CONFIG: {
+        MAX_SIZE: 10 * 1024 * 1024, // Adjust the max size as needed
+        ALLOWED_EXTENSIONS: ['doc'],
+        ALLOWED_EXTENSIONS_REGEX: /doc/,
+        MIME_TYPES: ['application/msword'],
+        FOLDER_NAME: 'doc'
+    },
+    DOCX_CONFIG: {
+        MAX_SIZE: 10 * 1024 * 1024, // Adjust the max size as needed
+        ALLOWED_EXTENSIONS: ['docx'],
+        ALLOWED_EXTENSIONS_REGEX: /docx/,
+        MIME_TYPES: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        FOLDER_NAME: 'docx'
     },
 });

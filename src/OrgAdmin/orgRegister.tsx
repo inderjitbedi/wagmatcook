@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 
 
 export default function RegisterOrganization() {
+    let API_URL = process.env.REACT_APP_API_URL;
+
     const navigate = useNavigate();
 
 
@@ -106,7 +108,7 @@ export default function RegisterOrganization() {
                 method: "post",
                 url: "/organization/register",
                 data: formData,
-            }).then(({ result }) => {
+            }).then(({ result, error }) => {
                 if (result) {
                     toast.success(result.message);//Account successfully created.")
                     navigate('/organization-admin/dashboard');
@@ -137,7 +139,7 @@ export default function RegisterOrganization() {
                                         <img src="../assets/user.png" alt='user' />
                                     </div>}
                                     {file && file?.path && <div className="h-12 rounded-full overflow-hidden image-container">
-                                        <img className="mw-100p" src={"http://hrapi.chantsit.com/" + file?.destination + "/" + file?.name} alt="" />
+                                        <img className="mw-100p" src={API_URL + file?.destination + "/" + file?.name} alt="" />
                                     </div>}
                                 </div>
 

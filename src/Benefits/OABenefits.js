@@ -126,7 +126,7 @@ const OABenefits = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -159,7 +159,7 @@ const OABenefits = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           HandleClose();
           reset();
@@ -187,7 +187,7 @@ const OABenefits = () => {
       method: "put",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           HandleCloseDelete();
           setId("");
@@ -218,7 +218,7 @@ const OABenefits = () => {
       url,
       data: dataCopy,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setId("");
           GetBenefits();

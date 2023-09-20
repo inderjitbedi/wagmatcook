@@ -80,7 +80,7 @@ const OADashBoardNext = ({ user, orgData }) => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setDisciplinaryData(result);
         } else {
@@ -104,7 +104,7 @@ const OADashBoardNext = ({ user, orgData }) => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setEmployeeData(result);
         } else {

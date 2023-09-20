@@ -213,7 +213,7 @@ const Departments = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
           setDepartmentData(result.departments);
@@ -279,7 +279,7 @@ const Departments = () => {
         url,
         data: dataCopy,
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result?.department) {
             HandleClose();
             HandleOpenThanks();
@@ -337,7 +337,7 @@ const Departments = () => {
         url,
         data: dataCopy,
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result?.department) {
             const indexToReplace = departmentData.findIndex(
               (obj) => (obj._id = result.department._id)
@@ -375,7 +375,7 @@ const Departments = () => {
       method: "put",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           // HandleOpenThanks();
           GetDepartments();

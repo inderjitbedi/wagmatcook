@@ -149,7 +149,7 @@ const SAOrganization = () => {
       method: "get",
       url,
     })
-      .then(({ result }) => {
+      .then(({ result, error }) => {
         if (result) {
           setResult(result);
         } else {
@@ -202,7 +202,7 @@ const SAOrganization = () => {
         url,
         data: dataCopy,
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result) {
             HandleClose();
             GetOrganizationList();

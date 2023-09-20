@@ -39,7 +39,7 @@ export default function VerifyUser() {
         url: url.replace(":email", formData.email),
         // data: dataCopy
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           toast.info(result.message);
         })
         .catch((error: any) => {
@@ -61,7 +61,7 @@ export default function VerifyUser() {
           .replace(":password", formData.tempPassword),
         // data: dataCopy
       })
-        .then(({ result }) => {
+        .then(({ result, error }) => {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem("token", result?.token);
