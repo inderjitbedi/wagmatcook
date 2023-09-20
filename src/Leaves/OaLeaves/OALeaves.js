@@ -384,7 +384,8 @@ const OALeaves = () => {
     reset(data);
     HandleOpen();
   };
-  const HandleOpenAddNewAction = () => {
+    const HandleOpenAddNewAction = () => {
+        setUpdate(false);
     HandleOpen();
     reset({});
     clearErrors();
@@ -492,7 +493,7 @@ const OALeaves = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalUpperDiv style={{ padding: " 10px 16px 10px 35px" }}>
                   <ModalHeading>
-                    {!update ? "Add New Leave" : "Update Leave Type"}
+                    { !update ? "Add New Leave" : "Update Leave Type"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {

@@ -5,30 +5,32 @@ export const SectionCard = styled.div`
   display: flex;
   gap: 16px;
   margin-bottom: 24px;
+  width: 100%;
+  justify-content: space-between;
 `;
 export const SectionCardContainer = styled.div`
   background-color: #4fafff;
   border-radius: 8px;
-  flex: 0 1 250px;
+  flex: 1 1 250px;
   padding: 10px 20px;
 `;
 
 export const SectionCardContainer2 = styled.div`
   background-color: #886ef2;
   border-radius: 8px;
-  flex: 0 1 250px;
+  flex: 1 1 250px;
   padding: 10px 20px;
 `;
 export const SectionCardContainer3 = styled.div`
   background-color: #60b4c2;
   border-radius: 8px;
-  flex: 0 1 250px;
+  flex: 1 1 250px;
   padding: 10px 20px;
 `;
 export const SectionCardContainer4 = styled.div`
   background-color: #49d157;
   border-radius: 8px;
-  flex: 0 1 250px;
+  flex: 1 1 250px;
   padding: 10px 20px;
 `;
 export const SectionCardTitle = styled.p`

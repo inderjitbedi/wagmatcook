@@ -66,7 +66,6 @@ const OABenefits = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
-  
   };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
@@ -116,7 +115,6 @@ const OABenefits = () => {
     } else if (update && isEmptyObject(errors)) {
       HandleUpdate(data);
     }
-    
   };
 
   const GetBenefits = () => {
@@ -238,7 +236,6 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
- 
 
   const style = {
     position: "absolute",
@@ -284,6 +281,7 @@ const OABenefits = () => {
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
+    setUpdate(false);
     HandleOpen();
     reset({});
     clearErrors();
