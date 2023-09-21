@@ -385,11 +385,11 @@ const EVCertificates = () => {
                                 return true;
                               },
                               onChange: (e) => {
-                                const endDate = new Date(
+                                const endDate = 
                                   getValues("expiryDate")
-                                );
+                                ;
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate && endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message:
@@ -425,8 +425,11 @@ const EVCertificates = () => {
                                 const startDate = new Date(
                                   getValues("completionDate")
                                 );
-                                const endDate = new Date(fieldValue);
-                                  if (startDate <= endDate && endDate) {
+                                const endDate = fieldValue;
+                                  if (
+                                    startDate <= new Date(endDate) &&
+                                    endDate
+                                  ) {
                                     setError("expiryDate", {
                                       type: "custom",
                                       message:

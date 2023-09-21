@@ -590,11 +590,9 @@ const EVPerformance = () => {
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = new Date(
-                                  getValues("nextReviewDate")
-                                );
+                                const endDate = getValues("nextReviewDate");
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate && endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("nextReviewDate", {
                                     type: "custom",
                                     message:
@@ -685,8 +683,8 @@ const EVPerformance = () => {
                                 const startDate = new Date(
                                   getValues("reviewDate")
                                 );
-                                const endDate = new Date(fieldValue);
-                                if (startDate <= endDate && endDate) {
+                                const endDate = fieldValue;
+                                if (startDate <= new Date(endDate) && endDate) {
                                   setError("nextReviewDate", {
                                     type: "custom",
                                     message:

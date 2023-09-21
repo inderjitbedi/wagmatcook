@@ -320,9 +320,9 @@ const Benefits = () => {
                           message: " Required",
                         },
                         onChange: (e) => {
-                          const endDate = new Date(getValues("endDate"));
+                          const endDate = getValues("endDate");
                           const startDate = new Date(e.target.value);
-                          if (startDate >= endDate && endDate) {
+                          if (startDate >= new Date(endDate) && endDate) {
                             setError("endDate", {
                               type: "custom",
                               message:
@@ -349,8 +349,8 @@ const Benefits = () => {
                        
                         validate: (fieldValue) => {
                           const startDate = new Date(getValues("startDate"));
-                          const endDate = new Date(fieldValue);
-                              if (startDate <= endDate && endDate) {
+                          const endDate = fieldValue;
+                              if (startDate <= new Date(endDate) && endDate) {
                                 setError("endDate", {
                                   type: "custom",
                                   message:

@@ -395,11 +395,11 @@ const EVDiscipline = () => {
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = new Date(
+                                const endDate = 
                                   getValues("expiryDate")
-                                );
+                                ;
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate && endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message: " Must not be earlier than  date",
@@ -446,8 +446,8 @@ const EVDiscipline = () => {
                                 const startDate = new Date(
                                   getValues("issueDate")
                                 );
-                                const endDate = new Date(fieldValue);
-                                if (startDate <= endDate && endDate) {
+                                const endDate = fieldValue;
+                                if (startDate <= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message: " Must not be earlier than  date",
