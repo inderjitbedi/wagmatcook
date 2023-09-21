@@ -505,4 +505,86 @@ letter-spacing: -0.28px;
 //     -webkit-appearance: none;
 //     display: none;
 // }
+.ReactTags__tags {
+ width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.ReactTags__tagInput {
+  width: 100%;
+  border-radius: 6px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+.ReactTags__tagInput input.ReactTags__tagInputField,
+.ReactTags__tagInput input.ReactTags__tagInputField:focus {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 10px;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+  outline: #dcdcdc;
+  margin-top: 8px;
+}
+.ReactTags__selected span.ReactTags__tag {
+  // border: 1px solid #ddd;
+  color: white;
+  font-size: 12px;
+  display: inline-block;
+  padding: 5px;
+  margin: 0px 5px 5px 5px;
+  border-radius: 6px;
+  background: #279AF1;
+}
+.ReactTags__selected a.ReactTags__remove {
+  color: #aaa;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.ReactTags__suggestions {
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+  top:39px;
+  padding: 0px;
 
+}
+.ReactTags__suggestions ul {
+  list-style-type: none;
+  box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
+  background: white;
+  // width: 100%;
+  padding: 0px;
+}
+.ReactTags__suggestions li {
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+    font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  // margin-left: -20px;
+}
+.ReactTags__suggestions li mark {
+  text-decoration: underline;
+  background: none;
+  font-weight: 600;
+}
+.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+  background: #279AF1;
+  color: #fff;
+  cursor: pointer;
+}
+
+.ReactTags__remove {
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: white;
+}

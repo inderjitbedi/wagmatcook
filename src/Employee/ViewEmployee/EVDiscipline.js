@@ -48,6 +48,8 @@ import {
   LightPara,
   IconsEmployee,
   File,
+  IconContainer,
+  Icons,
 } from "./ViewEmployeeStyle";
 const style = {
   position: "absolute",
@@ -393,11 +395,11 @@ const EVDiscipline = () => {
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = new Date(
+                                const endDate = 
                                   getValues("expiryDate")
-                                );
+                                ;
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message: " Must not be earlier than  date",
@@ -417,7 +419,7 @@ const EVDiscipline = () => {
                         </FlexColumnForm>
                       </FlexContaierForm>
                       <FlexContaierForm>
-                        <FlexColumnForm>
+                        {/* <FlexColumnForm>
                           <InputLabel>
                             BCR <InputSpan>*</InputSpan>
                           </InputLabel>
@@ -425,7 +427,7 @@ const EVDiscipline = () => {
                           {errors.bcr && (
                             <Errors> {errors.bcr?.message}</Errors>
                           )}
-                        </FlexColumnForm>
+                        </FlexColumnForm> */}
                       </FlexContaierForm>
                       <FlexContaierForm>
                         <FlexColumnForm>
@@ -435,20 +437,27 @@ const EVDiscipline = () => {
                           <Input
                             type="date"
                             {...register("expiryDate", {
-                              required: {
-                                value: true,
-                                message: " Required",
-                              },
+                              // required: {
+                              //   value: true,
+                              //   message: " Required",
+                              // },
 
                               validate: (fieldValue) => {
                                 const startDate = new Date(
                                   getValues("issueDate")
                                 );
-                                const endDate = new Date(fieldValue);
-                                return (
-                                  startDate <= endDate ||
-                                  "Must not be earlier than Date"
-                                );
+                                const endDate = fieldValue;
+                                if (startDate <= new Date(endDate) && endDate) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: " Must not be earlier than  date",
+                                  });
+                                } else {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
                               },
                             })}
                           />
@@ -566,7 +575,7 @@ const EVDiscipline = () => {
                         <FlexColumn style={{ width: "100%" }}>
                           <FlexSpaceBetween style={{ marginBottom: "0px" }}>
                             <TitlePara>Disciplinary Type</TitlePara>
-                            <TitlePara>BCR OPtional</TitlePara>
+                            {/* <TitlePara>BCR OPtional</TitlePara> */}
                             <TitlePara>
                               issued On:{" "}
                               {moment(data.issueDate).format("DD/MM/YYYY")}
@@ -581,14 +590,14 @@ const EVDiscipline = () => {
                             >
                               {data.disciplinary?.name || " - "}
                             </ViewPara>{" "}
-                            <ViewPara
+                            {/* <ViewPara
                               style={{
                                 fontWeight: 700,
                                 width: "60%",
                               }}
                             >
                               {data.bcr || "-"}
-                            </ViewPara>
+                            </ViewPara> */}
                           </FlexSpaceBetween>
 
                           <TimelinePara>{data.details}</TimelinePara>
@@ -614,11 +623,18 @@ const EVDiscipline = () => {
                               </File>
                             </Link>
                           </FlexSpaceBetween>
-                          <ReviewsDiv>
-                            Expiry Date:{" "}
-                            {moment(data.expiryDate).format("DD/MM/YYYY") ||
-                              " - "}
-                          </ReviewsDiv>
+
+                          <FlexSpaceBetween>
+                            <ReviewsDiv>
+                              Expiry Date:{" "}
+                              {moment(data.expiryDate).format("DD/MM/YYYY") ||
+                                " - "}
+                            </ReviewsDiv>
+                            <IconContainer>
+                              <Icons src="/images/icons/Pendown.svg" />
+                              <Icons src="/images/icons/Trash-2.svg" />
+                            </IconContainer>
+                          </FlexSpaceBetween>
                         </FlexColumn>
                       </TimelineDiv>
                     ))}

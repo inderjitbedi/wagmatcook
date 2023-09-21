@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 import Moment from "react-moment";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,6 +18,8 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import moment from "moment";
+import { useForm, Controller } from "react-hook-form";
+
 import {
   DashHeader,
   DashHeaderSearch,
@@ -38,7 +41,29 @@ import {
   TabelImg,
   TabelDiv,
   TabelParaContainer,
+  Input,
+  ButtonBlue,
+  FlexContaierForm,
+  FlexColumnForm,
+  InputLabel,
+  Errors,
+  ModalContainer,
+  ModalHeading,
+  ModalIcon,
+  ModalFormContainer,
 } from "./ViewEmployeeStyle";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 446,
+  bgcolor: "background.paper",
+  border: "none",
+  boxShadow: 45,
+  padding: "20px 0px",
+  borderRadius: "8px",
+};
 const CellStyle = {
   color: "#8F9BB3",
   padding: "16px 8px",
@@ -78,6 +103,21 @@ const Employee = () => {
   const [openEmployee, setOpenEmployee] = useState(false);
   const HandleOpenEmployee = () => setOpenEmployee(true);
   const HandleCloseEmployee = () => setOpenEmployee(false);
+
+  const [openWelcome, setOpenWelcome] = useState(false);
+  const HandleOpenWelcome = () => setOpenWelcome(true);
+  const HandleCloseWelcome = () => {
+    reset({});
+    clearErrors();
+    setOpenWelcome(false);
+  };
+  const {
+    register,
+    clearErrors,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ mode: "all" });
 
   //variable to fetch and get api data
   const [isLoading, setIsLoading] = useState(false);
@@ -131,7 +171,19 @@ const Employee = () => {
     "Students",
     "Other",
   ];
-
+  const onSubmit = (data) => {
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors)) {
+      // HandleAddEmployee(data);
+    }
+  };
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -156,7 +208,7 @@ const Employee = () => {
         if (result) {
           HandleCloseDelete();
           GetEmployees();
-          toast.success(result.message);//Entry Deleted successfully");
+          toast.success(result.message); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -232,8 +284,61 @@ const Employee = () => {
             <DepartmentFilterButton>{data}</DepartmentFilterButton>
           ))} */}
         </DepartmentFilterdiv>
-        <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
+
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <AddNewButton onClick={HandleOpenWelcome}>Send Welcome</AddNewButton>{" "}
+          <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
+        </div>
       </DepartmentFilterContainer>
+      <Modal
+        open={openWelcome}
+        onClose={() => {
+          HandleCloseWelcome();
+          clearErrors();
+          reset();
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <ModalContainer>
+            <ModalHeading>Welcome New Employee</ModalHeading>
+            <ModalIcon
+              onClick={() => {
+                HandleCloseWelcome();
+              }}
+              src="/images/icons/Alert-Circle.svg"
+            />
+          </ModalContainer>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalFormContainer>
+              <FlexContaierForm>
+                <FlexColumnForm>
+                  <InputLabel>Email Address</InputLabel>
+                  <Input
+                    type="email"
+                    {...register("email", {
+                      required: {
+                        value: true,
+                        message: "Required",
+                      },
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Please enter a valid email",
+                      },
+                    })}
+                  />
+                  {errors.email && <Errors> {errors.email?.message} </Errors>}
+                </FlexColumnForm>
+              </FlexContaierForm>
+
+              <ButtonBlue style={{ marginTop: "25px" }} type="submit">
+                Submit
+              </ButtonBlue>
+            </ModalFormContainer>
+          </form>
+        </Box>
+      </Modal>
       <HeaderDiv>
         <HeaderTitle>Employee List</HeaderTitle>
         <DashHeaderSearch>
@@ -324,7 +429,14 @@ const Employee = () => {
                     {index + 1}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
-                    <TabelDiv>
+                    <TabelDiv
+                      onClick={() =>
+                        Navigate(
+                          `/organization-admin/employee/details/personal-info/${data._id}`
+                        )
+                      }
+                      style={{cursor:"pointer"}}
+                    >
                       <TabelImg
                         src={
                           data.personalInfo[0]?.photo
@@ -357,7 +469,7 @@ const Employee = () => {
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
-                    {data.role || " - "}
+                    {(data.role === "EMPLOYEE" ? "USER" : data.role) || " - "}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <IconContainer>

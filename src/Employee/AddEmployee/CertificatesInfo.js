@@ -68,6 +68,7 @@ const CertificatesInfo = () => {
     getValues,
     reset,
     setValue,
+    clearErrors,
     setError,
   } = useForm({
     mode: "all",
@@ -183,9 +184,7 @@ const CertificatesInfo = () => {
         },
       })
         .then((data) => {
-
           if (data?.result) {
-
             setFiles((prevFiles) => {
               const updatedFiles = [...prevFiles];
               updatedFiles[index] = data?.result?.file;
@@ -412,11 +411,11 @@ const CertificatesInfo = () => {
                             return true;
                           },
                           onChange: (e) => {
-                            const endDate = new Date(
-                              getValues(`certificates.${index}.expiryDate`)
+                            const endDate = getValues(
+                              `certificates.${index}.expiryDate`
                             );
                             const startDate = new Date(e.target.value);
-                            if (startDate >= endDate) {
+                            if (startDate >= new Date(endDate) && endDate) {
                               setError(`certificates.${index}.expiryDate`, {
                                 type: "custom",
                                 message:
@@ -445,19 +444,28 @@ const CertificatesInfo = () => {
                         type="date"
                         {...register(`certificates.${index}.expiryDate`, {
                           valueAsDate: true,
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
                           validate: (fieldValue) => {
                             const startDate = new Date(
                               getValues(`certificates.${index}.completionDate`)
                             );
-                            const endDate = new Date(fieldValue);
-                            return (
-                              startDate <= endDate ||
-                              "Must not be earlier than completion date"
-                            );
+                            const endDate = fieldValue;
+
+                            if (startDate <= new Date(endDate) && endDate) {
+                              setError(`certificates.${index}.expiryDate`, {
+                                type: "custom",
+                                message:
+                                  "End date must not be earlier than start date   ",
+                              });
+                            } else {
+                              setError(`certificates.${index}.expiryDate`, {
+                                type: "custom",
+                                message: "",
+                              });
+                            }
                           },
                         })}
                       />

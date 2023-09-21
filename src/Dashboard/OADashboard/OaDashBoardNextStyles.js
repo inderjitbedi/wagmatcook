@@ -12,26 +12,47 @@ export const SectionCardContainer = styled.div`
   background-color: #4fafff;
   border-radius: 8px;
   flex: 1 1 250px;
-  padding: 10px 20px;
+  padding: 10px 0px 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const SectionCardContainer2 = styled.div`
   background-color: #886ef2;
   border-radius: 8px;
   flex: 1 1 250px;
-  padding: 10px 20px;
+  padding: 10px 0px 10px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 export const SectionCardContainer3 = styled.div`
   background-color: #60b4c2;
   border-radius: 8px;
   flex: 1 1 250px;
-  padding: 10px 20px;
+  padding: 10px 0px 10px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 export const SectionCardContainer4 = styled.div`
   background-color: #49d157;
   border-radius: 8px;
   flex: 1 1 250px;
-  padding: 10px 20px;
+  padding: 10px 0px 10px 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const SectionCardFlex = styled.div`
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 export const SectionCardTitle = styled.p`
   color: #ffffff;
@@ -46,6 +67,12 @@ export const SectionCardNumber = styled.p`
   line-height: 24px;
   font-weight: 700;
 `;
+export const SectionCardImg = styled.img`
+  width: 86px;
+  height: 86px;
+  opacity: 0.4;
+`;
+
 
 export const MainCardContainer = styled.div`
   display: flex;
@@ -163,7 +190,10 @@ export const CardLeavesButton = styled.button`
   border: none;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 85px;
   cursor: pointer;
+ 
 `;
 export const CardLeavesArrow = styled.img`
   display: inline-block;

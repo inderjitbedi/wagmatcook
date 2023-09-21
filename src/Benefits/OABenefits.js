@@ -99,7 +99,13 @@ const OABenefits = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" });
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      name: "",
+      description:"",
+    },
+  });
 
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
@@ -204,6 +210,7 @@ const OABenefits = () => {
       });
   };
   const HandleUpdate = (data) => {
+    console.log("update Data:", data)
     let dataCopy = data;
 
     let url = `/benefit/update/${Id}`;
@@ -277,7 +284,7 @@ const OABenefits = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset(data);
+    reset({name: data.name, description:data.description,});
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {

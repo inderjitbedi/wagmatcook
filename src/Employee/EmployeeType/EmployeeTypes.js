@@ -127,7 +127,12 @@ const EmployeeTypes = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" });
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      name:""
+    },
+  });
 
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
@@ -180,7 +185,7 @@ const EmployeeTypes = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset(data);
+    reset({name:data.name});
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {

@@ -224,6 +224,12 @@ const OALeaves = () => {
     clearErrors,
   } = useForm({
     mode: "all",
+    defaultValues: {
+      name: "",
+      description: "",
+      maxCarryOver: "",
+      isActive:false,
+    },
   });
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
@@ -381,7 +387,7 @@ const OALeaves = () => {
     setUpdate(true);
     setId(data._id);
     setdescriptionLength(500 - data?.description?.length);
-    reset(data);
+    reset({ name: data.name, description: data.description, maxCarryOver: data.maxCarryOver, isActive: data.isActive });
     HandleOpen();
   };
     const HandleOpenAddNewAction = () => {

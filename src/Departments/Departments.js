@@ -399,7 +399,7 @@ const Departments = () => {
     setUpDateData({
       name: data.name,
       description: data.description,
-      requiredBcr: data.requiredBcr,
+      // requiredBcr: data.requiredBcr,
     });
     setdescriptionLength(data.description.length);
 

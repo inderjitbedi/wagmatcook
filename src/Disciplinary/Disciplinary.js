@@ -123,19 +123,19 @@ const Disciplinary = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    requiredBcr: "",
+    // requiredBcr: "",
   });
 
   const [errors, setErrors] = useState({
     nameError: "",
     descriptionError: "",
-    requiredBcrError: "",
+    // requiredBcrError: "",
   });
 
   const [upDateData, setupDateData] = useState({
     name: "",
     description: "",
-    requiredBcr: "",
+    // requiredBcr: "",
   });
 
   const HandleLoadMore = () => {
@@ -301,6 +301,7 @@ const Disciplinary = () => {
       } else {
         setErrors("");
       }
+      // console.log("in handel submit ", errors);
     }
 
     if (
@@ -400,6 +401,7 @@ const Disciplinary = () => {
 
   // Handle reorder
   const HandleReorder = (reOrder) => {
+    console.log(reOrder, "this reorder");
     let url = "/disciplinary/reorder";
 
     httpClient({
@@ -433,6 +435,7 @@ const Disciplinary = () => {
     const reorderedData = Array.from(disciplinaryData);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
+    console.log("drag is working ");
     setDisciplinaryData(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };
@@ -454,7 +457,7 @@ const Disciplinary = () => {
     setupDateData({
       name: data.name,
       description: data.description,
-      requiredBcr: data.requiredBcr,
+      // requiredBcr: data.requiredBcr,
     });
     setdescriptionLength(data.description.length);
 
@@ -558,7 +561,7 @@ const Disciplinary = () => {
                   {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
                   Characters left
                 </InputPara>
-                <InputLabel>
+                {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
                 </InputLabel>
 
@@ -570,7 +573,7 @@ const Disciplinary = () => {
                   <Option disabled>Select an option</Option>
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
-                </Select>
+                </Select> */}
                 {/* <Errors>{errors.requiredBcrError}</Errors> */}
                 <AddNewButton
                   onClick={(e) => {
@@ -622,9 +625,9 @@ const Disciplinary = () => {
                     <TableCell sx={CellHeadStyles} align="left">
                       Description
                     </TableCell>
-                    <TableCell sx={CellHeadStyles} align="left">
+                    {/* <TableCell sx={CellHeadStyles} align="left">
                       Requires BCR
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={CellHeadStyles} align="left">
                       Action
                     </TableCell>
@@ -685,10 +688,10 @@ const Disciplinary = () => {
                                 {" "}
                                 {data.description}{" "}
                               </TableCell>
-                              <TableCell sx={CellStyle} align="left">
+                              {/* <TableCell sx={CellStyle} align="left">
                                 {" "}
                                 {data.requiredBcr === false ? "No" : "Yes"}{" "}
-                              </TableCell>
+                              </TableCell> */}
                               <TableCell sx={CellStyle2} align="left">
                                 {" "}
                                 <ActionIconDiv>
@@ -777,7 +780,7 @@ const Disciplinary = () => {
               {descriptionLength > -1 ? 500 - descriptionLength : 0} characters
               left
             </InputPara>
-            <InputLabel>
+            {/* <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>
             </InputLabel>
             <Select
@@ -790,7 +793,7 @@ const Disciplinary = () => {
               </Option>
               <Option value={true}>Yes</Option>
               <Option value={false}>No</Option>
-            </Select>
+            </Select> */}
             <AddNewButton
               onClick={() => {
                 HandleUpdate();

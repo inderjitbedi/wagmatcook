@@ -81,6 +81,7 @@ const EmployeeJobDetails = () => {
     getValues,
     clearErrors,
     reset,
+    setError
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
@@ -442,6 +443,27 @@ const EmployeeJobDetails = () => {
                                   value: true,
                                   message: "Required",
                                 },
+                                onChange: (e) => {
+                                  const endDate = 
+                                    getValues("endDate")
+                                  ;
+                                  const startDate = new Date(e.target.value);
+                                  if (
+                                    startDate >= new Date(endDate) &&
+                                    endDate
+                                  ) {
+                                    setError("endDate", {
+                                      type: "custom",
+                                      message:
+                                        "End date must not be earlier than start date",
+                                    });
+                                  } else {
+                                    setError("endDate", {
+                                      type: "custom",
+                                      message: "",
+                                    });
+                                  }
+                                },
                               })}
                             />
                             {errors.startDate && (
@@ -457,19 +479,30 @@ const EmployeeJobDetails = () => {
                             <Input
                               type="date"
                               {...register("endDate", {
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
+                                // required: {
+                                //   value: true,
+                                //   message: "Required",
+                                // },
                                 validate: (fieldValue) => {
                                   const startDate = new Date(
                                     getValues("startDate")
                                   );
-                                  const endDate = new Date(fieldValue);
-                                  return (
-                                    startDate <= endDate ||
-                                    "End Date must not be earlier than Start Date"
-                                  );
+                                  const endDate = fieldValue;
+                                    if (
+                                      startDate <= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("endDate", {
+                                        type: "custom",
+                                        message:
+                                          "End date must not be earlier than start date   ",
+                                      });
+                                    } else {
+                                      setError("endDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
                                 },
                               })}
                             />

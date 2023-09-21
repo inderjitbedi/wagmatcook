@@ -320,9 +320,9 @@ const Benefits = () => {
                           message: " Required",
                         },
                         onChange: (e) => {
-                          const endDate = new Date(getValues("endDate"));
+                          const endDate = getValues("endDate");
                           const startDate = new Date(e.target.value);
-                          if (startDate >= endDate) {
+                          if (startDate >= new Date(endDate) && endDate) {
                             setError("endDate", {
                               type: "custom",
                               message:
@@ -346,17 +346,22 @@ const Benefits = () => {
                     <Input
                       type="date"
                       {...register("endDate", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
+                       
                         validate: (fieldValue) => {
                           const startDate = new Date(getValues("startDate"));
-                          const endDate = new Date(fieldValue);
-                          return (
-                            startDate <= endDate ||
-                            "End Date must not be earlier than Start Date"
-                          );
+                          const endDate = fieldValue;
+                              if (startDate <= new Date(endDate) && endDate) {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message:
+                                    "End date must not be earlier than start date   ",
+                                });
+                              } else {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message: "",
+                                });
+                              }
                         },
                       })}
                     />

@@ -385,11 +385,11 @@ const EVCertificates = () => {
                                 return true;
                               },
                               onChange: (e) => {
-                                const endDate = new Date(
+                                const endDate = 
                                   getValues("expiryDate")
-                                );
+                                ;
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message:
@@ -417,19 +417,30 @@ const EVCertificates = () => {
                           <Input
                             type="date"
                             {...register("expiryDate", {
-                              required: {
-                                value: true,
-                                message: " Required",
-                              },
+                              // required: {
+                              //   value: true,
+                              //   message: " Required",
+                              // },
                               validate: (fieldValue) => {
                                 const startDate = new Date(
                                   getValues("completionDate")
                                 );
-                                const endDate = new Date(fieldValue);
-                                return (
-                                  startDate <= endDate ||
-                                  "Exipiry Date must not be earlier than completion Date"
-                                );
+                                const endDate = fieldValue;
+                                  if (
+                                    startDate <= new Date(endDate) &&
+                                    endDate
+                                  ) {
+                                    setError("expiryDate", {
+                                      type: "custom",
+                                      message:
+                                        "End date must not be earlier than start date   ",
+                                    });
+                                  } else {
+                                    setError("expiryDate", {
+                                      type: "custom",
+                                      message: "",
+                                    });
+                                  }
                               },
                             })}
                           />
