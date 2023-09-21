@@ -40,6 +40,7 @@ import OALeaves from "../Leaves/OaLeaves/OALeaves";
 import ManagerLeaves from "../Leaves/ManagerLeaves/ManagerLeaves";
 import ManagerSideBar from "../Dashboard/ManagerDashboard/ManagerSideBar";
 import ManagerLayout from "../Dashboard/ManagerDashboard/ManagerLayout";
+import EvLeaveAlloacation from "../Employee/ViewEmployee/EvLeaveAlloacation";
 const Routes: any = [
   {
     component: signup,
@@ -211,6 +212,13 @@ const Routes: any = [
                 component: EVDiscipline,
                 path: "discipline/:employeeid",
                 title: "EVDiscipline ",
+                to: "/",
+                type: "private",
+              },
+                {
+                component: EvLeaveAlloacation,
+                path: "leave-alloacation/:employeeid",
+                title: "Leave Alloaction",
                 to: "/",
                 type: "private",
               },

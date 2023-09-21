@@ -40,6 +40,7 @@ const PersonalInfo = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
+  const [getWorkEmail, setWorkEmail] = useState("");
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -98,7 +99,11 @@ const PersonalInfo = () => {
     reset,
   } = useForm({
     mode: "all",
-    defaultValues: result,
+    defaultValues: {
+      firstName: result?.firstName,
+      lastName: result?.lastName,
+      workEmail: getWorkEmail,
+    },
   });
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
@@ -111,6 +116,7 @@ const PersonalInfo = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result.personalInfo);
+          setWorkEmail(result.personalInfo.employee.email);
           if (result.personalInfo?.dob)
             result.personalInfo.dob = new Date(result.personalInfo.dob)
               .toISOString()
@@ -118,6 +124,8 @@ const PersonalInfo = () => {
           Object.keys(result.personalInfo).forEach((key) => {
             setValue(key, result.personalInfo[key]);
           });
+          setValue("workEmail", result.personalInfo.employee.email);
+          console.log("workemail", result.personalInfo.employee.email);
           if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
           //toast.warn("something went wrong ");
@@ -456,16 +464,10 @@ const PersonalInfo = () => {
                 </FlexContaierForm>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>
-                      Email-Personal <InputSpan>*</InputSpan>
-                    </InputLabel>
+                    <InputLabel>Email-Personal</InputLabel>
                     <Input
                       type="text"
                       {...register("personalEmail", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                           message: "Please enter a valid email",
@@ -507,7 +509,7 @@ const PersonalInfo = () => {
                       render={({ field }) => (
                         <InputMask
                           {...field}
-                          style={{ ...inputStyles, width: "50%" }}
+                          style={{ ...inputStyles }}
                           mask="(999) 999-9999"
                           onChange={(e) => {
                             const value = e.target.value;
@@ -531,6 +533,23 @@ const PersonalInfo = () => {
                         {errors.emergencyContactNumber?.message}{" "}
                       </Errors>
                     }
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>Email-Work</InputLabel>
+                    <Input
+                      type="text"
+                      {...register("workEmail", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Please enter a valid email",
+                        },
+                      })}
+                    />
+                    {<Errors> {errors.workEmail?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>
@@ -581,7 +600,7 @@ const PersonalInfo = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Sin <InputSpan>*</InputSpan>
+                      SIN <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="sin"
@@ -601,7 +620,7 @@ const PersonalInfo = () => {
                               e.target.value.replace(/\D/g, ""),
                               10
                             );
-                         
+
                             setValue("sin", numericValue);
                           }}
                         />
@@ -632,6 +651,13 @@ const PersonalInfo = () => {
                       )}
                     />
                     {<Errors>{errors.gender?.message} </Errors>}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm style={{ width: "50%" }}>
+                    <InputLabel>Pronouns</InputLabel>
+                    <Input type="text" {...register("pronouns", {})} />
+                    {<Errors> {errors.pronouns?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>

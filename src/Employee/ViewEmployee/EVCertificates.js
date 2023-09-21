@@ -389,7 +389,7 @@ const EVCertificates = () => {
                                   getValues("expiryDate")
                                 );
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate) {
+                                if (startDate >= endDate && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message:
@@ -417,19 +417,27 @@ const EVCertificates = () => {
                           <Input
                             type="date"
                             {...register("expiryDate", {
-                              required: {
-                                value: true,
-                                message: " Required",
-                              },
+                              // required: {
+                              //   value: true,
+                              //   message: " Required",
+                              // },
                               validate: (fieldValue) => {
                                 const startDate = new Date(
                                   getValues("completionDate")
                                 );
                                 const endDate = new Date(fieldValue);
-                                return (
-                                  startDate <= endDate ||
-                                  "Exipiry Date must not be earlier than completion Date"
-                                );
+                                  if (startDate <= endDate && endDate) {
+                                    setError("expiryDate", {
+                                      type: "custom",
+                                      message:
+                                        "End date must not be earlier than start date   ",
+                                    });
+                                  } else {
+                                    setError("expiryDate", {
+                                      type: "custom",
+                                      message: "",
+                                    });
+                                  }
                               },
                             })}
                           />

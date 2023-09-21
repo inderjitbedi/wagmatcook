@@ -18,6 +18,7 @@ export const DashMain = styled.div`
   background: #f3f3f5;
   height: max-content;
   min-height: 100vh;
+  overflow-x: hidden;
 `;
 export const DashHeader = styled.div`
   display: flex;

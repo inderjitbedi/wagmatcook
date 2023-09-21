@@ -362,6 +362,21 @@ const EVLeaveHistory = () => {
                         value: true,
                         message: "Required",
                       },
+                      onChange: (e) => {
+                        const endDate = new Date(getValues("endDate"));
+                        const startDate = new Date(e.target.value);
+                        if (startDate >= endDate && endDate) {
+                          setError("endDate", {
+                            type: "custom",
+                            message: "Must not be earlier than Start Date",
+                          });
+                        } else {
+                          setError("endDate", {
+                            type: "custom",
+                            message: "",
+                          });
+                        }
+                      },
                     })}
                   />
                   {<Errors>{errors.startDate?.message}</Errors>}
@@ -373,17 +388,25 @@ const EVLeaveHistory = () => {
                   <Input
                     type="date"
                     {...register("endDate", {
-                      required: {
-                        value: true,
-                        message: " Required",
-                      },
+                      // required: {
+                      //   value: true,
+                      //   message: " Required",
+                      // },
                       validate: (fieldValue) => {
                         const startDate = new Date(getValues("startdate"));
                         const endDate = new Date(fieldValue);
-                        return (
-                          startDate <= endDate ||
-                          "Must not be earlier than Start Date"
-                        );
+                        if (startDate <= endDate && endDate) {
+                          setError("endDate", {
+                            type: "custom",
+                            message:
+                              "End date must not be earlier than start date   ",
+                          });
+                        } else {
+                          setError("endDate", {
+                            type: "custom",
+                            message: "",
+                          });
+                        }
                       },
                     })}
                   />

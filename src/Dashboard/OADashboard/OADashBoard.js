@@ -63,6 +63,7 @@ import {
   CardList,
   CardListPara,
   CardListSpan,
+  SectionCardImg,
 } from "./OaDashBoardNextStyles.js";
 import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
@@ -73,10 +74,10 @@ const OADashBoard = () => {
   const [employeeData, setEmployeeData] = useState([]);
   const [departmentData, setDepartmentData] = useState([]);
   const [leavesData, setLeavesData] = useState([]);
-  
-    const [status, setStatus] = useState("Active");
-    const HandelClick = () => {
-      setStatus(status === "Active" ? "Inactive" : "Active");
+
+  const [status, setStatus] = useState("Active");
+  const HandelClick = () => {
+    setStatus(status === "Active" ? "Inactive" : "Active");
   };
   const Data = [1, 2, 3];
   const [isLoading, setIsLoading] = useState(false);
@@ -97,14 +98,16 @@ const OADashBoard = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
-     let org = localStorage.getItem("org");
-     if (org) {
-       let parsedUser = JSON.parse(org);
-       setOrgData(parsedUser);
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
     }
     setIsLoading(true);
     GetDisciplinary();
     GetEmployees();
+    GetDepartments();
+    GetLeavesType();
   }, []);
 
   const closeModal = () => {
@@ -116,28 +119,28 @@ const OADashBoard = () => {
       SubTitle: "Add Departments",
       Para: "Add new department by clicking add button and Add Name, description. ",
       src: "/images/icons/Department.svg",
-      to:"/organization-admin/departments"
+      to: "/organization-admin/departments",
     },
     {
       Title: "Disciplinary Types",
       SubTitle: "Add Disciplinary Types",
       Para: "Add new department by clicking add button and Add Name, description. ",
       src: "/images/icons/Discipliner.svg",
-      to:"/organization-admin/disciplinary"
+      to: "/organization-admin/disciplinary",
     },
     {
       Title: "Employee",
       SubTitle: "Add Employee",
       Para: "Add Employee by clicking add button and provide the name, email and other details. ",
       src: "/images/icons/Employees.svg",
-      to:"/organization-admin/employee/list"
+      to: "/organization-admin/employee/list",
     },
     {
       Title: "Leaves",
       SubTitle: "Add Leaves",
       Para: "Add new leave by clicking add button and Add Name Type, description and Max carry-over details ",
       src: "/images/icons/AddLeaves.svg",
-      to:"/organization-admin/disciplinary"
+      to: "/organization-admin/leaves",
     },
   ];
 
@@ -154,53 +157,101 @@ const OADashBoard = () => {
     handleCloseMenu();
     navigate("/");
   };
-    const GetDisciplinary = () => {
-      //  setIsLoading(true);
-      let url = `/disciplinary/list?limit=3`;
-      httpClient({
-        method: "get",
-        url,
+  const GetDisciplinary = () => {
+    //  setIsLoading(true);
+    let url = `/disciplinary/list?limit=3`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setDisciplinaryData(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setDisciplinaryData(result);
-          } else {
-            //toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error creating department. Please try again.");
-          //  setIsLoading(false);
-        })
-        .finally(() => {
-          //  setIsLoading(false);
-        });
-    };
-    const GetEmployees = () => {
-      //  setIsLoading(true);
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        //  setIsLoading(false);
+      })
+      .finally(() => {
+        //  setIsLoading(false);
+      });
+  };
+  const GetEmployees = () => {
+    //  setIsLoading(true);
 
-      let url = `employee/list?limit=3`;
-      httpClient({
-        method: "get",
-        url,
+    let url = `employee/list?limit=3`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setEmployeeData(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setEmployeeData(result);
-          } else {
-            //toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error creating Employee. Please try again.");
-          setIsLoading(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating Employee. Please try again.");
+        // setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  const GetDepartments = () => {
+    // setIsLoading(true);
+
+    let url = `/department/list?limit=3`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          // setResult(result);
+          setDepartmentData(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        // setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  const GetLeavesType = () => {
+    setIsLoading(true);
+    let url = `/leave-type/list?limit=3`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setLeavesData(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -277,26 +328,42 @@ const OADashBoard = () => {
           {orgData ? (
             <SectionCard>
               <SectionCardContainer>
-                <SectionCardTitle>Total Employee</SectionCardTitle>
-                <SectionCardNumber>
-                  {employeeData.totalEmployees}{" "}
-                </SectionCardNumber>
+                <div>
+                  <SectionCardTitle>Total Employee</SectionCardTitle>
+                  <SectionCardNumber>
+                    {employeeData.totalEmployees}{" "}
+                  </SectionCardNumber>
+                </div>
+                <SectionCardImg src="/svg/LeavesBig.svg" />
               </SectionCardContainer>
               <SectionCardContainer2>
-                <SectionCardTitle>Total Disciplinaries</SectionCardTitle>
-                <SectionCardNumber>
-                  {disciplinaryData.totalDisciplinaries}{" "}
-                </SectionCardNumber>
+                <div>
+                  <SectionCardTitle>Total Disciplinaries</SectionCardTitle>
+                  <SectionCardNumber>
+                    {disciplinaryData.totalDisciplinaries}{" "}
+                  </SectionCardNumber>
+                </div>
+                <SectionCardImg src="/svg/Calendar.svg" />
               </SectionCardContainer2>
               <SectionCardContainer3>
                 {" "}
-                <SectionCardTitle>Total Leaves</SectionCardTitle>
-                <SectionCardNumber>654</SectionCardNumber>
+                <div>
+                  <SectionCardTitle>Total Leaves</SectionCardTitle>
+                  <SectionCardNumber>
+                    {leavesData.totalLeaveTypes}
+                  </SectionCardNumber>
+                </div>
+                <SectionCardImg src="/svg/Disciplinarybig.svg" />
               </SectionCardContainer3>
               <SectionCardContainer4>
                 {" "}
-                <SectionCardTitle>Total Departments</SectionCardTitle>
-                <SectionCardNumber>654</SectionCardNumber>
+                <div>
+                  <SectionCardTitle>Total Departments</SectionCardTitle>
+                  <SectionCardNumber>
+                    {departmentData.totalDepartments}
+                  </SectionCardNumber>
+                </div>
+                <SectionCardImg src="/svg/Department.svg" />
               </SectionCardContainer4>
             </SectionCard>
           ) : (
@@ -314,18 +381,27 @@ const OADashBoard = () => {
           <DashCardContainer>
             {/* Department card */}
 
-            {departmentData.length ? (
+            {departmentData?.departments?.length ? (
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Departments</DashCardTitle>
-                  <MainCardView>View All</MainCardView>
+                  {departmentData.totalDepartments > 3 && (
+                    <MainCardView
+                      onClick={() =>
+                        navigate("/organization-admin/departments")
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      View All
+                    </MainCardView>
+                  )}
                 </MainCardTitleDiv>
-                {Data.map((data) => (
+                {departmentData?.departments.map((data) => (
                   <CardList>
-                    <MainCardPara>Product Design </MainCardPara>
+                    <MainCardPara>{data.name}</MainCardPara>
                     <CardListPara>
                       Employees:
-                      <CardListSpan>11</CardListSpan>
+                       <CardListSpan>0</CardListSpan>
                     </CardListPara>
                   </CardList>
                 ))}
@@ -367,12 +443,12 @@ const OADashBoard = () => {
                 {disciplinaryData?.disciplinaries?.map((data) => (
                   <CardList>
                     <MainCardPara>{data.name} </MainCardPara>
-                    <CardListPara>
+                    {/* <CardListPara>
                       Requires BCR:
                       <CardListSpan>
                         {data.requiredBcr ? "Yes" : "No"}
                       </CardListSpan>
-                    </CardListPara>
+                    </CardListPara> */}
                   </CardList>
                 ))}
               </MainCard>
@@ -452,35 +528,52 @@ const OADashBoard = () => {
                 </DashCardsub>
               </DashCard>
             )}
-            {leavesData.length ? (
+            {leavesData?.leaveTypes?.length ? (
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Leaves</DashCardTitle>
-                  <MainCardView>View All</MainCardView>
+                  {leavesData.totalLeaveTypes > 3 && (
+                    <MainCardView
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate("/organization-admin/leaves")}
+                    >
+                      View All
+                    </MainCardView>
+                  )}
                 </MainCardTitleDiv>
-                {Data.map((data) => (
+                {leavesData?.leaveTypes.map((data) => (
                   <CardLeavesList>
                     <CardLeavesDiv>
-                      <MainCardPara>Sickness Benefits</MainCardPara>
-                      <MainCardParaLight>
-                        Overtime Accumulated
-                      </MainCardParaLight>
+                      <MainCardPara>{data.name}</MainCardPara>
+                      <MainCardParaLight>{data.description}</MainCardParaLight>
                     </CardLeavesDiv>
-                    <CardLeavesPara>Max Carry Over: 10</CardLeavesPara>
-                    <CardLeavesButton
-                      onClick={HandelClick}
-                      style={
-                        status === "Active"
-                          ? { backgroundColor: "#c8ffc7", color: "#0d7d0b" }
-                          : { backgroundColor: "#FF6666", color: "#FF0000" }
-                      }
+
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "50px",
+                      }}
                     >
-                      {status}{" "}
-                      <CardLeavesArrow
+                      <CardLeavesPara>
+                        Max Carry Over: {data.maxCarryOver}
+                      </CardLeavesPara>
+
+                      <CardLeavesButton
+                        onClick={HandelClick}
+                        style={
+                          data.isActive
+                            ? { backgroundColor: "#c8ffc7", color: "#0d7d0b" }
+                            : { backgroundColor: "#FF6666", color: "#FF0000" }
+                        }
+                      >
+                        {data.isActive ? "Active" : "InActive"}{" "}
+                        {/* <CardLeavesArrow
                         src="/svg/Arrow Down.svg"
                         style={status === "active" ? {} : { fill: "#FF0000" }}
-                      />
-                    </CardLeavesButton>
+                      /> */}
+                      </CardLeavesButton>
+                    </div>
                   </CardLeavesList>
                 ))}
               </MainCard>

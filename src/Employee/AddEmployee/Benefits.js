@@ -322,7 +322,7 @@ const Benefits = () => {
                         onChange: (e) => {
                           const endDate = new Date(getValues("endDate"));
                           const startDate = new Date(e.target.value);
-                          if (startDate >= endDate) {
+                          if (startDate >= endDate && endDate) {
                             setError("endDate", {
                               type: "custom",
                               message:
@@ -346,17 +346,22 @@ const Benefits = () => {
                     <Input
                       type="date"
                       {...register("endDate", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
+                       
                         validate: (fieldValue) => {
                           const startDate = new Date(getValues("startDate"));
                           const endDate = new Date(fieldValue);
-                          return (
-                            startDate <= endDate ||
-                            "End Date must not be earlier than Start Date"
-                          );
+                              if (startDate <= endDate && endDate) {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message:
+                                    "End date must not be earlier than start date   ",
+                                });
+                              } else {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message: "",
+                                });
+                              }
                         },
                       })}
                     />

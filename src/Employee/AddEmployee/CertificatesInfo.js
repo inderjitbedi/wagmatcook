@@ -68,6 +68,7 @@ const CertificatesInfo = () => {
     getValues,
     reset,
     setValue,
+    clearErrors,
     setError,
   } = useForm({
     mode: "all",

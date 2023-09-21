@@ -43,7 +43,7 @@ const EmployeeDetailLayout = () => {
     Navigate("/");
   };
   return (
-    <>
+    <div style={{width:"100%",boxSizing:"border-box"}}>
       <DashHeader>
         <FlexContaier>
           <BackButton onClick={() => Navigate(-1)}>
@@ -116,7 +116,7 @@ const EmployeeDetailLayout = () => {
           </div>
         </BodyContainer>
       </EmployeeBody>
-    </>
+    </div>
   );
 };
 
