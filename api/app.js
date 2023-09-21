@@ -19,7 +19,9 @@ const employeeTypeRoute = require('./routes/employeeType')
 
 
 
-// const swagger = require('./swagger');
+const swagger = require('./swagger');
+const swaggerUi = require('swagger-ui-express');
+
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
 
 dotenv.config();
@@ -46,7 +48,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// swagger(app);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swagger));
 
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on("connected", () => {
