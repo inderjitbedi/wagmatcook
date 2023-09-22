@@ -107,7 +107,7 @@ const employeeController = {
                 return res.status(400).json({ message: 'User email already registered' });
             }
 
-            const user = new User({ email: req.body.email , role:roles.EMPLOYEE});
+            const user = new User({ email: req.body.email, role: roles.EMPLOYEE });
             // const token = crypto.randomBytes(20).toString('hex');
             // user.invitationToken = token;
             // user.invitationTokenExpiry = Date.now() + (3600000 * 24);
@@ -700,9 +700,11 @@ const employeeController = {
     },
     async getDocuments(req, res) {
         try {
-            const documents = await EmployeeDocuments.find({ employee: req.params.id, isDeleted: false })
+            const documents = await EmployeeDocuments.find({ employee: req.params.id, isDeleted: false }).populate('file')
+            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
+
             res.status(200).json({
-                documents,
+                documents, personalInfo,
                 message: 'Employee documents fetched successfully'
             });
         } catch (error) {
@@ -768,8 +770,10 @@ const employeeController = {
     async getLeaveAllocations(req, res) {
         try {
             const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false })
+            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
+
             res.status(200).json({
-                allocations,
+                allocations, personalInfo,
                 message: 'Employee allocations fetched successfully'
             });
         } catch (error) {
