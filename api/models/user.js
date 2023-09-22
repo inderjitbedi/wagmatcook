@@ -21,14 +21,14 @@ const userSchema = new mongoose.Schema({
     default: null,
     enum: Object.values(roles),
   },
-  tempPassword: {
-    type: String,
-    default: null,
-  },
-  tempPasswordExpiry: {
-    type: Date,
-    default: null,
-  },
+  // tempPassword: {
+  //   type: String,
+  //   default: null,
+  // },
+  // tempPasswordExpiry: {
+  //   type: Date,
+  //   default: null,
+  // },
   otp: {
     type: String,
     default: null,
@@ -45,14 +45,14 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
-  resetPasswordToken: {
-    type: String,
-    default: null,
-  },
-  resetPasswordTokenExpiry: {
-    type: Date,
-    default: null,
-  },
+  // resetPasswordToken: {
+  //   type: String,
+  //   default: null,
+  // },
+  // resetPasswordTokenExpiry: {
+  //   type: Date,
+  //   default: null,
+  // },
   isActive: {
     type: Boolean,
     default: true
@@ -62,6 +62,10 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   isSignedup: {
+    type: Boolean,
+    default: false
+  },
+  receivedWelcomeEmail: {
     type: Boolean,
     default: false
   }

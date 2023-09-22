@@ -62,6 +62,10 @@ const infoSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
+    pronouns: {
+        type: String,
+        default: null
+    },
     dob: {
         type: Date,
         default: null

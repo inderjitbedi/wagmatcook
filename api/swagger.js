@@ -13,6 +13,7 @@ const swaggerOptions = {
         'app.js',
         './routes/auth.js',
         './routes/benefit.js',
+        './routes/employee.js',
 
     ],
 };

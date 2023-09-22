@@ -1,12 +1,20 @@
 
 const mongoose = require('mongoose');
+const roles = require('../enum/roles');
 
 const infoSchema = new mongoose.Schema({
-
-
     employee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+    },
+    employeeType: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'EmployeeType',
+    },
+    role: {
+        type: String,
+        default: null,
+        enum: Object.values(roles),
     },
     department: {
         type: mongoose.Schema.Types.ObjectId,
@@ -14,6 +22,11 @@ const infoSchema = new mongoose.Schema({
     },
     title: {
         type: String,
+        default: null
+    },
+    reportsTo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         default: null
     },
     startDate: {
@@ -44,23 +57,13 @@ const infoSchema = new mongoose.Schema({
         type: Number,
         default: null
     },
-    reportsTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null
-    },
-    employeeType: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'EmployeeType',
-        default: null
-    },
     isBebEligible: {
         type: Boolean,
-        default: null
+        default: false
     },
-    isActive: {
+    isPrimary: {
         type: Boolean,
-        default: true
+        default: false
     },
     isDeleted: {
         type: Boolean,
