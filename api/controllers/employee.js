@@ -13,6 +13,7 @@ const EmployeeType = require("../models/employeeType");
 const EmployeeReviews = require("../models/employeeReviews");
 const EmployeeDisciplinaries = require("../models/employeeDisciplinaries");
 const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
+const EmployeeDocuments = require("../models/employeeDocuments");
 
 
 const employeeController = {
@@ -106,7 +107,7 @@ const employeeController = {
                 return res.status(400).json({ message: 'User email already registered' });
             }
 
-            const user = new User({ email: req.body.email });
+            const user = new User({ email: req.body.email , role:roles.EMPLOYEE});
             // const token = crypto.randomBytes(20).toString('hex');
             // user.invitationToken = token;
             // user.invitationTokenExpiry = Date.now() + (3600000 * 24);
