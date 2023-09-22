@@ -42,6 +42,7 @@ const JobDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState([]);
+  const [reportsToList, setReportsToList] = useState([]);
   const [result, setResult] = useState([]);
 
   const initialPosition = {
@@ -82,9 +83,25 @@ const JobDetails = () => {
     control,
   });
 
+
+  const GetReportsToList = () => {
+    let url = `/employee/reports-to-list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setReportsToList(result.users)
+
+        }
+      })
+  }
   const GetEmployeesJobDetails = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
+
+
     let url = `/employee/job-details/${trimid}`;
     httpClient({
       method: "get",
@@ -158,6 +175,7 @@ const JobDetails = () => {
   useEffect(() => {
     GetDepartments();
     GetEmployeeTypes();
+    GetReportsToList();
     // GetEmployeesJobDetails();
   }, []);
 
@@ -452,15 +470,25 @@ const JobDetails = () => {
                       <InputLabel>
                         Reports to <InputSpan>*</InputSpan>
                       </InputLabel>
-                      <Input
-                        type="text"
-                        value={employeeid}
-                        // {...register(`details.${index}.reportsTo`, {
-                        //   required: {
-                        //     value: true,
-                        //     message: "Required",
-                        //   },
-                        // })}
+                      <Controller
+                        name={`details.${index}.reportsTo`}
+                        control={control}
+                        rules={{
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        }}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Option value="" disabled>
+                              Select
+                            </Option>
+                            {reportsToList?.map((user) => (
+                              <Option value={user._id}>{user.personalInfo?.length ? user.personalInfo[0].firstName + ' ' + user.personalInfo[0].lastName : user.userData.name}</Option>
+                            ))}
+                          </Select>
+                        )}
                       />
                       <ErrorMessage
                         as={<Errors />}
