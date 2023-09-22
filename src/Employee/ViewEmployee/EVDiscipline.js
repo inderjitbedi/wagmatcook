@@ -395,10 +395,10 @@ const EVDiscipline = () => {
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = 
-                                  getValues("expiryDate")
-                                ;
+                                const endDate = getValues("expiryDate");
+
                                 const startDate = new Date(e.target.value);
+
                                 if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
@@ -431,9 +431,7 @@ const EVDiscipline = () => {
                       </FlexContaierForm>
                       <FlexContaierForm>
                         <FlexColumnForm>
-                          <InputLabel>
-                            Exipiry Date <InputSpan>*</InputSpan>
-                          </InputLabel>
+                          <InputLabel>Exipiry Date</InputLabel>
                           <Input
                             type="date"
                             {...register("expiryDate", {
@@ -565,7 +563,7 @@ const EVDiscipline = () => {
 
               <BasicDetailsDiv style={{ width: "80%" }}>
                 {!result?.disciplinaries?.length ? (
-                  <NoDocumentfound />
+                  <NoDocumentfound message="No disciplinary to show" />
                 ) : (
                   <>
                     {result?.disciplinaries?.map((data) => (

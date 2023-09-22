@@ -47,12 +47,11 @@ const JobDetails = () => {
 
   const initialPosition = {
     department: "",
-    endDate: null,
+    endDate: "",
     hoursPerWeek: "",
-    isActive: false,
     isBebEligible: false,
     ratePer: "",
-    reportsTo: employeeid,
+    reportsTo: null,
     salary: "",
     salaryScaleFrom: "",
     salaryScaleTo: "",
@@ -73,16 +72,15 @@ const JobDetails = () => {
   } = useForm({
     mode: "all",
     defaultValues: {
-      details: [initialPosition],
+      positions: [initialPosition],
       isActive: false,
     },
   });
 
   const { fields, remove, append } = useFieldArray({
-    name: "details",
+    name: "positions",
     control,
   });
-
 
   const GetReportsToList = () => {
     let url = `/employee/reports-to-list`;
@@ -92,15 +90,17 @@ const JobDetails = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setReportsToList(result.users)
-
+          setReportsToList(result.users);
         }
       })
-  }
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Fetching Job Details. Please try again.");
+      });
+  };
   const GetEmployeesJobDetails = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-
 
     let url = `/employee/job-details/${trimid}`;
     httpClient({
@@ -111,50 +111,29 @@ const JobDetails = () => {
         if (result) {
           // console.log(result, "this what result Looks like ");
           setResult(result);
-          if (result.details.startDate || result.details.endDate) {
-            result.details.startDate = new Date(result.details.startDate)
-              .toISOString()
-              .split("T")[0];
-            result.details.endDate = new Date(result.details.endDate)
-              .toISOString()
-              .split("T")[0];
-          }
+
           if (result.positions) {
             result.positions.forEach((data) => {
-              if (data.startDate || data.endDate) {
+              if (data.startDate) {
                 data.startDate = new Date(data.startDate)
                   .toISOString()
                   .split("T")[0];
                 data.endDate = new Date(data.endDate)
                   .toISOString()
                   .split("T")[0];
-
-                data.department = data.department._id;
               }
+              if (data.endDate) {
+                data.endDate = new Date(data.endDate)
+                  .toISOString()
+                  .split("T")[0];
+              }
+              data.department = data.department._id;
             });
           }
-          if (result.details?.department) {
-            result.details.department = result.details?.department?._id;
-          }
-          if (result.details?.employeeType) {
-            result.details.employeeType = result.details?.employeeType?._id;
-          }
-
-          // console.log(result, "updates in results");
-          // Object.keys(result).forEach((key) => {
-          //   console.log(key, result[key], "this is what we have now ");
-          //   setValue(key, result[key]);
-          // });
-
-          // console.log(result.details.department);
-          // Object.keys(result).forEach((key) => {
-          //   console.log(key, result[key]);
-          //   setValue(key, result[key])
-          // })
 
           reset(result);
-          setValue("department");
-          // adding if no position added
+          setValue("isActive", result.isActive);
+         
           if (!result.positions?.length) {
             append(initialPosition);
           }
@@ -275,17 +254,17 @@ const JobDetails = () => {
       }
       return true;
     }
-    const atLeastOnePrimary = data.details.some(
+    const atLeastOnePrimary = data.positions.some(
       (position) => position.isPrimary
     );
     console.log("is primary value:", atLeastOnePrimary);
     if (!atLeastOnePrimary) {
-      setError("details.0.isPrimary", {
+      setError("positions.0.isPrimary", {
         type: "custom",
         message: "At least one position must be marked as primary",
       });
     } else {
-      clearErrors("details.0.isPrimary"); // Clear any previous error
+      clearErrors("positions.0.isPrimary"); // Clear any previous error
     }
     if (isEmptyObject(errors)) {
       HandleSubmitJobDetails(data);
@@ -358,7 +337,7 @@ const JobDetails = () => {
                         Employee Type <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
-                        name={`details.${index}.employeeType`}
+                        name={`positions.${index}.employeeType`}
                         control={control}
                         rules={{
                           required: {
@@ -380,7 +359,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.employeeType`}
+                        name={`positions.${index}.employeeType`}
                       />
                     </FlexColumnForm>
                     <FlexColumnForm>
@@ -388,7 +367,7 @@ const JobDetails = () => {
                         Role <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
-                        name={`details.${index}.role`}
+                        name={`positions.${index}.role`}
                         control={control}
                         rules={{
                           required: {
@@ -398,19 +377,19 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option value="" disabled>
+                            <Option >
                               Select
                             </Option>
                             <Option value="EMPLOYEE"> User </Option>
-                            <Option value="HR"> HR </Option>
-                            <Option value="Manager"> Manager </Option>
+                            <Option value="HUMAN_RECOURSE"> HR </Option>
+                            <Option value="MANAGER"> Manager </Option>
                           </Select>
                         )}
                       />
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.role`}
+                        name={`positions.${index}.role`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
@@ -420,7 +399,7 @@ const JobDetails = () => {
                         Department <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
-                        name={`details.${index}.department`}
+                        name={`positions.${index}.department`}
                         control={control}
                         rules={{
                           required: {
@@ -442,7 +421,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.department`}
+                        name={`positions.${index}.department`}
                       />
                     </FlexColumnForm>
                     <FlexColumnForm>
@@ -451,7 +430,7 @@ const JobDetails = () => {
                       </InputLabel>
                       <Input
                         type="text"
-                        {...register(`details.${index}.title`, {
+                        {...register(`positions.${index}.title`, {
                           required: {
                             value: true,
                             message: "Required",
@@ -461,7 +440,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.title`}
+                        name={`positions.${index}.title`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
@@ -471,7 +450,7 @@ const JobDetails = () => {
                         Reports to <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
-                        name={`details.${index}.reportsTo`}
+                        name={`positions.${index}.reportsTo`}
                         control={control}
                         rules={{
                           required: {
@@ -481,11 +460,15 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option value="" disabled>
-                              Select
-                            </Option>
+                            <Option value="">Select</Option>
                             {reportsToList?.map((user) => (
-                              <Option value={user._id}>{user.personalInfo?.length ? user.personalInfo[0].firstName + ' ' + user.personalInfo[0].lastName : user.userData.name}</Option>
+                              <Option value={user._id}>
+                                {user.personalInfo?.length
+                                  ? user.personalInfo[0].firstName +
+                                    " " +
+                                    user.personalInfo[0].lastName
+                                  : user.userData.name}
+                              </Option>
                             ))}
                           </Select>
                         )}
@@ -493,96 +476,104 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.reportsTo`}
+                        name={`positions.${index}.reportsTo`}
                       />
                     </FlexColumnForm>
+                    <FlexContaierForm
+                      style={{ alignItems: "flex-start", width: "50%" }}
+                    >
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Position Start Date <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register(`positions.${index}.startDate`, {
+                            valueAsDate: true,
+
+                            required: {
+                              value: true,
+                              message: " Required",
+                            },
+                            onChange: (e) => {
+                              const endDateValue = getValues(
+                                `positions.${index}.endDate`
+                              );
+                              const startDateValue = getValues(
+                                `positions.${index}.startDate`
+                              );
+                              // const startDate = e.target.value;
+
+                              if (endDateValue && startDateValue) {
+                                const endDate = new Date(endDateValue);
+                                const startDate = new Date(startDateValue);
+
+                                if (startDate > endDate) {
+                                  setError(`positions.${index}.endDate`, {
+                                    type: "custom",
+                                    message:
+                                      "End date must not be earlier than start date",
+                                  });
+                                } else {
+                                  clearErrors(`positions.${index}.endDate`);
+                                }
+                              }
+                            },
+                          })}
+                        />
+                        <ErrorMessage
+                          as={<Errors />}
+                          errors={errors}
+                          name={`positions.${index}.startDate`}
+                        />
+                      </FlexColumnForm>
+                      <FlexColumnForm>
+                        <InputLabel>Position End Date</InputLabel>
+                        <Input
+                          type="date"
+                          {...register(`positions.${index}.endDate`, {
+                            valueAsDate: true,
+
+                            onChange: (fieldValue) => {
+                              const startDateValue = getValues(
+                                `positions.${index}.startDate`
+                              );
+
+                              const endDateValue = getValues(
+                                `positions.${index}.endDate`
+                              );
+                              if (endDateValue && startDateValue) {
+                                const endDate = new Date(endDateValue);
+                                const startDate = new Date(startDateValue);
+
+                                if (startDate > endDate) {
+                                  setError(`positions.${index}.endDate`, {
+                                    type: "custom",
+                                    message:
+                                      "End date must not be earlier than start date",
+                                  });
+                                } else {
+                                  clearErrors(`positions.${index}.endDate`);
+                                }
+                              }
+                            },
+                          })}
+                        />
+                        <ErrorMessage
+                          as={<Errors />}
+                          errors={errors}
+                          name={`positions.${index}.endDate`}
+                        />
+                      </FlexColumnForm>
+                    </FlexContaierForm>
                   </FlexContaierForm>
+
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
-                      <InputLabel>
-                        Position Start Date <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input
-                        type="date"
-                        {...register(`details.${index}.startDate`, {
-                          valueAsDate: true,
-
-                          required: {
-                            value: true,
-                            message: " Required",
-                          },
-                          onChange: (e) => {
-                            const endDate = getValues(
-                              `details.${index}.endDate`
-                            );
-                            const startDate = new Date(e.target.value);
-                            if (endDate && startDate >= new Date(endDate)) {
-                              setError(`details.${index}.endDate`, {
-                                type: "custom",
-                                message:
-                                  "End date must not be earlier than start date",
-                              });
-                            } else {
-                              setError(`details.${index}.endDate`, {
-                                type: "custom",
-                                message: "",
-                              });
-                            }
-                          },
-                        })}
-                      />
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`details.${index}.startDate`}
-                      />
-                    </FlexColumnForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Position End Date <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input
-                        type="date"
-                        {...register(`details.${index}.endDate`, {
-                          valueAsDate: true,
-
-                          validate: (fieldValue) => {
-                            const startDate = new Date(
-                              getValues(`details.${index}.startDate`)
-                            );
-                            const endDate = fieldValue;
-
-                            if (startDate <= new Date(endDate) && endDate) {
-                              setError(`details.${index}.endDate`, {
-                                type: "custom",
-                                message:
-                                  "End date must not be earlier than start date",
-                              });
-                            } else {
-                              clearErrors(`details.${index}.endDate`);
-                              // setError(`details.${index}.endDate`, {
-                              //   type: "custom",
-                              //   message: "",
-                              // });
-                            }
-                          },
-                        })}
-                      />
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`details.${index}.endDate`}
-                      />
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Salary Scale From <InputSpan>*</InputSpan>
-                      </InputLabel>
+                      <InputLabel>Salary Scale From</InputLabel>
                       <Input
                         type="text"
-                        {...register(`details.${index}.salaryScaleFrom`, {
+                        {...register(`positions.${index}.salaryScaleFrom`, {
                           pattern: {
                             value: /^[+]?\d+(\.\d+)?$/,
                             message: "Please enter valid salary",
@@ -592,31 +583,32 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.salaryScaleFrom`}
+                        name={`positions.${index}.salaryScaleFrom`}
                       />
                     </FlexColumnForm>
                     <FlexColumnForm style={{ alignItems: "flex-start" }}>
-                      <InputLabel>
-                        Salary Scale To <InputSpan>*</InputSpan>
-                      </InputLabel>
+                      <InputLabel>Salary Scale To</InputLabel>
                       <Input
                         type="text"
-                        {...register(`details.${index}.salaryScaleTo`, {
+                        {...register(`positions.${index}.salaryScaleTo`, {
                           pattern: {
                             value: /^[+]?\d+(\.\d+)?$/,
                             message: "Please enter valid salary",
                           },
                           validate: (fieldValue) => {
                             const salaryFrom = parseFloat(
-                              getValues(`details.${index}.salaryScaleFrom`)
+                              getValues(`positions.${index}.salaryScaleFrom`)
                             );
                             const salaryTo = parseFloat(fieldValue);
-                            if (!isNaN(salaryFrom) && !isNaN(salaryTo)) {
-                              return (
-                                salaryTo >= salaryFrom ||
-                                "Salary to must be greater than or equal to Salary From"
-                              );
+                            if (salaryFrom && salaryTo) {
+                              if (!isNaN(salaryFrom) && !isNaN(salaryTo)) {
+                                return (
+                                  salaryTo >= salaryFrom ||
+                                  "Salary to must be greater than or equal to Salary From"
+                                );
+                              }
                             }
+
                             return true;
                           },
                         })}
@@ -624,42 +616,71 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.salaryScaleTo`}
+                        name={`positions.${index}.salaryScaleTo`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
-                      <InputLabel>
-                        Actual Salary amounts <InputSpan>*</InputSpan>
-                      </InputLabel>
+                      <InputLabel>Actual Salary amounts</InputLabel>
                       <Input
                         type="text"
-                        {...register(`details.${index}.salary`, {
+                        {...register(`positions.${index}.salary`, {
                           pattern: {
                             value: /^[+]?\d+(\.\d+)?$/,
                             message: "Please enter valid salary",
                           },
 
-                          validate: (fieldValue) => {
+                          onChange: () => {
                             const salaryFrom = parseFloat(
-                              getValues(`details.${index}.salaryScaleFrom`)
+                              getValues(`positions.${index}.salaryScaleFrom`)
                             );
                             const salaryTo = parseFloat(
-                              getValues(`details.${index}.salaryScaleTo`)
+                              getValues(`positions.${index}.salaryScaleTo`)
                             );
-                            const actualSalary = parseFloat(fieldValue);
+                            const actualSalary = parseFloat(
+                              getValues(`positions.${index}.salary`)
+                            );
 
-                            if (
-                              !isNaN(salaryFrom) &&
-                              !isNaN(salaryTo) &&
-                              !isNaN(actualSalary)
-                            ) {
-                              return (
-                                (actualSalary >= salaryFrom &&
-                                  actualSalary <= salaryTo) ||
-                                "Actual Salary must be between Salary From and Salary To"
-                              );
+                            if (isNaN(salaryFrom) && isNaN(salaryTo)) {
+                              // No salary range specified, clear any errors
+                              clearErrors(`positions.${index}.salary`);
+                            } else if (!isNaN(salaryFrom) && isNaN(salaryTo)) {
+                              // Only Salary From is specified
+                              if (actualSalary < salaryFrom) {
+                                setError(`positions.${index}.salary`, {
+                                  type: "custom",
+                                  message:
+                                    "Actual salary must be greater than or equal to Salary From",
+                                });
+                              } else {
+                                clearErrors(`positions.${index}.salary`);
+                              }
+                            } else if (isNaN(salaryFrom) && !isNaN(salaryTo)) {
+                              // Only Salary To is specified
+                              if (actualSalary > salaryTo) {
+                                setError(`positions.${index}.salary`, {
+                                  type: "custom",
+                                  message:
+                                    "Actual salary must be smaller than or equal to Salary To",
+                                });
+                              } else {
+                                clearErrors(`positions.${index}.salary`);
+                              }
+                            } else {
+                              // Both Salary From and Salary To are specified
+                              if (
+                                actualSalary < salaryFrom ||
+                                actualSalary > salaryTo
+                              ) {
+                                setError(`positions.${index}.salary`, {
+                                  type: "custom",
+                                  message:
+                                    "Actual Salary must be between Salary From and Salary To",
+                                });
+                              } else {
+                                clearErrors(`positions.${index}.salary`);
+                              }
                             }
                           },
                         })}
@@ -667,7 +688,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.salary`}
+                        name={`positions.${index}.salary`}
                       />
                     </FlexColumnForm>
                     <FlexColumnForm>
@@ -676,7 +697,7 @@ const JobDetails = () => {
                         <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
-                        name={`details.${index}.ratePer`}
+                        name={`positions.${index}.ratePer`}
                         control={control}
                         rules={{
                           required: {
@@ -686,7 +707,7 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option disabled>Select</Option>
+                            <Option >Select</Option>
                             <Option value={1}>Hour</Option>
                             <Option value={2}>Day</Option>
                             <Option value={3}>Week</Option>
@@ -698,7 +719,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.ratePer`}
+                        name={`positions.${index}.ratePer`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
@@ -709,7 +730,7 @@ const JobDetails = () => {
                       </InputLabel>
                       <Input
                         type="text"
-                        {...register(`details.${index}.hoursPerWeek`, {
+                        {...register(`positions.${index}.hoursPerWeek`, {
                           required: {
                             value: true,
                             message: "Required",
@@ -730,7 +751,7 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.hoursPerWeek`}
+                        name={`positions.${index}.hoursPerWeek`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
@@ -747,11 +768,11 @@ const JobDetails = () => {
                       <AlignFlex>
                         <input
                           type="checkbox"
-                          {...register(`details.${index}.isBebEligible`, {})}
-                          id={`details.${index}.isBebEligible`}
+                          {...register(`positions.${index}.isBebEligible`, {})}
+                          id={`positions.${index}.isBebEligible`}
                         />
                         <InputLabel
-                          htmlFor={`details.${index}.isBebEligible`}
+                          htmlFor={`positions.${index}.isBebEligible`}
                           style={{ marginBottom: "0px", cursor: "pointer" }}
                         >
                           Is BEB Eligible? <InputSpan>*</InputSpan>
@@ -762,11 +783,11 @@ const JobDetails = () => {
                       <AlignFlex>
                         <input
                           type="checkbox"
-                          {...register(`details.${index}.isPrimary`, {})}
-                          id={`details.${index}.isPrimary`}
+                          {...register(`positions.${index}.isPrimary`, {})}
+                          id={`positions.${index}.isPrimary`}
                         />
                         <InputLabel
-                          htmlFor={`details.${index}.isPrimary`}
+                          htmlFor={`positions.${index}.isPrimary`}
                           style={{ marginBottom: "0px", cursor: "pointer" }}
                         >
                           Is Primary <InputSpan>*</InputSpan>
@@ -775,11 +796,11 @@ const JobDetails = () => {
                       <ErrorMessage
                         as={<Errors />}
                         errors={errors}
-                        name={`details.${index}.isPrimary`}
+                        name={`positions.${index}.isPrimary`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
-                  {getValues("details").length > 1 && (
+                  {getValues("positions").length > 1 && (
                     <TrashDiv onClick={() => remove(index)}>
                       <DeleteIcon src="/images/icons/trash-empty.svg" /> Remove
                     </TrashDiv>

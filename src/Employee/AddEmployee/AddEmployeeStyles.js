@@ -260,7 +260,7 @@ export const Errors = styled.p`
   color: red;
   font-size: 10px;
   font-weight: 300;
-  line-height: 0px;
+  line-height: 14px;
   margin-top: 2px;
 `;
 export const ButtonBlue = styled.button`

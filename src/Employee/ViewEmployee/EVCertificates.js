@@ -385,15 +385,13 @@ const EVCertificates = () => {
                                 return true;
                               },
                               onChange: (e) => {
-                                const endDate = 
-                                  getValues("expiryDate")
-                                ;
+                                const endDate = getValues("expiryDate");
                                 const startDate = new Date(e.target.value);
                                 if (startDate >= new Date(endDate) && endDate) {
                                   setError("expiryDate", {
                                     type: "custom",
                                     message:
-                                      " Must not be earlier than completion date",
+                                      "Expiry  date must not be earlier than completion date",
                                   });
                                 } else {
                                   setError("expiryDate", {
@@ -426,21 +424,18 @@ const EVCertificates = () => {
                                   getValues("completionDate")
                                 );
                                 const endDate = fieldValue;
-                                  if (
-                                    startDate <= new Date(endDate) &&
-                                    endDate
-                                  ) {
-                                    setError("expiryDate", {
-                                      type: "custom",
-                                      message:
-                                        "End date must not be earlier than start date   ",
-                                    });
-                                  } else {
-                                    setError("expiryDate", {
-                                      type: "custom",
-                                      message: "",
-                                    });
-                                  }
+                                if (startDate <= new Date(endDate) && endDate) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message:
+                                      "Expiry date must not be earlier than completion date   ",
+                                  });
+                                } else {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
                               },
                             })}
                           />
@@ -509,7 +504,7 @@ const EVCertificates = () => {
 
               <BasicDetailsDiv>
                 {!result?.certificates?.length ? (
-                  <NoDocumentfound />
+                  <NoDocumentfound message="No certificates to show" />
                 ) : (
                   <>
                     {result?.certificates?.map((data) => (

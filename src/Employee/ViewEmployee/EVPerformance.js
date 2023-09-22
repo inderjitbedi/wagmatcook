@@ -66,7 +66,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "8px 0px",
+  padding: "20px 0px",
   borderRadius: "8px",
   height: "597px",
   overflowY: "scroll",
@@ -262,7 +262,12 @@ const EVPerformance = () => {
   };
 
   const handleAddition = (tag) => {
-    setTags([...tags, tag]);
+
+ 
+    if (suggestions.includes(tag)) {
+        setTags([...tags, tag]);
+   
+    }
   };
 
   const handleDrag = (tag, currPos, newPos) => {
@@ -669,7 +674,7 @@ const EVPerformance = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Date of Next Review <InputSpan>*</InputSpan>
+                            Date of Next Review
                           </InputLabel>
                           <Input
                             type="date"

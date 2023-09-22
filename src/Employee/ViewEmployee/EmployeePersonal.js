@@ -86,8 +86,7 @@ const EmployeePersonal = () => {
             <PersonalImg
               src={
                 result.personalInfo?.photo
-                  ? API_URL +
-                    result.personalInfo.photo?.path
+                  ? API_URL + result.personalInfo.photo?.path
                   : "/images/User.jpg"
               }
             />
@@ -156,7 +155,7 @@ const EmployeePersonal = () => {
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Postal Code</TitlePara>
-                    <ViewPara style={{textTransform:"uppercase"}}>
+                    <ViewPara style={{ textTransform: "uppercase" }}>
                       {result?.personalInfo?.postalCode || " - "}
                     </ViewPara>
                   </FlexColumn>
@@ -176,18 +175,24 @@ const EmployeePersonal = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Email - Personal</TitlePara>
-                    <ViewPara style={{textTransform:"none"}}>
+                    <ViewPara style={{ textTransform: "none" }}>
                       {result?.personalInfo?.personalEmail || " - "}
                     </ViewPara>
                   </FlexColumn>
+                  <FlexColumn>
+                    <TitlePara>Email - Work</TitlePara>
+                    <ViewPara style={{ textTransform: "none" }}>
+                      {result?.personalInfo?.employee.email || " - "}
+                    </ViewPara>
+                  </FlexColumn>
+                </FlexSpaceBetween>
+                <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Emergency Contact </TitlePara>
                     <ViewPara>
                       {result?.personalInfo?.emergencyContact || " - "}
                     </ViewPara>
                   </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Emergency Contact Number *</TitlePara>
                     <ViewPara>
@@ -227,21 +232,22 @@ const EmployeePersonal = () => {
                     ) : result.personalInfo?.gender === 3 ? (
                       <ViewPara> Non-Binary</ViewPara>
                     ) : (
-                      <ViewPara> Pronouns</ViewPara>
+                      <ViewPara> - </ViewPara>
                     )}
                   </FlexColumn>
                 </FlexSpaceBetween>
+
                 {/* band number and is status */}
-                {/* <FlexSpaceBetween>
+                <FlexSpaceBetween>
                   <FlexColumn>
-                    <TitlePara>Is Status </TitlePara>
-                    <ViewPara>Yes</ViewPara>
+                    <TitlePara>Pronouns </TitlePara>
+                    <ViewPara>{result.personalInfo?.pronouns || " - "}</ViewPara>
                   </FlexColumn>
-                  <FlexColumn>
+                  {/* <FlexColumn>
                     <TitlePara>Band Number</TitlePara>
                     <ViewPara>JHGTRYSG4542DES</ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween> */}
+                  </FlexColumn> */}
+                </FlexSpaceBetween>
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

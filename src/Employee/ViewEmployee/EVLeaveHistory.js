@@ -383,7 +383,7 @@ const EVLeaveHistory = () => {
                 </FlexColumnForm>
                 <FlexColumnForm>
                   <InputLabel>
-                    To <InputSpan>*</InputSpan>
+                    To 
                   </InputLabel>
                   <Input
                     type="date"
