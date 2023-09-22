@@ -312,7 +312,6 @@ const employeeController = {
             await User.findByIdAndUpdate(req.params.id, { role: primaryPositions[0].role, isActive });
 
             res.status(200).json({
-                details,
                 positions: updatedPositions,
                 message: 'Employee job details updated successfully'
             });
