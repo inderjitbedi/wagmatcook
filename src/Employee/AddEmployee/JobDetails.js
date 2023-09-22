@@ -383,7 +383,6 @@ const JobDetails = () => {
                             <Option value="" disabled>
                               Select
                             </Option>
-
                             <Option value="EMPLOYEE"> User </Option>
                             <Option value="HR"> HR </Option>
                             <Option value="Manager"> Manager </Option>

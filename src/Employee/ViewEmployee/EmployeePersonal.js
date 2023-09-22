@@ -215,7 +215,7 @@ const EmployeePersonal = () => {
                 </FlexSpaceBetween>
                 <FlexSpaceBetween>
                   <FlexColumn>
-                    <TitlePara>Sin</TitlePara>
+                    <TitlePara>SIN</TitlePara>
                     <ViewPara>{result.personalInfo?.sin || " - "}</ViewPara>
                   </FlexColumn>
                   <FlexColumn>
