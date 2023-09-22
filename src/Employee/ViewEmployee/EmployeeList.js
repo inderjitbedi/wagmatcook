@@ -286,7 +286,7 @@ const Employee = () => {
         </DepartmentFilterdiv>
 
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <AddNewButton onClick={HandleOpenWelcome}>Send Welcome</AddNewButton>{" "}
+          <AddNewButton >Send Welcome</AddNewButton>{" "}
           <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
         </div>
       </DepartmentFilterContainer>

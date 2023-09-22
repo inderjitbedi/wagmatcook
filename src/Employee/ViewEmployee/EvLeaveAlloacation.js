@@ -372,7 +372,7 @@ const EvLeaveAlloacation = () => {
                 {result?.allocations?.length === 0 && (
                   <TableRow sx={{ height: "200px" }}>
                     <TableCell align="center" colSpan={3}>
-                      No employee found
+                      No leave allocation found
                     </TableCell>
                   </TableRow>
                 )}

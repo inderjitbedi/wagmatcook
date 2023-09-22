@@ -6,6 +6,8 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import DeleteModal from "../../Modals/DeleteModal";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
+import NoDocumentfound from "../NoDocumentfound";
+
 import {
   FlexContaier,
   IconsEmployee,
@@ -313,32 +315,39 @@ const EVDocuments = () => {
                   New Document
                 </ButtonBlue>
               </FlexSpaceBetween>
-              {result.documents?.map((data) => (
-                <FlexSpaceBetween
-                  style={{
-                    marginBottom: "10px",
-                    width: "80%",
-                    borderRadius: "8px",
-                    border: "1.5px solid #EFF4FA",
-                    padding: "16px",
-                  }}
-                >
-                  <FlexContaier>
-                    <IconsEmployee src="/images/icons/File3.svg" />
-                    <ViewPara>Welcome_to_team_offer_letter.doc</ViewPara>
-                  </FlexContaier>
-                  <IconContainer>
-                    <IconsEmployee src="/images/icons/Download.svg" />
-                    <IconsEmployee
-                      onClick={() => {
-                        setId(data._id);
-                        HandleOpenDelete();
+              {!result?.reviews?.length ? (
+                <NoDocumentfound message="No documents to show" />
+              ) : (
+                <>
+                  {result.documents?.map((data) => (
+                    <FlexSpaceBetween
+                      style={{
+                        marginBottom: "10px",
+                        width: "80%",
+                        borderRadius: "8px",
+                        border: "1.5px solid #EFF4FA",
+                        padding: "16px",
                       }}
-                      src="/images/icons/Trash-2.svg"
-                    />
-                  </IconContainer>
-                </FlexSpaceBetween>
-              ))}
+                    >
+                      <FlexContaier>
+                        <IconsEmployee src="/images/icons/File3.svg" />
+                        <ViewPara>Welcome_to_team_offer_letter.doc</ViewPara>
+                      </FlexContaier>
+                      <IconContainer>
+                        <IconsEmployee src="/images/icons/Download.svg" />
+                        <IconsEmployee
+                          onClick={() => {
+                            setId(data._id);
+                            HandleOpenDelete();
+                          }}
+                          src="/images/icons/Trash-2.svg"
+                        />
+                      </IconContainer>
+                    </FlexSpaceBetween>
+                  ))}
+                </>
+              )}
+
               {/* <FlexSpaceBetween
                 style={{
                   marginBottom: "10px",

@@ -410,7 +410,7 @@ const EVCertificates = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Exipiry <InputSpan>*</InputSpan>
+                            Exipiry 
                           </InputLabel>
                           <Input
                             type="date"
@@ -528,8 +528,9 @@ const EVCertificates = () => {
                           <FlexColumn style={{ gap: "0px" }}>
                             <TitlePara>Expriry </TitlePara>
                             <ViewPara>
-                              {moment(data.expiryDate).format("DD/MM/YYYY") ||
-                                " - "}{" "}
+                              {data.expiryDate
+                                ? moment(data.expiryDate).format("DD/MM/YYYY")
+                                : " - "}{" "}
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
