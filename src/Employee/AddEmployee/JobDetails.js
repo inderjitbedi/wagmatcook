@@ -183,7 +183,7 @@ const JobDetails = () => {
 
           setFormData(result);
         } else {
-          toast.warn("something went wrong ");
+          // toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -377,9 +377,7 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option >
-                              Select
-                            </Option>
+                            <Option>Select</Option>
                             <Option value="EMPLOYEE"> User </Option>
                             <Option value="HUMAN_RECOURSE"> HR </Option>
                             <Option value="MANAGER"> Manager </Option>
@@ -622,10 +620,16 @@ const JobDetails = () => {
                   </FlexContaierForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
-                      <InputLabel>Actual Salary amounts</InputLabel>
+                      <InputLabel>
+                        Actual Salary amounts <InputSpan>*</InputSpan>{" "}
+                      </InputLabel>
                       <Input
                         type="text"
                         {...register(`positions.${index}.salary`, {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
                           pattern: {
                             value: /^[+]?\d+(\.\d+)?$/,
                             message: "Please enter valid salary",
@@ -707,7 +711,7 @@ const JobDetails = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option >Select</Option>
+                            <Option>Select</Option>
                             <Option value={1}>Hour</Option>
                             <Option value={2}>Day</Option>
                             <Option value={3}>Week</Option>

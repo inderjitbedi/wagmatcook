@@ -442,7 +442,7 @@ const CertificatesInfo = () => {
                     </FlexColumnForm>
                     <FlexColumnForm>
                       <InputLabel>
-                        Expiry <InputSpan>*</InputSpan>
+                        Expiry 
                       </InputLabel>
                       <Input
                         type="date"

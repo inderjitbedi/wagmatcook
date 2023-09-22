@@ -476,7 +476,9 @@ const PersonalInfo = () => {
                     {<Errors> {errors.personalEmail?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
-                    <InputLabel>Email-Work</InputLabel>
+                    <InputLabel>
+                      Email-Work <InputSpan>*</InputSpan>
+                    </InputLabel>
                     <Input
                       type="text"
                       {...register("workEmail", {
@@ -599,7 +601,7 @@ const PersonalInfo = () => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      SIN <InputSpan>*</InputSpan>
+                      SIN 
                     </InputLabel>
                     <Controller
                       name="sin"

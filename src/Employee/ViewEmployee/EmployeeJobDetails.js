@@ -628,9 +628,7 @@ const EmployeeJobDetails = () => {
                               {<Errors>{errors.startDate?.message}</Errors>}
                             </FlexColumnForm>
                             <FlexColumnForm>
-                              <InputLabel>
-                                End Date 
-                              </InputLabel>
+                              <InputLabel>End Date</InputLabel>
                               <Input
                                 type="date"
                                 {...register("endDate", {
@@ -715,10 +713,17 @@ const EmployeeJobDetails = () => {
 
                         <FlexContaierForm>
                           <FlexColumnForm>
-                            <InputLabel>Actual Salary amounts</InputLabel>
+                            <InputLabel>
+                              Actual Salary amounts <InputSpan>*</InputSpan>
+                            </InputLabel>
                             <Input
                               type="text"
                               {...register(`salary`, {
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+
                                 pattern: {
                                   value: /^[+]?\d+(\.\d+)?$/,
                                   message: "Please enter valid salary",
@@ -887,7 +892,7 @@ const EmployeeJobDetails = () => {
                             </AlignFlex>
                           </FlexColumnForm>
                         </FlexContaierForm>
-                        <FlexContaierForm style={{marginTop:"25px"}}>
+                        <FlexContaierForm style={{ marginTop: "25px" }}>
                           <FlexColumnForm>
                             <AlignFlex>
                               <input
