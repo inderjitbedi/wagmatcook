@@ -76,7 +76,6 @@ const PersonalInfo = () => {
         },
       })
         .then((data) => {
-
           if (data?.result) {
             setFile(data?.result?.file);
             // setFormData({ ...formData, file: data?.result.file._id });
@@ -477,6 +476,25 @@ const PersonalInfo = () => {
                     {<Errors> {errors.personalEmail?.message} </Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
+                    <InputLabel>Email-Work</InputLabel>
+                    <Input
+                      type="text"
+                      {...register("workEmail", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Please enter a valid email",
+                        },
+                      })}
+                    />
+                    {<Errors> {errors.workEmail?.message} </Errors>}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm>
                     <InputLabel>
                       Emergency Contact <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -491,8 +509,6 @@ const PersonalInfo = () => {
                     />
                     {<Errors> {errors.emergencyContact?.message} </Errors>}
                   </FlexColumnForm>
-                </FlexContaierForm>
-                <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
                       Emergency Contact number <InputSpan>*</InputSpan>
@@ -533,23 +549,6 @@ const PersonalInfo = () => {
                         {errors.emergencyContactNumber?.message}{" "}
                       </Errors>
                     }
-                  </FlexColumnForm>
-                  <FlexColumnForm>
-                    <InputLabel>Email-Work</InputLabel>
-                    <Input
-                      type="text"
-                      {...register("workEmail", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Please enter a valid email",
-                        },
-                      })}
-                    />
-                    {<Errors> {errors.workEmail?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>

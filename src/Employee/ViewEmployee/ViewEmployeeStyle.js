@@ -10,6 +10,11 @@ export const DashNav = styled.div`
   background-color: #ffffff;
   /* padding: 32px; */
 `;
+export const AlignFlex = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
 export const DashMain = styled.div`
   width: 82%;
@@ -165,6 +170,7 @@ export const BackButton = styled.button`
 `;
 export const IconsEmployee = styled.img`
   display: inline-block;
+  cursor: pointer;
 `;
 export const FlexContaier = styled.div`
   display: flex;
@@ -591,3 +597,48 @@ export const LightPara = styled.p`
   letter-spacing: -0.28px;
   cursor: pointer;
 `;
+export const UploadImageContainer = styled.label`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.8px dashed #d2d3d3;
+  flex-direction: column;
+  height: 152px;
+  margin-bottom: 16px;
+`;
+export const UploadImageName = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  border-radius: 5px;
+  border: 0.5px solid #d2d3d3;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  padding: 9px 9px 7px 9px;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const UploadImagePara = styled.div`
+  color: #222b45;
+  
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 21px;
+  letter-spacing: -0.14px;
+`;
+export const UploadImageLight = styled.div`
+  color: #8f9bb3;
+  font-family: Inter;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 12px;
+`;
+
+
+

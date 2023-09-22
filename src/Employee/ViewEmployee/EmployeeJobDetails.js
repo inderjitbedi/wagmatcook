@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import NoDocumentfound from "../NoDocumentfound";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   VerticalTimeline,
@@ -46,18 +47,22 @@ import {
   InputSpan,
   Select,
   Option,
+  CertificateContainer,
+  AlignFlex,
 } from "./ViewEmployeeStyle";
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: 800,
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
   padding: "20px 0px",
   borderRadius: "8px",
+  height: "500px",
+  overflowY: "scroll",
 };
 
 const EmployeeJobDetails = () => {
@@ -72,6 +77,8 @@ const EmployeeJobDetails = () => {
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [departmentData, setDepartmentData] = useState([]);
+  const [reportsToList, setReportsToList] = useState([]);
+  const [employeeTypes, setEmployeeTypes] = useState([]);
 
   const {
     register,
@@ -81,7 +88,7 @@ const EmployeeJobDetails = () => {
     getValues,
     clearErrors,
     reset,
-    setError
+    setError,
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
@@ -136,7 +143,6 @@ const EmployeeJobDetails = () => {
       .then(({ result, error }) => {
         if (result) {
           setDepartmentData(result.departments);
-          GetEmployeesJobDetails();
           // console.log(result.departments, "result.departments ");
         } else {
           //toast.warn("something went wrong ");
@@ -149,6 +155,45 @@ const EmployeeJobDetails = () => {
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  };
+  const GetEmployeeTypes = () => {
+    setIsLoading(true);
+    let url = `/employee-type/list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setEmployeeTypes(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetReportsToList = () => {
+    let url = `/employee/reports-to-list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setReportsToList(result.users);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Fetching Job Details. Please try again.");
       });
   };
   const AddNewPosition = (data) => {
@@ -182,6 +227,8 @@ const EmployeeJobDetails = () => {
   useEffect(() => {
     GetEmployeesJobDetails();
     GetDepartments();
+    GetReportsToList();
+    GetEmployeeTypes();
   }, []);
   return (
     <>
@@ -245,124 +292,151 @@ const EmployeeJobDetails = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Employment Details</BasicHeading>
+                <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
               </FlexSpaceBetween>
+
               <BasicDetailsDiv>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Department</TitlePara>
-                    <ViewPara>
-                      {result.details?.department?.name || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Position </TitlePara>
-                    <ViewPara>{result.details?.title || " - "}</ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Position Start Date</TitlePara>
-                    <ViewPara>
-                      {moment(result.details?.startDate).format("DD/MM/YYYY") ||
-                        "-"}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Position End Date</TitlePara>
-                    <ViewPara>
-                      {result.details?.endDate
-                        ? moment(result.details?.endDate).format("DD/MM/YYYY")
-                        : "Present"}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Salary Scale From</TitlePara>
-                    <ViewPara>
-                      {" "}
-                      $ {result.details?.salaryScaleFrom || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Salary Scale To</TitlePara>
-                    <ViewPara>
-                      {" "}
-                      $ {result.details?.salaryScaleTo || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Actual Salary amounts</TitlePara>
-                    <ViewPara> $ {result.details?.salary || " - "}</ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Salary rate per</TitlePara>
-                    <ViewPara>
-                      {result.details?.ratePer === 1
-                        ? "Hour"
-                        : result.details?.ratePer === 2
-                        ? "Day"
-                        : result.details?.ratePer === 3
-                        ? "Week"
-                        : result.details?.ratePer === 4
-                        ? "Biweekly "
-                        : result.details?.ratePer === 5
-                        ? "Annual "
-                        : " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Hours per week</TitlePara>
-                    <ViewPara>{result.details?.hoursPerWeek || " - "}</ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Reports to</TitlePara>
-                    <ViewPara> {result.details?.reportTo || " - "} </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Is BEB Eligible?</TitlePara>
-                    <ViewPara>
-                      {result.details?.isBebEligible ? "Yes" : "No"}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Status</TitlePara>
-                    {result.details?.isActive ? (
-                      <ViewPara style={{ color: "#34A853" }}>Active</ViewPara>
-                    ) : (
-                      <ViewPara style={{ color: "red" }}>Inactive</ViewPara>
-                    )}
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                {/* <FlexSpaceBetween>
+                {result?.positions?.length < 0 ? (
+                  <NoDocumentfound message="No certificates to show" />
+                ) : (
+                  <>
+                    {result?.positions?.map((data) => (
+                      <CertificateContainer>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Employee Type</TitlePara>
+                            <ViewPara>
+                              {data?.employeeType.name || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Role </TitlePara>
+                            <ViewPara>{data?.role || " - "}</ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Department</TitlePara>
+                            <ViewPara>
+                              {data?.department?.name || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Position </TitlePara>
+                            <ViewPara>{data?.title || " - "}</ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Position Start Date</TitlePara>
+                            <ViewPara>
+                              {moment(data?.startDate).format("DD/MM/YYYY") ||
+                                "-"}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Position End Date</TitlePara>
+                            <ViewPara>
+                              {data?.endDate
+                                ? moment(data?.endDate).format("DD/MM/YYYY")
+                                : "Present"}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Salary Scale From</TitlePara>
+                            <ViewPara>
+                              {" "}
+                              $ {data?.salaryScaleFrom || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Salary Scale To</TitlePara>
+                            <ViewPara>
+                              {" "}
+                              $ {data?.salaryScaleTo || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Actual Salary amounts</TitlePara>
+                            <ViewPara> $ {data?.salary || " - "}</ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Salary rate per</TitlePara>
+                            <ViewPara>
+                              {data?.ratePer === 1
+                                ? "Hour"
+                                : data?.ratePer === 2
+                                ? "Day"
+                                : data?.ratePer === 3
+                                ? "Week"
+                                : data?.ratePer === 4
+                                ? "Biweekly "
+                                : data?.ratePer === 5
+                                ? "Annual "
+                                : " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Hours per week</TitlePara>
+                            <ViewPara>{data?.hoursPerWeek || " - "}</ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Reports to</TitlePara>
+                            <ViewPara> {data?.reportTo || " - "} </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Is BEB Eligible?</TitlePara>
+                            <ViewPara>
+                              {data?.isBebEligible ? "Yes" : "No"}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Is Primary</TitlePara>
+                            <ViewPara>
+                              {data?.isPrimary ? "Yes" : "No"}
+                            </ViewPara>
+                          </FlexColumn>
+                          <FlexColumn>
+                            <TitlePara>Status</TitlePara>
+                            {result.isActive ? (
+                              <ViewPara style={{ color: "#34A853" }}>
+                                Active
+                              </ViewPara>
+                            ) : (
+                              <ViewPara style={{ color: "red" }}>
+                                Inactive
+                              </ViewPara>
+                            )}
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                        {/* <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Duration of Employment</TitlePara>
                     <ViewPara>2 Years 3 months</ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween> */}
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Employee Type</TitlePara>
-                    <ViewPara>
-                      {" "}
-                      {result.details?.employeeType?.name || " - "}{" "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <BasicHeading
-                    style={{ marginTop: "53px", marginBottom: "24px" }}
-                  >
-                    Position History
-                  </BasicHeading>
-                  <AddNewButton onClick={handleOpen}> Add New</AddNewButton>
-                </FlexSpaceBetween>
+                        {/* <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Employee Type</TitlePara>
+                            <ViewPara>
+                              {" "}
+                              {data?.employeeType?.name || " - "}{" "}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween> */}
+                      </CertificateContainer>
+                    ))}
+                  </>
+                )}
+
                 {/* add new modal  */}
 
                 <Modal
@@ -392,12 +466,71 @@ const EmployeeJobDetails = () => {
                         <FlexContaierForm>
                           <FlexColumnForm>
                             <InputLabel>
+                              Employee Type <InputSpan>*</InputSpan>
+                            </InputLabel>
+                            <Controller
+                              name={`employeeType`}
+                              control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option value="" disabled>
+                                    Select
+                                  </Option>
+                                  {employeeTypes?.employeeTypes?.map((data) => (
+                                    <Option value={data._id}>
+                                      {data.name}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              )}
+                            />
+                            {<Errors> {errors.employeeType?.message}</Errors>}
+                          </FlexColumnForm>
+                          <FlexColumnForm>
+                            <InputLabel>
+                              Role <InputSpan>*</InputSpan>
+                            </InputLabel>
+                            <Controller
+                              name={`role`}
+                              control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option>Select</Option>
+                                  <Option value="EMPLOYEE"> User </Option>
+                                  <Option value="HUMAN_RECOURSE"> HR </Option>
+                                  <Option value="MANAGER"> Manager </Option>
+                                </Select>
+                              )}
+                            />
+                            {<Errors> {errors.role?.message}</Errors>}
+                          </FlexColumnForm>
+                        </FlexContaierForm>
+                        <FlexContaierForm>
+                          <FlexColumnForm>
+                            <InputLabel>
                               Department <InputSpan>*</InputSpan>
                             </InputLabel>
                             <Controller
                               name="department"
                               control={control}
-                              rules={{ required: true }}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
                               render={({ field }) => (
                                 <Select {...field}>
                                   <Option>Select</Option>
@@ -409,10 +542,8 @@ const EmployeeJobDetails = () => {
                                 </Select>
                               )}
                             />
-                            {errors.department && <Errors> Required </Errors>}
+                            {<Errors> {errors.department?.message}</Errors>}
                           </FlexColumnForm>
-                        </FlexContaierForm>
-                        <FlexContaierForm>
                           <FlexColumnForm>
                             <InputLabel>
                               Position Title <InputSpan>*</InputSpan>
@@ -426,68 +557,92 @@ const EmployeeJobDetails = () => {
                                 },
                               })}
                             />
-                            {errors.title && (
-                              <Errors> {errors.title?.message}</Errors>
-                            )}
+                            {<Errors> {errors.title?.message}</Errors>}
                           </FlexColumnForm>
                         </FlexContaierForm>
+
                         <FlexContaierForm>
-                          <FlexColumnForm>
+                          <FlexColumnForm style={{ width: "50%" }}>
                             <InputLabel>
-                              Start Date <InputSpan>*</InputSpan>
+                              Reports to <InputSpan>*</InputSpan>
                             </InputLabel>
-                            <Input
-                              type="date"
-                              {...register("startDate", {
+                            <Controller
+                              name={`reportsTo`}
+                              control={control}
+                              rules={{
                                 required: {
                                   value: true,
                                   message: "Required",
                                 },
-                                onChange: (e) => {
-                                  const endDate = 
-                                    getValues("endDate")
-                                  ;
-                                  const startDate = new Date(e.target.value);
-                                  if (
-                                    startDate >= new Date(endDate) &&
-                                    endDate
-                                  ) {
-                                    setError("endDate", {
-                                      type: "custom",
-                                      message:
-                                        "End date must not be earlier than start date",
-                                    });
-                                  } else {
-                                    setError("endDate", {
-                                      type: "custom",
-                                      message: "",
-                                    });
-                                  }
-                                },
-                              })}
+                              }}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option value="">Select</Option>
+                                  {reportsToList?.map((user) => (
+                                    <Option value={user._id}>
+                                      {user.personalInfo?.length
+                                        ? user.personalInfo[0].firstName +
+                                          " " +
+                                          user.personalInfo[0].lastName
+                                        : user.userData.name}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              )}
                             />
-                            {errors.startDate && (
-                              <Errors>{errors.startDate?.message}</Errors>
-                            )}
+                            {<Errors>{errors.reportTo?.message}</Errors>}
                           </FlexColumnForm>
-                        </FlexContaierForm>
-                        <FlexContaierForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              End Date <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Input
-                              type="date"
-                              {...register("endDate", {
-                                // required: {
-                                //   value: true,
-                                //   message: "Required",
-                                // },
-                                validate: (fieldValue) => {
-                                  const startDate = new Date(
-                                    getValues("startDate")
-                                  );
-                                  const endDate = fieldValue;
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Start Date <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="date"
+                                {...register("startDate", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                  onChange: (e) => {
+                                    const endDate = getValues("endDate");
+                                    const startDate = new Date(e.target.value);
+                                    if (
+                                      startDate >= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("endDate", {
+                                        type: "custom",
+                                        message:
+                                          "End date must not be earlier than start date",
+                                      });
+                                    } else {
+                                      setError("endDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {<Errors>{errors.startDate?.message}</Errors>}
+                            </FlexColumnForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                End Date 
+                              </InputLabel>
+                              <Input
+                                type="date"
+                                {...register("endDate", {
+                                  // required: {
+                                  //   value: true,
+                                  //   message: "Required",
+                                  // },
+                                  validate: (fieldValue) => {
+                                    const startDate = new Date(
+                                      getValues("startDate")
+                                    );
+                                    const endDate = fieldValue;
                                     if (
                                       startDate <= new Date(endDate) &&
                                       endDate
@@ -503,15 +658,252 @@ const EmployeeJobDetails = () => {
                                         message: "",
                                       });
                                     }
+                                  },
+                                })}
+                              />
+                              {<Errors>{errors.endDate?.message}</Errors>}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                        </FlexContaierForm>
+                        <FlexContaierForm>
+                          <FlexColumnForm>
+                            <InputLabel>Salary Scale From</InputLabel>
+                            <Input
+                              type="text"
+                              {...register(`salaryScaleFrom`, {
+                                pattern: {
+                                  value: /^[+]?\d+(\.\d+)?$/,
+                                  message: "Please enter valid salary",
                                 },
                               })}
                             />
-                            {errors.endDate && (
-                              <Errors>{errors.endDate?.message}</Errors>
-                            )}
+                            {<Errors>{errors.salaryScaleFrom?.message}</Errors>}
+                          </FlexColumnForm>
+                          <FlexColumnForm style={{ alignItems: "flex-start" }}>
+                            <InputLabel>Salary Scale To</InputLabel>
+                            <Input
+                              type="text"
+                              {...register(`salaryScaleTo`, {
+                                pattern: {
+                                  value: /^[+]?\d+(\.\d+)?$/,
+                                  message: "Please enter valid salary",
+                                },
+                                validate: (fieldValue) => {
+                                  const salaryFrom = parseFloat(
+                                    getValues(`salaryScaleFrom`)
+                                  );
+                                  const salaryTo = parseFloat(fieldValue);
+                                  if (salaryFrom && salaryTo) {
+                                    if (
+                                      !isNaN(salaryFrom) &&
+                                      !isNaN(salaryTo)
+                                    ) {
+                                      return (
+                                        salaryTo >= salaryFrom ||
+                                        "Salary to must be greater than or equal to Salary From"
+                                      );
+                                    }
+                                  }
+
+                                  return true;
+                                },
+                              })}
+                            />
+                            {<Errors>{errors.salaryScaleTo?.message}</Errors>}
                           </FlexColumnForm>
                         </FlexContaierForm>
 
+                        <FlexContaierForm>
+                          <FlexColumnForm>
+                            <InputLabel>Actual Salary amounts</InputLabel>
+                            <Input
+                              type="text"
+                              {...register(`salary`, {
+                                pattern: {
+                                  value: /^[+]?\d+(\.\d+)?$/,
+                                  message: "Please enter valid salary",
+                                },
+
+                                onChange: () => {
+                                  const salaryFrom = parseFloat(
+                                    getValues(`salaryScaleFrom`)
+                                  );
+                                  const salaryTo = parseFloat(
+                                    getValues(`salaryScaleTo`)
+                                  );
+                                  const actualSalary = parseFloat(
+                                    getValues(`salary`)
+                                  );
+
+                                  if (isNaN(salaryFrom) && isNaN(salaryTo)) {
+                                    // No salary range specified, clear any errors
+                                    clearErrors(`salary`);
+                                  } else if (
+                                    !isNaN(salaryFrom) &&
+                                    isNaN(salaryTo)
+                                  ) {
+                                    // Only Salary From is specified
+                                    if (actualSalary < salaryFrom) {
+                                      setError(`salary`, {
+                                        type: "custom",
+                                        message:
+                                          "Actual salary must be greater than or equal to Salary From",
+                                      });
+                                    } else {
+                                      clearErrors(`salary`);
+                                    }
+                                  } else if (
+                                    isNaN(salaryFrom) &&
+                                    !isNaN(salaryTo)
+                                  ) {
+                                    // Only Salary To is specified
+                                    if (actualSalary > salaryTo) {
+                                      setError(`salary`, {
+                                        type: "custom",
+                                        message:
+                                          "Actual salary must be smaller than or equal to Salary To",
+                                      });
+                                    } else {
+                                      clearErrors(`salary`);
+                                    }
+                                  } else {
+                                    // Both Salary From and Salary To are specified
+                                    if (
+                                      actualSalary < salaryFrom ||
+                                      actualSalary > salaryTo
+                                    ) {
+                                      setError(`salary`, {
+                                        type: "custom",
+                                        message:
+                                          "Actual Salary must be between Salary From and Salary To",
+                                      });
+                                    } else {
+                                      clearErrors(`salary`);
+                                    }
+                                  }
+                                },
+                              })}
+                            />
+                            {<Errors>{errors.salary?.message}</Errors>}
+                          </FlexColumnForm>
+                          <FlexColumnForm>
+                            <InputLabel>
+                              Salary rate per
+                              <InputSpan>*</InputSpan>
+                            </InputLabel>
+                            <Controller
+                              name={`ratePer`}
+                              control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option>Select</Option>
+                                  <Option value={1}>Hour</Option>
+                                  <Option value={2}>Day</Option>
+                                  <Option value={3}>Week</Option>
+                                  <Option value={4}>Biweekly</Option>
+                                  <Option value={5}>Annual</Option>
+                                </Select>
+                              )}
+                            />
+                          </FlexColumnForm>
+                          {<Errors>{errors.ratePer?.message}</Errors>}
+                        </FlexContaierForm>
+                        <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                          <FlexColumnForm style={{ width: "50%" }}>
+                            <InputLabel>
+                              Hours per week <InputSpan>*</InputSpan>
+                            </InputLabel>
+                            <Input
+                              type="text"
+                              {...register(`hoursPerWeek`, {
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                                validate: (fieldValue) => {
+                                  return (
+                                    (!isNaN(parseFloat(fieldValue)) &&
+                                      isFinite(fieldValue)) ||
+                                    "Must be a number "
+                                  );
+                                },
+                                pattern: {
+                                  value: /^[+]?\d+(\.\d+)?$/,
+                                  message: "Please enter valid hours",
+                                },
+                              })}
+                            />
+                            {<Errors>{errors.hoursPerWeek?.message}</Errors>}
+                          </FlexColumnForm>
+                        </FlexContaierForm>
+                        <FlexContaierForm
+                          style={{
+                            width: "50%",
+                            gap: "46px",
+                            marginTop: "16px",
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          <FlexColumnForm>
+                            <AlignFlex>
+                              <input
+                                type="checkbox"
+                                {...register(`isBebEligible`, {})}
+                                id={`isBebEligible`}
+                              />
+                              <InputLabel
+                                htmlFor={`isBebEligible`}
+                                style={{
+                                  marginBottom: "0px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Is BEB Eligible? <InputSpan>*</InputSpan>
+                              </InputLabel>
+                            </AlignFlex>
+                          </FlexColumnForm>
+                          <FlexColumnForm>
+                            <AlignFlex>
+                              <input
+                                type="checkbox"
+                                {...register(`isPrimary`, {})}
+                                id={`isPrimary`}
+                              />
+                              <InputLabel
+                                htmlFor={`isPrimary`}
+                                style={{
+                                  marginBottom: "0px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Is Primary <InputSpan>*</InputSpan>
+                              </InputLabel>
+                            </AlignFlex>
+                          </FlexColumnForm>
+                        </FlexContaierForm>
+                        <FlexContaierForm style={{marginTop:"25px"}}>
+                          <FlexColumnForm>
+                            <AlignFlex>
+                              <input
+                                type="checkbox"
+                                {...register("isActive", {})}
+                                id="isActive"
+                              />
+                              <InputLabel
+                                htmlFor="isActive"
+                                style={{ marginBottom: "0px" }}
+                              >
+                                Is Active <InputSpan>*</InputSpan>
+                              </InputLabel>
+                            </AlignFlex>
+                          </FlexColumnForm>
+                        </FlexContaierForm>
                         <ButtonBlue
                           type="submit"
                           style={{ marginTop: "25px" }}
@@ -526,64 +918,6 @@ const EmployeeJobDetails = () => {
                     </form>
                   </Box>
                 </Modal>
-
-                {/* dot and circle  */}
-                <VerticalTimeline
-                  layout={"1-column-left"}
-                  lineColor={"#EFF4FA"}
-                  style={{
-                    padding: "0px",
-                    margin: "0px",
-                    maxWidth: "100%",
-                  }}
-                >
-                  {result?.positions?.map((data) => (
-                    <VerticalTimelineElement
-                      className="vertical-timeline-element--work"
-                      contentStyle={{
-                        outine: "none",
-                        boxShadow: "none",
-                        border: "none",
-                      }}
-                      iconStyle={{
-                        width: "18px",
-                        height: "18px",
-                        background: "#fff",
-                        border: "1.5px solid #8F9BB3",
-                        borderRadius: "50%",
-                        boxShadow: "none",
-                        outine: "none",
-                        marginLeft: "10px",
-                      }}
-                      intersectionObserverProps={{
-                        margin: "0px 0px 0px 0px",
-                      }}
-                      style={{ margin: "0px" }}
-                    >
-                      <TimelineDiv>
-                        <FlexColumn style={{ gap: "4px" }}>
-                          <ViewPara> {data.title || " - "} </ViewPara>
-
-                          <TitlePara>
-                            {" "}
-                            {data.department?.name || " - "}
-                          </TitlePara>
-                        </FlexColumn>
-                        <TitlePara>
-                          From:{" "}
-                          {moment(data.startDate).format("DD/MM/YYYY") || " - "}
-                          <span style={{ marginLeft: "14px" }}>
-                            {" "}
-                            To:
-                            {data.endDate
-                              ? moment(data.endDate).format("DD/MM/YYYY")
-                              : " - "}
-                          </span>{" "}
-                        </TitlePara>
-                      </TimelineDiv>
-                    </VerticalTimelineElement>
-                  ))}
-                </VerticalTimeline>
               </BasicDetailsDiv>
             </BasicInfoDiv>
           </BasicInfoContainer>

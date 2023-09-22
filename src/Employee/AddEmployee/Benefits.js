@@ -277,7 +277,6 @@ const Benefits = () => {
                               const description = findBenefit.description;
                               setValue("description", description);
                             } else {
-                           
                               // setValue("description", "");
                             }
                           }}
@@ -346,22 +345,21 @@ const Benefits = () => {
                     <Input
                       type="date"
                       {...register("endDate", {
-                       
                         validate: (fieldValue) => {
-                          const startDate = new Date(getValues("startDate"));
-                          const endDate = fieldValue;
-                              if (startDate <= new Date(endDate) && endDate) {
-                                setError("endDate", {
-                                  type: "custom",
-                                  message:
-                                    "End date must not be earlier than start date   ",
-                                });
-                              } else {
-                                setError("endDate", {
-                                  type: "custom",
-                                  message: "",
-                                });
-                              }
+                            const startDate = new Date(getValues("startDate"));
+                            const endDate = fieldValue;
+                          if (startDate <= new Date(endDate) && endDate) {
+                            setError("endDate", {
+                              type: "custom",
+                              message:
+                                "End date must not be earlier than start date   ",
+                            });
+                          } else {
+                            setError("endDate", {
+                              type: "custom",
+                              message: "",
+                            });
+                          }
                         },
                       })}
                     />

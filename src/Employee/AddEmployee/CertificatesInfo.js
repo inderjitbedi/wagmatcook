@@ -411,21 +411,25 @@ const CertificatesInfo = () => {
                             return true;
                           },
                           onChange: (e) => {
-                            const endDate = getValues(
+                            const endDateValue = getValues(
                               `certificates.${index}.expiryDate`
                             );
-                            const startDate = new Date(e.target.value);
-                            if (startDate >= new Date(endDate) && endDate) {
-                              setError(`certificates.${index}.expiryDate`, {
-                                type: "custom",
-                                message:
-                                  " Must not be earlier than completion date",
-                              });
-                            } else {
-                              setError(`certificates.${index}.expiryDate`, {
-                                type: "custom",
-                                message: "",
-                              });
+                            const startDateValue = getValues(
+                              `certificates.${index}.completionDate`
+                            );
+                            if (endDateValue && startDateValue) {
+                              const endDate = new Date(endDateValue);
+                              const startDate = new Date(startDateValue);
+
+                              if (startDate > endDate) {
+                                setError(`certificates.${index}.expiryDate`, {
+                                  type: "custom",
+                                  message:
+                                    "End date must not be earlier than start date",
+                                });
+                              } else {
+                                clearErrors(`certificates.${index}.expiryDate`);
+                              }
                             }
                           },
                         })}

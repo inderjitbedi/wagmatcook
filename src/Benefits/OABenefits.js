@@ -103,7 +103,7 @@ const OABenefits = () => {
     mode: "all",
     defaultValues: {
       name: "",
-      description:"",
+      description: "",
     },
   });
 
@@ -210,7 +210,7 @@ const OABenefits = () => {
       });
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data)
+    console.log("update Data:", data);
     let dataCopy = data;
 
     let url = `/benefit/update/${Id}`;
@@ -284,7 +284,7 @@ const OABenefits = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset({name: data.name, description:data.description,});
+    reset({ name: data.name, description: data.description });
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {

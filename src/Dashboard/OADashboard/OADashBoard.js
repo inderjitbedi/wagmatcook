@@ -476,7 +476,8 @@ const OADashBoard = () => {
                 <MainCardTitleDiv>
                   <DashCardTitle>New Employee</DashCardTitle>
                   {employeeData.totalEmployees > 3 && (
-                    <MainCardView
+                      <MainCardView
+                        style={{cursor:"pointer"}}
                       onClick={() =>
                         navigate("/organization-admin/employee/list")
                       }

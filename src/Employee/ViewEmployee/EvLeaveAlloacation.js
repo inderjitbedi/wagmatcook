@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -80,7 +81,11 @@ const EvLeaveAlloacation = () => {
   const { employeeid } = useParams();
   const Navigate = useNavigate();
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    clearErrors();
+    reset({});
+  };
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [result, setResult] = useState([]);
@@ -102,7 +107,6 @@ const EvLeaveAlloacation = () => {
     setError,
   } = useForm({
     mode: "all",
-  
   });
 
   const onSubmit = (data) => {
@@ -114,10 +118,13 @@ const EvLeaveAlloacation = () => {
       }
       return true;
     }
-    if (isEmptyObject(errors)) {
-      //  AddNewCertificates(data);
+    if (isEmptyObject(errors) && !update) {
+      HandleSubmit(data);
+    } else if (update) {
+      console.log("form submmited :", data);
+      HandleUpdate(data);
     }
-    console.log("form submmited :", data);
+
   };
   const GetLeavesType = () => {
     setIsLoading(true);
@@ -142,20 +149,141 @@ const EvLeaveAlloacation = () => {
         setIsLoading(false);
       });
   };
+  const GetLeaveAlloaction = () => {
+    setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/leave-allocations/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleSubmit = (data) => {
+    // e.preventDefault();
+    setIsLoading(true);
+    let url = `/employee/leave-allocation/${employeeid}`;
+
+    let dataCopy = data;
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          handleClose();
+          reset();
+          toast.success(result.message); //Benefit created successfully.");
+          GetLeaveAlloaction();
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error feteching benefits. Please try again.");
+        handleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsLoading(true);
+    let url = `/employee/leave-allocation/${employeeid}/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetLeaveAlloaction();
+          toast.success(result.message); //Benefit deleted successfully.");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = `/employee/leave-allocation/${employeeid}/${Id}`;
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetLeaveAlloaction();
+          setUpdate(false);
+          handleClose();
+          reset();
+          toast.success(result.message); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   useEffect(() => {
-      GetLeavesType();
+    GetLeavesType();
+    GetLeaveAlloaction();
   }, []);
   const HandleUpdateAction = (data) => {
     setUpdate(true);
     setId(data._id);
-    // reset(data);
+    reset({
+      leaveType: data.leaveType,
+      totalAllocation: data.totalAllocation,
+    });
     handleOpen();
+
   };
   const HandleOpenAddNewAction = () => {
+    setUpdate(false);
     handleOpen();
     reset({});
     clearErrors();
   };
+  console.log("update bollean :", update)
   return (
     <>
       {isLoading ? (
@@ -210,6 +338,7 @@ const EvLeaveAlloacation = () => {
               New Alloaction
             </ButtonBlue>
           </LeaveDiv>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -240,7 +369,14 @@ const EvLeaveAlloacation = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((data, index) => (
+                {result?.allocations?.length === 0 && (
+                  <TableRow sx={{ height: "200px" }}>
+                    <TableCell align="center" colSpan={3}>
+                      No employee found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {result?.allocations?.map((data, index) => (
                   <TableRow
                     key={data.name}
                     sx={{
@@ -252,10 +388,13 @@ const EvLeaveAlloacation = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      Vacation
+                      {
+                        leaveType?.find((leave) => leave._id === data.leaveType)
+                          ?.name
+                      }
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      10
+                      {data.totalAllocation}
                     </TableCell>
 
                     <TableCell align="center" sx={Celllstyle2}>
@@ -281,6 +420,7 @@ const EvLeaveAlloacation = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
           {/* modal applying leaves  */}
           <Modal
             open={open}
@@ -316,9 +456,7 @@ const EvLeaveAlloacation = () => {
                         }}
                         render={({ field }) => (
                           <Select {...field}>
-                            <Option value="" disabled>
-                              Select
-                            </Option>
+                            <Option>Select</Option>
                             {leaveType?.map((data) => (
                               <Option value={data._id}>{data.name}</Option>
                             ))}
@@ -334,7 +472,7 @@ const EvLeaveAlloacation = () => {
                     </InputLabel>
                     <Input
                       type="text"
-                      {...register("totalAlloaction", {
+                      {...register("totalAllocation", {
                         required: {
                           value: true,
                           message: "Required",
@@ -352,7 +490,7 @@ const EvLeaveAlloacation = () => {
                         },
                       })}
                     />
-                    {<Errors>{errors.totalAlloaction?.message}</Errors>}
+                    {<Errors>{errors.totalAllocation?.message}</Errors>}
                   </FlexColumnForm>
                   <ButtonBlue type="submit">
                     {!update ? "Submit" : "Update"}
@@ -368,7 +506,7 @@ const EvLeaveAlloacation = () => {
         message="Are you sure you want to delete this Leave Alloaction"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isLoading}
-        // HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
       />
     </>
   );
