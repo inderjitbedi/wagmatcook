@@ -91,7 +91,7 @@ const leaveTypeController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization: req.organization?._id || null };
+            let filters = { isDeleted: false, isActive: true, organization: req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [
@@ -100,7 +100,7 @@ const leaveTypeController = {
                 ];
             }
 
-            const existingLeaveTypes = await EmployeeLeaveAllocation.find({ employee: req.params.employeeid }).distinct('leaveType');
+            const existingLeaveTypes = await EmployeeLeaveAllocation.find({ employee: req.params.employeeid, isDeleted: false }).distinct('leaveType');
             if (existingLeaveTypes && existingLeaveTypes.length) {
                 filters._id = { $nin: existingLeaveTypes }
             }
