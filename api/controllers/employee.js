@@ -439,7 +439,7 @@ const employeeController = {
     },
 
 
-    async getCompletedByListWithSearch() {
+    async getCompletedByListWithSearch(req, res) {
         try {
             if (req.organization._id) {
                 const pipeline = [
