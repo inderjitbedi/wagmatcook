@@ -340,7 +340,7 @@ const Benefits = () => {
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      End Date <InputSpan>*</InputSpan>
+                      End Date 
                     </InputLabel>
                     <Input
                       type="date"

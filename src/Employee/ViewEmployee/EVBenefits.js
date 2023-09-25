@@ -55,8 +55,29 @@ const EVBenefits = () => {
       });
   };
   useEffect(() => {
+          GetHeadersData();
+
     GetEmployeesBenefits();
   }, []);
+    const [headerData, setHeaderData] = useState([]);
+    const GetHeadersData = () => {
+      // setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = `/employee/header-info/${trimid}`;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setHeaderData(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error in fetching Personal info. Please try again.");
+        });
+    };
   return (
     <>
       {isLoading ? (
@@ -83,22 +104,23 @@ const EVBenefits = () => {
             <PersonalInfo>
               <PersonalImg
                 src={
-                  result.personalInfo?.photo
-                    ? API_URL +
-                      result.personalInfo.photo?.path
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
-              <FlexColumn style={{ gap: "5px" }}>
+              <FlexColumn>
                 <PersonalName>
                   {[
-                    result.personalInfo?.firstName,
-                    result.personalInfo?.lastName,
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
                   ].join(" ")}
                 </PersonalName>
-                <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
                 <PersonalDepartment>
-                  {result.jobDetails?.department?.name || "-"}
+                  {headerData.position?.department?.name || "-"}
                 </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
@@ -129,7 +151,9 @@ const EVBenefits = () => {
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Description </TitlePara>
-                    <ViewPara>{result.benefit?.benefit.description || "-"}</ViewPara>
+                    <ViewPara>
+                      {result.benefit?.benefit.description || "-"}
+                    </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
                 <FlexSpaceBetween>

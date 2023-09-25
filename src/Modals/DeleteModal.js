@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
+import { RotatingLines } from "react-loader-spinner";
 
 const style = {
   position: "absolute",
@@ -72,27 +73,49 @@ const DeleteModal = ({
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <ModalThanks>
-          <ModalIconDelete
-            onClick={HandleCloseDelete}
-            src="/images/icons/Alert-Circle.svg" 
-          />
-          <ModalThanksImg src="/images/Danger Circle.jpg" />
-          <ModalThanksHeading>
-               {message}
-          </ModalThanksHeading>
-          <DeleteButton
-            onClick={() => {
-              // HandleCloseDelete();
-              HandleDelete();
-            //   HandleReorder();
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "380px",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 999,
             }}
-            disabled={isLoading}
           >
-            {" "}
-            Delete{" "}
-          </DeleteButton>
-        </ModalThanks>
+            <RotatingLines
+              strokeColor="#279AF1"
+              strokeWidth="3"
+              animationDuration="0.75"
+              width="52"
+              visible={true}
+            />
+          </div>
+        ) : (
+          <ModalThanks>
+            <ModalIconDelete
+              onClick={HandleCloseDelete}
+              src="/images/icons/Alert-Circle.svg"
+            />
+            <ModalThanksImg src="/images/Danger Circle.jpg" />
+            <ModalThanksHeading>
+              {message}
+            </ModalThanksHeading>
+            <DeleteButton
+              onClick={() => {
+                // HandleCloseDelete();
+                HandleDelete();
+                //   HandleReorder();
+              }}
+              disabled={isLoading}
+            >
+              {" "}
+              Delete{" "}
+            </DeleteButton>
+          </ModalThanks>
+        )}
+
       </Box>
     </Modal>
   );

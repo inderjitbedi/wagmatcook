@@ -260,7 +260,7 @@ export const Errors = styled.p`
   color: red;
   font-size: 10px;
   font-weight: 300;
-  line-height: 14px;
+  line-height: 0px;
   margin-top: 2px;
 `;
 export const ButtonBlue = styled.button`
@@ -341,6 +341,7 @@ export const AlignFlex = styled.div`
 display: flex;
 align-items: center;
 gap:10px;
+margin-bottom: 10px;
 `;
 export const DeleteIcon = styled.img`
   display: inline-block;

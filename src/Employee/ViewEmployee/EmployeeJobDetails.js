@@ -188,7 +188,10 @@ const EmployeeJobDetails = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setReportsToList(result.users);
+          const filteredArray = result.users.filter(
+            (obj) => obj.id !== employeeid
+          );
+          setReportsToList(filteredArray);
         }
       })
       .catch((error) => {
@@ -225,11 +228,32 @@ const EmployeeJobDetails = () => {
       });
   };
   useEffect(() => {
+          GetHeadersData();
+
     GetEmployeesJobDetails();
     GetDepartments();
     GetReportsToList();
     GetEmployeeTypes();
   }, []);
+    const [headerData, setHeaderData] = useState([]);
+    const GetHeadersData = () => {
+      // setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = `/employee/header-info/${trimid}`;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setHeaderData(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error in fetching Personal info. Please try again.");
+        });
+    };
   return (
     <>
       {isLoading ? (
@@ -256,21 +280,23 @@ const EmployeeJobDetails = () => {
             <PersonalInfo>
               <PersonalImg
                 src={
-                  result.personalInfo?.photo
-                    ? API_URL + result.personalInfo.photo?.path
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
               <FlexColumn>
                 <PersonalName>
                   {[
-                    result.personalInfo?.firstName,
-                    result.personalInfo?.lastName,
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
                   ].join(" ")}
                 </PersonalName>
-                <PersonalTitle>{result.details?.title || "-"}</PersonalTitle>
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
                 <PersonalDepartment>
-                  {result.details?.department?.name || "-"}
+                  {headerData.position?.department?.name || "-"}
                 </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
@@ -370,14 +396,14 @@ const EmployeeJobDetails = () => {
                               {data?.ratePer === 1
                                 ? "Hour"
                                 : data?.ratePer === 2
-                                  ? "Day"
-                                  : data?.ratePer === 3
-                                    ? "Week"
-                                    : data?.ratePer === 4
-                                      ? "Biweekly "
-                                      : data?.ratePer === 5
-                                        ? "Annual "
-                                        : " - "}
+                                ? "Day"
+                                : data?.ratePer === 3
+                                ? "Week"
+                                : data?.ratePer === 4
+                                ? "Biweekly "
+                                : data?.ratePer === 5
+                                ? "Annual "
+                                : " - "}
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
@@ -449,450 +475,468 @@ const EmployeeJobDetails = () => {
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
-                  <Box sx={style}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                      <ModalContainer>
-                        <ModalHeading>Add Position</ModalHeading>
-                        <ModalIcon
-                          onClick={() => {
-                            handleClose();
-                            reset();
-                            clearErrors();
-                          }}
-                          src="/images/icons/Alert-Circle.svg"
-                        />
-                      </ModalContainer>
-                      <ModalFormContainer>
-                        <FlexContaierForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Employee Type <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Controller
-                              name={`employeeType`}
-                              control={control}
-                              rules={{
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              }}
-                              render={({ field }) => (
-                                <Select {...field}>
-                                  <Option value="" disabled>
-                                    Select
-                                  </Option>
-                                  {employeeTypes?.employeeTypes?.map((data) => (
-                                    <Option value={data._id}>
-                                      {data.name}
-                                    </Option>
-                                  ))}
-                                </Select>
-                              )}
-                            />
-                            {<Errors> {errors.employeeType?.message}</Errors>}
-                          </FlexColumnForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Role <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Controller
-                              name={`role`}
-                              control={control}
-                              rules={{
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              }}
-                              render={({ field }) => (
-                                <Select {...field}>
-                                  <Option>Select</Option>
-                                  <Option value="EMPLOYEE"> User </Option>
-                                  <Option value="HUMAN_RECOURSE"> HR </Option>
-                                  <Option value="MANAGER"> Manager </Option>
-                                </Select>
-                              )}
-                            />
-                            {<Errors> {errors.role?.message}</Errors>}
-                          </FlexColumnForm>
-                        </FlexContaierForm>
-                        <FlexContaierForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Department <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Controller
-                              name="department"
-                              control={control}
-                              rules={{
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              }}
-                              render={({ field }) => (
-                                <Select {...field}>
-                                  <Option>Select</Option>
-                                  {departmentData?.map((data) => (
-                                    <Option value={data._id}>
-                                      {data.name}
-                                    </Option>
-                                  ))}
-                                </Select>
-                              )}
-                            />
-                            {<Errors> {errors.department?.message}</Errors>}
-                          </FlexColumnForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Position Title <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Input
-                              type="text"
-                              {...register("title", {
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              })}
-                            />
-                            {<Errors> {errors.title?.message}</Errors>}
-                          </FlexColumnForm>
-                        </FlexContaierForm>
-
-                        <FlexContaierForm>
-                          <FlexColumnForm style={{ width: "50%" }}>
-                            <InputLabel>
-                              Reports to <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Controller
-                              name={`reportsTo`}
-                              control={control}
-                              rules={{
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              }}
-                              render={({ field }) => (
-                                <Select {...field}>
-                                  <Option value="">Select</Option>
-                                  {reportsToList?.map((user) => (
-                                    <Option value={user._id}>
-                                      {user.personalInfo?.length
-                                        ? user.personalInfo[0].firstName +
-                                        " " +
-                                        user.personalInfo[0].lastName
-                                        : user.userData.name}
-                                    </Option>
-                                  ))}
-                                </Select>
-                              )}
-                            />
-                            {<Errors>{errors.reportTo?.message}</Errors>}
-                          </FlexColumnForm>
-                          <FlexContaierForm>
-                            <FlexColumnForm>
-                              <InputLabel>
-                                Start Date <InputSpan>*</InputSpan>
-                              </InputLabel>
-                              <Input
-                                type="date"
-                                {...register("startDate", {
-                                  required: {
-                                    value: true,
-                                    message: "Required",
-                                  },
-                                  onChange: (e) => {
-                                    const endDate = getValues("endDate");
-                                    const startDate = new Date(e.target.value);
-                                    if (
-                                      startDate >= new Date(endDate) &&
-                                      endDate
-                                    ) {
-                                      setError("endDate", {
-                                        type: "custom",
-                                        message:
-                                          "End date must not be earlier than start date",
-                                      });
-                                    } else {
-                                      setError("endDate", {
-                                        type: "custom",
-                                        message: "",
-                                      });
-                                    }
-                                  },
-                                })}
-                              />
-                              {<Errors>{errors.startDate?.message}</Errors>}
-                            </FlexColumnForm>
-                            <FlexColumnForm>
-                              <InputLabel>End Date</InputLabel>
-                              <Input
-                                type="date"
-                                {...register("endDate", {
-                                  // required: {
-                                  //   value: true,
-                                  //   message: "Required",
-                                  // },
-                                  validate: (fieldValue) => {
-                                    const startDate = new Date(
-                                      getValues("startDate")
-                                    );
-                                    const endDate = fieldValue;
-                                    if (
-                                      startDate <= new Date(endDate) &&
-                                      endDate
-                                    ) {
-                                      setError("endDate", {
-                                        type: "custom",
-                                        message:
-                                          "End date must not be earlier than start date   ",
-                                      });
-                                    } else {
-                                      setError("endDate", {
-                                        type: "custom",
-                                        message: "",
-                                      });
-                                    }
-                                  },
-                                })}
-                              />
-                              {<Errors>{errors.endDate?.message}</Errors>}
-                            </FlexColumnForm>
-                          </FlexContaierForm>
-                        </FlexContaierForm>
-                        <FlexContaierForm>
-                          <FlexColumnForm>
-                            <InputLabel>Salary Scale From</InputLabel>
-                            <Input
-                              type="text"
-                              {...register(`salaryScaleFrom`, {
-                                pattern: {
-                                  value: /^[+]?\d+(\.\d+)?$/,
-                                  message: "Please enter valid salary",
-                                },
-                              })}
-                            />
-                            {<Errors>{errors.salaryScaleFrom?.message}</Errors>}
-                          </FlexColumnForm>
-                          <FlexColumnForm style={{ alignItems: "flex-start" }}>
-                            <InputLabel>Salary Scale To</InputLabel>
-                            <Input
-                              type="text"
-                              {...register(`salaryScaleTo`, {
-                                pattern: {
-                                  value: /^[+]?\d+(\.\d+)?$/,
-                                  message: "Please enter valid salary",
-                                },
-                                validate: (fieldValue) => {
-                                  const salaryFrom = parseFloat(
-                                    getValues(`salaryScaleFrom`)
-                                  );
-                                  const salaryTo = parseFloat(fieldValue);
-                                  if (salaryFrom && salaryTo) {
-                                    if (
-                                      !isNaN(salaryFrom) &&
-                                      !isNaN(salaryTo)
-                                    ) {
-                                      return (
-                                        salaryTo >= salaryFrom ||
-                                        "Salary to must be greater than or equal to Salary From"
-                                      );
-                                    }
-                                  }
-
-                                  return true;
-                                },
-                              })}
-                            />
-                            {<Errors>{errors.salaryScaleTo?.message}</Errors>}
-                          </FlexColumnForm>
-                        </FlexContaierForm>
-
-                        <FlexContaierForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Actual Salary amounts <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Input
-                              type="text"
-                              {...register(`salary`, {
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-
-                                pattern: {
-                                  value: /^[+]?\d+(\.\d+)?$/,
-                                  message: "Please enter valid salary",
-                                },
-
-                                onChange: () => {
-                                  const salaryFrom = parseFloat(
-                                    getValues(`salaryScaleFrom`)
-                                  );
-                                  const salaryTo = parseFloat(
-                                    getValues(`salaryScaleTo`)
-                                  );
-                                  const actualSalary = parseFloat(
-                                    getValues(`salary`)
-                                  );
-
-                                  if (isNaN(salaryFrom) && isNaN(salaryTo)) {
-                                    // No salary range specified, clear any errors
-                                    clearErrors(`salary`);
-                                  } else if (
-                                    !isNaN(salaryFrom) &&
-                                    isNaN(salaryTo)
-                                  ) {
-                                    // Only Salary From is specified
-                                    if (actualSalary < salaryFrom) {
-                                      setError(`salary`, {
-                                        type: "custom",
-                                        message:
-                                          "Actual salary must be greater than or equal to Salary From",
-                                      });
-                                    } else {
-                                      clearErrors(`salary`);
-                                    }
-                                  } else if (
-                                    isNaN(salaryFrom) &&
-                                    !isNaN(salaryTo)
-                                  ) {
-                                    // Only Salary To is specified
-                                    if (actualSalary > salaryTo) {
-                                      setError(`salary`, {
-                                        type: "custom",
-                                        message:
-                                          "Actual salary must be smaller than or equal to Salary To",
-                                      });
-                                    } else {
-                                      clearErrors(`salary`);
-                                    }
-                                  } else {
-                                    // Both Salary From and Salary To are specified
-                                    if (
-                                      actualSalary < salaryFrom ||
-                                      actualSalary > salaryTo
-                                    ) {
-                                      setError(`salary`, {
-                                        type: "custom",
-                                        message:
-                                          "Actual Salary must be between Salary From and Salary To",
-                                      });
-                                    } else {
-                                      clearErrors(`salary`);
-                                    }
-                                  }
-                                },
-                              })}
-                            />
-                            {<Errors>{errors.salary?.message}</Errors>}
-                          </FlexColumnForm>
-                          <FlexColumnForm>
-                            <InputLabel>
-                              Salary rate per
-                              <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Controller
-                              name={`ratePer`}
-                              control={control}
-                              rules={{
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                              }}
-                              render={({ field }) => (
-                                <Select {...field}>
-                                  <Option>Select</Option>
-                                  <Option value={1}>Hour</Option>
-                                  <Option value={2}>Day</Option>
-                                  <Option value={3}>Week</Option>
-                                  <Option value={4}>Biweekly</Option>
-                                  <Option value={5}>Annual</Option>
-                                </Select>
-                              )}
-                            />
-                          </FlexColumnForm>
-                          {<Errors>{errors.ratePer?.message}</Errors>}
-                        </FlexContaierForm>
-                        <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                          <FlexColumnForm style={{ width: "50%" }}>
-                            <InputLabel>
-                              Hours per week <InputSpan>*</InputSpan>
-                            </InputLabel>
-                            <Input
-                              type="text"
-                              {...register(`hoursPerWeek`, {
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                                validate: (fieldValue) => {
-                                  return (
-                                    (!isNaN(parseFloat(fieldValue)) &&
-                                      isFinite(fieldValue)) ||
-                                    "Must be a number "
-                                  );
-                                },
-                                pattern: {
-                                  value: /^[+]?\d+(\.\d+)?$/,
-                                  message: "Please enter valid hours",
-                                },
-                              })}
-                            />
-                            {<Errors>{errors.hoursPerWeek?.message}</Errors>}
-                          </FlexColumnForm>
-                        </FlexContaierForm>
-                        <FlexContaierForm
+                    <Box sx={style}>
+                      {isLoading ? (
+                        <div
                           style={{
-                            width: "50%",
-                            gap: "46px",
-                            marginTop: "16px",
-                            alignItems: "flex-start",
+                            display: "flex",
+                            width: "100%",
+                            height: "380px",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            zIndex: 999,
                           }}
                         >
-                          <FlexColumnForm>
-                            <AlignFlex>
-                              <input
-                                type="checkbox"
-                                {...register(`isBebEligible`, {})}
-                                id={`isBebEligible`}
-                              />
-                              <InputLabel
-                                htmlFor={`isBebEligible`}
-                                style={{
-                                  marginBottom: "0px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                Is BEB Eligible? <InputSpan>*</InputSpan>
-                              </InputLabel>
-                            </AlignFlex>
-                          </FlexColumnForm>
-                          <FlexColumnForm>
-                            <AlignFlex>
-                              <input
-                                type="checkbox"
-                                {...register(`isPrimary`, {})}
-                                id={`isPrimary`}
-                              />
-                              <InputLabel
-                                htmlFor={`isPrimary`}
-                                style={{
-                                  marginBottom: "0px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                Is Primary <InputSpan>*</InputSpan>
-                              </InputLabel>
-                            </AlignFlex>
-                          </FlexColumnForm>
-                        </FlexContaierForm>
-                        {/* <FlexContaierForm style={{ marginTop: "25px" }}>
+                          <RotatingLines
+                            strokeColor="#279AF1"
+                            strokeWidth="3"
+                            animationDuration="0.75"
+                            width="52"
+                            visible={true}
+                          />
+                        </div>
+                      ) : (
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                          <ModalContainer>
+                            <ModalHeading>Add Position</ModalHeading>
+                            <ModalIcon
+                              onClick={() => {
+                                handleClose();
+                                reset();
+                                clearErrors();
+                              }}
+                              src="/images/icons/Alert-Circle.svg"
+                            />
+                          </ModalContainer>
+                          <ModalFormContainer>
+                            <FlexContaierForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Employee Type <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Controller
+                                  name={`employeeType`}
+                                  control={control}
+                                  rules={{
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  }}
+                                  render={({ field }) => (
+                                    <Select {...field}>
+                                      <Option value="">Select</Option>
+                                      {employeeTypes?.employeeTypes?.map((data) => (
+                                        <Option value={data._id}>
+                                          {data.name}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                  )}
+                                />
+                                {<Errors> {errors.employeeType?.message}</Errors>}
+                              </FlexColumnForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Role <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Controller
+                                  name={`role`}
+                                  control={control}
+                                  rules={{
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  }}
+                                  render={({ field }) => (
+                                    <Select {...field}>
+                                      <Option>Select</Option>
+                                      <Option value="EMPLOYEE"> User </Option>
+                                      <Option value="HUMAN_RECOURSE"> HR </Option>
+                                      <Option value="MANAGER"> Manager </Option>
+                                    </Select>
+                                  )}
+                                />
+                                {<Errors> {errors.role?.message}</Errors>}
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+                            <FlexContaierForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Department <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Controller
+                                  name="department"
+                                  control={control}
+                                  rules={{
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  }}
+                                  render={({ field }) => (
+                                    <Select {...field}>
+                                      <Option>Select</Option>
+                                      {departmentData?.map((data) => (
+                                        <Option value={data._id}>
+                                          {data.name}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                  )}
+                                />
+                                {<Errors> {errors.department?.message}</Errors>}
+                              </FlexColumnForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Position Title <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Input
+                                  type="text"
+                                  {...register("title", {
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  })}
+                                />
+                                {<Errors> {errors.title?.message}</Errors>}
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+
+                            <FlexContaierForm>
+                              <FlexColumnForm style={{ width: "50%" }}>
+                                <InputLabel>
+                                  Reports to <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Controller
+                                  name={`reportsTo`}
+                                  control={control}
+                                  rules={{
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  }}
+                                  render={({ field }) => (
+                                    <Select {...field}>
+                                      <Option value="">Select</Option>
+                                      {reportsToList?.map((user) => (
+                                        <Option value={user._id}>
+                                          {user.personalInfo?.length
+                                            ? user.personalInfo[0].firstName +
+                                            " " +
+                                            user.personalInfo[0].lastName
+                                            : user.userData.name}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                  )}
+                                />
+                                {<Errors>{errors.reportTo?.message}</Errors>}
+                              </FlexColumnForm>
+                              <FlexContaierForm>
+                                <FlexColumnForm>
+                                  <InputLabel>
+                                    Start Date <InputSpan>*</InputSpan>
+                                  </InputLabel>
+                                  <Input
+                                    type="date"
+                                    {...register("startDate", {
+                                      required: {
+                                        value: true,
+                                        message: "Required",
+                                      },
+                                      onChange: (e) => {
+                                        const endDate = getValues("endDate");
+                                        const startDate = new Date(e.target.value);
+                                        if (
+                                          startDate >= new Date(endDate) &&
+                                          endDate
+                                        ) {
+                                          setError("endDate", {
+                                            type: "custom",
+                                            message:
+                                              "End date must not be earlier than start date",
+                                          });
+                                        } else {
+                                          setError("endDate", {
+                                            type: "custom",
+                                            message: "",
+                                          });
+                                        }
+                                      },
+                                    })}
+                                  />
+                                  {<Errors>{errors.startDate?.message}</Errors>}
+                                </FlexColumnForm>
+                                <FlexColumnForm>
+                                  <InputLabel>End Date</InputLabel>
+                                  <Input
+                                    type="date"
+                                    {...register("endDate", {
+                                      // required: {
+                                      //   value: true,
+                                      //   message: "Required",
+                                      // },
+                                      validate: (fieldValue) => {
+                                        const startDate = new Date(
+                                          getValues("startDate")
+                                        );
+                                        const endDate = fieldValue;
+                                        if (
+                                          startDate <= new Date(endDate) &&
+                                          endDate
+                                        ) {
+                                          setError("endDate", {
+                                            type: "custom",
+                                            message:
+                                              "End date must not be earlier than start date",
+                                          });
+                                        } else {
+                                          setError("endDate", {
+                                            type: "custom",
+                                            message: "",
+                                          });
+                                        }
+                                      },
+                                    })}
+                                  />
+                                  {<Errors>{errors.endDate?.message}</Errors>}
+                                </FlexColumnForm>
+                              </FlexContaierForm>
+                            </FlexContaierForm>
+                            <FlexContaierForm>
+                              <FlexColumnForm>
+                                <InputLabel>Salary Scale From</InputLabel>
+                                <Input
+                                  type="text"
+                                  {...register(`salaryScaleFrom`, {
+                                    pattern: {
+                                      value: /^[+]?\d+(\.\d+)?$/,
+                                      message: "Please enter valid salary",
+                                    },
+                                  })}
+                                />
+                                {<Errors>{errors.salaryScaleFrom?.message}</Errors>}
+                              </FlexColumnForm>
+                              <FlexColumnForm style={{ alignItems: "flex-start" }}>
+                                <InputLabel>Salary Scale To</InputLabel>
+                                <Input
+                                  type="text"
+                                  {...register(`salaryScaleTo`, {
+                                    pattern: {
+                                      value: /^[+]?\d+(\.\d+)?$/,
+                                      message: "Please enter valid salary",
+                                    },
+                                    validate: (fieldValue) => {
+                                      const salaryFrom = parseFloat(
+                                        getValues(`salaryScaleFrom`)
+                                      );
+                                      const salaryTo = parseFloat(fieldValue);
+                                      if (salaryFrom && salaryTo) {
+                                        if (
+                                          !isNaN(salaryFrom) &&
+                                          !isNaN(salaryTo)
+                                        ) {
+                                          return (
+                                            salaryTo >= salaryFrom ||
+                                            "Salary to must be greater than or equal to Salary From"
+                                          );
+                                        }
+                                      }
+
+                                      return true;
+                                    },
+                                  })}
+                                />
+                                {<Errors>{errors.salaryScaleTo?.message}</Errors>}
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+
+                            <FlexContaierForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Actual Salary amounts <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Input
+                                  type="text"
+                                  {...register(`salary`, {
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+
+                                    pattern: {
+                                      value: /^[+]?\d+(\.\d+)?$/,
+                                      message: "Please enter valid salary",
+                                    },
+
+                                    onChange: () => {
+                                      const salaryFrom = parseFloat(
+                                        getValues(`salaryScaleFrom`)
+                                      );
+                                      const salaryTo = parseFloat(
+                                        getValues(`salaryScaleTo`)
+                                      );
+                                      const actualSalary = parseFloat(
+                                        getValues(`salary`)
+                                      );
+
+                                      if (isNaN(salaryFrom) && isNaN(salaryTo)) {
+                                        // No salary range specified, clear any errors
+                                        clearErrors(`salary`);
+                                      } else if (
+                                        !isNaN(salaryFrom) &&
+                                        isNaN(salaryTo)
+                                      ) {
+                                        // Only Salary From is specified
+                                        if (actualSalary < salaryFrom) {
+                                          setError(`salary`, {
+                                            type: "custom",
+                                            message:
+                                              "Actual salary must be greater than or equal to Salary From",
+                                          });
+                                        } else {
+                                          clearErrors(`salary`);
+                                        }
+                                      } else if (
+                                        isNaN(salaryFrom) &&
+                                        !isNaN(salaryTo)
+                                      ) {
+                                        // Only Salary To is specified
+                                        if (actualSalary > salaryTo) {
+                                          setError(`salary`, {
+                                            type: "custom",
+                                            message:
+                                              "Actual salary must be smaller than or equal to Salary To",
+                                          });
+                                        } else {
+                                          clearErrors(`salary`);
+                                        }
+                                      } else {
+                                        // Both Salary From and Salary To are specified
+                                        if (
+                                          actualSalary < salaryFrom ||
+                                          actualSalary > salaryTo
+                                        ) {
+                                          setError(`salary`, {
+                                            type: "custom",
+                                            message:
+                                              "Actual Salary must be between Salary From and Salary To",
+                                          });
+                                        } else {
+                                          clearErrors(`salary`);
+                                        }
+                                      }
+                                    },
+                                  })}
+                                />
+                                {<Errors>{errors.salary?.message}</Errors>}
+                              </FlexColumnForm>
+                              <FlexColumnForm>
+                                <InputLabel>
+                                  Salary rate per
+                                  <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Controller
+                                  name={`ratePer`}
+                                  control={control}
+                                  rules={{
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                  }}
+                                  render={({ field }) => (
+                                    <Select {...field}>
+                                      <Option>Select</Option>
+                                      <Option value={1}>Hour</Option>
+                                      <Option value={2}>Day</Option>
+                                      <Option value={3}>Week</Option>
+                                      <Option value={4}>Biweekly</Option>
+                                      <Option value={5}>Annual</Option>
+                                    </Select>
+                                  )}
+                                />
+                                {<Errors>{errors.ratePer?.message}</Errors>}
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+                            <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                              <FlexColumnForm style={{ width: "50%" }}>
+                                <InputLabel>
+                                  Hours per week <InputSpan>*</InputSpan>
+                                </InputLabel>
+                                <Input
+                                  type="text"
+                                  {...register(`hoursPerWeek`, {
+                                    required: {
+                                      value: true,
+                                      message: "Required",
+                                    },
+                                    validate: (fieldValue) => {
+                                      return (
+                                        (!isNaN(parseFloat(fieldValue)) &&
+                                          isFinite(fieldValue)) ||
+                                        "Must be a number "
+                                      );
+                                    },
+                                    pattern: {
+                                      value: /^[+]?\d+(\.\d+)?$/,
+                                      message: "Please enter valid hours",
+                                    },
+                                  })}
+                                />
+                                {<Errors>{errors.hoursPerWeek?.message}</Errors>}
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+                            <FlexContaierForm
+                              style={{
+                                width: "50%",
+                                gap: "46px",
+                                marginTop: "16px",
+                                alignItems: "flex-start",
+                              }}
+                            >
+                              <FlexColumnForm>
+                                <AlignFlex>
+                                  <input
+                                    type="checkbox"
+                                    {...register(`isBebEligible`, {})}
+                                    id={`isBebEligible`}
+                                  />
+                                  <InputLabel
+                                    htmlFor={`isBebEligible`}
+                                    style={{
+                                      marginBottom: "0px",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    Is BEB Eligible? <InputSpan>*</InputSpan>
+                                  </InputLabel>
+                                </AlignFlex>
+                              </FlexColumnForm>
+                              <FlexColumnForm>
+                                <AlignFlex>
+                                  <input
+                                    type="checkbox"
+                                    {...register(`isPrimary`, {})}
+                                    id={`isPrimary`}
+                                  />
+                                  <InputLabel
+                                    htmlFor={`isPrimary`}
+                                    style={{
+                                      marginBottom: "0px",
+                                      cursor: "pointer",
+                                    }}
+                                  >
+                                    Is Primary <InputSpan>*</InputSpan>
+                                  </InputLabel>
+                                </AlignFlex>
+                              </FlexColumnForm>
+                            </FlexContaierForm>
+                            {/* <FlexContaierForm style={{ marginTop: "25px" }}>
                           <FlexColumnForm>
                             <AlignFlex>
                               <input
@@ -909,18 +953,19 @@ const EmployeeJobDetails = () => {
                             </AlignFlex>
                           </FlexColumnForm>
                         </FlexContaierForm> */}
-                        <ButtonBlue
-                          type="submit"
-                          style={{ marginTop: "25px" }}
-                        // disabled={!isDirty}
-                        // onClick={() => {
-                        //   handleSubmit(onSubmit);
-                        // }}
-                        >
-                          Submit
-                        </ButtonBlue>
-                      </ModalFormContainer>
-                    </form>
+                            <ButtonBlue
+                              type="submit"
+                              style={{ marginTop: "25px" }}
+                            // disabled={!isDirty}
+                            // onClick={() => {
+                            //   handleSubmit(onSubmit);
+                            // }}
+                            >
+                              Submit
+                            </ButtonBlue>
+                          </ModalFormContainer>
+                        </form>
+                      )}
                   </Box>
                 </Modal>
               </BasicDetailsDiv>

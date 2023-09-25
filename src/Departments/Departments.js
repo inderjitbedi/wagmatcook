@@ -686,54 +686,77 @@ const Departments = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ModalUpperDiv>
-            <ModalHeading>Edit Department</ModalHeading>
-            <ModalIcon
-              onClick={() => {
-                HandleCloseEdit();
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "380px",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999,
               }}
-              src="/images/icons/alert-circle.svg"
-            />
-          </ModalUpperDiv>
-          <ModalUpperMid>
-            <InputLabel>
-              Department Name <InputSpan>*</InputSpan>
-            </InputLabel>
-            <Input
-              onChange={HandleChangeEdit}
-              value={upDateData.name}
-              name="name"
-              type="text"
-            />
-            <Errors>{errors.nameError}</Errors>
-            <InputLabel>
-              Description <InputSpan>*</InputSpan>
-            </InputLabel>
-            <TextArea
-              // placeholder={descriptionEdit}
-              onChange={HandleChangeEdit}
-              value={upDateData.description}
-              type="text"
-              name="description"
-            />
-            <InputPara>
-              {" "}
-              <Errors>{errors.descriptionError}</Errors>{" "}
-              {descriptionLength > -1 ? 500 - descriptionLength : 0} Characters
-              left
-            </InputPara>
-          </ModalUpperMid>
-          <ModalBottom>
-            <AddNewButton
-              onClick={(e) => {
-                HandleUpdate();
-              }}
-              disabled={isLoading}
             >
-              Update
-            </AddNewButton>
-            <CancelButton onClick={HandleCloseEdit}>Cancel</CancelButton>
-          </ModalBottom>
+              <RotatingLines
+                strokeColor="#279AF1"
+                strokeWidth="3"
+                animationDuration="0.75"
+                width="52"
+                visible={true}
+              />
+            </div>
+          ) : (
+            <>
+              <ModalUpperDiv>
+                <ModalHeading>Edit Department</ModalHeading>
+                <ModalIcon
+                  onClick={() => {
+                    HandleCloseEdit();
+                  }}
+                  src="/images/icons/alert-circle.svg"
+                />
+              </ModalUpperDiv>
+              <ModalUpperMid>
+                <InputLabel>
+                  Department Name <InputSpan>*</InputSpan>
+                </InputLabel>
+                <Input
+                  onChange={HandleChangeEdit}
+                  value={upDateData.name}
+                  name="name"
+                  type="text"
+                />
+                <Errors>{errors.nameError}</Errors>
+                <InputLabel>
+                  Description <InputSpan>*</InputSpan>
+                </InputLabel>
+                <TextArea
+                  // placeholder={descriptionEdit}
+                  onChange={HandleChangeEdit}
+                  value={upDateData.description}
+                  type="text"
+                  name="description"
+                />
+                <InputPara>
+                  {" "}
+                  <Errors>{errors.descriptionError}</Errors>{" "}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
+                  Characters left
+                </InputPara>
+              </ModalUpperMid>
+              <ModalBottom>
+                <AddNewButton
+                  onClick={(e) => {
+                    HandleUpdate();
+                  }}
+                  disabled={isLoading}
+                >
+                  Update
+                </AddNewButton>
+                <CancelButton onClick={HandleCloseEdit}>Cancel</CancelButton>
+              </ModalBottom>
+            </>
+          )}
         </Box>
       </Modal>
       {/* Delete Modal  */}

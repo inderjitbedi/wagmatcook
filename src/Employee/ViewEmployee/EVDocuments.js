@@ -46,6 +46,8 @@ import {
 } from "./ViewEmployeeStyle";
 
 const EVDocuments = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -98,13 +100,14 @@ const EVDocuments = () => {
   };
   const HandleSubmit = (e, data) => {
     e.preventDefault();
-    setIsLoading(true);
 
     let url = `/employee/documents/${employeeid}`;
     if (!data) {
       setErrors({ fileError: "Required" });
       return;
     } else {
+      setIsLoading(true);
+
       let dataCopy = { file: data._id };
       httpClient({
         method: "post",
@@ -173,7 +176,10 @@ const EVDocuments = () => {
   };
 
   useEffect(() => {
+    GetHeadersData();
+
     GetDocuments();
+
     const el = document.getElementById("filedrop");
     if (el) {
       drop.current.addEventListener("dragover", handleDragOver);
@@ -267,6 +273,25 @@ const EVDocuments = () => {
       toast.error("Unsuported file type.");
     }
   };
+  const [headerData, setHeaderData] = useState([]);
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -291,11 +316,26 @@ const EVDocuments = () => {
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <PersonalInfo>
-              <PersonalImg src="/images/User.jpg" />
-              <FlexColumn style={{ gap: "5px" }}>
-                <PersonalName>Hattie Watkins</PersonalName>
-                <PersonalTitle>Team Manager</PersonalTitle>
-                <PersonalDepartment>Design Department</PersonalDepartment>
+              <PersonalImg
+                src={
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
+                    : "/images/User.jpg"
+                }
+              />
+              <FlexColumn>
+                <PersonalName>
+                  {[
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
+                  ].join(" ")}
+                </PersonalName>
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
+                <PersonalDepartment>
+                  {headerData.position?.department?.name || "-"}
+                </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
 
@@ -315,7 +355,7 @@ const EVDocuments = () => {
                   New Document
                 </ButtonBlue>
               </FlexSpaceBetween>
-              {!result?.reviews?.length ? (
+              {result?.documents?.length === 0 ? (
                 <NoDocumentfound message="No documents to show" />
               ) : (
                 <>
@@ -330,11 +370,27 @@ const EVDocuments = () => {
                       }}
                     >
                       <FlexContaier>
-                        <IconsEmployee src="/images/icons/File3.svg" />
-                        <ViewPara>Welcome_to_team_offer_letter.doc</ViewPara>
+                        <IconsEmployee
+                          src={
+                            getFileType(data?.file) === "pdf"
+                              ? "/images/icons/FilePdf.svg"
+                              : getFileType(data?.file) === "doc"
+                              ? "/images/icons/FileText.svg"
+                              : "/images/icons/File3.svg"
+                          }
+                        />
+                        <ViewPara>{data.file?.originalName}</ViewPara>
                       </FlexContaier>
                       <IconContainer>
-                        <IconsEmployee src="/images/icons/Download.svg" />
+                        <Link
+                          to={API_URL + data.file?.path}
+                          target="_blank"
+                          download
+                          style={{ textDecoration: "none" }}
+                        >
+                          <IconsEmployee src="/images/icons/Download.svg" />
+                        </Link>
+
                         <IconsEmployee
                           onClick={() => {
                             setId(data._id);
@@ -389,76 +445,60 @@ const EVDocuments = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ModalContainer>
-            <ModalHeading>Upload a file</ModalHeading>
-            <ModalIcon
-              onClick={handleClose}
-              src="/images/icons/Alert-Circle.svg"
-            />
-          </ModalContainer>
-          <form
-          // onSubmit={handleSubmit()}
-          >
-            <ModalFormContainer>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel
-                    style={{
-                      color: "#8F9BB3",
-                    }}
-                  >
-                    File upload description
-                  </InputLabel>
-                  <input
-                    style={{ width: "50%" }}
-                    type="file"
-                    onChange={handleFileChange}
-                    id="upload"
-                    className="custom"
-                  />
-
-                  <UploadImageContainer
-                    id="filedrop"
-                    htmlFor="upload"
-                    ref={drop}
-                  >
-                    {isUploading ? (
-                      <ThreeDots
-                        height="8"
-                        width="80"
-                        radius="9"
-                        color="#279AF1"
-                        ariaLabel="three-dots-loading"
-                        visible={true}
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "380px",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999,
+              }}
+            >
+              <RotatingLines
+                strokeColor="#279AF1"
+                strokeWidth="3"
+                animationDuration="0.75"
+                width="52"
+                visible={true}
+              />
+            </div>
+          ) : (
+            <>
+              <ModalContainer>
+                <ModalHeading>Upload a file</ModalHeading>
+                <ModalIcon
+                  onClick={handleClose}
+                  src="/images/icons/Alert-Circle.svg"
+                />
+              </ModalContainer>
+              <form
+              // onSubmit={handleSubmit()}
+              >
+                <ModalFormContainer>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel
+                        style={{
+                          color: "#8F9BB3",
+                        }}
+                      >
+                        File upload description
+                      </InputLabel>
+                      <input
+                        style={{ width: "50%" }}
+                        type="file"
+                        onChange={handleFileChange}
+                        id="upload"
+                        className="custom"
                       />
-                    ) : (
-                      <>
-                        {file ? (
-                          <UploadImagePara>
-                            File uploaded successfully
-                          </UploadImagePara>
-                        ) : (
-                          <>
-                            <img src="/svg/plus-circle.svg" />
-                            <UploadImagePara>
-                              Drop your files here
-                            </UploadImagePara>
-                            <UploadImageLight>
-                              <span style={{ color: "#279AF1" }}>
-                                Browse file
-                              </span>
-                              from your computer
-                            </UploadImageLight>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </UploadImageContainer>
-                  {file && (
-                    <UploadImageName>
-                      <FlexContaier>
-                        <img src="/svg/file.svg" />
 
+                      <UploadImageContainer
+                        id="filedrop"
+                        htmlFor="upload"
+                        ref={drop}
+                      >
                         {isUploading ? (
                           <ThreeDots
                             height="8"
@@ -469,27 +509,66 @@ const EVDocuments = () => {
                             visible={true}
                           />
                         ) : (
-                          file?.originalName
+                          <>
+                            {file ? (
+                              <UploadImagePara>
+                                File uploaded successfully
+                              </UploadImagePara>
+                            ) : (
+                              <>
+                                <img src="/svg/plus-circle.svg" />
+                                <UploadImagePara>
+                                  Drop your files here
+                                </UploadImagePara>
+                                <UploadImageLight>
+                                  <span style={{ color: "#279AF1" }}>
+                                    Browse file
+                                  </span>
+                                  from your computer
+                                </UploadImageLight>
+                              </>
+                            )}
+                          </>
                         )}
-                      </FlexContaier>
-                      <Icons
-                        onClick={removeFile}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                    </UploadImageName>
-                  )}
-                  <Errors>{errors?.fileError}</Errors>
-                </FlexColumnForm>
-              </FlexContaierForm>
+                      </UploadImageContainer>
+                      {file && (
+                        <UploadImageName>
+                          <FlexContaier>
+                            <img src="/svg/file.svg" />
 
-              <ButtonBlue
-                style={{ marginTop: "25px" }}
-                onClick={(e) => HandleSubmit(e, file)}
-              >
-                Submit
-              </ButtonBlue>
-            </ModalFormContainer>
-          </form>
+                            {isUploading ? (
+                              <ThreeDots
+                                height="8"
+                                width="80"
+                                radius="9"
+                                color="#279AF1"
+                                ariaLabel="three-dots-loading"
+                                visible={true}
+                              />
+                            ) : (
+                              file?.originalName
+                            )}
+                          </FlexContaier>
+                          <Icons
+                            onClick={removeFile}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        </UploadImageName>
+                      )}
+                      <Errors>{errors?.fileError}</Errors>
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+
+                  <ButtonBlue
+                    style={{ marginTop: "25px" }}
+                    onClick={(e) => HandleSubmit(e, file)}
+                  >
+                    Submit
+                  </ButtonBlue>
+                </ModalFormContainer>
+              </form>
+            </>
+          )}
         </Box>
       </Modal>
       <DeleteModal

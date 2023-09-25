@@ -41,6 +41,10 @@ import ManagerLeaves from "../Leaves/ManagerLeaves/ManagerLeaves";
 import ManagerSideBar from "../Dashboard/ManagerDashboard/ManagerSideBar";
 import ManagerLayout from "../Dashboard/ManagerDashboard/ManagerLayout";
 import EvLeaveAlloacation from "../Employee/ViewEmployee/EvLeaveAlloacation";
+import Welcome from "../EmailTemplates/Welcome"; 
+import ResetPasswords from "../EmailTemplates/ResetPassword";
+import Invitation from "../EmailTemplates/Invitation";
+
 const Routes: any = [
   {
     component: signup,
@@ -59,6 +63,31 @@ const Routes: any = [
     type: "public",
     children: [],
   },
+   {
+    component: Welcome,
+    path: "/welcome",
+    title: "welcome-template",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: ResetPasswords,
+    path: "/passwords-template",
+    title: "welcome-template",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+  {
+    component: Invitation,
+    path: "/invitation",
+    title: "welcome-template",
+    to: "/",
+    type: "public",
+    children: [],
+  },
+
   {
     component: ResetPassword,
     path: "/reset-password/:token",

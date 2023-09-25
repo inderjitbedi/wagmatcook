@@ -90,7 +90,10 @@ const JobDetails = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setReportsToList(result.users);
+          const filteredArray = result.users.filter(
+            (obj) => obj.id !== employeeid
+          );
+          setReportsToList(filteredArray);
         }
       })
       .catch((error) => {
@@ -118,9 +121,6 @@ const JobDetails = () => {
                 data.startDate = new Date(data.startDate)
                   .toISOString()
                   .split("T")[0];
-                data.endDate = new Date(data.endDate)
-                  .toISOString()
-                  .split("T")[0];
               }
               if (data.endDate) {
                 data.endDate = new Date(data.endDate)
@@ -128,6 +128,7 @@ const JobDetails = () => {
                   .split("T")[0];
               }
               data.department = data.department._id;
+              data.employeeType = data.employeeType._id;
             });
           }
 
@@ -259,12 +260,16 @@ const JobDetails = () => {
     );
     console.log("is primary value:", atLeastOnePrimary);
     if (!atLeastOnePrimary) {
-      setError("positions.0.isPrimary", {
-        type: "custom",
-        message: "At least one position must be marked as primary",
+      data.positions.forEach((position, index) => {
+        setError(`positions.${index}.isPrimary`, {
+          type: "custom",
+            message: "At least one Primary Required",
+        });
       });
     } else {
-      clearErrors("positions.0.isPrimary"); // Clear any previous error
+      data.positions.forEach((position, index) => {
+        clearErrors(`positions.${index}.isPrimary`);
+      }); // Clear any previous error
     }
     if (isEmptyObject(errors)) {
       HandleSubmitJobDetails(data);
@@ -463,8 +468,8 @@ const JobDetails = () => {
                               <Option value={user._id}>
                                 {user.personalInfo?.length
                                   ? user.personalInfo[0].firstName +
-                                  " " +
-                                  user.personalInfo[0].lastName
+                                    " " +
+                                    user.personalInfo[0].lastName
                                   : user.userData.name}
                               </Option>
                             ))}

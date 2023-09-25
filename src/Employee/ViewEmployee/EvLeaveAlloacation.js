@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -124,7 +123,6 @@ const EvLeaveAlloacation = () => {
       console.log("form submmited :", data);
       HandleUpdate(data);
     }
-
   };
   const GetLeavesType = () => {
     setIsLoading(true);
@@ -264,6 +262,8 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
+          GetHeadersData();
+
     GetLeavesType();
     GetLeaveAlloaction();
   }, []);
@@ -275,7 +275,6 @@ const EvLeaveAlloacation = () => {
       totalAllocation: data.totalAllocation,
     });
     handleOpen();
-
   };
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
@@ -283,7 +282,26 @@ const EvLeaveAlloacation = () => {
     reset({});
     clearErrors();
   };
-  console.log("update bollean :", update)
+  console.log("update bollean :", update);
+  const [headerData, setHeaderData] = useState([]);
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -310,24 +328,23 @@ const EvLeaveAlloacation = () => {
             <PersonalInfo>
               <PersonalImg
                 src={
-                  result.personalInfo?.photo
-                    ? API_URL + result.personalInfo.photo?.path
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
-              <FlexColumn style={{ gap: "5px" }}>
+              <FlexColumn>
                 <PersonalName>
-                  {" "}
                   {[
-                    result.personalInfo?.firstName,
-                    result.personalInfo?.lastName,
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
                   ].join(" ")}
                 </PersonalName>
-                <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
-
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
                 <PersonalDepartment>
-                  {" "}
-                  {result.jobDetails?.department?.name || "-"}
+                  {headerData.position?.department?.name || "-"}
                 </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
@@ -429,74 +446,99 @@ const EvLeaveAlloacation = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <ModalContainer>
-                <ModalHeading>
-                  {!update ? "Leave Alloaction" : "Update Leaves Alloaction"}
-                </ModalHeading>
-                <ModalIcon
-                  onClick={handleClose}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalContainer>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalFormContainer>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Leave Type <InputSpan>*</InputSpan>{" "}
-                      </InputLabel>
-                      <Controller
-                        name="leaveType"
-                        control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                        }}
-                        render={({ field }) => (
-                          <Select {...field}>
-                            <Option>Select</Option>
-                            {leaveType?.map((data) => (
-                              <Option value={data._id}>{data.name}</Option>
-                            ))}
-                          </Select>
-                        )}
-                      />
-                      {<Errors>{errors.leaveType?.message}</Errors>}
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Total Alloaction <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("totalAllocation", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        pattern: {
-                          value: /^[+]?\d+(\.\d+)?$/,
-                          message: "Please enter valid alloaction",
-                        },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            " Must be a number "
-                          );
-                        },
-                      })}
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    height: "380px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 999,
+                  }}
+                >
+                  <RotatingLines
+                    strokeColor="#279AF1"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="52"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <>
+                  <ModalContainer>
+                    <ModalHeading>
+                      {!update
+                        ? "Leave Alloaction"
+                        : "Update Leaves Alloaction"}
+                    </ModalHeading>
+                    <ModalIcon
+                      onClick={handleClose}
+                      src="/images/icons/Alert-Circle.svg"
                     />
-                    {<Errors>{errors.totalAllocation?.message}</Errors>}
-                  </FlexColumnForm>
-                  <ButtonBlue type="submit">
-                    {!update ? "Submit" : "Update"}
-                  </ButtonBlue>
-                </ModalFormContainer>
-              </form>
+                  </ModalContainer>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <ModalFormContainer>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Leave Type <InputSpan>*</InputSpan>{" "}
+                          </InputLabel>
+                          <Controller
+                            name="leaveType"
+                            control={control}
+                            rules={{
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field}>
+                                <Option>Select</Option>
+                                {leaveType?.map((data) => (
+                                  <Option value={data._id}>{data.name}</Option>
+                                ))}
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.leaveType?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Total Alloaction <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="text"
+                          {...register("totalAllocation", {
+                            required: {
+                              value: true,
+                              message: "Required",
+                            },
+                            pattern: {
+                              value: /^[+]?\d+(\.\d+)?$/,
+                              message: "Please enter valid alloaction",
+                            },
+                            validate: (fieldValue) => {
+                              return (
+                                (!isNaN(parseFloat(fieldValue)) &&
+                                  isFinite(fieldValue)) ||
+                                " Must be a number "
+                              );
+                            },
+                          })}
+                        />
+                        {<Errors>{errors.totalAllocation?.message}</Errors>}
+                      </FlexColumnForm>
+                      <ButtonBlue type="submit">
+                        {!update ? "Submit" : "Update"}
+                      </ButtonBlue>
+                    </ModalFormContainer>
+                  </form>
+                </>
+              )}
             </Box>
           </Modal>
         </MainBodyContainer>
