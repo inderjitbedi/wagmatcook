@@ -744,13 +744,63 @@ const employeeController = {
             if (!user) {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
-            const reviews = await EmployeeReviews.find({ employee: req.params.id, isDeleted: false }).populate('file employee completedBy')
-
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
+            console.log('first', req.params.id)
+            const reviews = await EmployeeReviews.aggregate([
+                {
+                    $match: {
+                        employee: user._id,
+                        isDeleted: false,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'completedBy',
+                        foreignField: '_id',
+                        as: 'completedByUser',
+                    },
+                },
+                {
+                    $unwind: '$completedByUser',
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos',
+                        localField: 'completedByUser._id',
+                        foreignField: 'employee',
+                        as: 'completedByUserPersonalInfo',
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$completedByUserPersonalInfo',
+                        preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
+                    },
+                },
+                // {
+                //     $project: {
+                //         file: 1,
+                //         employee: 1,
+                //         completedBy: {
+                //             _id: '$completedByUser._id',
+                //             name: '$completedByUser.firstName',
+                //             personalInfo: {
+                //                 $cond: {
+                //                     if: { $gt: [{ $size: '$completedByUserPersonalInfo' }, 0] }, // Check if the array is not empty
+                //                     then: '$completedByUserPersonalInfo', // Include personalInfo if it's not empty
+                //                     else: null, // Otherwise, set it to null or omit it
+                //                 },
+                //             },
+                //         },
+                //     },
+                // },
+            ]);
+            console.log('Reviews:', reviews);
+            // const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
+            // const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
-                reviews, personalInfo, jobDetails,
+                reviews, //personalInfo, jobDetails,
                 message: 'Employee reviews fetched successfully'
             });
 

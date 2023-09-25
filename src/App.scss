@@ -414,18 +414,23 @@ input[type="file"].custom {
 .mw-100p {
   max-width: 100%;
 }
+
 .mw-600 {
   max-width: 600px;
 }
+
 .mw-385 {
   max-width: 385px;
 }
+
 .mb-50 {
   margin-bottom: 50px;
 }
+
 .mb-250 {
   margin-bottom: 250px;
 }
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -440,6 +445,7 @@ input[type="checkbox"] {
   transform: translateY(-0.075em);
   display: grid;
   place-content: center;
+
   &::before {
     content: "";
     width: 12px;
@@ -451,14 +457,17 @@ input[type="checkbox"] {
     transform-origin: bottom left;
     clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
   }
+
   &:checked::before {
     transform: scale(1);
   }
+
   // &:focus {
   //   outline: max(2px, 0.15em) solid #279af1;
   //   outline-offset: max(2px, 0.15em);
   // }
 }
+
 .upper-text {
   position: absolute;
   top: 42px;
@@ -473,6 +482,7 @@ input[type="checkbox"] {
   line-height: normal;
   letter-spacing: -0.28px;
 }
+
 .blue-text {
   color: #279af1;
   font-family: Inter;
@@ -486,6 +496,7 @@ input[type="checkbox"] {
 .cursor-pointer {
   cursor: pointer;
 }
+
 //  css to remove placeholde of  input type date
 // input[type=date]::-webkit-datetime-edit-text {
 //     -webkit-appearance: none;
@@ -506,15 +517,17 @@ input[type="checkbox"] {
 .ReactTags__tags {
   width: 100%;
   box-sizing: border-box;
- 
+
 }
+
 .ReactTags__tagInput {
   width: 100%;
   border-radius: 6px;
   display: inline-block;
   box-sizing: border-box;
-   position: relative;
+  position: relative;
 }
+
 .ReactTags__tagInput input.ReactTags__tagInputField,
 .ReactTags__tagInput input.ReactTags__tagInputField:focus {
   font-size: 13px;
@@ -532,26 +545,29 @@ input[type="checkbox"] {
   outline: #dcdcdc;
   margin-top: 8px;
 }
+
 .ReactTags__selected span.ReactTags__tag {
   // border: 1px solid #ddd;
-  color:  #0d7d0b;
+  color: #0d7d0b;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   display: inline-block;
- padding: 2px 12px;
+  padding: 2px 12px;
   margin: 0px 5px 5px 5px;
 
   border-radius: 100px;
   background: #c8ffc7;
 }
+
 .ReactTags__selected a.ReactTags__remove {
-   color:  #0d7d0b;
-   fill:#0d7d0b;
-    margin-left: 5px;
-   cursor: pointer;
+  color: #0d7d0b;
+  fill: #0d7d0b;
+  margin-left: 5px;
+  cursor: pointer;
 }
+
 .ReactTags__suggestions {
   position: absolute;
   width: 100%;
@@ -559,6 +575,7 @@ input[type="checkbox"] {
   top: 39px;
   padding: 0px;
 }
+
 .ReactTags__suggestions ul {
   list-style-type: none;
   box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
@@ -566,6 +583,7 @@ input[type="checkbox"] {
   // width: 100%;
   padding: 0px;
 }
+
 .ReactTags__suggestions li {
   border-bottom: 1px solid #ddd;
   padding: 5px 10px;
@@ -574,11 +592,13 @@ input[type="checkbox"] {
   line-height: 16px;
   // margin-left: -20px;
 }
+
 .ReactTags__suggestions li mark {
   text-decoration: underline;
   background: none;
   font-weight: 600;
 }
+
 .ReactTags__suggestions ul li.ReactTags__activeSuggestion {
   background: #279af1;
   color: #fff;
@@ -587,7 +607,10 @@ input[type="checkbox"] {
 
 .ReactTags__remove {
   border: none;
-  cursor: pointer;
   background: none;
-  color: white;
+  color: #0d7d0b;
+  fill: #0d7d0b;
+  margin-left: 5px;
+  cursor: pointer;
+  padding-right: 0;
 }

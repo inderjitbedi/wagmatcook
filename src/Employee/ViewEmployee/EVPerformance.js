@@ -409,8 +409,8 @@ const EVPerformance = () => {
             id: data?.userData._id,
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
-                " " +
-                data?.personalInfo[0].lastName
+              " " +
+              data?.personalInfo[0].lastName
               : data?.userData.name,
           }));
 
@@ -605,7 +605,7 @@ const EVPerformance = () => {
                                 inputFieldPosition="bottom"
                                 autocomplete
                                 placeholder="Add More"
-                                // editable
+                              // editable
                               />
                             </FlexColumnForm>
                           </FlexContaierForm>
@@ -730,7 +730,7 @@ const EVPerformance = () => {
                               ) : file?.originalName.length <= 32 ? (
                                 file?.originalName
                               ) : (
-                                file?.originalName.substring(0, 30) + "..."
+                                file?.originalName?.substring(0, 30) + "..."
                               )}
                             </EditButton>
                             {file && (
@@ -836,10 +836,10 @@ const EVPerformance = () => {
                                 <File>
                                   {" "}
                                   <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                                  {data.file.originalName?.length <= 38
+                                  {data.file?.originalName?.length <= 38
                                     ? data.file?.originalName
-                                    : data.file?.originalName.substring(0, 38) +
-                                        "..." || " - "}
+                                    : data.file?.originalName?.substring(0, 38) +
+                                    "..." || " - "}
                                 </File>
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>
@@ -851,8 +851,8 @@ const EVPerformance = () => {
                                 Next Review on:{" "}
                                 {data.nextReviewDate
                                   ? moment(data.nextReviewDate).format(
-                                      "DD/MM/YYYY"
-                                    )
+                                    "DD/MM/YYYY"
+                                  )
                                   : " - "}
                               </ReviewsDiv>
                               <IconContainer>
