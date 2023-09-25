@@ -127,7 +127,7 @@ const EvLeaveAlloacation = () => {
   };
   const GetLeavesType = () => {
     setIsLoading(true);
-    let url = `/leave-type/list`;
+    let url = `/leave-type/employee-list/${employeeid}`;
     httpClient({
       method: "get",
       url,
@@ -150,6 +150,7 @@ const EvLeaveAlloacation = () => {
   };
   const GetLeaveAlloaction = () => {
     setIsLoading(true);
+    GetLeavesType();
     const trimid = employeeid.trim();
     let url = `/employee/leave-allocations/${trimid}`;
     httpClient({
@@ -248,6 +249,7 @@ const EvLeaveAlloacation = () => {
           setUpdate(false);
           handleClose();
           reset();
+
           toast.success(result.message); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
@@ -406,10 +408,7 @@ const EvLeaveAlloacation = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {
-                        leaveType?.find((leave) => leave._id === data.leaveType)
-                          ?.name
-                      }
+                      {data?.leaveType?.name}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.totalAllocation}

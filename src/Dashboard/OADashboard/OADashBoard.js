@@ -568,7 +568,7 @@ const OADashBoard = () => {
                             : { backgroundColor: "#FF6666", color: "#FF0000" }
                         }
                       >
-                        {data.isActive ? "Active" : "InActive"}{" "}
+                        {data.isActive ? "Active" : "Inactive"}{" "}
                         {/* <CardLeavesArrow
                         src="/svg/Arrow Down.svg"
                         style={status === "active" ? {} : { fill: "#FF0000" }}

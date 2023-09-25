@@ -271,12 +271,15 @@ const EVPerformance = () => {
   };
 
   const handleAddition = (tag) => {
+    const isTagInSuggestions = suggestions.some(
+      (suggestion) => suggestion.text === tag.text
+    );
 
-    const isTagInSuggestions = suggestions.some((suggestion) => suggestion.text === tag);
+    console.log("tag :", tag, "issuggestioin:", isTagInSuggestions);
+
     if (isTagInSuggestions) {
       setTags([...tags, tag]);
     }
-
   };
 
   const handleDrag = (tag, currPos, newPos) => {
@@ -299,8 +302,6 @@ const EVPerformance = () => {
   };
 
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-
 
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -391,7 +392,7 @@ const EVPerformance = () => {
         setIsDeleting(false);
       });
   };
-  const [suggestions, setSuggestions] = useState([])
+  const [suggestions, setSuggestions] = useState([]);
   const GetSuggestionsList = () => {
     setIsLoading(true);
     let url = `/employee/completed-by-list`;
@@ -404,12 +405,13 @@ const EVPerformance = () => {
           setSuggestionsData(result);
           console.log("suggestions are:", result);
 
-          const suggestions = result?.users?.map((data) =>
-          ({
-
-            id: data._id,
-            text: data.userData.name,
-
+          const suggestions = result?.users?.map((data) => ({
+            id: data?.userData._id,
+            text: data?.personalInfo?.length
+              ? data?.personalInfo[0].firstName +
+                " " +
+                data?.personalInfo[0].lastName
+              : data?.userData.name,
           }));
 
           setSuggestions(suggestions);
@@ -426,7 +428,7 @@ const EVPerformance = () => {
         setIsLoading(false);
       });
   };
-  console.log(suggestions, "this is map  data for suggestions")
+  console.log(suggestions, "this is map  data for suggestions");
 
   const [headerData, setHeaderData] = useState([]);
 
@@ -603,7 +605,7 @@ const EVPerformance = () => {
                                 inputFieldPosition="bottom"
                                 autocomplete
                                 placeholder="Add More"
-                              // editable
+                                // editable
                               />
                             </FlexColumnForm>
                           </FlexContaierForm>
@@ -837,7 +839,7 @@ const EVPerformance = () => {
                                   {data.file.originalName?.length <= 38
                                     ? data.file?.originalName
                                     : data.file?.originalName.substring(0, 38) +
-                                    "..." || " - "}
+                                        "..." || " - "}
                                 </File>
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>
@@ -849,8 +851,8 @@ const EVPerformance = () => {
                                 Next Review on:{" "}
                                 {data.nextReviewDate
                                   ? moment(data.nextReviewDate).format(
-                                    "DD/MM/YYYY"
-                                  )
+                                      "DD/MM/YYYY"
+                                    )
                                   : " - "}
                               </ReviewsDiv>
                               <IconContainer>
