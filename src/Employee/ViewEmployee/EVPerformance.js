@@ -113,6 +113,7 @@ const EVPerformance = () => {
     setError,
   } = useForm({ mode: "all" });
 
+  const [byError, setByError] = useState([]);
   const onSubmit = (data) => {
     console.log("form submmited", data);
     function isEmptyObject(obj) {
@@ -123,10 +124,17 @@ const EVPerformance = () => {
       }
       return true;
     }
+
     if (isEmptyObject(errors) && !update) {
       console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
+      }
+      if (tags) {
+        const ids = tags.map((data) => data.id);
+        data.completedBy = ids;
+      } else {
+        setByError("Required");
       }
       AddNewProformance(data);
     } else if (update) {
@@ -220,6 +228,8 @@ const EVPerformance = () => {
           setFile(null);
           GetEmployeesProformance();
           reset();
+          setByError(null);
+
           toast.success(result.message); //Employee proformance added successfully");
         } else {
           //toast.warn("something went wrong ");
@@ -351,6 +361,7 @@ const EVPerformance = () => {
           setUpdate(false);
           handleClose();
           reset();
+          setByError(null);
           toast.success(result.message); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
@@ -595,6 +606,7 @@ const EVPerformance = () => {
                                 Completed By <InputSpan>*</InputSpan>
                               </InputLabel>
                               <ReactTags
+                                name="completedBy"
                                 tags={tags}
                                 suggestions={suggestions}
                                 delimiters={delimiters}
@@ -607,6 +619,7 @@ const EVPerformance = () => {
                                 placeholder="Add More"
                                 // editable
                               />
+                              <Errors>{byError}</Errors>
                             </FlexColumnForm>
                           </FlexContaierForm>
                           <FlexContaierForm>
