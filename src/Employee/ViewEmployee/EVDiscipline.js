@@ -8,6 +8,8 @@ import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import NoDocumentfound from "../NoDocumentfound";
+import DeleteModal from "../../Modals/DeleteModal";
+
 import moment from "moment";
 import {
   MainBodyContainer,
@@ -60,9 +62,9 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "0px 0px",
+  padding: "20px 0px",
   borderRadius: "8px",
-  height: "597px",
+  height: "520px",
   overflowY: "scroll",
 };
 const EVDiscipline = () => {
@@ -73,6 +75,11 @@ const EVDiscipline = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
     reset({});
@@ -87,7 +94,8 @@ const EVDiscipline = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [disciplinaryData, setDisciplinaryData] = useState([]);
   const [file, setFile] = useState(null);
-
+  const [Id, setId] = useState("");
+  const [update, setUpdate] = useState(false);
   const {
     register,
     control,
@@ -117,11 +125,13 @@ const EVDiscipline = () => {
       }
       return true;
     }
-    if (isEmptyObject(errors)) {
+    if (isEmptyObject(errors) && !update) {
       if (file) {
         data.file = file._id;
       }
       AddNewDisciplinary(data);
+    } else if (update) {
+      HandleUpdate(data);
     }
     console.log("form submmited", data);
   };
@@ -175,7 +185,6 @@ const EVDiscipline = () => {
   const AddNewDisciplinary = (data) => {
     setIsLoading(true);
     let dataCopy = data;
-    console.log("api data :", data);
 
     let url = `/employee/disciplinary/${employeeid}`;
     httpClient({
@@ -277,11 +286,114 @@ const EVDiscipline = () => {
     setValue("file", null);
   };
   useEffect(() => {
+
     setIsLoading(true);
+    GetHeadersData();
+
     GetDisciplinary();
     GetEmployeesDisciplinary();
   }, []);
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data.details?.length);
+    reset({
+      details: data.details,
+      disciplinary: data.disciplinary._id,
+      file: data.file._id,
+      issueDate: new Date(data.issueDate).toISOString().split("T")[0],
+      expiryDate: data.expiryDate ? new Date(data.expiryDate).toISOString().split("T")[0] : null,
+    });
+    handleOpen();
+    setFile(data.file);
+  };
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
+    handleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+    setFile(null);
+  };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
 
+    let url = `/employee/disciplinary/${employeeid}/${Id}`;
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetEmployeesDisciplinary();
+          setUpdate(false);
+          handleClose();
+          reset();
+          toast.success(result.message); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = `/employee/disciplinary/${employeeid}/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetEmployeesDisciplinary();
+
+          toast.success(result.message);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+  const [headerData, setHeaderData] = useState([]);
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -308,23 +420,23 @@ const EVDiscipline = () => {
             <PersonalInfo>
               <PersonalImg
                 src={
-                  result.personalInfo?.photo
-                    ? API_URL + result.personalInfo.photo?.path
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
               <FlexColumn>
                 <PersonalName>
-                  {" "}
                   {[
-                    result.personalInfo?.firstName,
-                    result.personalInfo?.lastName,
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
                   ].join(" ")}
                 </PersonalName>
-                <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
                 <PersonalDepartment>
-                  {" "}
-                  {result.jobDetails?.department?.name || "-"}
+                  {headerData.position?.department?.name || "-"}
                 </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
@@ -339,7 +451,9 @@ const EVDiscipline = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Disciplinary Details</BasicHeading>
-                <AddNewButton onClick={handleOpen}>Add New </AddNewButton>
+                <AddNewButton onClick={HandleOpenAddNewAction}>
+                  Add New{" "}
+                </AddNewButton>
               </FlexSpaceBetween>
               {/* modal add disciplinary */}
               <Modal
@@ -349,77 +463,114 @@ const EVDiscipline = () => {
                 aria-describedby="modal-modal-description"
               >
                 <Box sx={style}>
-                  <ModalContainer style={{ padding: "10px 29px 10px 29px " }}>
-                    <ModalHeading>Add Disciplinary </ModalHeading>
-                    <ModalIcon
-                      onClick={handleClose}
-                      src="/images/icons/Alert-Circle.svg"
-                    />
-                  </ModalContainer>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <ModalFormContainer>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Disciplinary Type <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <Controller
-                            name={`disciplinary`}
-                            control={control}
-                            render={({ field }) => (
-                              <Select {...field}>
-                                <Option disabled>Select</Option>
-                                {disciplinaryData?.map((data) => (
-                                  <Option value={data._id}>{data.name}</Option>
-                                ))}
-                              </Select>
-                            )}
-                          />
-                          <ErrorMessage
-                            as={<Errors />}
-                            errors={errors}
-                            name={`disciplinary`}
-                          />
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Date <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <Input
-                            type="date"
-                            {...register("issueDate", {
-                              required: {
-                                value: true,
-                                message: "Required",
-                              },
-                              onChange: (e) => {
-                                const endDate = getValues("expiryDate");
+                  {isLoading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "520px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 999,
+                      }}
+                    >
+                      <RotatingLines
+                        strokeColor="#279AF1"
+                        strokeWidth="3"
+                        animationDuration="0.75"
+                        width="52"
+                        visible={true}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <ModalContainer>
+                        <ModalHeading>
+                          {!update
+                            ? " Add Disciplinary"
+                            : "Update Disciplinary"}{" "}
+                        </ModalHeading>
+                        <ModalIcon
+                          onClick={handleClose}
+                          src="/images/icons/Alert-Circle.svg"
+                        />
+                      </ModalContainer>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <ModalFormContainer>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Disciplinary Type <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Controller
+                                name={`disciplinary`}
+                                control={control}
+                                rules={{
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                }}
+                                render={({ field }) => (
+                                  <Select {...field}>
+                                    <Option>Select</Option>
+                                    {disciplinaryData?.map((data) => (
+                                      <Option value={data._id}>
+                                        {data.name}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                )}
+                              />
+                              <ErrorMessage
+                                as={<Errors />}
+                                errors={errors}
+                                name={`disciplinary`}
+                              />
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Date <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="date"
+                                {...register("issueDate", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                  onChange: (e) => {
+                                    const endDate = getValues("expiryDate");
 
-                                const startDate = new Date(e.target.value);
+                                    const startDate = new Date(e.target.value);
 
-                                if (startDate >= new Date(endDate) && endDate) {
-                                  setError("expiryDate", {
-                                    type: "custom",
-                                    message: " Must not be earlier than  date",
-                                  });
-                                } else {
-                                  setError("expiryDate", {
-                                    type: "custom",
-                                    message: "",
-                                  });
-                                }
-                              },
-                            })}
-                          />
-                          {errors.issueDate && (
-                            <Errors>{errors.issueDate?.message}</Errors>
-                          )}
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        {/* <FlexColumnForm>
+                                    if (
+                                      startDate >= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message:
+                                          " Must not be earlier than  date",
+                                      });
+                                    } else {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {errors.issueDate && (
+                                <Errors>{errors.issueDate?.message}</Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            {/* <FlexColumnForm>
                           <InputLabel>
                             BCR <InputSpan>*</InputSpan>
                           </InputLabel>
@@ -428,135 +579,145 @@ const EVDiscipline = () => {
                             <Errors> {errors.bcr?.message}</Errors>
                           )}
                         </FlexColumnForm> */}
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>Exipiry Date</InputLabel>
-                          <Input
-                            type="date"
-                            {...register("expiryDate", {
-                              // required: {
-                              //   value: true,
-                              //   message: " Required",
-                              // },
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>Exipiry Date</InputLabel>
+                              <Input
+                                type="date"
+                                {...register("expiryDate", {
+                                  // required: {
+                                  //   value: true,
+                                  //   message: " Required",
+                                  // },
 
-                              validate: (fieldValue) => {
-                                const startDate = new Date(
-                                  getValues("issueDate")
-                                );
-                                const endDate = fieldValue;
-                                if (startDate <= new Date(endDate) && endDate) {
-                                  setError("expiryDate", {
-                                    type: "custom",
-                                    message: " Must not be earlier than  date",
-                                  });
-                                } else {
-                                  setError("expiryDate", {
-                                    type: "custom",
-                                    message: "",
-                                  });
-                                }
-                              },
-                            })}
-                          />
-                          {errors.expiryDate && (
-                            <Errors>{errors.expiryDate?.message}</Errors>
-                          )}
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Details <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <TextArea
-                            type="text"
-                            {...register("details", {
+                                  validate: (fieldValue) => {
+                                    const startDate = new Date(
+                                      getValues("issueDate")
+                                    );
+                                    const endDate = fieldValue;
+                                    if (
+                                      startDate <= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message:
+                                          " Must not be earlier than  date",
+                                      });
+                                    } else {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {errors.expiryDate && (
+                                <Errors>{errors.expiryDate?.message}</Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Details <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <TextArea
+                                type="text"
+                                {...register("details", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                  maxLength: {
+                                    value: 500,
+                                    message: "Details exceeds  500 characters ",
+                                  },
+                                  // minLength: {
+                                  //   value: 10,
+                                  //   message: "Atleast write  10 characters ",
+                                  // },
+                                  onChange: (value) => {
+                                    setDetailsLength(
+                                      500 - value.target.value.length
+                                    );
+                                  },
+                                })}
+                              />
+                              <InputPara>
+                                {<Errors>{errors.details?.message}</Errors>}
+                                <span style={{ justifySelf: "flex-end" }}>
+                                  {" "}
+                                  {detailsLength > -1 ? detailsLength : 0}{" "}
+                                  characters left
+                                </span>
+                              </InputPara>
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <input
+                            style={{ width: "50%" }}
+                            type="file"
+                            // accept="image/*,capture=camera"
+                            {...register(`file`, {
                               required: {
-                                value: true,
+                                value: update ? false : true,
                                 message: "Required",
                               },
-                              maxLength: {
-                                value: 500,
-                                message: "Details exceeds  500 characters ",
-                              },
-                              // minLength: {
-                              //   value: 10,
-                              //   message: "Atleast write  10 characters ",
-                              // },
-                              onChange: (value) => {
-                                setDetailsLength(
-                                  500 - value.target.value.length
-                                );
+                              onChange: (e) => {
+                                handleFileChange(e);
                               },
                             })}
+                            id="upload"
+                            className="custom"
                           />
-                          <InputPara>
-                            {<Errors>{errors.details?.message}</Errors>}
-                            <span style={{ justifySelf: "flex-end" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "16px",
+                              alignItems: "center",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            <EditButton
+                              htmlFor="upload"
+                              style={{ width: "max-content" }}
+                            >
                               {" "}
-                              {detailsLength > -1 ? detailsLength : 0}{" "}
-                              characters left
-                            </span>
-                          </InputPara>
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <input
-                        style={{ width: "50%" }}
-                        type="file"
-                        // accept="image/*,capture=camera"
-                        {...register(`file`, {
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                          onChange: (e) => {
-                            handleFileChange(e);
-                          },
-                        })}
-                        id="upload"
-                        className="custom"
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "16px",
-                          alignItems: "center",
-                          marginBottom: "20px",
-                        }}
-                      >
-                        <EditButton
-                          htmlFor="upload"
-                          style={{ width: "max-content" }}
-                        >
-                          {" "}
-                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {isUploading ? (
-                            <ThreeDots
-                              height="8"
-                              width="80"
-                              radius="9"
-                              color="#279AF1"
-                              ariaLabel="three-dots-loading"
-                              visible={true}
-                            />
-                          ) : !file ? (
-                            "Upload Document "
-                          ) : file?.originalName.length <= 32 ? (
-                            file?.originalName
-                          ) : (
-                            file.originalName.substring(0, 30) + "..."
+                              <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                              {isUploading ? (
+                                <ThreeDots
+                                  height="8"
+                                  width="80"
+                                  radius="9"
+                                  color="#279AF1"
+                                  ariaLabel="three-dots-loading"
+                                  visible={true}
+                                />
+                              ) : !file ? (
+                                "Upload Document "
+                              ) : file?.originalName.length <= 32 ? (
+                                file?.originalName
+                              ) : (
+                                file.originalName.substring(0, 30) + "..."
+                              )}
+                            </EditButton>
+                            {file && (
+                              <LightPara onClick={removeFile}>Remove</LightPara>
+                            )}
+                          </div>
+                          {errors.file && (
+                            <Errors> {errors.file?.message} </Errors>
                           )}
-                        </EditButton>
-                        {file && (
-                          <LightPara onClick={removeFile}>Remove</LightPara>
-                        )}
-                      </div>
-                      {errors.file && <Errors> {errors.file?.message} </Errors>}
 
-                      <ButtonBlue type="submit">Submit</ButtonBlue>
-                    </ModalFormContainer>
-                  </form>
+                          <ButtonBlue type="submit" disabled={isUploading}>
+                            {!update ? " Submit " : "Update"}
+                          </ButtonBlue>
+                        </ModalFormContainer>
+                      </form>
+                    </>
+                  )}
                 </Box>
               </Modal>
               {/*modal ends here  */}
@@ -625,12 +786,22 @@ const EVDiscipline = () => {
                           <FlexSpaceBetween>
                             <ReviewsDiv>
                               Expiry Date:{" "}
-                              {moment(data.expiryDate).format("DD/MM/YYYY") ||
-                                " - "}
+                              {data.expiryDate
+                                ? moment(data.expiryDate).format("DD/MM/YYYY")
+                                : " - "}
                             </ReviewsDiv>
                             <IconContainer>
-                              <Icons src="/images/icons/Pendown.svg" />
-                              <Icons src="/images/icons/Trash-2.svg" />
+                              <Icons
+                                onClick={() => HandleUpdateAction(data)}
+                                src="/images/icons/Pendown.svg"
+                              />
+                              <Icons
+                                onClick={() => {
+                                  setId(data._id);
+                                  HandleOpenDelete();
+                                }}
+                                src="/images/icons/Trash-2.svg"
+                              />
                             </IconContainer>
                           </FlexSpaceBetween>
                         </FlexColumn>
@@ -643,6 +814,13 @@ const EVDiscipline = () => {
           </BasicInfoContainer>
         </MainBodyContainer>
       )}
+      <DeleteModal
+        openDelete={openDelete}
+        message="Are you sure you want to delete this Discipline"
+        HandleCloseDelete={HandleCloseDelete}
+        isLoading={isDeleting}
+        HandleDelete={HandleDelete}
+      />
     </>
   );
 };

@@ -286,7 +286,7 @@ const Employee = () => {
         </DepartmentFilterdiv>
 
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <AddNewButton >Send Welcome</AddNewButton>{" "}
+          <AddNewButton>Send Welcome</AddNewButton>{" "}
           <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
         </div>
       </DepartmentFilterContainer>
@@ -301,42 +301,67 @@ const Employee = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ModalContainer>
-            <ModalHeading>Welcome New Employee</ModalHeading>
-            <ModalIcon
-              onClick={() => {
-                HandleCloseWelcome();
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "380px",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999,
               }}
-              src="/images/icons/Alert-Circle.svg"
-            />
-          </ModalContainer>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalFormContainer>
-              <FlexContaierForm>
-                <FlexColumnForm>
-                  <InputLabel>Email Address</InputLabel>
-                  <Input
-                    type="email"
-                    {...register("email", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: "Please enter a valid email",
-                      },
-                    })}
-                  />
-                  {errors.email && <Errors> {errors.email?.message} </Errors>}
-                </FlexColumnForm>
-              </FlexContaierForm>
+            >
+              <RotatingLines
+                strokeColor="#279AF1"
+                strokeWidth="3"
+                animationDuration="0.75"
+                width="52"
+                visible={true}
+              />
+            </div>
+          ) : (
+            <>
+              <ModalContainer>
+                <ModalHeading>Welcome New Employee</ModalHeading>
+                <ModalIcon
+                  onClick={() => {
+                    HandleCloseWelcome();
+                  }}
+                  src="/images/icons/Alert-Circle.svg"
+                />
+              </ModalContainer>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <ModalFormContainer>
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>Email Address</InputLabel>
+                      <Input
+                        type="email"
+                        {...register("email", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                          pattern: {
+                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                            message: "Please enter a valid email",
+                          },
+                        })}
+                      />
+                      {errors.email && (
+                        <Errors> {errors.email?.message} </Errors>
+                      )}
+                    </FlexColumnForm>
+                  </FlexContaierForm>
 
-              <ButtonBlue style={{ marginTop: "25px" }} type="submit">
-                Submit
-              </ButtonBlue>
-            </ModalFormContainer>
-          </form>
+                  <ButtonBlue style={{ marginTop: "25px" }} type="submit">
+                    Submit
+                  </ButtonBlue>
+                </ModalFormContainer>
+              </form>
+            </>
+          )}
         </Box>
       </Modal>
       <HeaderDiv>

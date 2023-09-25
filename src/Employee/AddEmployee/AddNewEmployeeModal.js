@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { useNavigate } from "react-router-dom";
+import { RotatingLines } from "react-loader-spinner";
+
 import {
   Input,
   ButtonBlue,
@@ -55,6 +57,8 @@ const ModalFormContainer = styled.div`
   box-sizing: border-box;
 `;
 const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const Navigate = useNavigate();
   const {
     register,
@@ -66,6 +70,8 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
 
   // Add New Employee Post api  user name and email
   const HandleAddEmployee = (data) => {
+    setIsLoading(true);
+
     let dataCopy = data;
 
     let url = `/employee/add`;
@@ -77,18 +83,21 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          HandleCloseEmployee()
-          Navigate(`/organization-admin/employee/personal-info/${result.employee._id}`);
-          reset()
+          HandleCloseEmployee();
+          Navigate(
+            `/organization-admin/employee/personal-info/${result.employee._id}`
+          );
+          reset();
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         toast.error("Error Adding Employee . Please try again.");
+        setIsLoading(false);
       })
       .finally(() => {
-        //  setIsLoading(false);
+        setIsLoading(false);
       });
   };
 
@@ -112,75 +121,98 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       onClose={() => {
         HandleCloseEmployee();
         clearErrors();
-        reset()
+        reset();
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <ModalContainer>
-          <ModalHeading>Add New Employee</ModalHeading>
-          <ModalIcon
-            onClick={() => {
-              HandleCloseEmployee();
-              reset()
-              clearErrors();
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "380px",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 999,
             }}
-            src="/images/icons/Alert-Circle.svg"
-          />
-        </ModalContainer>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalFormContainer>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>First Name</InputLabel>
-                <Input
-                  type="text"
-                  {...register("firstName", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                  })}
-                />
-                {errors.firstName && (
-                  <Errors>{errors.firstName?.message}</Errors>
-                )}
-              </FlexColumnForm>
-              <FlexColumnForm>
-                <InputLabel>Last Name</InputLabel>
-                <Input
-                  type="text"
-                  {...register("lastName", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                  })}
-                />
-                {errors.lastName && <Errors>{errors.lastName?.message}</Errors>}
-              </FlexColumnForm>
-            </FlexContaierForm>
-            <FlexContaierForm>
-              <FlexColumnForm>
-                <InputLabel>Email Address</InputLabel>
-                <Input
-                  type="email"
-                  {...register("email", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Please enter a valid email",
-                    },
-                  })}
-                />
-                {errors.email && <Errors> {errors.email?.message} </Errors>}
-              </FlexColumnForm>
-            </FlexContaierForm>
-            {/* <FlexContaierForm>
+          >
+            <RotatingLines
+              strokeColor="#279AF1"
+              strokeWidth="3"
+              animationDuration="0.75"
+              width="52"
+              visible={true}
+            />
+          </div>
+        ) : (
+          <>
+            <ModalContainer>
+              <ModalHeading>Add New Employee</ModalHeading>
+              <ModalIcon
+                onClick={() => {
+                  HandleCloseEmployee();
+                  reset();
+                  clearErrors();
+                }}
+                src="/images/icons/Alert-Circle.svg"
+              />
+            </ModalContainer>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ModalFormContainer>
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>First Name</InputLabel>
+                    <Input
+                      type="text"
+                      {...register("firstName", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.firstName && (
+                      <Errors>{errors.firstName?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    <InputLabel>Last Name</InputLabel>
+                    <Input
+                      type="text"
+                      {...register("lastName", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.lastName && (
+                      <Errors>{errors.lastName?.message}</Errors>
+                    )}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <InputLabel>Email Address</InputLabel>
+                    <Input
+                      type="email"
+                      {...register("email", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Please enter a valid email",
+                        },
+                      })}
+                    />
+                    {errors.email && <Errors> {errors.email?.message} </Errors>}
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                {/* <FlexContaierForm>
               <FlexColumnForm>
                 <InputLabel>Passsword</InputLabel>
                 <Input
@@ -223,9 +255,13 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
               </FlexColumnForm>
             </FlexContaierForm> */}
-            <ButtonBlue style={{ marginTop: "25px" }} type="submit">Submit</ButtonBlue>
-          </ModalFormContainer>
-        </form>
+                <ButtonBlue style={{ marginTop: "25px" }} type="submit">
+                  Submit
+                </ButtonBlue>
+              </ModalFormContainer>
+            </form>
+          </>
+        )}
       </Box>
     </Modal>
   );

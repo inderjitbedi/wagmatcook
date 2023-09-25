@@ -16,6 +16,8 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import moment from "moment";
 import NoDocumentfound from "../NoDocumentfound";
 import { WithContext as ReactTags } from "react-tag-input";
+import DeleteModal from "../../Modals/DeleteModal";
+
 import {
   IconsEmployee,
   MainBodyContainer,
@@ -96,6 +98,8 @@ const EVPerformance = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [suggestionsData, setSuggestionsData] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     register,
@@ -119,12 +123,14 @@ const EVPerformance = () => {
       }
       return true;
     }
-    if (isEmptyObject(errors)) {
+    if (isEmptyObject(errors) && !update) {
       console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
       }
       AddNewProformance(data);
+    } else if (update) {
+      HandleUpdate(data);
     }
   };
   // const onSubmitFollow = (data) => {
@@ -252,7 +258,10 @@ const EVPerformance = () => {
       });
   };
   useEffect(() => {
+    GetHeadersData();
+
     GetEmployeesProformance();
+    GetSuggestionsList();
   }, []);
 
   const [tags, setTags] = useState([]);
@@ -263,11 +272,11 @@ const EVPerformance = () => {
 
   const handleAddition = (tag) => {
 
-
-    if (suggestions.includes(tag)) {
+    const isTagInSuggestions = suggestions.some((suggestion) => suggestion.text === tag);
+    if (isTagInSuggestions) {
       setTags([...tags, tag]);
-
     }
+
   };
 
   const handleDrag = (tag, currPos, newPos) => {
@@ -290,222 +299,155 @@ const EVPerformance = () => {
   };
 
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-  const COUNTRIES = [
-    "Afghanistan",
-    "Albania",
-    "Algeria",
-    "Andorra",
-    "Angola",
-    "Anguilla",
-    "Antigua &amp; Barbuda",
-    "Argentina",
-    "Armenia",
-    "Aruba",
-    "Australia",
-    "Austria",
-    "Azerbaijan",
-    "Bahamas",
-    "Bahrain",
-    "Bangladesh",
-    "Barbados",
-    "Belarus",
-    "Belgium",
-    "Belize",
-    "Benin",
-    "Bermuda",
-    "Bhutan",
-    "Bolivia",
-    "Bosnia &amp; Herzegovina",
-    "Botswana",
-    "Brazil",
-    "British Virgin Islands",
-    "Brunei",
-    "Bulgaria",
-    "Burkina Faso",
-    "Burundi",
-    "Cambodia",
-    "Cameroon",
-    "Cape Verde",
-    "Cayman Islands",
-    "Chad",
-    "Chile",
-    "China",
-    "Colombia",
-    "Congo",
-    "Cook Islands",
-    "Costa Rica",
-    "Cote D Ivoire",
-    "Croatia",
-    "Cruise Ship",
-    "Cuba",
-    "Cyprus",
-    "Czech Republic",
-    "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "Ecuador",
-    "Egypt",
-    "El Salvador",
-    "Equatorial Guinea",
-    "Estonia",
-    "Ethiopia",
-    "Falkland Islands",
-    "Faroe Islands",
-    "Fiji",
-    "Finland",
-    "France",
-    "French Polynesia",
-    "French West Indies",
-    "Gabon",
-    "Gambia",
-    "Georgia",
-    "Germany",
-    "Ghana",
-    "Gibraltar",
-    "Greece",
-    "Greenland",
-    "Grenada",
-    "Guam",
-    "Guatemala",
-    "Guernsey",
-    "Guinea",
-    "Guinea Bissau",
-    "Guyana",
-    "Haiti",
-    "Honduras",
-    "Hong Kong",
-    "Hungary",
-    "Iceland",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Iraq",
-    "Ireland",
-    "Isle of Man",
-    "Israel",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Jersey",
-    "Jordan",
-    "Kazakhstan",
-    "Kenya",
-    "Kuwait",
-    "Kyrgyz Republic",
-    "Laos",
-    "Latvia",
-    "Lebanon",
-    "Lesotho",
-    "Liberia",
-    "Libya",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Macau",
-    "Macedonia",
-    "Madagascar",
-    "Malawi",
-    "Malaysia",
-    "Maldives",
-    "Mali",
-    "Malta",
-    "Mauritania",
-    "Mauritius",
-    "Mexico",
-    "Moldova",
-    "Monaco",
-    "Mongolia",
-    "Montenegro",
-    "Montserrat",
-    "Morocco",
-    "Mozambique",
-    "Namibia",
-    "Nepal",
-    "Netherlands",
-    "Netherlands Antilles",
-    "New Caledonia",
-    "New Zealand",
-    "Nicaragua",
-    "Niger",
-    "Nigeria",
-    "Norway",
-    "Oman",
-    "Pakistan",
-    "Palestine",
-    "Panama",
-    "Papua New Guinea",
-    "Paraguay",
-    "Peru",
-    "Philippines",
-    "Poland",
-    "Portugal",
-    "Puerto Rico",
-    "Qatar",
-    "Reunion",
-    "Romania",
-    "Russia",
-    "Rwanda",
-    "Saint Pierre &amp; Miquelon",
-    "Samoa",
-    "San Marino",
-    "Satellite",
-    "Saudi Arabia",
-    "Senegal",
-    "Serbia",
-    "Seychelles",
-    "Sierra Leone",
-    "Singapore",
-    "Slovakia",
-    "Slovenia",
-    "South Africa",
-    "South Korea",
-    "Spain",
-    "Sri Lanka",
-    "St Kitts &amp; Nevis",
-    "St Lucia",
-    "St Vincent",
-    "St. Lucia",
-    "Sudan",
-    "Suriname",
-    "Swaziland",
-    "Sweden",
-    "Switzerland",
-    "Syria",
-    "Taiwan",
-    "Tajikistan",
-    "Tanzania",
-    "Thailand",
-    "Timor L'Este",
-    "Togo",
-    "Tonga",
-    "Trinidad &amp; Tobago",
-    "Tunisia",
-    "Turkey",
-    "Turkmenistan",
-    "Turks &amp; Caicos",
-    "Uganda",
-    "Ukraine",
-    "United Arab Emirates",
-    "United Kingdom",
-    "United States of America",
-    "Uruguay",
-    "Uzbekistan",
-    "Venezuela",
-    "Vietnam",
-    "Virgin Islands (US)",
-    "Yemen",
-    "Zambia",
-    "Zimbabwe",
-  ];
 
-  const suggestions = COUNTRIES.map((country) => {
-    return {
-      id: country,
-      text: country,
-    };
-  });
 
+
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
+  const [Id, setId] = useState("");
+  const [update, setUpdate] = useState(false);
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data.details?.length);
+    reset({
+      details: data.details,
+      // completedBy: data.completedBy,
+      file: data.file._id,
+      reviewDate: new Date(data.reviewDate).toISOString().split("T")[0],
+      nextReviewDate: data.expiryDate
+        ? new Date(data.nextReviewDate).toISOString().split("T")[0]
+        : null,
+    });
+    handleOpen();
+    setFile(data.file);
+  };
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
+    handleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+    setFile(null);
+  };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = `/employee/review/${employeeid}/${Id}`;
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetEmployeesProformance();
+          setUpdate(false);
+          handleClose();
+          reset();
+          toast.success(result.message); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = `/employee/review/${employeeid}/delete/${Id}`;
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetEmployeesProformance();
+
+          toast.success(result.message);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+  const [suggestions, setSuggestions] = useState([])
+  const GetSuggestionsList = () => {
+    setIsLoading(true);
+    let url = `/employee/completed-by-list`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setSuggestionsData(result);
+          console.log("suggestions are:", result);
+
+          const suggestions = result?.users?.map((data) =>
+          ({
+
+            id: data._id,
+            text: data.userData.name,
+
+          }));
+
+          setSuggestions(suggestions);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in Fetching . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  console.log(suggestions, "this is map  data for suggestions")
+
+  const [headerData, setHeaderData] = useState([]);
+
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -532,23 +474,23 @@ const EVPerformance = () => {
             <PersonalInfo>
               <PersonalImg
                 src={
-                  result.personalInfo?.photo
-                    ? API_URL + result.personalInfo.photo?.path
+                  headerData.personalInfo?.photo
+                    ? API_URL + headerData.personalInfo.photo?.path
                     : "/images/User.jpg"
                 }
               />
               <FlexColumn>
                 <PersonalName>
-                  {" "}
                   {[
-                    result.personalInfo?.firstName,
-                    result.personalInfo?.lastName,
+                    headerData.personalInfo?.firstName,
+                    headerData.personalInfo?.lastName,
                   ].join(" ")}
                 </PersonalName>
-                <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+                <PersonalTitle>
+                  {headerData?.position?.title || "-"}
+                </PersonalTitle>
                 <PersonalDepartment>
-                  {" "}
-                  {result.jobDetails?.department?.name || "-"}
+                  {headerData.position?.department?.name || "-"}
                 </PersonalDepartment>
               </FlexColumn>
             </PersonalInfo>
@@ -563,7 +505,9 @@ const EVPerformance = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Reviews</BasicHeading>
-                <AddNewButton onClick={handleOpen}>Add New Review</AddNewButton>
+                <AddNewButton onClick={HandleOpenAddNewAction}>
+                  Add New Review
+                </AddNewButton>
               </FlexSpaceBetween>
               {/* modal t add new review  */}
               <Modal
@@ -573,197 +517,236 @@ const EVPerformance = () => {
                 aria-describedby="modal-modal-description"
               >
                 <Box sx={style}>
-                  <ModalContainer style={{ paddingTop: "8px" }}>
-                    <ModalHeading>Add Review </ModalHeading>
-                    <ModalIcon
-                      onClick={handleClose}
-                      src="/images/icons/Alert-Circle.svg"
-                    />
-                  </ModalContainer>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <ModalFormContainer>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Date of Review <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <Input
-                            type="date"
-                            {...register("reviewDate", {
+                  {isLoading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "520px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <RotatingLines
+                        strokeColor="#279AF1"
+                        strokeWidth="3"
+                        animationDuration="0.75"
+                        width="52"
+                        visible={true}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <ModalContainer style={{ paddingTop: "8px" }}>
+                        <ModalHeading>
+                          {" "}
+                          {!update ? "Add Review" : "Update Review"}{" "}
+                        </ModalHeading>
+                        <ModalIcon
+                          onClick={handleClose}
+                          src="/images/icons/Alert-Circle.svg"
+                        />
+                      </ModalContainer>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <ModalFormContainer>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Date of Review <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="date"
+                                {...register("reviewDate", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                  onChange: (e) => {
+                                    const endDate = getValues("nextReviewDate");
+                                    const startDate = new Date(e.target.value);
+                                    if (
+                                      startDate >= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("nextReviewDate", {
+                                        type: "custom",
+                                        message:
+                                          "Next Review must not be earlier than  Date",
+                                      });
+                                    } else {
+                                      setError("nextReviewDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {errors.reviewDate && (
+                                <Errors>{errors.reviewDate?.message}</Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Completed By <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <ReactTags
+                                tags={tags}
+                                suggestions={suggestions}
+                                delimiters={delimiters}
+                                handleDelete={handleDelete}
+                                handleAddition={handleAddition}
+                                handleDrag={handleDrag}
+                                handleTagClick={handleTagClick}
+                                inputFieldPosition="bottom"
+                                autocomplete
+                                placeholder="Add More"
+                              // editable
+                              />
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Details <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <TextArea
+                                type="text"
+                                {...register("details", {
+                                  required: {
+                                    value: true,
+                                    message: " Required",
+                                  },
+                                  maxLength: {
+                                    value: 500,
+                                    message: "Details exceeds  500 characters ",
+                                  },
+
+                                  onChange: (value) => {
+                                    setDetailsLength(
+                                      500 - value.target.value.length
+                                    );
+                                  },
+                                })}
+                              />
+                              <InputPara>
+                                {" "}
+                                {
+                                  <Errors>{errors.details?.message}</Errors>
+                                }{" "}
+                                <span style={{ justifySelf: "flex-end" }}>
+                                  {" "}
+                                  {detailsLength > -1 ? detailsLength : 0}{" "}
+                                  Characters left
+                                </span>
+                              </InputPara>
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>Date of Next Review</InputLabel>
+                              <Input
+                                type="date"
+                                {...register("nextReviewDate", {
+                                  // required: {
+                                  //   value: true,
+                                  //   message: "Required",
+                                  // },
+
+                                  validate: (fieldValue) => {
+                                    const startDate = new Date(
+                                      getValues("reviewDate")
+                                    );
+                                    const endDate = fieldValue;
+                                    if (
+                                      startDate <= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("nextReviewDate", {
+                                        type: "custom",
+                                        message:
+                                          "End date must not be earlier than start date   ",
+                                      });
+                                    } else {
+                                      setError("nextReviewDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {errors.nextReviewDate && (
+                                <Errors>
+                                  {errors.nextReviewDate?.message}
+                                </Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <input
+                            style={{ width: "50%" }}
+                            type="file"
+                            {...register(`file`, {
                               required: {
-                                value: true,
+                                value: update ? false : true,
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = getValues("nextReviewDate");
-                                const startDate = new Date(e.target.value);
-                                if (startDate >= new Date(endDate) && endDate) {
-                                  setError("nextReviewDate", {
-                                    type: "custom",
-                                    message:
-                                      "Next Review must not be earlier than  Date",
-                                  });
-                                } else {
-                                  setError("nextReviewDate", {
-                                    type: "custom",
-                                    message: "",
-                                  });
-                                }
+                                handleFileChange(e);
                               },
                             })}
+                            id="upload"
+                            className="custom"
                           />
-                          {errors.reviewDate && (
-                            <Errors>{errors.reviewDate?.message}</Errors>
-                          )}
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Completed By <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <ReactTags
-                            tags={tags}
-                            suggestions={suggestions}
-                            delimiters={delimiters}
-                            handleDelete={handleDelete}
-                            handleAddition={handleAddition}
-                            handleDrag={handleDrag}
-                            handleTagClick={handleTagClick}
-                            inputFieldPosition="bottom"
-                            autocomplete
-                          // editable
-                          />
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Details <InputSpan>*</InputSpan>
-                          </InputLabel>
-                          <TextArea
-                            type="text"
-                            {...register("details", {
-                              required: {
-                                value: true,
-                                message: " Required",
-                              },
-                              maxLength: {
-                                value: 500,
-                                message: "Details exceeds  500 characters ",
-                              },
-
-                              onChange: (value) => {
-                                setDetailsLength(
-                                  500 - value.target.value.length
-                                );
-                              },
-                            })}
-                          />
-                          <InputPara>
-                            {" "}
-                            {<Errors>{errors.details?.message}</Errors>}{" "}
-                            <span style={{ justifySelf: "flex-end" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "16px",
+                              alignItems: "center",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            <EditButton
+                              htmlFor="upload"
+                              style={{ width: "max-content" }}
+                            >
                               {" "}
-                              {detailsLength > -1 ? detailsLength : 0}{" "}
-                              Characters left
-                            </span>
-                          </InputPara>
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <FlexContaierForm>
-                        <FlexColumnForm>
-                          <InputLabel>
-                            Date of Next Review
-                          </InputLabel>
-                          <Input
-                            type="date"
-                            {...register("nextReviewDate", {
-                              // required: {
-                              //   value: true,
-                              //   message: "Required",
-                              // },
-
-                              validate: (fieldValue) => {
-                                const startDate = new Date(
-                                  getValues("reviewDate")
-                                );
-                                const endDate = fieldValue;
-                                if (startDate <= new Date(endDate) && endDate) {
-                                  setError("nextReviewDate", {
-                                    type: "custom",
-                                    message:
-                                      "End date must not be earlier than start date   ",
-                                  });
-                                } else {
-                                  setError("nextReviewDate", {
-                                    type: "custom",
-                                    message: "",
-                                  });
-                                }
-                              },
-                            })}
-                          />
-                          {errors.nextReviewDate && (
-                            <Errors>{errors.nextReviewDate?.message}</Errors>
+                              <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                              {isUploading ? (
+                                <ThreeDots
+                                  height="8"
+                                  width="80"
+                                  radius="9"
+                                  color="#279AF1"
+                                  ariaLabel="three-dots-loading"
+                                  visible={true}
+                                />
+                              ) : !file ? (
+                                "Upload Document "
+                              ) : file?.originalName.length <= 32 ? (
+                                file?.originalName
+                              ) : (
+                                file?.originalName.substring(0, 30) + "..."
+                              )}
+                            </EditButton>
+                            {file && (
+                              <LightPara onClick={removeFile}>Remove</LightPara>
+                            )}
+                          </div>
+                          {errors.file && (
+                            <Errors> {errors.file?.message} </Errors>
                           )}
-                        </FlexColumnForm>
-                      </FlexContaierForm>
-                      <input
-                        style={{ width: "50%" }}
-                        type="file"
-                        {...register(`file`, {
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                          onChange: (e) => {
-                            handleFileChange(e);
-                          },
-                        })}
-                        id="upload"
-                        className="custom"
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "16px",
-                          alignItems: "center",
-                          marginBottom: "20px",
-                        }}
-                      >
-                        <EditButton
-                          htmlFor="upload"
-                          style={{ width: "max-content" }}
-                        >
-                          {" "}
-                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {isUploading ? (
-                            <ThreeDots
-                              height="8"
-                              width="80"
-                              radius="9"
-                              color="#279AF1"
-                              ariaLabel="three-dots-loading"
-                              visible={true}
-                            />
-                          ) : !file ? (
-                            "Upload Document "
-                          ) : file?.originalName.length <= 32 ? (
-                            file?.originalName
-                          ) : (
-                            file?.originalName.substring(0, 30) + "..."
-                          )}
-                        </EditButton>
-                        {file && (
-                          <LightPara onClick={removeFile}>Remove</LightPara>
-                        )}
-                      </div>
-                      {errors.file && <Errors> {errors.file?.message} </Errors>}
 
-                      <ButtonBlue type="submit">Submit</ButtonBlue>
-                    </ModalFormContainer>
-                  </form>
+                          <ButtonBlue type="submit" disabled={isUploading}>
+                            {" "}
+                            {!update ? "Submit" : "Update"}
+                          </ButtonBlue>
+                        </ModalFormContainer>
+                      </form>
+                    </>
+                  )}
                 </Box>
               </Modal>
               {/*modal ends here  */}
@@ -864,13 +847,24 @@ const EVPerformance = () => {
                             <FlexSpaceBetween>
                               <ReviewsDiv>
                                 Next Review on:{" "}
-                                {moment(data.nextReviewDate).format(
-                                  "DD/MM/YYYY"
-                                ) || " - "}
+                                {data.nextReviewDate
+                                  ? moment(data.nextReviewDate).format(
+                                    "DD/MM/YYYY"
+                                  )
+                                  : " - "}
                               </ReviewsDiv>
                               <IconContainer>
-                                <Icons src="/images/icons/Pendown.svg" />
-                                <Icons src="/images/icons/Trash-2.svg" />
+                                <Icons
+                                  onClick={() => HandleUpdateAction(data)}
+                                  src="/images/icons/Pendown.svg"
+                                />
+                                <Icons
+                                  onClick={() => {
+                                    setId(data._id);
+                                    HandleOpenDelete();
+                                  }}
+                                  src="/images/icons/Trash-2.svg"
+                                />
                               </IconContainer>
                             </FlexSpaceBetween>
                           </FlexColumn>
@@ -973,6 +967,13 @@ const EVPerformance = () => {
                       </form> */}
         </Box>
       </Modal>
+      <DeleteModal
+        openDelete={openDelete}
+        message="Are you sure you want to delete this Review"
+        HandleCloseDelete={HandleCloseDelete}
+        isLoading={isDeleting}
+        HandleDelete={HandleDelete}
+      />
     </>
   );
 };

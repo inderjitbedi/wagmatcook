@@ -34,6 +34,7 @@ import {
   ButtonBlue,
   Select,
   Option,
+  AlignFlex,
 } from "./AddEmployeeStyles";
 
 const PersonalInfo = () => {
@@ -553,6 +554,26 @@ const PersonalInfo = () => {
                     }
                   </FlexColumnForm>
                 </FlexContaierForm>
+                <FlexContaierForm>
+                  <FlexColumnForm>
+                    <AlignFlex>
+                      <input
+                        type="checkbox"
+                        {...register(`isActive`, {})}
+                        id={`isBebEligible`}
+                      />
+                      <InputLabel
+                        htmlFor={`isBebEligible`}
+                        style={{
+                          marginBottom: "0px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Is Active <InputSpan>*</InputSpan>
+                      </InputLabel>
+                    </AlignFlex>
+                  </FlexColumnForm>
+                </FlexContaierForm>
               </FormContainer>
               <BodyMainHeading style={{ marginBottom: "25px" }}>
                 Personal Information
@@ -600,9 +621,7 @@ const PersonalInfo = () => {
                 </FlexContaierForm>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>
-                      SIN 
-                    </InputLabel>
+                    <InputLabel>SIN</InputLabel>
                     <Controller
                       name="sin"
                       control={control}
@@ -644,7 +663,7 @@ const PersonalInfo = () => {
                       }}
                       render={({ field }) => (
                         <Select {...field}>
-                          <Option disabled>Select</Option>
+                          <Option value="">Select</Option>
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
                           <Option value={3}>Non-Binary</Option>

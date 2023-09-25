@@ -381,7 +381,7 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength(value.length);
+      setdescriptionLength( 500 - value.length);
       if (!value) {
         setErrors({
           ...errors,
@@ -559,7 +559,7 @@ const Disciplinary = () => {
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
                   {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  Characters left
+                  characters left
                 </InputPara>
                 {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -739,48 +739,69 @@ const Disciplinary = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <ModalUpperDiv>
-            <ModalHeading> Update Disciplinary Type</ModalHeading>
-            <ModalIcon
-              onClick={() => {
-                HandleCloseEdit();
-                setErrors("");
+          {isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "380px",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999,
               }}
-              src="/images/icons/Alert-Circle.svg"
-            />
-          </ModalUpperDiv>
-          <ModalUpperMid>
-            <InputLabel>
-              Disciplinary Type Name <InputSpan>*</InputSpan>
-            </InputLabel>
-            <Input
-              type="text"
-              name="name"
-              onChange={HandleChangesEdit}
-              value={upDateData.name}
-              // placeholder={name}
-            />
-            <Errors>{errors.nameError}</Errors>
-            <InputLabel>
-              Details <InputSpan>*</InputSpan>
-            </InputLabel>
-            <TextArea
-              type="text"
-              name="description"
-              onChange={HandleChangesEdit}
-              value={upDateData.description}
-              // placeholder={descriptio}
-            />
-            <Errors style={{ display: "inline-block" }}>
-              {errors.descriptionError}
-            </Errors>
-            <InputPara>
-              {" "}
-              <Errors>{errors.descriptionError}</Errors>{" "}
-              {descriptionLength > -1 ? 500 - descriptionLength : 0} characters
-              left
-            </InputPara>
-            {/* <InputLabel>
+            >
+              <RotatingLines
+                strokeColor="#279AF1"
+                strokeWidth="3"
+                animationDuration="0.75"
+                width="52"
+                visible={true}
+              />
+            </div>
+          ) : (
+            <>
+              <ModalUpperDiv>
+                <ModalHeading> Update Disciplinary Type</ModalHeading>
+                <ModalIcon
+                  onClick={() => {
+                    HandleCloseEdit();
+                    setErrors("");
+                  }}
+                  src="/images/icons/Alert-Circle.svg"
+                />
+              </ModalUpperDiv>
+              <ModalUpperMid>
+                <InputLabel>
+                  Disciplinary Type Name <InputSpan>*</InputSpan>
+                </InputLabel>
+                <Input
+                  type="text"
+                  name="name"
+                  onChange={HandleChangesEdit}
+                  value={upDateData.name}
+                  // placeholder={name}
+                />
+                <Errors>{errors.nameError}</Errors>
+                <InputLabel>
+                  Details <InputSpan>*</InputSpan>
+                </InputLabel>
+                <TextArea
+                  type="text"
+                  name="description"
+                  onChange={HandleChangesEdit}
+                  value={upDateData.description}
+                  // placeholder={descriptio}
+                />
+                <Errors style={{ display: "inline-block" }}>
+                  {errors.descriptionError}
+                </Errors>
+                <InputPara>
+                  {" "}
+                  <Errors>{errors.descriptionError}</Errors>{" "}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
+                  characters left
+                </InputPara>
+                {/* <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>
             </InputLabel>
             <Select
@@ -794,15 +815,17 @@ const Disciplinary = () => {
               <Option value={true}>Yes</Option>
               <Option value={false}>No</Option>
             </Select> */}
-            <AddNewButton
-              onClick={() => {
-                HandleUpdate();
-              }}
-              disabled={isLoading}
-            >
-              Update
-            </AddNewButton>
-          </ModalUpperMid>
+                <AddNewButton
+                  onClick={() => {
+                    HandleUpdate();
+                  }}
+                  disabled={isLoading}
+                >
+                  Update
+                </AddNewButton>
+              </ModalUpperMid>
+            </>
+          )}
         </Box>
       </Modal>
       <DeleteModal

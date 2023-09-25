@@ -1,0 +1,234 @@
+.container {
+  width: 100%;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+}
+.template-container {
+  width: 700px;
+}
+.header {
+  padding: 36px 50px 0px 50px;
+  background: #093fe1;
+  /* height: 552px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.header-reset {
+  padding: 36px 50px 48px 50px;
+  background: #093fe1;
+  /* height: 552px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+}
+.otp{
+  color: #222B45;
+font-family: Inter;
+font-size: 64px;
+font-style: normal;
+font-weight: 500;
+line-height: 60px;
+margin: 20px 0px;
+}
+.underline{
+ text-decoration-line: underline;
+}
+.reset-para{
+  width:100%;
+  color: #222B45;
+font-family: Inter;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 28px;
+margin:0px; 
+}
+.header-logo {
+  color: #fff;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  width: 100%;
+}
+.header-heading {
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px; /* 150% */
+  letter-spacing: -0.64px;
+  width: 80%;
+}
+
+.main {
+  /* height: 500px; */
+  padding: 40px 50px 0px 50px;
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: center; */
+  flex-direction: column;
+}
+.border{
+  padding-bottom: 60px;
+  border-bottom: 1px solid #eaeaea;
+
+}
+.border-reset{
+  padding-bottom: 50px;
+  border-bottom: 1px solid #eaeaea;
+
+}
+.banner{
+  border-radius: 8px;
+background: #BDE0E6;
+display:flex;
+padding:20px 0px;
+  align-items: center;
+  gap:20px;
+  margin:20px 0px 40px 0px;
+
+}
+.image{
+  width:30%;
+
+}
+.text-container{
+   width:70%;
+
+}
+.btn{
+  border-radius: 8px;
+background: #FFF;
+color: #050505;
+text-align: center;
+font-family: Inter;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 16px;
+padding: 0.8em 1.25em;
+border:none;
+
+}
+.main-heading {
+  width: 100%;
+  color: #222b45;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 0px;
+}
+.main-para {
+  color: #222b45;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+.grid {
+  width: 100%;
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 30px;
+  align-items: start;
+}
+.card {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-row-gap: 8px;
+  grid-column-gap: 16px;
+}
+.icon {
+  grid-row: 1 / span 2;
+  transform: translateY(-8px);
+  width: 49px;
+  height: 49px;
+  background-color: #eef2ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.main-heading-2 {
+  color: #222b45;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  margin: 0px;
+  align-items: center;
+}
+.card-para {
+  color: #222b45;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin: 0;
+}
+
+.footer {
+  padding: 36px 0px 18px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.icons-container {
+  display: flex;
+  gap: 10px;
+}
+.footer-text {
+  color: #6b6b6b;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  /* line-height: 28px; */
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  /* margin-bottom:36px; */
+}
+.para {
+  color: #8f939c;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  /* line-height: 28px; */
+}
+.color {
+  color: #279af1;
+}
+.copyrights {
+  color: #8f939c;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  /* line-height: 28px; */
+}

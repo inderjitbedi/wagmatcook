@@ -352,87 +352,110 @@ const OABenefits = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <ModalUpperDiv>
-              <ModalHeading>
-                {!update ? "Add Benefit" : "Update Benefit"}
-              </ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  HandleClose();
-                  setUpdate(false);
-                  clearErrors();
-                  reset({});
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  height: "380px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 999,
                 }}
-                src="/images/icons/Alert-Circle.svg"
-              />
-            </ModalUpperDiv>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <ModalUpperMid>
-                <InputLabel>
-                  Benefit Name <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="text"
-                  {...register("name", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                  })}
+              >
+                <RotatingLines
+                  strokeColor="#279AF1"
+                  strokeWidth="3"
+                  animationDuration="0.75"
+                  width="52"
+                  visible={true}
                 />
-                {errors.name && <Errors>{errors.name?.message}</Errors>}
-                <InputLabel>
-                  Description <InputSpan>*</InputSpan>
-                </InputLabel>
-                <TextArea
-                  type="text"
-                  {...register("description", {
-                    required: {
-                      value: true,
-                      message: "Required",
-                    },
-                    maxLength: {
-                      value: 500,
-                      message: "Details exceeds 500 characters ",
-                    },
-                    // minLength: {
-                    //   value: 10,
-                    //   message: "Atleast write  10 characters ",
-                    // },
-                    onChange: (value) => {
-                      setDetailsLength(500 - value.target.value.length);
-                    },
-                  })}
-                />
+              </div>
+            ) : (
+              <>
+                <ModalUpperDiv>
+                  <ModalHeading>
+                    {!update ? "Add Benefit" : "Update Benefit"}
+                  </ModalHeading>
+                  <ModalIcon
+                    onClick={() => {
+                      HandleClose();
+                      setUpdate(false);
+                      clearErrors();
+                      reset({});
+                    }}
+                    src="/images/icons/Alert-Circle.svg"
+                  />
+                </ModalUpperDiv>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <ModalUpperMid>
+                    <InputLabel>
+                      Benefit Name <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("name", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    <InputLabel>
+                      Description <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <TextArea
+                      type="text"
+                      {...register("description", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        maxLength: {
+                          value: 500,
+                          message: "Details exceeds 500 characters ",
+                        },
+                        // minLength: {
+                        //   value: 10,
+                        //   message: "Atleast write  10 characters ",
+                        // },
+                        onChange: (value) => {
+                          setDetailsLength(500 - value.target.value.length);
+                        },
+                      })}
+                    />
 
-                <InputPara>
-                  {" "}
-                  {<Errors>{errors.description?.message}</Errors>}{" "}
-                  <span style={{ justifySelf: "flex-end" }}>
-                    {" "}
-                    {detailsLength > -1 ? detailsLength : 0} characters left
-                  </span>
-                </InputPara>
+                    <InputPara>
+                      {" "}
+                      {<Errors>{errors.description?.message}</Errors>}{" "}
+                      <span style={{ justifySelf: "flex-end" }}>
+                        {" "}
+                        {detailsLength > -1 ? detailsLength : 0} characters left
+                      </span>
+                    </InputPara>
 
-                {!update ? (
-                  <AddNewButton
-                    type="submit"
-                    disabled={isLoading}
-                    style={{ marginTop: "25px" }}
-                  >
-                    Submit
-                  </AddNewButton>
-                ) : (
-                  <AddNewButton
-                    type="submit"
-                    disabled={isLoading}
-                    style={{ marginTop: "25px" }}
-                  >
-                    Update
-                  </AddNewButton>
-                )}
-              </ModalUpperMid>
-            </form>
+                    {!update ? (
+                      <AddNewButton
+                        type="submit"
+                        disabled={isLoading}
+                        style={{ marginTop: "25px" }}
+                      >
+                        Submit
+                      </AddNewButton>
+                    ) : (
+                      <AddNewButton
+                        type="submit"
+                        disabled={isLoading}
+                        style={{ marginTop: "25px" }}
+                      >
+                        Update
+                      </AddNewButton>
+                    )}
+                  </ModalUpperMid>
+                </form>
+              </>
+            )}
           </Box>
         </Modal>
       </DisciplinaryDiv>

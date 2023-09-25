@@ -31,6 +31,7 @@ const EmployeePersonal = () => {
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -56,8 +57,29 @@ const EmployeePersonal = () => {
         setIsLoading(false);
       });
   };
+  const [headerData, setHeaderData] = useState([]);
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   useEffect(() => {
     GetEmployeesPersonalInfo();
+          GetHeadersData();
+
   }, []);
   console.log(result);
   return (
@@ -85,21 +107,21 @@ const EmployeePersonal = () => {
           <PersonalInfo>
             <PersonalImg
               src={
-                result.personalInfo?.photo
-                  ? API_URL + result.personalInfo.photo?.path
+                headerData.personalInfo?.photo
+                  ? API_URL + headerData.personalInfo.photo?.path
                   : "/images/User.jpg"
               }
             />
             <FlexColumn>
               <PersonalName>
                 {[
-                  result.personalInfo?.firstName,
-                  result.personalInfo?.lastName,
+                  headerData.personalInfo?.firstName,
+                  headerData.personalInfo?.lastName,
                 ].join(" ")}
               </PersonalName>
-              <PersonalTitle>{result.jobDetails?.title || "-"}</PersonalTitle>
+              <PersonalTitle>{headerData?.position?.title || "-"}</PersonalTitle>
               <PersonalDepartment>
-                {result.jobDetails?.department?.name || "-"}
+                {headerData.position?.department?.name || "-"}
               </PersonalDepartment>
             </FlexColumn>
           </PersonalInfo>
@@ -200,6 +222,16 @@ const EmployeePersonal = () => {
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
+                <FlexSpaceBetween>
+                  <FlexColumn>
+                    <TitlePara>Is Active </TitlePara>
+                    {result.personalInfo?.isActive ? (
+                      <ViewPara style={{ color: "#34A853" }}>Active</ViewPara>
+                    ) : (
+                      <ViewPara style={{ color: "red" }}>In Active</ViewPara>
+                    )}
+                  </FlexColumn>
+                </FlexSpaceBetween>
                 <BasicHeading style={{ marginTop: "53px" }}>
                   Basic Information
                 </BasicHeading>
@@ -241,7 +273,9 @@ const EmployeePersonal = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Pronouns </TitlePara>
-                    <ViewPara>{result.personalInfo?.pronouns || " - "}</ViewPara>
+                    <ViewPara>
+                      {result.personalInfo?.pronouns || " - "}
+                    </ViewPara>
                   </FlexColumn>
                   {/* <FlexColumn>
                     <TitlePara>Band Number</TitlePara>
