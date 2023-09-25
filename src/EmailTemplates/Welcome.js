@@ -1,7 +1,9 @@
 import React from "react";
 import "./EmailTemplatesCss.css";
+
 const Welcome = () => {
   return (
+
     <div className="container">
       <div className="template-container">
         <div className="header">
@@ -296,6 +298,7 @@ const Welcome = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 

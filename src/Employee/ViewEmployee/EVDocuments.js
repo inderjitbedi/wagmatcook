@@ -73,6 +73,7 @@ const EVDocuments = () => {
   const [Id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const GetDocuments = () => {
     setIsLoading(true);
@@ -136,7 +137,7 @@ const EVDocuments = () => {
     }
   };
   const HandleDelete = () => {
-    setIsLoading(true);
+    setIsDeleting(true);
     let url = `/employee/documents/${employeeid}/delete/${Id}`;
     httpClient({
       method: "put",
@@ -155,10 +156,10 @@ const EVDocuments = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Deleting Benefits. Please try again.");
-        setIsLoading(false);
+        setIsDeleting(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsDeleting(false);
       });
   };
   const drop = useRef(null);
@@ -561,7 +562,8 @@ const EVDocuments = () => {
 
                   <ButtonBlue
                     style={{ marginTop: "25px" }}
-                    onClick={(e) => HandleSubmit(e, file)}
+                      onClick={(e) => HandleSubmit(e, file)}
+                      disabled={isUploading}
                   >
                     Submit
                   </ButtonBlue>
@@ -575,7 +577,7 @@ const EVDocuments = () => {
         openDelete={openDelete}
         message="Are you sure you want to delete this Document"
         HandleCloseDelete={HandleCloseDelete}
-        isLoading={isLoading}
+        isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
     </>

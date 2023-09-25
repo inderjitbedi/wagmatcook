@@ -168,7 +168,7 @@ const EVBenefits = () => {
                   <FlexColumn>
                     <TitlePara>End Date </TitlePara>
                     <ViewPara>
-                      {moment(result.benefit?.endDate).format("DD/MM/YYYY") ||
+                        {result.benefit?.endDate ?   moment(result.benefit?.endDate).format("DD/MM/YYYY") :
                         " - "}{" "}
                     </ViewPara>
                   </FlexColumn>

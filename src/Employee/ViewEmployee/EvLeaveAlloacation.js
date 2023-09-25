@@ -94,6 +94,7 @@ const EvLeaveAlloacation = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const {
     register,
     control,
@@ -203,7 +204,7 @@ const EvLeaveAlloacation = () => {
       });
   };
   const HandleDelete = () => {
-    setIsLoading(true);
+    setIsDeleting(true);
     let url = `/employee/leave-allocation/${employeeid}/delete/${Id}`;
     httpClient({
       method: "put",
@@ -222,10 +223,10 @@ const EvLeaveAlloacation = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Deleting Benefits. Please try again.");
-        setIsLoading(false);
+        setIsDeleting(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsDeleting(false);
       });
   };
   const HandleUpdate = (data) => {
@@ -262,7 +263,7 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-          GetHeadersData();
+    GetHeadersData();
 
     GetLeavesType();
     GetLeaveAlloaction();
@@ -547,7 +548,7 @@ const EvLeaveAlloacation = () => {
         openDelete={openDelete}
         message="Are you sure you want to delete this Leave Alloaction"
         HandleCloseDelete={HandleCloseDelete}
-        isLoading={isLoading}
+        isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
     </>

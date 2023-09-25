@@ -167,7 +167,7 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength(value.length);
+      setdescriptionLength( 500 - value.length);
 
       if (!value) {
         setErrors({
@@ -192,7 +192,7 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength(value.length);
+      setdescriptionLength( 500 - value.length);
 
       if (!value) {
         setErrors({
@@ -526,9 +526,9 @@ const Departments = () => {
                 />
                 <InputPara>
                   {" "}
-                  <Errors>{errors.descriptionError}</Errors>Max{" "}
-                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  characters
+                  <Errors>{errors.descriptionError}</Errors>{" "}
+                  {descriptionLength > -1 ? descriptionLength : 0}{" "}
+                  characters left
                 </InputPara>
               </ModalUpperMid>
               <ModalBottom>

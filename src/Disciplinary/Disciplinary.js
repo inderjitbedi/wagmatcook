@@ -381,7 +381,7 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength(value.length);
+      setdescriptionLength( 500 - value.length);
       if (!value) {
         setErrors({
           ...errors,
@@ -559,7 +559,7 @@ const Disciplinary = () => {
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
                   {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  Characters left
+                  characters left
                 </InputPara>
                 {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>

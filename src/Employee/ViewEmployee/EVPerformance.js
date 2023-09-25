@@ -99,6 +99,8 @@ const EVPerformance = () => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [suggestionsData, setSuggestionsData] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const {
     register,
     control,
@@ -256,7 +258,7 @@ const EVPerformance = () => {
       });
   };
   useEffect(() => {
-          GetHeadersData();
+    GetHeadersData();
 
     GetEmployeesProformance();
     GetSuggestionsList();
@@ -269,9 +271,12 @@ const EVPerformance = () => {
   };
 
   const handleAddition = (tag) => {
-    if (suggestions.includes(tag)) {
+
+    const isTagInSuggestions = suggestions.some((suggestion) => suggestion.text === tag);
+    if (isTagInSuggestions) {
       setTags([...tags, tag]);
     }
+
   };
 
   const handleDrag = (tag, currPos, newPos) => {
@@ -294,221 +299,9 @@ const EVPerformance = () => {
   };
 
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-  const COUNTRIES = [
-    "Afghanistan",
-    "Albania",
-    "Algeria",
-    "Andorra",
-    "Angola",
-    "Anguilla",
-    "Antigua &amp; Barbuda",
-    "Argentina",
-    "Armenia",
-    "Aruba",
-    "Australia",
-    "Austria",
-    "Azerbaijan",
-    "Bahamas",
-    "Bahrain",
-    "Bangladesh",
-    "Barbados",
-    "Belarus",
-    "Belgium",
-    "Belize",
-    "Benin",
-    "Bermuda",
-    "Bhutan",
-    "Bolivia",
-    "Bosnia &amp; Herzegovina",
-    "Botswana",
-    "Brazil",
-    "British Virgin Islands",
-    "Brunei",
-    "Bulgaria",
-    "Burkina Faso",
-    "Burundi",
-    "Cambodia",
-    "Cameroon",
-    "Cape Verde",
-    "Cayman Islands",
-    "Chad",
-    "Chile",
-    "China",
-    "Colombia",
-    "Congo",
-    "Cook Islands",
-    "Costa Rica",
-    "Cote D Ivoire",
-    "Croatia",
-    "Cruise Ship",
-    "Cuba",
-    "Cyprus",
-    "Czech Republic",
-    "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "Ecuador",
-    "Egypt",
-    "El Salvador",
-    "Equatorial Guinea",
-    "Estonia",
-    "Ethiopia",
-    "Falkland Islands",
-    "Faroe Islands",
-    "Fiji",
-    "Finland",
-    "France",
-    "French Polynesia",
-    "French West Indies",
-    "Gabon",
-    "Gambia",
-    "Georgia",
-    "Germany",
-    "Ghana",
-    "Gibraltar",
-    "Greece",
-    "Greenland",
-    "Grenada",
-    "Guam",
-    "Guatemala",
-    "Guernsey",
-    "Guinea",
-    "Guinea Bissau",
-    "Guyana",
-    "Haiti",
-    "Honduras",
-    "Hong Kong",
-    "Hungary",
-    "Iceland",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Iraq",
-    "Ireland",
-    "Isle of Man",
-    "Israel",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Jersey",
-    "Jordan",
-    "Kazakhstan",
-    "Kenya",
-    "Kuwait",
-    "Kyrgyz Republic",
-    "Laos",
-    "Latvia",
-    "Lebanon",
-    "Lesotho",
-    "Liberia",
-    "Libya",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Macau",
-    "Macedonia",
-    "Madagascar",
-    "Malawi",
-    "Malaysia",
-    "Maldives",
-    "Mali",
-    "Malta",
-    "Mauritania",
-    "Mauritius",
-    "Mexico",
-    "Moldova",
-    "Monaco",
-    "Mongolia",
-    "Montenegro",
-    "Montserrat",
-    "Morocco",
-    "Mozambique",
-    "Namibia",
-    "Nepal",
-    "Netherlands",
-    "Netherlands Antilles",
-    "New Caledonia",
-    "New Zealand",
-    "Nicaragua",
-    "Niger",
-    "Nigeria",
-    "Norway",
-    "Oman",
-    "Pakistan",
-    "Palestine",
-    "Panama",
-    "Papua New Guinea",
-    "Paraguay",
-    "Peru",
-    "Philippines",
-    "Poland",
-    "Portugal",
-    "Puerto Rico",
-    "Qatar",
-    "Reunion",
-    "Romania",
-    "Russia",
-    "Rwanda",
-    "Saint Pierre &amp; Miquelon",
-    "Samoa",
-    "San Marino",
-    "Satellite",
-    "Saudi Arabia",
-    "Senegal",
-    "Serbia",
-    "Seychelles",
-    "Sierra Leone",
-    "Singapore",
-    "Slovakia",
-    "Slovenia",
-    "South Africa",
-    "South Korea",
-    "Spain",
-    "Sri Lanka",
-    "St Kitts &amp; Nevis",
-    "St Lucia",
-    "St Vincent",
-    "St. Lucia",
-    "Sudan",
-    "Suriname",
-    "Swaziland",
-    "Sweden",
-    "Switzerland",
-    "Syria",
-    "Taiwan",
-    "Tajikistan",
-    "Tanzania",
-    "Thailand",
-    "Timor L'Este",
-    "Togo",
-    "Tonga",
-    "Trinidad &amp; Tobago",
-    "Tunisia",
-    "Turkey",
-    "Turkmenistan",
-    "Turks &amp; Caicos",
-    "Uganda",
-    "Ukraine",
-    "United Arab Emirates",
-    "United Kingdom",
-    "United States of America",
-    "Uruguay",
-    "Uzbekistan",
-    "Venezuela",
-    "Vietnam",
-    "Virgin Islands (US)",
-    "Yemen",
-    "Zambia",
-    "Zimbabwe",
-  ];
 
-  const suggestions = COUNTRIES.map((country) => {
-    return {
-      id: country,
-      text: country,
-    };
-  });
+
+
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
@@ -572,7 +365,7 @@ const EVPerformance = () => {
       });
   };
   const HandleDelete = () => {
-    setIsLoading(true);
+    setIsDeleting(true);
     let url = `/employee/review/${employeeid}/delete/${Id}`;
     httpClient({
       method: "put",
@@ -592,12 +385,13 @@ const EVPerformance = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Deleting Benefits. Please try again.");
-        setIsLoading(false);
+        setIsDeleting(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsDeleting(false);
       });
   };
+  const [suggestions, setSuggestions] = useState([])
   const GetSuggestionsList = () => {
     setIsLoading(true);
     let url = `/employee/completed-by-list`;
@@ -609,6 +403,16 @@ const EVPerformance = () => {
         if (result) {
           setSuggestionsData(result);
           console.log("suggestions are:", result);
+
+          const suggestions = result?.users?.map((data) =>
+          ({
+
+            id: data._id,
+            text: data.userData.name,
+
+          }));
+
+          setSuggestions(suggestions);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -622,25 +426,28 @@ const EVPerformance = () => {
         setIsLoading(false);
       });
   };
-    const [headerData, setHeaderData] = useState([]);
-    const GetHeadersData = () => {
-      // setIsLoading(true);
-      const trimid = employeeid.trim();
-      let url = `/employee/header-info/${trimid}`;
-      httpClient({
-        method: "get",
-        url,
+  console.log(suggestions, "this is map  data for suggestions")
+
+  const [headerData, setHeaderData] = useState([]);
+
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setHeaderData(result);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error in fetching Personal info. Please try again.");
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -795,7 +602,8 @@ const EVPerformance = () => {
                                 handleTagClick={handleTagClick}
                                 inputFieldPosition="bottom"
                                 autocomplete
-                                // editable
+                                placeholder="Add More"
+                              // editable
                               />
                             </FlexColumnForm>
                           </FlexContaierForm>
@@ -931,7 +739,7 @@ const EVPerformance = () => {
                             <Errors> {errors.file?.message} </Errors>
                           )}
 
-                          <ButtonBlue type="submit">
+                          <ButtonBlue type="submit" disabled={isUploading}>
                             {" "}
                             {!update ? "Submit" : "Update"}
                           </ButtonBlue>
@@ -1029,7 +837,7 @@ const EVPerformance = () => {
                                   {data.file.originalName?.length <= 38
                                     ? data.file?.originalName
                                     : data.file?.originalName.substring(0, 38) +
-                                        "..." || " - "}
+                                    "..." || " - "}
                                 </File>
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>
@@ -1041,8 +849,8 @@ const EVPerformance = () => {
                                 Next Review on:{" "}
                                 {data.nextReviewDate
                                   ? moment(data.nextReviewDate).format(
-                                      "DD/MM/YYYY"
-                                    )
+                                    "DD/MM/YYYY"
+                                  )
                                   : " - "}
                               </ReviewsDiv>
                               <IconContainer>
@@ -1163,7 +971,7 @@ const EVPerformance = () => {
         openDelete={openDelete}
         message="Are you sure you want to delete this Review"
         HandleCloseDelete={HandleCloseDelete}
-        isLoading={isLoading}
+        isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
     </>

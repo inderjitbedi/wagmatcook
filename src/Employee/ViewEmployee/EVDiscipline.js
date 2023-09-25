@@ -78,6 +78,8 @@ const EVDiscipline = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleClose = () => {
     setOpen(false);
     reset({});
@@ -286,7 +288,7 @@ const EVDiscipline = () => {
   useEffect(() => {
 
     setIsLoading(true);
-          GetHeadersData();
+    GetHeadersData();
 
     GetDisciplinary();
     GetEmployeesDisciplinary();
@@ -347,7 +349,7 @@ const EVDiscipline = () => {
       });
   };
   const HandleDelete = () => {
-    setIsLoading(true);
+    setIsDeleting(true);
     let url = `/employee/disciplinary/${employeeid}/delete/${Id}`;
     httpClient({
       method: "put",
@@ -367,10 +369,10 @@ const EVDiscipline = () => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error Deleting Benefits. Please try again.");
-        setIsLoading(false);
+        setIsDeleting(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsDeleting(false);
       });
   };
   const [headerData, setHeaderData] = useState([]);
@@ -709,7 +711,7 @@ const EVDiscipline = () => {
                             <Errors> {errors.file?.message} </Errors>
                           )}
 
-                          <ButtonBlue type="submit">
+                          <ButtonBlue type="submit" disabled={isUploading}>
                             {!update ? " Submit " : "Update"}
                           </ButtonBlue>
                         </ModalFormContainer>
@@ -776,7 +778,7 @@ const EVDiscipline = () => {
                                 {data.file.originalName?.length <= 38
                                   ? data.file.originalName
                                   : data.file.originalName.substring(0, 38) +
-                                      "..." || " - "}
+                                  "..." || " - "}
                               </File>
                             </Link>
                           </FlexSpaceBetween>
@@ -816,7 +818,7 @@ const EVDiscipline = () => {
         openDelete={openDelete}
         message="Are you sure you want to delete this Discipline"
         HandleCloseDelete={HandleCloseDelete}
-        isLoading={isLoading}
+        isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
     </>
