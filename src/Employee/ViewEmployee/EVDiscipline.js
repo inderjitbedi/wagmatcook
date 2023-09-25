@@ -189,7 +189,7 @@ const EVDiscipline = () => {
           GetEmployeesDisciplinary();
           toast.success(result.message); //Employee disciplinary added successfully");
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -617,7 +617,7 @@ const EVDiscipline = () => {
                                 {data.file.originalName?.length <= 38
                                   ? data.file.originalName
                                   : data.file.originalName.substring(0, 38) +
-                                      "..." || " - "}
+                                  "..." || " - "}
                               </File>
                             </Link>
                           </FlexSpaceBetween>

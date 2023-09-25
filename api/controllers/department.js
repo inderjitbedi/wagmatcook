@@ -54,7 +54,7 @@ const departmentController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization : req.organization?._id || null };
+            let filters = { isDeleted: false, organization: req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [
@@ -62,6 +62,38 @@ const departmentController = {
                     { description: { $regex: req.query.searchKey, $options: 'i' } }
                 ];
             }
+            const departments = await Department.find(filters)
+                .skip(startIndex)
+                .limit(limit)
+                .sort({ createdAt: -1 });
+
+            const totalDepartments = await Department.countDocuments(filters);
+            const totalPages = Math.ceil(totalDepartments / req.query.limit);
+
+            res.status(200).json({
+                departments,
+                totalDepartments,
+                currentPage: page,
+                totalPages,
+                message: 'Departments fetched successfully'
+            });
+        } catch (error) {
+            console.error("departmentController:list:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async dashboardList(req, res) {
+        try {
+
+            // if (!req.params.orgid) {
+            //     return res.status(400).json({ message: 'Please provide Organization Id' });
+            // }
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 4;
+            const startIndex = (page - 1) * limit;
+
+            let filters = { isDeleted: false, organization: req.organization?._id || null };
+
             const departments = await Department.find(filters)
                 .skip(startIndex)
                 .limit(limit)

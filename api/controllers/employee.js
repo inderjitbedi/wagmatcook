@@ -25,7 +25,7 @@ const employeeController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, role: roles.EMPLOYEE }
+            let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN }, }
 
             const employees = await User.aggregate([
                 {
@@ -42,6 +42,7 @@ const employeeController = {
                 {
                     $match: {
                         'userOrganizations.organization': req.organization?._id || null,
+
                     },
                 },
                 {
@@ -69,11 +70,7 @@ const employeeController = {
                         as: 'photoInfo',
                     },
                 },
-                {
-                    $addFields: {
-                        'personalInfo.photo': { $arrayElemAt: ['$photoInfo', 0] },
-                    },
-                },
+
                 {
                     $skip: startIndex,
                 },
@@ -83,13 +80,198 @@ const employeeController = {
 
             ]);
 
-            const totalEmployees = await User.countDocuments(filters);
+            const totalEmployees = await UserOrganization.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                {
+                    $unwind: '$userData',
+                },
+                {
+                    $match: {
+                        'userData.isActive': true,
+                        'userData.isDeleted': false,
+                        'organization': req.organization?._id || null,
+                        'userData.role': { $ne: roles.ORG_ADMIN },
+                    },
+                },
+            ]).count('user');
+
             const totalPages = Math.ceil(totalEmployees / req.query.limit);
             res.status(200).json({
                 employees,
-                totalEmployees,
+                totalEmployees: totalEmployees[0]?.user || 0,
                 currentPage: page,
                 totalPages,
+                message: 'Employees fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:list:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async dashboardList(req, res) {
+        try {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 4;
+            const startIndex = (page - 1) * limit;
+
+            const employees = await UserOrganization.aggregate([
+                {
+                    $match: {
+                        organization: req.organization?._id || null,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                {
+                    $unwind: '$userData',
+                },
+                {
+                    $match: { 'userData.isDeleted': false, 'userData.isActive': true, },
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos',
+                        localField: 'user',
+                        foreignField: 'employee',
+                        as: 'personalInfo',
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'employeepositionhistories',
+                        localField: 'user',
+                        foreignField: 'employee',
+                        as: 'positions',
+                    },
+                },
+
+                {
+                    $lookup: {
+                        from: 'files',
+                        localField: 'personalInfo.photo',
+                        foreignField: '_id',
+                        as: 'photoInfo',
+                    },
+                }, {
+                    $project: {
+                        userData: 1,
+                        personalInfo: 1,
+                        positions: 1,
+                        photoInfo: 1,
+                    },
+                },
+                {
+                    $unwind: {
+                        path: '$positions',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $match: {
+                        $or: [
+                            { 'positions.isPrimary': true },
+                            { 'positions.isPrimary': { $exists: false } },
+                        ],
+                        'positions.isDeleted': false,
+                    },
+                },
+                {
+                    $skip: startIndex,
+                },
+                {
+                    $limit: limit,
+                },
+            ]);
+            // const employees = await User.aggregate([
+            //     {
+            //         $match: filters,
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'userorganizations',
+            //             localField: '_id',
+            //             foreignField: 'user',
+            //             as: 'userOrganizations',
+            //         },
+            //     },
+            //     {
+            //         $match: {
+            //             'userOrganizations.organization': req.organization?._id || null,
+            //         },
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'employeepersonalinfos',
+            //             localField: '_id',
+            //             foreignField: 'employee',
+            //             as: 'personalInfo',
+            //         },
+            //     },
+
+            //     {
+            //         $lookup: {
+            //             from: 'employeejobdetails',
+            //             localField: '_id',
+            //             foreignField: 'employee',
+            //             as: 'jobDetails',
+            //         },
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'files',
+            //             localField: 'personalInfo.photo',
+            //             foreignField: '_id',
+            //             as: 'photoInfo',
+            //         },
+            //     },
+
+            //     {
+            //         $skip: startIndex,
+            //     },
+            //     {
+            //         $limit: limit,
+            //     }
+
+            // ]);
+
+            // const totalEmployees = await User.countDocuments(filters);
+            const totalEmployees = await UserOrganization.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                {
+                    $unwind: '$userData',
+                },
+                {
+                    $match: {
+                        'userData.isActive': true,     // Filter by isActive in the User collection
+                        'userData.isDeleted': false,   // Filter by isDeleted in the User collection
+                        'organization': req.organization?._id || null,
+                        'userData.role': { $ne: roles.ORG_ADMIN },
+                    },
+                },
+            ]).count('user');
+            res.status(200).json({
+                employees,
+                totalEmployees: totalEmployees[0]?.user || 0,
                 message: 'Employees fetched successfully'
             });
         } catch (error) {
@@ -172,6 +354,7 @@ const employeeController = {
             const personalInfo = await EmployeePersonalInfo.findOneAndUpdate({ employee: req.params.id }, req.body, { new: true })
 
             user.email = req.body.workEmail;
+            user.isActive = req.body.isActive;
             user.save();
 
             res.status(200).json({
@@ -238,17 +421,6 @@ const employeeController = {
                         },
                     },
                 ])
-
-
-
-                // let users = await UserOrganization.find({ organization: req.organization._id })
-                //     .populate('user')
-                // let filteredUsers = []
-                // for (const user of users) {
-                //     if (user.role != "EMPLOYEE") {
-                //         filteredUsers.push(user)
-                //     }
-                // }
                 res.status(200).json({
                     users,
                     message: 'Reports to list fetched successfully'
@@ -267,7 +439,69 @@ const employeeController = {
     },
 
 
+    async getCompletedByListWithSearch() {
+        try {
+            if (req.organization._id) {
+                const pipeline = [
+                    {
+                        $match: { organization: req.organization._id },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'user',
+                            foreignField: '_id',
+                            as: 'userData',
+                        },
+                    },
+                    {
+                        $unwind: '$userData',
+                    },
+                    {
+                        $lookup: {
+                            from: 'employeepersonalinfos',
+                            localField: 'user',
+                            foreignField: 'employee',
+                            as: 'personalInfo',
+                        },
+                    },
+                    {
+                        $match: {
+                            'userData.role': { $ne: roles.EMPLOYEE },
+                        },
+                    },
+                ];
 
+                if (req.params.searchKey) {
+                    pipeline.push({
+                        $match: {
+                            $or: [
+                                { 'personalInfo.firstName': { $regex: req.params.searchKey, $options: 'i' } },
+                                { 'personalInfo.lastName': { $regex: req.params.searchKey, $options: 'i' } },
+                                { 'userData.email': { $regex: req.params.searchKey, $options: 'i' } },
+                            ],
+                        },
+                    });
+                }
+
+                const users = await UserOrganization.aggregate(pipeline);
+
+                res.status(200).json({
+                    users,
+                    message: 'Reports to list fetched successfully'
+                });
+            } else
+
+                res.status(200).json({
+                    users: [],
+                    message: 'Reports to list fetched successfully'
+                });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
 
     async updateJobDetails(req, res) {
         try {
@@ -356,7 +590,12 @@ const employeeController = {
             }
             if (req.body.isPrimary) {
                 await EmployeePositionHistory.updateMany({ employee: req.params.id }, { isPrimary: false });
+            } else {
+                let primaryPosition = await EmployeePositionHistory.find({ employee: req.params.id, isPrimary: true, isDeleted: false })
 
+                if (!primaryPosition.length) {
+                    return res.status(400).json({ message: 'Atleast one primary position required for an employee' });
+                }
             }
 
             const position = new EmployeePositionHistory({ ...req.body, employee: req.params.id });
@@ -532,7 +771,13 @@ const employeeController = {
             if (file) {
                 req.body.file = await fileController.moveToUploads(req, file)
             }
-            const review = new EmployeeReviews({ ...req.body, employee: req.params.id, completedBy: req.user._id });
+
+            if (!req.body.completedBy || !req.body.completedBy.length) {
+                req.body.completedBy = [req.user._id]
+            }
+            const review = new EmployeeReviews({
+                ...req.body, employee: req.params.id
+            });
             await review.save();
 
             res.status(200).json({
@@ -559,14 +804,34 @@ const employeeController = {
                 req.body.file = await fileController.moveToUploads(req, file)
             }
 
-
-
-            const review = await EmployeeReviews.findOneAndUpdate({ _id: req.params.reviewid }, { ...req.body, employee: req.params.id, completedBy: req.user._id });
-            await review.save();
+            if (!req.body.completedBy || !req.body.completedBy.length) {
+                req.body.completedBy = [req.user._id]
+            }
+            const review = await EmployeeReviews.findOneAndUpdate({ _id: req.params.reviewid }, { ...req.body, employee: req.params.id });
 
             res.status(200).json({
                 review,
-                message: 'Employee review added successfully'
+                message: 'Employee review updated successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async deleteReview(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const review = await EmployeeReviews.findOneAndUpdate({ _id: req.params.reviewid }, { isDeleted: true });
+
+            res.status(200).json({
+                review,
+                message: 'Employee review deleted successfully'
             });
 
         } catch (error) {
@@ -608,7 +873,7 @@ const employeeController = {
             if (file) {
                 req.body.file = await fileController.moveToUploads(req, file)
             }
-            const disciplinary = new EmployeeDisciplinaries({ ...req.body, employee: req.params.id, completedBy: req.user._id });
+            const disciplinary = new EmployeeDisciplinaries({ ...req.body, employee: req.params.id });
             await disciplinary.save();
 
             res.status(200).json({
@@ -621,6 +886,52 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+    async updateDisciplinary(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            let file = await File.findOne({ _id: req.body.file });
+            if (file) {
+                req.body.file = await fileController.moveToUploads(req, file)
+            }
+
+            const disciplinary = await EmployeeDisciplinaries.findOneAndUpdate({ _id: req.params.disciplinaryid }, { ...req.body, employee: req.params.id });
+
+            res.status(200).json({
+                disciplinary,
+                message: 'Employee disciplinary updated successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async deleteDisciplinary(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const disciplinary = await EmployeeDisciplinaries.findOneAndUpdate({ _id: req.params.disciplinaryid }, { isDeleted: true });
+
+            res.status(200).json({
+                disciplinary,
+                message: 'Employee disciplinary deleted successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
     async addType(req, res) {
         try {
             const employeeType = new EmployeeType({ ...req.body, organization: req.organization?._id || null })
@@ -706,6 +1017,34 @@ const employeeController = {
             res.status(200).json({
                 documents, personalInfo,
                 message: 'Employee documents fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async getEmployeeHeaderInfo(req, res) {
+        try {
+            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).select('firstName lastName')
+                .populate({
+                    path: 'photo',
+                    select: 'destination name originalName path',
+                })
+            const position = await EmployeePositionHistory.findOne({ employee: req.params.id, isDeleted: false })
+                .select('title')
+                .populate([{
+                    path: 'employee',
+                    select: 'email',
+                },
+                {
+                    path: 'department employeeType',
+                    select: 'name',
+                }]
+
+                );
+            res.status(200).json({
+                position, personalInfo,
+                message: 'Employee details fetched successfully'
             });
         } catch (error) {
             console.error("employeeController:getBenefit:error -", error);

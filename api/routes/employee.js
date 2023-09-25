@@ -99,11 +99,14 @@ router.put('/delete/:id', verifyOrgAdmin, employeeController.delete);
 router.put('/personal-info/:id', verifyOrgAdmin, employeeController.updatePersonalInfo);
 router.get('/personal-info/:id', verifyOrgAdmin, employeeController.getPersonalInfo);
 
+router.get('/header-info/:id', verifyOrgAdmin, employeeController.getEmployeeHeaderInfo);
+
 router.put('/job-details/:id', verifyOrgAdmin, employeeController.updateJobDetails);
 router.get('/job-details/:id', verifyOrgAdmin, employeeController.getJobDetails);
 router.post('/job-details/position/:id', verifyOrgAdmin, employeeController.addPosition);
 
 router.get('/reports-to-list', verifyOrgAdmin, employeeController.getReportsToList);
+router.get('/completed-by-list', verifyOrgAdmin, employeeController.getCompletedByListWithSearch);
 
 router.put('/benefit/:id', verifyOrgAdmin, employeeController.updateBenefit);
 router.get('/benefit/:id', verifyOrgAdmin, employeeController.getBenefit);
@@ -118,11 +121,14 @@ router.get('/types', verifyOrgAdmin, employeeController.getTypes);
 
 router.get('/reviews/:id', verifyOrgAdmin, employeeController.getReviews);
 router.post('/review/:id', verifyOrgAdmin, employeeController.addReview);
-router.post('/review/:id/:reviewid', verifyOrgAdmin, employeeController.updateReview);
+router.put('/review/:id/:reviewid', verifyOrgAdmin, employeeController.updateReview);
+router.put('/review/:id/delete/:reviewid', verifyOrgAdmin, employeeController.deleteReview);
 
 
 router.get('/disciplinaries/:id', verifyOrgAdmin, employeeController.getDisciplinaries);
 router.post('/disciplinary/:id', verifyOrgAdmin, employeeController.addDisciplinary);
+router.put('/disciplinary/:id/:disciplinaryid', verifyOrgAdmin, employeeController.updateDisciplinary);
+router.put('/disciplinary/:id/delete/:disciplinaryid', verifyOrgAdmin, employeeController.deleteDisciplinary);
 
 router.post('/file/upload/:type', verifyOrgAdmin, upload.single('file'), handleMulterError, fileController.upload);
 

@@ -75,13 +75,13 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       url,
       data: dataCopy,
     })
-      .then(({ result, error }) => { 
+      .then(({ result, error }) => {
         if (result) {
           HandleCloseEmployee()
           Navigate(`/organization-admin/employee/personal-info/${result.employee._id}`);
           reset()
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -223,7 +223,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
               </FlexColumnForm>
             </FlexContaierForm> */}
-            <ButtonBlue style={{marginTop:"25px"}} type="submit">Submit</ButtonBlue>
+            <ButtonBlue style={{ marginTop: "25px" }} type="submit">Submit</ButtonBlue>
           </ModalFormContainer>
         </form>
       </Box>

@@ -113,7 +113,7 @@ const CertificatesInfo = () => {
             HandleOpenThanks();
           }
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -442,7 +442,7 @@ const CertificatesInfo = () => {
                     </FlexColumnForm>
                     <FlexColumnForm>
                       <InputLabel>
-                        Expiry 
+                        Expiry
                       </InputLabel>
                       <Input
                         type="date"

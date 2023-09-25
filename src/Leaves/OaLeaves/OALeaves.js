@@ -122,7 +122,7 @@ const PendingStyle = {
 };
 const ApprovedStyles = {
   borderRadius: "100px",
-background: "#C8FFC7",
+  background: "#C8FFC7",
   display: "inline-flex",
   padding: "2px 12px",
   alignItems: "center",
@@ -228,7 +228,7 @@ const OALeaves = () => {
       name: "",
       description: "",
       maxCarryOver: "",
-      isActive:false,
+      isActive: false,
     },
   });
   const onSubmit = (data) => {
@@ -288,7 +288,7 @@ const OALeaves = () => {
           GetLeavesType();
           toast.success(result.message);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -390,8 +390,8 @@ const OALeaves = () => {
     reset({ name: data.name, description: data.description, maxCarryOver: data.maxCarryOver, isActive: data.isActive });
     HandleOpen();
   };
-    const HandleOpenAddNewAction = () => {
-        setUpdate(false);
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
     HandleOpen();
     reset({});
     clearErrors();
@@ -499,7 +499,7 @@ const OALeaves = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalUpperDiv style={{ padding: " 10px 16px 10px 35px" }}>
                   <ModalHeading>
-                    { !update ? "Add New Leave" : "Update Leave Type"}
+                    {!update ? "Add New Leave" : "Update Leave Type"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -800,7 +800,7 @@ const OALeaves = () => {
                             <TableCell
                               sx={CellStyle2}
                               align="center"
-                              //   style={{ maxWidth: "10px" }}
+                            //   style={{ maxWidth: "10px" }}
                             >
                               {" "}
                               <ActionIconDiv

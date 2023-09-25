@@ -183,7 +183,7 @@ const OADashBoard = () => {
   const GetEmployees = () => {
     //  setIsLoading(true);
 
-    let url = `employee/list?limit=3`;
+    let url = `dashboard/employee/list?limit=3`;
     httpClient({
       method: "get",
       url,
@@ -401,7 +401,7 @@ const OADashBoard = () => {
                     <MainCardPara>{data.name}</MainCardPara>
                     <CardListPara>
                       Employees:
-                       <CardListSpan>0</CardListSpan>
+                      <CardListSpan>0</CardListSpan>
                     </CardListPara>
                   </CardList>
                 ))}
@@ -476,8 +476,8 @@ const OADashBoard = () => {
                 <MainCardTitleDiv>
                   <DashCardTitle>New Employee</DashCardTitle>
                   {employeeData.totalEmployees > 3 && (
-                      <MainCardView
-                        style={{cursor:"pointer"}}
+                    <MainCardView
+                      style={{ cursor: "pointer" }}
                       onClick={() =>
                         navigate("/organization-admin/employee/list")
                       }
@@ -498,7 +498,7 @@ const OADashBoard = () => {
                             data.personalInfo[0]?.lastName,
                           ].join(" ")}
                         </MainCardPara>
-                        <MainCardParaLight>{data.email}</MainCardParaLight>
+                        <MainCardParaLight>{data.positions?.title}</MainCardParaLight>
                       </CardLeavesDiv>
                     </CardEmployeeDiv>
                     <CardEmployeePara>

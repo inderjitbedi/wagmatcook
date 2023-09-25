@@ -16,6 +16,7 @@ const superAdminRoute = require('./routes/superAdmin')
 const orgAdminRoute = require('./routes/orgAdmin')
 const employeeRoute = require('./routes/employee')
 const employeeTypeRoute = require('./routes/employeeType')
+const dashboardRoute = require('./routes/dashboard')
 
 
 
@@ -71,6 +72,7 @@ app.use('/api/disciplinary', disciplinaryRoute);
 app.use('/api/super-admin', superAdminRoute);
 app.use('/api/organization-admin', orgAdminRoute);
 app.use('/api/employee', employeeRoute);
+app.use('/api/dashboard', dashboardRoute);
 
 
 

@@ -84,7 +84,7 @@ const Benefits = () => {
 
           setFormData(result);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -159,7 +159,7 @@ const Benefits = () => {
             (benefit) => benefit._id === result.benefit.benefit._id
           );
           const description = findBenefit?.description;
-         
+
 
           reset(result.benefit);
           setValue("benefit", result.benefit.benefit);
@@ -346,8 +346,8 @@ const Benefits = () => {
                       type="date"
                       {...register("endDate", {
                         validate: (fieldValue) => {
-                            const startDate = new Date(getValues("startDate"));
-                            const endDate = fieldValue;
+                          const startDate = new Date(getValues("startDate"));
+                          const endDate = fieldValue;
                           if (startDate <= new Date(endDate) && endDate) {
                             setError("endDate", {
                               type: "custom",

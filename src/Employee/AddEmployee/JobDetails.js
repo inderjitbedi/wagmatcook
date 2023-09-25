@@ -133,7 +133,7 @@ const JobDetails = () => {
 
           reset(result);
           setValue("isActive", result.isActive);
-         
+
           if (!result.positions?.length) {
             append(initialPosition);
           }
@@ -183,7 +183,7 @@ const JobDetails = () => {
 
           setFormData(result);
         } else {
-          // toast.warn("something went wrong ");
+          ////toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -463,8 +463,8 @@ const JobDetails = () => {
                               <Option value={user._id}>
                                 {user.personalInfo?.length
                                   ? user.personalInfo[0].firstName +
-                                    " " +
-                                    user.personalInfo[0].lastName
+                                  " " +
+                                  user.personalInfo[0].lastName
                                   : user.userData.name}
                               </Option>
                             ))}
@@ -818,7 +818,7 @@ const JobDetails = () => {
                 </BluePara>
               </FlexContaier>
 
-              <FlexContaierForm>
+              {/* <FlexContaierForm>
                 <FlexColumnForm>
                   <AlignFlex>
                     <input
@@ -834,7 +834,7 @@ const JobDetails = () => {
                     </InputLabel>
                   </AlignFlex>
                 </FlexColumnForm>
-              </FlexContaierForm>
+              </FlexContaierForm> */}
 
               <FlexContaier style={{ marginTop: "25px" }}>
                 {!edit && (

@@ -435,12 +435,12 @@ const Employee = () => {
                           `/organization-admin/employee/details/personal-info/${data._id}`
                         )
                       }
-                      style={{cursor:"pointer"}}
+                      style={{ cursor: "pointer" }}
                     >
                       <TabelImg
                         src={
-                          data.personalInfo[0]?.photo
-                            ? API_URL + data.personalInfo[0]?.photo?.path
+                          data.photoInfo && data.photoInfo.length
+                            ? API_URL + data.photoInfo[0]?.path
                             : "/images/User.jpg"
                         }
                       />

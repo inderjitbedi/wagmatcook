@@ -216,7 +216,7 @@ const EVPerformance = () => {
           reset();
           toast.success(result.message); //Employee proformance added successfully");
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -263,10 +263,10 @@ const EVPerformance = () => {
 
   const handleAddition = (tag) => {
 
- 
+
     if (suggestions.includes(tag)) {
-        setTags([...tags, tag]);
-   
+      setTags([...tags, tag]);
+
     }
   };
 
@@ -632,7 +632,7 @@ const EVPerformance = () => {
                             handleTagClick={handleTagClick}
                             inputFieldPosition="bottom"
                             autocomplete
-                            // editable
+                          // editable
                           />
                         </FlexColumnForm>
                       </FlexContaierForm>
@@ -854,7 +854,7 @@ const EVPerformance = () => {
                                   {data.file.originalName?.length <= 38
                                     ? data.file?.originalName
                                     : data.file?.originalName.substring(0, 38) +
-                                        "..." || " - "}
+                                    "..." || " - "}
                                 </File>
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>

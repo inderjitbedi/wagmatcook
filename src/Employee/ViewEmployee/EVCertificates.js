@@ -156,7 +156,7 @@ const EVCertificates = () => {
           reset();
           toast.success(result.message); //Employee certificate added successfully");
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -410,7 +410,7 @@ const EVCertificates = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Exipiry 
+                            Exipiry
                           </InputLabel>
                           <Input
                             type="date"
@@ -547,7 +547,7 @@ const EVCertificates = () => {
                               {data.file?.originalName?.length <= 38
                                 ? data.file?.originalName
                                 : data.file?.originalName.substring(0, 38) +
-                                    "..." || " - "}
+                                "..." || " - "}
                             </File>
                           </Link>
                         )}

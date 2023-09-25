@@ -213,7 +213,7 @@ const EmployeeJobDetails = () => {
           reset();
           toast.success(result.message);
         } else {
-          toast.warn("something went wrong ");
+          //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
@@ -370,14 +370,14 @@ const EmployeeJobDetails = () => {
                               {data?.ratePer === 1
                                 ? "Hour"
                                 : data?.ratePer === 2
-                                ? "Day"
-                                : data?.ratePer === 3
-                                ? "Week"
-                                : data?.ratePer === 4
-                                ? "Biweekly "
-                                : data?.ratePer === 5
-                                ? "Annual "
-                                : " - "}
+                                  ? "Day"
+                                  : data?.ratePer === 3
+                                    ? "Week"
+                                    : data?.ratePer === 4
+                                      ? "Biweekly "
+                                      : data?.ratePer === 5
+                                        ? "Annual "
+                                        : " - "}
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
@@ -404,7 +404,7 @@ const EmployeeJobDetails = () => {
                               {data?.isPrimary ? "Yes" : "No"}
                             </ViewPara>
                           </FlexColumn>
-                          <FlexColumn>
+                          {/* <FlexColumn>
                             <TitlePara>Status</TitlePara>
                             {result.isActive ? (
                               <ViewPara style={{ color: "#34A853" }}>
@@ -415,7 +415,7 @@ const EmployeeJobDetails = () => {
                                 Inactive
                               </ViewPara>
                             )}
-                          </FlexColumn>
+                          </FlexColumn> */}
                         </FlexSpaceBetween>
                         {/* <FlexSpaceBetween>
                   <FlexColumn>
@@ -582,8 +582,8 @@ const EmployeeJobDetails = () => {
                                     <Option value={user._id}>
                                       {user.personalInfo?.length
                                         ? user.personalInfo[0].firstName +
-                                          " " +
-                                          user.personalInfo[0].lastName
+                                        " " +
+                                        user.personalInfo[0].lastName
                                         : user.userData.name}
                                     </Option>
                                   ))}
@@ -892,7 +892,7 @@ const EmployeeJobDetails = () => {
                             </AlignFlex>
                           </FlexColumnForm>
                         </FlexContaierForm>
-                        <FlexContaierForm style={{ marginTop: "25px" }}>
+                        {/* <FlexContaierForm style={{ marginTop: "25px" }}>
                           <FlexColumnForm>
                             <AlignFlex>
                               <input
@@ -908,14 +908,14 @@ const EmployeeJobDetails = () => {
                               </InputLabel>
                             </AlignFlex>
                           </FlexColumnForm>
-                        </FlexContaierForm>
+                        </FlexContaierForm> */}
                         <ButtonBlue
                           type="submit"
                           style={{ marginTop: "25px" }}
-                          // disabled={!isDirty}
-                          // onClick={() => {
-                          //   handleSubmit(onSubmit);
-                          // }}
+                        // disabled={!isDirty}
+                        // onClick={() => {
+                        //   handleSubmit(onSubmit);
+                        // }}
                         >
                           Submit
                         </ButtonBlue>

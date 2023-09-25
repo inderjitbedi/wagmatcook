@@ -14,10 +14,12 @@ const infoSchema = new mongoose.Schema({
         ref: 'File',
         required: true
     },
-    completedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-    },
+    completedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        },
+    ],
     details: {
         type: String,
         default: null
