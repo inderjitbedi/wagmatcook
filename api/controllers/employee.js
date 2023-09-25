@@ -1108,7 +1108,7 @@ const employeeController = {
     },
     async getLeaveAllocations(req, res) {
         try {
-            const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false })
+            const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'leaveType', select: 'name' })
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
 
             res.status(200).json({
