@@ -535,8 +535,6 @@ input[type="checkbox"] {
 .ReactTags__selected span.ReactTags__tag {
   // border: 1px solid #ddd;
   color:  #0d7d0b;
-
-  font-family: Helvetica Neue;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -550,8 +548,9 @@ input[type="checkbox"] {
 }
 .ReactTags__selected a.ReactTags__remove {
    color:  #0d7d0b;
-  margin-left: 5px;
-  cursor: pointer;
+   fill:#0d7d0b;
+    margin-left: 5px;
+   cursor: pointer;
 }
 .ReactTags__suggestions {
   position: absolute;

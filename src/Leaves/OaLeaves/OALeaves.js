@@ -794,7 +794,7 @@ const OALeaves = () => {
                                   data.isActive ? ApprovedStyles : PendingStyle
                                 }
                               >
-                                {data.isActive ? "Active" : "InActive"}
+                                {data.isActive ? "Active" : "Inactive"}
                               </span>{" "}
                             </TableCell>
                             <TableCell
