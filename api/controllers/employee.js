@@ -15,6 +15,7 @@ const EmployeeDisciplinaries = require("../models/employeeDisciplinaries");
 const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const EmployeeDocuments = require("../models/employeeDocuments");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
+const leaveStatus = require("../enum/leaveStatus");
 
 
 const employeeController = {
@@ -1187,16 +1188,16 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate({
-                path: 'approver',
-                populate: {
-                    path: 'personalInfo',
-                    model: 'EmployeePersonalInfo', // Replace with the actual model name
+            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false })
+                .populate({
+                    path: 'approver',
                     populate: {
-                        path: 'photo',
-                    }
-                },
-            }, 'leaveType');
+                        path: 'personalInfo',
+                        populate: {
+                            path: 'photo',
+                        },
+                    },
+                }).populate('leaveType');
 
             res.status(200).json({
                 history,
@@ -1239,7 +1240,7 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id });
+            const request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id, status: leaveStatus.PENDING });
             await request.save();
 
             res.status(200).json({
