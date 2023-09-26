@@ -16,6 +16,7 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import moment from "moment";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -189,7 +190,12 @@ const EVLeaveHistory = () => {
   const { employeeid } = useParams();
   const Navigate = useNavigate();
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setUpdate(false)
+    clearErrors()
+    reset({})
+    setOpen(false)
+  };
   const [openThanks, setOpenThanks] = useState(false);
   const handleOpenThanks = () => setOpenThanks(true);
   const handleCloseThanks = () => setOpenThanks(false);
@@ -236,13 +242,13 @@ const EVLeaveHistory = () => {
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
     reset({
-      leaveType: "",
-      from: "",
-      to: "",
-      hours: "",
-      requesterComment: "",
-      approver: "",
-      status:"",
+      leaveType: data.leaveType._id,
+      from: new Date(data.from).toISOString().split("T")[0],
+      to: new Date(data.to).toISOString().split("T")[0],
+      hours: data.hours,
+      requesterComment: data.requesterComment,
+      approver: data.approver?._id,
+      status: data.status,
     });
     handleOpen();
   };
@@ -288,13 +294,13 @@ const EVLeaveHistory = () => {
                 lastName,
               } = user.personalInfo[0];
               return {
-                _id: user._id,
+                _id: user.user,
                 personalInfoId,
                 name: `${firstName} ${lastName}`,
               };
             } else {
               const { _id: userDataId, name } = user.userData;
-              return { _id: user._id, userDataId, name };
+              return { _id: user.user, userDataId, name };
             }
           });
           setReportList(extractedDataArray);
@@ -350,6 +356,7 @@ const EVLeaveHistory = () => {
         if (result) {
           handleClose();
           reset();
+          GetLeaveHistory();
           toast.success(result.message); //Benefit created successfully.");
         } else {
           //toast.warn("something went wrong ");
@@ -501,7 +508,14 @@ const EVLeaveHistory = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((data, index) => (
+                {result.history?.length == 0 && (
+                  <TableRow sx={{ height: "200px" }}>
+                    <TableCell align="center" colSpan={8}>
+                      No Leave History Found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {result?.history?.map((data, index) => (
                   <TableRow
                     key={data.index}
                     sx={{
@@ -514,28 +528,32 @@ const EVLeaveHistory = () => {
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <TabelDiv>
-                        <TabelImg src="/images/Oval Copy 2.jpg" />
+                        {/* <TabelImg src="/images/Oval Copy 2.jpg" /> */}
                         <TabelParaContainer>
-                          <TabelDarkPara>{data.name}</TabelDarkPara>
+                          <TabelDarkPara>
+                            {data?.leaveType?.name || " - "}
+                          </TabelDarkPara>
                         </TabelParaContainer>
                       </TabelDiv>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.employeeid}
+                      {data.approver?.name || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.phone}
+                      {data.from
+                        ? moment(data.from).format("DD/MM/YYYY")
+                        : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.joindate}
+                      {data.to ? moment(data.to).format("DD/MM/YYYY") : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.role}
+                      {data.hours || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <span
                         style={
-                          data.status === "Pending"
+                          data.status === "PENDING"
                             ? PendingStyle
                             : ApprovedStyles
                         }
@@ -591,6 +609,7 @@ const EVLeaveHistory = () => {
                         From <InputSpan>*</InputSpan>{" "}
                       </InputLabel>
                       <Input
+                        readOnly={update}
                         type="date"
                         {...register("from", {
                           required: {
@@ -621,6 +640,7 @@ const EVLeaveHistory = () => {
                         To <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Input
+                        readOnly={update}
                         type="date"
                         {...register("to", {
                           required: {
@@ -666,7 +686,7 @@ const EVLeaveHistory = () => {
                           },
                         }}
                         render={({ field }) => (
-                          <Select {...field}>
+                          <Select {...field} disabled={update}>
                             <Option>Select</Option>
                             {leaveType?.map((data) => (
                               <Option value={data._id}>{data.name}</Option>
@@ -682,6 +702,7 @@ const EVLeaveHistory = () => {
                       </InputLabel>
                       <Input
                         type="text"
+                        readOnly={update}
                         {...register("hours", {
                           required: {
                             value: true,
@@ -708,11 +729,12 @@ const EVLeaveHistory = () => {
                       <InputLabel>Description</InputLabel>
                       <Input
                         type="text"
+                        readOnly={update}
                         {...register("requesterComment", {
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
                         })}
                       />
                       <Errors> {errors.requesterComment?.message} </Errors>
@@ -733,7 +755,7 @@ const EVLeaveHistory = () => {
                           },
                         }}
                         render={({ field }) => (
-                          <Select {...field}>
+                          <Select {...field} disabled={update}>
                             <Option>Select</Option>
                             {reportList?.map((data) => (
                               <Option value={data._id}>{data.name}</Option>
@@ -744,23 +766,20 @@ const EVLeaveHistory = () => {
                       {<Errors>{errors.approver?.message}</Errors>}
                     </FlexColumnForm>
                   </FlexContaierForm>
-                  <ButtonBlue type="submit">
-                    {" "}
-                    {!update ? (
-                      "Submit"
-                    ) : (
-                      <span
-                        style={
-                          rows[0].status === "Pending"
-                            ? PendingStyle
-                            : ApprovedStyles
-                        }
-                      >
-                        {" "}
-                        {rows[0].status}{" "}
-                      </span>
-                    )}{" "}
-                  </ButtonBlue>{" "}
+                  {!update ? (
+                    <ButtonBlue type="submit"> Submit</ButtonBlue>
+                  ) : (
+                    <span
+                      style={
+                        rows[0].status === "Pending"
+                          ? PendingStyle
+                          : ApprovedStyles
+                      }
+                    >
+                      {" "}
+                      {rows[0].status}{" "}
+                    </span>
+                  )}
                 </ModalFormContainer>
               </form>
             </Box>
