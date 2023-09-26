@@ -100,7 +100,6 @@ const EVPerformance = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [suggestionsData, setSuggestionsData] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const {
     register,
     control,
@@ -113,7 +112,7 @@ const EVPerformance = () => {
     setError,
   } = useForm({ mode: "all" });
 
-  const [byError, setByError] = useState([]);
+  const [byError, setByError] = useState(null);
   const onSubmit = (data) => {
     //console.log("form submmited", data);
     function isEmptyObject(obj) {
@@ -133,10 +132,10 @@ const EVPerformance = () => {
       if (tags) {
         const ids = tags.map((data) => data.id);
         data.completedBy = ids;
+        AddNewProformance(data);
       } else {
         setByError("Required");
       }
-      AddNewProformance(data);
     } else if (update) {
       if (tags) {
         const ids = tags.map((data) => data.id);
@@ -217,35 +216,37 @@ const EVPerformance = () => {
     setValue("file", null);
   };
   const AddNewProformance = (data) => {
-    setIsLoading(true);
     let dataCopy = data;
+    if (!byError) {
+      setIsLoading(true);
 
-    let url = `/employee/review/${employeeid}`;
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          handleClose();
-          setFile(null);
-          GetEmployeesProformance();
-          reset();
-          setByError(null);
+      let url = `/employee/review/${employeeid}`;
+      httpClient({
+        method: "post",
+        url,
+        data: dataCopy,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            handleClose();
+            setFile(null);
+            GetEmployeesProformance();
+            reset();
+            setByError(null);
 
-          toast.success(result.message); //Employee proformance added successfully");
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        toast.error("Error Adding review . Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+            toast.success(result.message); //Employee proformance added successfully");
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          toast.error("Error Adding review . Please try again.");
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   };
   const GetEmployeesProformance = () => {
     setIsLoading(true);
@@ -472,7 +473,8 @@ const EVPerformance = () => {
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
-  console.log("tags data:", tags);
+  // console.log("tags data:", tags);
+  console.log(byError);
 
   return (
     <>
@@ -841,7 +843,9 @@ const EVPerformance = () => {
                                 lineHeight: "1px",
                               }}
                             >
-                              Tom Holland
+                              {data?.personalInfo
+                                ?.map((obj) => obj.firstName)
+                                .join(", ")}
                             </ViewPara>
                             <TimelinePara
                               style={{
@@ -880,15 +884,18 @@ const EVPerformance = () => {
                             </AddNewButton> */}
                             </FlexSpaceBetween>
                             <FlexSpaceBetween>
-                              <ReviewsDiv>
-                                Next Review on:{" "}
-                                {data.nextReviewDate
-                                  ? moment(data.nextReviewDate).format(
-                                      "DD/MM/YYYY"
-                                    )
-                                  : " - "}
-                              </ReviewsDiv>
-                              <IconContainer>
+                              {data.nextReviewDate && (
+                                <ReviewsDiv>
+                                  Next Review on:{" "}
+                                  {data.nextReviewDate
+                                    ? moment(data.nextReviewDate).format(
+                                        "DD/MM/YYYY"
+                                      )
+                                    : " - "}
+                                </ReviewsDiv>
+                              )}
+                              <div></div>
+                              <IconContainer style={{ alignSelf: "flex-end" }}>
                                 <Icons
                                   onClick={() => HandleUpdateAction(data)}
                                   src="/images/icons/Pendown.svg"
