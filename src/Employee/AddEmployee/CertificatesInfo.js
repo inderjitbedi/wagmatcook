@@ -405,7 +405,7 @@ const CertificatesInfo = () => {
                           validate: (fieldValue) => {
                             const selectedDate = Date.parse(fieldValue);
                             const currentDate = new Date().setHours(0, 0, 0, 0);
-                            if (selectedDate > currentDate) {
+                            if (selectedDate >= currentDate) {
                               return "Completion Date must not be greater than today's date";
                             }
                             return true;
@@ -453,22 +453,29 @@ const CertificatesInfo = () => {
                           //   message: "Required",
                           // },
                           validate: (fieldValue) => {
-                            const startDate = new Date(
+                            const startDateValue = 
                               getValues(`certificates.${index}.completionDate`)
+                          
+                            const endDateValue = getValues(
+                              `certificates.${index}.expiryDate`
                             );
-                            const endDate = fieldValue;
 
-                            if (startDate <= new Date(endDate) && endDate) {
-                              setError(`certificates.${index}.expiryDate`, {
-                                type: "custom",
-                                message:
-                                  "End date must not be earlier than start date   ",
-                              });
+                            if (endDateValue && startDateValue) {
+                               const endDate = new Date(endDateValue);
+                              const startDate = new Date(startDateValue);
+                              if (startDate > endDate) {
+                                return setError(
+                                  `certificates.${index}.expiryDate`,
+                                  {
+                                    type: "custom",
+                                    message:
+                                      "End date must not be earlier than start date   ",
+                                  }
+                                );
+                               }
+                              ;
                             } else {
-                              setError(`certificates.${index}.expiryDate`, {
-                                type: "custom",
-                                message: "",
-                              });
+                              return clearErrors(`certificates.${index}.expiryDate`);
                             }
                           },
                         })}
@@ -580,7 +587,7 @@ const CertificatesInfo = () => {
         openThanks={openThanks}
         HandleCloseThanks={HandleCloseThanks}
       />
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

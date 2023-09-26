@@ -488,9 +488,9 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                    {moment(data.jobDetails[0]?.startDate).format(
+                    { data.jobDetails[0]?.startDate?   moment(data.jobDetails[0]?.startDate).format(
                       "DD/MM/YYYY"
-                    ) || " - "}
+                    ) : " - "}
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>

@@ -591,25 +591,27 @@ const EVDiscipline = () => {
                                   //   message: " Required",
                                   // },
 
-                                  validate: (fieldValue) => {
-                                    const startDate = new Date(
-                                      getValues("issueDate")
-                                    );
-                                    const endDate = fieldValue;
-                                    if (
-                                      startDate <= new Date(endDate) &&
-                                      endDate
-                                    ) {
-                                      setError("expiryDate", {
-                                        type: "custom",
-                                        message:
-                                          " Must not be earlier than  date",
-                                      });
-                                    } else {
-                                      setError("expiryDate", {
-                                        type: "custom",
-                                        message: "",
-                                      });
+                                  onChange: (fieldValue) => {
+                                    const startDateValue =
+                                      getValues("issueDate");
+
+                                    const endDateValue =
+                                      getValues("expiryDate");
+
+                                    if (endDateValue && startDateValue) {
+                                      const endDate = new Date(endDateValue);
+                                      const startDate = new Date(
+                                        startDateValue
+                                      );
+                                      if (startDate > endDate) {
+                                        return setError("expiryDate", {
+                                          type: "custom",
+                                          message:
+                                            "End date must not be earlier than start date",
+                                        });
+                                      } else {
+                                        return clearErrors("expiryDate");
+                                      }
                                     }
                                   },
                                 })}
@@ -737,7 +739,9 @@ const EVDiscipline = () => {
                             {/* <TitlePara>BCR OPtional</TitlePara> */}
                             <TitlePara>
                               issued On:{" "}
-                              {moment(data.issueDate).format("DD/MM/YYYY")}
+                              {data.issueDate
+                                ? moment(data.issueDate).format("DD/MM/YYYY")
+                                : " - "}
                             </TitlePara>
                           </FlexSpaceBetween>
                           <FlexSpaceBetween style={{ marginBottom: "0px" }}>
@@ -778,7 +782,7 @@ const EVDiscipline = () => {
                                 {data.file.originalName?.length <= 38
                                   ? data.file.originalName
                                   : data.file.originalName.substring(0, 38) +
-                                  "..." || " - "}
+                                      "..." || " - "}
                               </File>
                             </Link>
                           </FlexSpaceBetween>

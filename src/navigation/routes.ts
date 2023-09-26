@@ -41,9 +41,7 @@ import ManagerLeaves from "../Leaves/ManagerLeaves/ManagerLeaves";
 import ManagerSideBar from "../Dashboard/ManagerDashboard/ManagerSideBar";
 import ManagerLayout from "../Dashboard/ManagerDashboard/ManagerLayout";
 import EvLeaveAlloacation from "../Employee/ViewEmployee/EvLeaveAlloacation";
-import Welcome from "../EmailTemplates/Welcome"; 
-import ResetPasswords from "../EmailTemplates/ResetPassword";
-import Invitation from "../EmailTemplates/Invitation";
+
 
 const Routes: any = [
   {
@@ -59,30 +57,6 @@ const Routes: any = [
     component: ForgotPassword,
     path: "/forgot-password",
     title: "forgot-password",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-   {
-    component: Welcome,
-    path: "/welcome",
-    title: "welcome-template",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: ResetPasswords,
-    path: "/passwords-template",
-    title: "welcome-template",
-    to: "/",
-    type: "public",
-    children: [],
-  },
-  {
-    component: Invitation,
-    path: "/invitation",
-    title: "welcome-template",
     to: "/",
     type: "public",
     children: [],
@@ -127,15 +101,6 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-      {
-        component: OADashBoardNext,
-        path: "DashBoardNext",
-        title: "DashBoardNext",
-        to: "/",
-        type: "private",
-        index: true,
-      },
-
       {
         component: OABenefits,
         path: "benefits",

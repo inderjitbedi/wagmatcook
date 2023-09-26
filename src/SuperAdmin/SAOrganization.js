@@ -13,6 +13,7 @@ import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { RotatingLines } from "react-loader-spinner";
 
 import {
   Dashboard,
@@ -85,6 +86,8 @@ const CellStyle2 = {
   lineHeight: "15px",
 };
 const SAOrganization = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
@@ -141,6 +144,8 @@ const SAOrganization = () => {
   };
 
   const GetOrganizationList = () => {
+    setIsLoading(true);
+
     console.log("called");
     let url = `${API_URLS.adminOrganizationList}?page=1&limit=10`;
     httpClient({
@@ -150,13 +155,16 @@ const SAOrganization = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          setIsLoading(false);
         } else {
           //toast.warn("something went wrong ");
+          setIsLoading(false);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
       });
   };
 
@@ -194,6 +202,8 @@ const SAOrganization = () => {
       !errors.nameError &&
       !errors.emailError
     ) {
+      setIsLoading(true);
+
       let dataCopy = formData;
       httpClient({
         method: "post",
@@ -207,13 +217,16 @@ const SAOrganization = () => {
             setFormData("");
             setErrors("");
             toast.success(result.message);
+            setIsLoading(false);
           } else {
             //toast.warn("Something went wrong.");
+            setIsLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error creating Disciplinary. Please try again.");
+          setIsLoading(false);
         });
     }
   };
@@ -233,158 +246,202 @@ const SAOrganization = () => {
   };
   return (
     <>
-      <DashHeader>
-        <DashHeaderTitle>Organization List</DashHeaderTitle>
-        <DashHeaderSearch>
-          <SearchBox>
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              // value={searchValue}
-              // onChange={(e) => setSearchValue(e.target.value)}
-            ></SearchInput>
-            <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
-          <DashNotification src="/images/icons/Notifications.svg" />
-          <DepartmentIconImg
-            style={{ cursor: "pointer" }}
-            onClick={(event) => handleClickMenu(event)}
-            src="/images/icons/PersonIcon.svg"
-          />
-        </DashHeaderSearch>
-      </DashHeader>
-      <Menu
-        sx={{ margin: "0px" }}
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
-      </Menu>
-      <DisciplinaryDiv>
-        <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
-        <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
-        <Modal
-          open={open}
-          onClose={HandleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "380px",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 999,
+          }}
         >
-          <Box sx={style}>
-            <ModalUpperDiv>
-              <ModalHeading>Invite Organization Admin</ModalHeading>
-              <ModalIcon
-                onClick={() => {
-                  HandleClose();
-                }}
-                src="/images/icons/Alert-Circle.svg"
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <>
+          <DashHeader>
+            <DashHeaderTitle>Organization List</DashHeaderTitle>
+            <DashHeaderSearch>
+              <SearchBox>
+                <SearchInput
+                  type="text"
+                  placeholder="Search..."
+                  // value={searchValue}
+                  // onChange={(e) => setSearchValue(e.target.value)}
+                ></SearchInput>
+                <SearchIcon src="/images/icons/searchIcon.svg" />
+              </SearchBox>
+              <DashNotification src="/images/icons/Notifications.svg" />
+              <DepartmentIconImg
+                style={{ cursor: "pointer" }}
+                onClick={(event) => handleClickMenu(event)}
+                src="/images/icons/PersonIcon.svg"
               />
-            </ModalUpperDiv>
-            <ModalUpperMid>
-              <InputLabel>
-                Organization Name <InputSpan>*</InputSpan>
-              </InputLabel>
-              <Input
-                type="text"
-                name="name"
-                onChange={HandleChanges}
-                value={formData.name}
-                placeholder="Organization Name"
-              />
-              {errors.nameError && (
-                <span className="error">{errors.nameError}</span>
-              )}
-              <InputLabel>
-                Email <InputSpan>*</InputSpan>
-              </InputLabel>
-              <Input
-                type="Email"
-                name="email"
-                onChange={HandleChanges}
-                value={formData.email}
-                placeholder="email@gmail.com"
-              />
-              {errors.emailError && (
-                <span className="error">{errors.emailError}</span>
-              )}
-              <AddNewButton
-                onClick={(e) => {
-                  HandleSubmit(e);
-                }}
-              >
-                Invite
-              </AddNewButton>
-            </ModalUpperMid>
-          </Box>
-        </Modal>
-      </DisciplinaryDiv>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow
-              sx={{
-                background: "#FBFBFB",
-              }}
+            </DashHeaderSearch>
+          </DashHeader>
+          <Menu
+            sx={{ margin: "0px" }}
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={openMenu}
+            onClose={handleCloseMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+          </Menu>
+          <DisciplinaryDiv>
+            <DisciplinaryHeading>All Organizations</DisciplinaryHeading>
+            <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
+            <Modal
+              open={open}
+              onClose={HandleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
             >
-              <TableCell
-                sx={{ ...CellHeadStyles, minWidth: "250px" }}
-                align="left"
-              >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{ ...CellHeadStyles, minWidth: "180px" }}
-                align="left"
-              >
-                Email
-              </TableCell>
-              <TableCell
-                sx={{ ...CellHeadStyles, minWidth: "150px" }}
-                align="left"
-              >
-                Has Signed Up?
-              </TableCell>
-              {/* <TableCell
+              <Box sx={style}>
+                {isLoading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      height: "380px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      zIndex: 999,
+                    }}
+                  >
+                    <RotatingLines
+                      strokeColor="#279AF1"
+                      strokeWidth="3"
+                      animationDuration="0.75"
+                      width="52"
+                      visible={true}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <ModalUpperDiv>
+                      <ModalHeading>Invite Organization Admin</ModalHeading>
+                      <ModalIcon
+                        onClick={() => {
+                          HandleClose();
+                        }}
+                        src="/images/icons/Alert-Circle.svg"
+                      />
+                    </ModalUpperDiv>
+                    <ModalUpperMid>
+                      <InputLabel>
+                        Organization Name <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        name="name"
+                        onChange={HandleChanges}
+                        value={formData.name}
+                        placeholder="Organization Name"
+                      />
+                      {errors.nameError && (
+                        <span className="error">{errors.nameError}</span>
+                      )}
+                      <InputLabel>
+                        Email <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="Email"
+                        name="email"
+                        onChange={HandleChanges}
+                        value={formData.email}
+                        placeholder="email@gmail.com"
+                      />
+                      {errors.emailError && (
+                        <span className="error">{errors.emailError}</span>
+                      )}
+                      <AddNewButton
+                        onClick={(e) => {
+                          HandleSubmit(e);
+                        }}
+                      >
+                        Invite
+                      </AddNewButton>
+                    </ModalUpperMid>
+                  </>
+                )}
+              </Box>
+            </Modal>
+          </DisciplinaryDiv>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    background: "#FBFBFB",
+                  }}
+                >
+                  <TableCell
+                    sx={{ ...CellHeadStyles, minWidth: "250px" }}
+                    align="left"
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellHeadStyles, minWidth: "180px" }}
+                    align="left"
+                  >
+                    Email
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                    align="left"
+                  >
+                    Has Signed Up?
+                  </TableCell>
+                  {/* <TableCell
                 sx={{ ...CellHeadStyles, minWidth: "150px" }}
                 align="left"
               >
                 Action
               </TableCell> */}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {result?.organizations?.length == 0 && (
-              <TableRow>
-                <TableCell rowSpan={3}>No organizations found</TableCell>
-              </TableRow>
-            )}
-            {result.organizations?.map((data) => (
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                  background: "#fff",
-                }}
-              >
-                <TableCell sx={CellStyle} align="left">
-                  {data.name}
-                </TableCell>
-                <TableCell sx={CellStyle2} align="left">
-                  {data.primaryUser?.email || "-"}
-                </TableCell>
-                <TableCell sx={CellStyle} align="left">
-                  {data.primaryUser?.isSignedup ? "Yes" : "No"}
-                </TableCell>
-                {/* <TableCell sx={CellStyle2} align="left">
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {result?.organizations?.length == 0 && (
+                  <TableRow>
+                    <TableCell rowSpan={3}>No organizations found</TableCell>
+                  </TableRow>
+                )}
+                {result.organizations?.map((data) => (
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      background: "#fff",
+                    }}
+                  >
+                    <TableCell sx={CellStyle} align="left">
+                      {data.name}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.primaryUser?.email || "-"}
+                    </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.primaryUser?.isSignedup ? "Yes" : "No"}
+                    </TableCell>
+                    {/* <TableCell sx={CellStyle2} align="left">
                   <ActionIconDiv>
                     <ActionIcons
                       // onClick={() => {
@@ -405,14 +462,16 @@ const SAOrganization = () => {
                     />
                   </ActionIconDiv>
                 </TableCell> */}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
           Load More
         </AddNewButton> */}
+        </>
+      )}
     </>
   );
 };

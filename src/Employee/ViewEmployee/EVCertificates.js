@@ -331,222 +331,226 @@ const EVCertificates = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                  <Box sx={style}>
-                    {isLoading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          height: "380px",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          zIndex: 999,
-                        }}
-                      >
-                        <RotatingLines
-                          strokeColor="#279AF1"
-                          strokeWidth="3"
-                          animationDuration="0.75"
-                          width="52"
-                          visible={true}
+                <Box sx={style}>
+                  {isLoading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        width: "100%",
+                        height: "380px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 999,
+                      }}
+                    >
+                      <RotatingLines
+                        strokeColor="#279AF1"
+                        strokeWidth="3"
+                        animationDuration="0.75"
+                        width="52"
+                        visible={true}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <ModalContainer>
+                        <ModalHeading>New Certificate</ModalHeading>
+                        <ModalIcon
+                          onClick={handleClose}
+                          src="/images/icons/Alert-Circle.svg"
                         />
-                      </div>
-                    ) : (
-                      <>
-                        <ModalContainer>
-                          <ModalHeading>New Certificate</ModalHeading>
-                          <ModalIcon
-                            onClick={handleClose}
-                            src="/images/icons/Alert-Circle.svg"
-                          />
-                        </ModalContainer>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                          <ModalFormContainer>
-                            <FlexContaierForm>
-                              <FlexColumnForm>
-                                <InputLabel>
-                                  Certificate Title <InputSpan>*</InputSpan>
-                                </InputLabel>
-                                <Input
-                                  type="text"
-                                  {...register("title", {
-                                    required: {
-                                      value: true,
-                                      message: "Required",
-                                    },
-                                  })}
-                                />
-                                {errors.title && (
-                                  <Errors> {errors.title?.message}</Errors>
-                                )}
-                              </FlexColumnForm>
-                            </FlexContaierForm>
-                            <FlexContaierForm>
-                              <FlexColumnForm>
-                                <InputLabel>
-                                  Provider <InputSpan>*</InputSpan>
-                                </InputLabel>
-                                <Input
-                                  type="text"
-                                  {...register("provider", {
-                                    required: {
-                                      value: true,
-                                      message: "Required",
-                                    },
-                                  })}
-                                />
-                                {errors.provider && (
-                                  <Errors> {errors.provider?.message}</Errors>
-                                )}
-                              </FlexColumnForm>
-                            </FlexContaierForm>
-                            <FlexContaierForm>
-                              <FlexColumnForm>
-                                <InputLabel>
-                                  Completion Date <InputSpan>*</InputSpan>
-                                </InputLabel>
-                                <Input
-                                  type="date"
-                                  {...register("completionDate", {
-                                    required: {
-                                      value: true,
-                                      message: "Required",
-                                    },
-                                    validate: (fieldValue) => {
-                                      const selectedDate = Date.parse(fieldValue);
-                                      const currentDate = new Date().setHours(
-                                        0,
-                                        0,
-                                        0,
-                                        0
-                                      );
-                                      if (selectedDate > currentDate) {
-                                        return "Completion Date must not be greater than today's date";
-                                      }
-                                      return true;
-                                    },
-                                    onChange: (e) => {
-                                      const endDate = getValues("expiryDate");
-                                      const startDate = new Date(e.target.value);
-                                      if (
-                                        startDate >= new Date(endDate) &&
-                                        endDate
-                                      ) {
-                                        setError("expiryDate", {
-                                          type: "custom",
-                                          message:
-                                            "Expiry  date must not be earlier than completion date",
-                                        });
-                                      } else {
-                                        setError("expiryDate", {
-                                          type: "custom",
-                                          message: "",
-                                        });
-                                      }
-                                    },
-                                  })}
-                                />
-                                {errors.completionDate && (
-                                  <Errors>{errors.completionDate?.message}</Errors>
-                                )}
-                              </FlexColumnForm>
-                            </FlexContaierForm>
-                            <FlexContaierForm>
-                              <FlexColumnForm>
-                                <InputLabel>Exipiry</InputLabel>
-                                <Input
-                                  type="date"
-                                  {...register("expiryDate", {
-                                    // required: {
-                                    //   value: true,
-                                    //   message: " Required",
-                                    // },
-                                    validate: (fieldValue) => {
-                                      const startDate = new Date(
-                                        getValues("completionDate")
-                                      );
-                                      const endDate = fieldValue;
-                                      if (
-                                        startDate <= new Date(endDate) &&
-                                        endDate
-                                      ) {
-                                        setError("expiryDate", {
-                                          type: "custom",
-                                          message:
-                                            "Expiry date must not be earlier than completion date   ",
-                                        });
-                                      } else {
-                                        setError("expiryDate", {
-                                          type: "custom",
-                                          message: "",
-                                        });
-                                      }
-                                    },
-                                  })}
-                                />
-                                {errors.expiryDate && (
-                                  <Errors>{errors.expiryDate?.message}</Errors>
-                                )}
-                              </FlexColumnForm>
-                            </FlexContaierForm>
-                            <input
-                              style={{ width: "50%" }}
-                              type="file"
-                              {...register(`file`, {
-                                required: {
-                                  value: true,
-                                  message: "Required",
-                                },
-                                onChange: (e) => {
-                                  handleFileChange(e);
-                                },
-                              })}
-                              id="upload"
-                              className="custom"
-                            />
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: "16px",
-                                alignItems: "center",
-                                marginBottom: "20px",
-                              }}
-                            >
-                              <EditButton
-                                htmlFor="upload"
-                                style={{ width: "max-content" }}
-                              >
-                                {" "}
-                                <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                                {isUploading ? (
-                                  <ThreeDots
-                                    height="8"
-                                    width="80"
-                                    radius="9"
-                                    color="#279AF1"
-                                    ariaLabel="three-dots-loading"
-                                    visible={true}
-                                  />
-                                ) : !file ? (
-                                  "Upload Document "
-                                ) : file?.originalName?.length <= 32 ? (
-                                  file?.originalName
-                                ) : (
-                                  file.name?.substring(0, 30) + "..."
-                                )}
-                              </EditButton>
-                              {file && (
-                                <LightPara onClick={removeFile}>Remove</LightPara>
+                      </ModalContainer>
+                      <form onSubmit={handleSubmit(onSubmit)}>
+                        <ModalFormContainer>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Certificate Title <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="text"
+                                {...register("title", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                })}
+                              />
+                              {errors.title && (
+                                <Errors> {errors.title?.message}</Errors>
                               )}
-                            </div>
-                            {errors.file && (
-                              <Errors> {errors.file?.message} </Errors>
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Provider <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="text"
+                                {...register("provider", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                })}
+                              />
+                              {errors.provider && (
+                                <Errors> {errors.provider?.message}</Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>
+                                Completion Date <InputSpan>*</InputSpan>
+                              </InputLabel>
+                              <Input
+                                type="date"
+                                {...register("completionDate", {
+                                  required: {
+                                    value: true,
+                                    message: "Required",
+                                  },
+                                  validate: (fieldValue) => {
+                                    const selectedDate = Date.parse(fieldValue);
+                                    const currentDate = new Date().setHours(
+                                      0,
+                                      0,
+                                      0,
+                                      0
+                                    );
+                                    if (selectedDate > currentDate) {
+                                      return "Completion Date must not be greater than today's date";
+                                    }
+                                    return true;
+                                  },
+                                  onChange: (e) => {
+                                    const endDate = getValues("expiryDate");
+                                    const startDate = new Date(e.target.value);
+                                    if (
+                                      startDate >= new Date(endDate) &&
+                                      endDate
+                                    ) {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message:
+                                          "Expiry  date must not be earlier than completion date",
+                                      });
+                                    } else {
+                                      setError("expiryDate", {
+                                        type: "custom",
+                                        message: "",
+                                      });
+                                    }
+                                  },
+                                })}
+                              />
+                              {errors.completionDate && (
+                                <Errors>
+                                  {errors.completionDate?.message}
+                                </Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <FlexContaierForm>
+                            <FlexColumnForm>
+                              <InputLabel>Exipiry</InputLabel>
+                              <Input
+                                type="date"
+                                {...register("expiryDate", {
+                                  // required: {
+                                  //   value: true,
+                                  //   message: " Required",
+                                  // },
+                                  onChange: (fieldValue) => {
+                                    const startDateValue =
+                                      getValues("completionDate");
+
+                                    const endDateValue =
+                                      getValues("expiryDate");
+
+                                    if (endDateValue && startDateValue) {
+                                      const endDate = new Date(endDateValue);
+                                      const startDate = new Date(
+                                        startDateValue
+                                      );
+                                      if (startDate > endDate) {
+                                        return setError("expiryDate", {
+                                          type: "custom",
+                                          message:
+                                            "End date must not be earlier than start date",
+                                        });
+                                      } else {
+                                        return clearErrors("expiryDate");
+                                      }
+                                    }
+                                  },
+                                })}
+                              />
+                              {(
+                                <Errors>{errors.expiryDate?.message}</Errors>
+                              )}
+                            </FlexColumnForm>
+                          </FlexContaierForm>
+                          <input
+                            style={{ width: "50%" }}
+                            type="file"
+                            {...register(`file`, {
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                              onChange: (e) => {
+                                handleFileChange(e);
+                              },
+                            })}
+                            id="upload"
+                            className="custom"
+                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "16px",
+                              alignItems: "center",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            <EditButton
+                              htmlFor="upload"
+                              style={{ width: "max-content" }}
+                            >
+                              {" "}
+                              <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                              {isUploading ? (
+                                <ThreeDots
+                                  height="8"
+                                  width="80"
+                                  radius="9"
+                                  color="#279AF1"
+                                  ariaLabel="three-dots-loading"
+                                  visible={true}
+                                />
+                              ) : !file ? (
+                                "Upload Document "
+                              ) : file?.originalName?.length <= 32 ? (
+                                file?.originalName
+                              ) : (
+                                file.name?.substring(0, 30) + "..."
+                              )}
+                            </EditButton>
+                            {file && (
+                              <LightPara onClick={removeFile}>Remove</LightPara>
                             )}
-                            <ButtonBlue type="submit">Submit</ButtonBlue>
-                          </ModalFormContainer>
-                        </form>
-                      </>
-                    )}
+                          </div>
+                          {errors.file && (
+                            <Errors> {errors.file?.message} </Errors>
+                          )}
+                          <ButtonBlue type="submit">Submit</ButtonBlue>
+                        </ModalFormContainer>
+                      </form>
+                    </>
+                  )}
                 </Box>
               </Modal>
               {/*modal ends here  */}
@@ -569,9 +573,11 @@ const EVCertificates = () => {
                           <FlexColumn style={{ gap: "0px" }}>
                             <TitlePara>Completion Date</TitlePara>
                             <ViewPara>
-                              {moment(data.completionDate).format(
-                                "DD/MM/YYYY"
-                              ) || " - "}
+                              {data.completionDate
+                                ? moment(data.completionDate).format(
+                                    "DD/MM/YYYY"
+                                  )
+                                : " - "}
                             </ViewPara>
                           </FlexColumn>
                           <FlexColumn style={{ gap: "0px" }}>

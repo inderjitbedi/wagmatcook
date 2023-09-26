@@ -6,11 +6,14 @@ import httpClient from "../api/httpClient";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URLS from "../constants/apiUrls";
+import { RotatingLines } from "react-loader-spinner";
 
 export default function CompleteSignup() {
   const navigate = useNavigate();
   const location = useLocation();
   const { token, email } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+
   // useEffect(() => {
   //   // localStorage.clear()
   //   let isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -86,6 +89,7 @@ export default function CompleteSignup() {
 
     if (formData.name && formData.email) {
       let data: any = { ...formData };
+      setIsLoading(true);
 
       let url = API_URLS.orgAdminCompleteSignup.replace(":token", data.token);
       delete data.token;
@@ -101,12 +105,15 @@ export default function CompleteSignup() {
               "organization",
               JSON.stringify(result?.organization)
             );
+            setIsLoading(false);
+
             localStorage.setItem("token", result?.token);
             navigate("/organization-admin/organization-profile");
           }
         })
         .catch((error: any) => {
           console.error("Error:", error);
+          setIsLoading(false);
         });
     } else {
       toast.warn("All fields are required");
@@ -115,56 +122,76 @@ export default function CompleteSignup() {
 
   return (
     <React.Fragment>
-      <div className="signup-form mt-8 mb-50">
-        <Link to="/">
-          <p className="upper-text">
-            Already have an account?{" "}
-            <span className="cursor-pointer blue-text">Login</span>
-          </p>
-        </Link>
-        <h1>Sign up as an Organization Admin</h1>
-        <p className="text">Please provide your information</p>
-        <form onSubmit={handleSubmit} noValidate>
-          <Box sx={{ mt: 1 }}>
-            <InputLabel>
-              Full Name <span className="astrick">*</span>
-            </InputLabel>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              name="name"
-              placeholder="Enter name"
-              autoFocus
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="signup-form mt-8 mb-50">
+            <Link to="/">
+              <p className="upper-text">
+                Already have an account?{" "}
+                <span className="cursor-pointer blue-text">Login</span>
+              </p>
+            </Link>
+            <h1>Sign up as an Organization Admin</h1>
+            <p className="text">Please provide your information</p>
+            <form onSubmit={handleSubmit} noValidate>
+              <Box sx={{ mt: 1 }}>
+                <InputLabel>
+                  Full Name <span className="astrick">*</span>
+                </InputLabel>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  name="name"
+                  placeholder="Enter name"
+                  autoFocus
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
 
-            <InputLabel>
-              Email Address
-              {/* <span className="astrick">*</span> */}
-            </InputLabel>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              name="email"
-              disabled
-              InputProps={{
-                readOnly: true,
-              }}
-              placeholder="Enter email"
-              value={formData.email}
-            />
-            {errors.emailError && (
-              <span className="error">{errors.emailError}</span>
-            )}
+                <InputLabel>
+                  Email Address
+                  {/* <span className="astrick">*</span> */}
+                </InputLabel>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  name="email"
+                  disabled
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  placeholder="Enter email"
+                  value={formData.email}
+                />
+                {errors.emailError && (
+                  <span className="error">{errors.emailError}</span>
+                )}
 
-            {/* <InputLabel>
+                {/* <InputLabel>
               Password <span className="astrick">*</span>
             </InputLabel>
             <TextField
@@ -200,20 +227,20 @@ export default function CompleteSignup() {
               <span className="error">{errors.confirmPasswordError}</span>
             )} */}
 
-            <p className="gray-text ">
-              By clicking, you agree to our
-              <a className="app-link"> Terms of Services </a>
-              and that you have read and understood our
-              <a className="app-link"> Privacy Policy</a>.
-            </p>
+                <p className="gray-text ">
+                  By clicking, you agree to our
+                  <a className="app-link"> Terms of Services </a>
+                  and that you have read and understood our
+                  <a className="app-link"> Privacy Policy</a>.
+                </p>
 
-            <Button type="submit" variant="contained" className="mt-1">
-              Create Your Account
-            </Button>
-          </Box>
-        </form>
-      </div>
-      {/* <Stack sx={{ width: "100%" }} spacing={2}>
+                <Button type="submit" variant="contained" className="mt-1">
+                  Create Your Account
+                </Button>
+              </Box>
+            </form>
+          </div>
+          {/* <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info">
               Already have an account?
               <div className="d-flex dir-row align-center">
@@ -227,6 +254,8 @@ export default function CompleteSignup() {
               </div>
             </Alert>
           </Stack> */}
+        </>
+      )}
     </React.Fragment>
   );
 }

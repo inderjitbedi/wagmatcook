@@ -92,23 +92,7 @@ const OADashBoard = () => {
   //     // }
   //   }
   // }, []);
-  useEffect(() => {
-    let user = localStorage.getItem("user");
-    if (user) {
-      let parsedUser = JSON.parse(user);
-      setUser(parsedUser);
-    }
-    let org = localStorage.getItem("org");
-    if (org) {
-      let parsedUser = JSON.parse(org);
-      setOrgData(parsedUser);
-    }
-    setIsLoading(true);
-    GetDisciplinary();
-    GetEmployees();
-    GetDepartments();
-    GetLeavesType();
-  }, []);
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -252,6 +236,24 @@ const OADashBoard = () => {
         setIsLoading(false);
       });
   };
+  
+    useEffect(() => {
+      let user = localStorage.getItem("user");
+      if (user) {
+        let parsedUser = JSON.parse(user);
+        setUser(parsedUser);
+      }
+      let org = localStorage.getItem("org");
+      if (org) {
+        let parsedUser = JSON.parse(org);
+        setOrgData(parsedUser);
+      }
+      setIsLoading(true);
+      GetDisciplinary();
+      GetEmployees();
+      GetDepartments();
+      GetLeavesType();
+    }, []);
   return (
     <>
       {isLoading ? (
@@ -350,7 +352,7 @@ const OADashBoard = () => {
                 <div>
                   <SectionCardTitle>Total Leaves</SectionCardTitle>
                   <SectionCardNumber>
-                    {leavesData.totalLeaveTypes}
+                    {leavesData.totalLeaveTypes || 0}
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/Disciplinarybig.svg" />
@@ -360,7 +362,7 @@ const OADashBoard = () => {
                 <div>
                   <SectionCardTitle>Total Departments</SectionCardTitle>
                   <SectionCardNumber>
-                    {departmentData.totalDepartments}
+                    {departmentData.totalDepartments || 0 }
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/Department.svg" />

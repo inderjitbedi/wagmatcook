@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 
 import {
   SidebarTitle,
@@ -8,8 +8,13 @@ import {
   SideBarListTitle,
   SideBarList,
 } from "../SAStyles";
-
+ const style = {
+   textDecoration: "none",
+   color: "#279AF1",
+ };
 const SASideBar = () => {
+  const location = useLocation();
+
   const SideBarData = [
     // {
     //   Title: "User",
@@ -26,17 +31,37 @@ const SASideBar = () => {
     <>
       {" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
-      <span style={{ width: "100%", borderBottom: "1px solid #EDEDED", display:"inline-block"}}></span>
-
+      <span
+        style={{
+          width: "100%",
+          borderBottom: "1px solid #EDEDED",
+          display: "inline-block",
+        }}
+      ></span>
       <SidebarTitle>Super Admin</SidebarTitle>
-      <span style={{ width: "80%", borderBottom: "1px solid #EDEDED", display:"inline-block",  margin: "0 28px" }}></span>
+      <span
+        style={{
+          width: "80%",
+          borderBottom: "1px solid #EDEDED",
+          display: "inline-block",
+          margin: "0 28px",
+        }}
+      ></span>
       <SideBarList>
         {SideBarData.map((data) => (
-          <NavLink style={{textDecoration:"none"}} to={data.to}>
+          <NavLink style={{ textDecoration: "none" }} to={data.to}>
             <SideBarListContainer>
-              <SideBarListLogo src={data.src}>
-              </SideBarListLogo>
-              <SideBarListTitle> {data.Title}</SideBarListTitle>
+              <SideBarListLogo src={data.src}></SideBarListLogo>
+              <SideBarListTitle
+                style={
+                  location.pathname.indexOf(data.to) > -1
+                    ? style
+                    : { color: "#5C5C5C" }
+                }
+              >
+                {" "}
+                {data.Title}
+              </SideBarListTitle>
             </SideBarListContainer>
           </NavLink>
         ))}

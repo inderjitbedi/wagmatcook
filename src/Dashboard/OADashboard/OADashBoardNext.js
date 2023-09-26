@@ -210,12 +210,12 @@ const OADashBoardNext = ({ user, orgData }) => {
             <SectionCardContainer3>
               {" "}
               <SectionCardTitle>Total Employee</SectionCardTitle>
-              <SectionCardNumber>654</SectionCardNumber>
+              <SectionCardNumber>0</SectionCardNumber>
             </SectionCardContainer3>
             <SectionCardContainer4>
               {" "}
               <SectionCardTitle>Total Employee</SectionCardTitle>
-              <SectionCardNumber>654</SectionCardNumber>
+              <SectionCardNumber>0</SectionCardNumber>
             </SectionCardContainer4>
             </SectionCard>
             
