@@ -8,6 +8,7 @@ const sendGrid = require("../providers/sendGrid.js");
 const UserOrganization = require("../models/userOrganization");
 const crypto = require("crypto");
 const fileController = require("./file");
+const EmployeePersonalInfo = require("../models/employeePersonalInfo");
 
 // Function to create a directory if it doesn't exist
 const createDirectoryIfNotExists = (directory) => {
@@ -19,22 +20,25 @@ const createDirectoryIfNotExists = (directory) => {
 const orgController = {
   async create(req, res) {
     try {
-      const org = new Organization(req.body);
-      console.log(req.user);
-      let file = await File.findOne({ _id: req.body.file });
 
+      let file = await File.findOne({ _id: req.body.file });
       if (file) {
-        org.logo = await fileController.moveToUploads(file);
+        req.body.logo = await fileController.moveToUploads(req, file);
       }
 
-      org.createdBy = req.user._id;
-      await org.save();
-      res
-        .status(201)
-        .json({
-          organization: org,
-          message: "Organization created successfully.",
-        });
+      req.body.createdBy = req.user._id;
+
+      const relation = await UserOrganization.findOne({
+        user: req.user._id, isActive: true, isDeleted: false, isPrimary: true
+      });
+      let org = null;
+      if (relation) {
+        org = await Organization.findOneAndUpdate({ _id: relation.organization }, req.body)
+      }
+      res.status(200).json({
+        organization: org,
+        message: "Organization updated successfully.",
+      });
     } catch (error) {
       console.error("authController:register:error -", error);
       res.status(400).json(error);
@@ -172,6 +176,9 @@ const orgController = {
       user.invitationToken = token;
       user.invitationTokenExpiry = Date.now() + 3600000 * 24;
       await user.save();
+
+      const personalInfo = new EmployeePersonalInfo({ employee: user._id });
+      await personalInfo.save()
 
       const relation = new UserOrganization({
         user: user._id,

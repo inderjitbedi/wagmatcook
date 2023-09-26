@@ -14,6 +14,7 @@ const EmployeeReviews = require("../models/employeeReviews");
 const EmployeeDisciplinaries = require("../models/employeeDisciplinaries");
 const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const EmployeeDocuments = require("../models/employeeDocuments");
+const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 
 
 const employeeController = {
@@ -284,12 +285,12 @@ const employeeController = {
     async add(req, res) {
         try {
 
-            const userExists = await User.findOne({ email: req.body.email })
+            const userExists = await User.findOne({ email: req.body.email, isDeleted: false })
             if (userExists) {
                 return res.status(400).json({ message: 'User email already registered' });
             }
 
-            const user = new User({ email: req.body.email, role: roles.EMPLOYEE });
+            let user = new User({ email: req.body.email, role: roles.EMPLOYEE });
             // const token = crypto.randomBytes(20).toString('hex');
             // user.invitationToken = token;
             // user.invitationTokenExpiry = Date.now() + (3600000 * 24);
@@ -303,7 +304,7 @@ const employeeController = {
 
             const personalInfo = new EmployeePersonalInfo({ employee: user._id, firstName, lastName });
             await personalInfo.save()
-
+            user = await User.findByIdAndUpdate(user._id, { personalInfo: personalInfo._id }, { new: true })
             res.status(200).json({
                 employee: user,
                 message: 'Employee added successfully'
@@ -375,11 +376,9 @@ const employeeController = {
             }
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
                 personalInfo,
-                jobDetails,
                 message: 'Employee personal info fetched successfully'
             });
 
@@ -566,14 +565,14 @@ const employeeController = {
 
             // const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
-            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department employee employeeType').sort({ 'startDate': -1 })
+            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department reportsTo employee employeeType').sort({ 'startDate': -1 })
 
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
+            // const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
             res.status(200).json({
                 // details,
                 positions,
-                personalInfo,
+                // personalInfo,
                 message: 'Employee job details fetched successfully'
             });
 
@@ -643,11 +642,9 @@ const employeeController = {
             }
 
             const benefit = await EmployeeBenefits.findOne({ employee: req.params.id }).populate('employee benefit')
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
-                benefit, personalInfo, jobDetails,
+                benefit,
                 message: 'Employee benefit fetched successfully'
             });
 
@@ -724,11 +721,9 @@ const employeeController = {
             }
             const certificates = await EmployeeCertificates.find({ employee: req.params.id, isDeleted: false }).populate('file employee').sort({ completionDate: -1 })
 
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
-                certificates, personalInfo, jobDetails,
+                certificates,
                 message: 'Employee certificates fetched successfully'
             });
 
@@ -757,33 +752,41 @@ const employeeController = {
                         from: 'users',
                         localField: 'completedBy',
                         foreignField: '_id',
-                        as: 'completedByUser',
+                        as: 'completedBy',
                     },
                 },
                 {
-                    $unwind: '$completedByUser',
+                    $lookup: {
+                        from: 'files',
+                        localField: 'file',
+                        foreignField: '_id',
+                        as: 'file',
+                    },
+                },
+                {
+                    $unwind: '$file',
                 },
                 {
                     $lookup: {
                         from: 'employeepersonalinfos',
-                        localField: 'completedByUser._id',
+                        localField: 'completedBy._id',
                         foreignField: 'employee',
-                        as: 'completedByUserPersonalInfo',
+                        as: 'personalInfo',
                     },
                 },
-                {
-                    $unwind: {
-                        path: '$completedByUserPersonalInfo',
-                        preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
-                    },
-                },
+                // {
+                //     $unwind: {
+                //         path: '$completedByUserPersonalInfo',
+                //         preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
+                //     },
+                // },
                 // {
                 //     $project: {
                 //         file: 1,
                 //         employee: 1,
                 //         completedBy: {
-                //             _id: '$completedByUser._id',
-                //             name: '$completedByUser.firstName',
+                //             _id: '$completedBy._id',
+                //             name: '$completedBy.firstName',
                 //             personalInfo: {
                 //                 $cond: {
                 //                     if: { $gt: [{ $size: '$completedByUserPersonalInfo' }, 0] }, // Check if the array is not empty
@@ -796,11 +799,9 @@ const employeeController = {
                 // },
             ]);
             console.log('Reviews:', reviews);
-            // const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            // const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
             res.status(200).json({
-                reviews, //personalInfo, jobDetails,
+                reviews,
                 message: 'Employee reviews fetched successfully'
             });
 
@@ -898,11 +899,8 @@ const employeeController = {
             }
             const disciplinaries = await EmployeeDisciplinaries.find({ employee: req.params.id, isDeleted: false }).populate('file employee disciplinary')
 
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
-            const jobDetails = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
-
             res.status(200).json({
-                disciplinaries, personalInfo, jobDetails,
+                disciplinaries,
                 message: 'Employee disciplinaries fetched successfully'
             });
 
@@ -1061,11 +1059,15 @@ const employeeController = {
     },
     async getDocuments(req, res) {
         try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
             const documents = await EmployeeDocuments.find({ employee: req.params.id, isDeleted: false }).populate('file')
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
 
             res.status(200).json({
-                documents, personalInfo,
+                documents,
                 message: 'Employee documents fetched successfully'
             });
         } catch (error) {
@@ -1075,6 +1077,11 @@ const employeeController = {
     },
     async getEmployeeHeaderInfo(req, res) {
         try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).select('firstName lastName')
                 .populate({
                     path: 'photo',
@@ -1158,11 +1165,14 @@ const employeeController = {
     },
     async getLeaveAllocations(req, res) {
         try {
-            const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'leaveType', select: 'name' })
-            const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo')
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
 
+            const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'leaveType', select: 'name' })
             res.status(200).json({
-                allocations, personalInfo,
+                allocations,
                 message: 'Employee allocations fetched successfully'
             });
         } catch (error) {
@@ -1170,7 +1180,62 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+    async getLeaveHistory(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
 
+            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'approver', populate: 'personalInfo' }, 'leaveType')
+
+            res.status(200).json({
+                history,
+                message: 'Employee leave history fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
+    async getLeaveRequest(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate({ path: 'approver', populate: 'personalInfo' }, 'leaveType')
+            res.status(200).json({
+                request,
+                message: 'Employee leave request fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
+    async addLeaveRequest(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id });
+            await request.save();
+
+            res.status(200).json({
+                request,
+                message: 'Employee leave request sent successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
 
 
 }

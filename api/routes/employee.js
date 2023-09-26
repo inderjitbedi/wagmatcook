@@ -141,6 +141,8 @@ router.put('/leave-allocation/:id/:allocationid', verifyOrgAdmin, employeeContro
 router.get('/leave-allocations/:id', verifyOrgAdmin, employeeController.getLeaveAllocations);
 router.post('/leave-allocation/:id', verifyOrgAdmin, employeeController.addLeaveAllocation);
 
-
+router.get('/leave-history/:id', verifyOrgAdmin, employeeController.getLeaveHistory);
+router.get('/leave-history/:id/:requestid', verifyOrgAdmin, employeeController.getLeaveHistory);
+router.post('/leave-history/:id/request', verifyOrgAdmin, employeeController.addLeaveRequest);
 
 module.exports = router;

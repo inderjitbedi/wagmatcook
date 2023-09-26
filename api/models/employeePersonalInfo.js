@@ -74,11 +74,6 @@ const infoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'File',
     },
-
-    isActive: {
-        type: Boolean,
-        default: true
-    },
     isDeleted: {
         type: Boolean,
         default: false

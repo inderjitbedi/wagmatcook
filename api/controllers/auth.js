@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const sendGrid = require('../providers/sendGrid.js')
 const roles = require('../enum/roles');
 const UserOrganization = require("../models/userOrganization");
+const EmployeePersonalInfo = require("../models/employeePersonalInfo");
 
 const authController = {
     async register(req, res) {
@@ -245,6 +246,7 @@ const authController = {
 
             let relation = await UserOrganization.findOne({ user: user._id, isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
 
+            const personalInfo = await EmployeePersonalInfo.findOneAndUpdate({ employee: user._id }, { firstName: name }, { new: true })
 
             res.status(200).json({ user, organization: relation.organization, token, message: 'User signup completed successfully' });
 
