@@ -51,7 +51,7 @@ const JobDetails = () => {
     hoursPerWeek: "",
     isBebEligible: false,
     ratePer: "",
-    reportsTo: null,
+    reportsTo: "",
     salary: "",
     salaryScaleFrom: "",
     salaryScaleTo: "",
@@ -263,7 +263,7 @@ const JobDetails = () => {
       data.positions.forEach((position, index) => {
         setError(`positions.${index}.isPrimary`, {
           type: "custom",
-            message: "At least one Primary Required",
+          message: "At least one Primary Required",
         });
       });
     } else {
@@ -384,7 +384,7 @@ const JobDetails = () => {
                           <Select {...field}>
                             <Option>Select</Option>
                             <Option value="EMPLOYEE"> User </Option>
-                            <Option value="HUMAN_RECOURSE"> HR </Option>
+                            <Option value="HUMAN_RESOURCE"> HR </Option>
                             <Option value="MANAGER"> Manager </Option>
                           </Select>
                         )}
@@ -550,13 +550,18 @@ const JobDetails = () => {
                                 const startDate = new Date(startDateValue);
 
                                 if (startDate > endDate) {
-                                  setError(`positions.${index}.endDate`, {
-                                    type: "custom",
-                                    message:
-                                      "End date must not be earlier than start date",
-                                  });
+                                  return setError(
+                                    `positions.${index}.endDate`,
+                                    {
+                                      type: "custom",
+                                      message:
+                                        "End date must not be earlier than start date",
+                                    }
+                                  );
                                 } else {
-                                  clearErrors(`positions.${index}.endDate`);
+                                  return clearErrors(
+                                    `positions.${index}.endDate`
+                                  );
                                 }
                               }
                             },
@@ -853,7 +858,7 @@ const JobDetails = () => {
           </BodyMain>
         </EmployeeBody>
       )}
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

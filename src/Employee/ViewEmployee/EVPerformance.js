@@ -115,7 +115,7 @@ const EVPerformance = () => {
 
   const [byError, setByError] = useState([]);
   const onSubmit = (data) => {
-    console.log("form submmited", data);
+    //console.log("form submmited", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -126,7 +126,7 @@ const EVPerformance = () => {
     }
 
     if (isEmptyObject(errors) && !update) {
-      console.log(file, ":this is file ");
+      //console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
       }
@@ -138,6 +138,10 @@ const EVPerformance = () => {
       }
       AddNewProformance(data);
     } else if (update) {
+      if (tags) {
+        const ids = tags.map((data) => data.id);
+        data.completedBy = ids;
+      }
       HandleUpdate(data);
     }
   };
@@ -145,7 +149,7 @@ const EVPerformance = () => {
   //   if (!errors) {
   //     setFormData(data); // chnage the sate when you use it
   //   }
-  //   console.log("form submmited", data);
+  //   //console.log("form submmited", data);
   // };
   const getFileType = (file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -167,7 +171,7 @@ const EVPerformance = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    console.log("this file type:", type);
+    //console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -191,10 +195,10 @@ const EVPerformance = () => {
         },
       })
         .then((data) => {
-          console.log(data);
+          //console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
+            //console.log(data?.result);
             setFile(data?.result?.file);
 
             setIsUploading(false);
@@ -203,7 +207,7 @@ const EVPerformance = () => {
           }
         })
         .catch((error) => {
-          console.error("Error:", error);
+          //console.error("Error:", error);
           setIsUploading(false);
         });
     }
@@ -259,7 +263,7 @@ const EVPerformance = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
         setIsLoading(false);
       })
@@ -285,7 +289,7 @@ const EVPerformance = () => {
       (suggestion) => suggestion.text === tag.text
     );
 
-    console.log("tag :", tag, "issuggestioin:", isTagInSuggestions);
+    //console.log("tag :", tag, "issuggestioin:", isTagInSuggestions);
 
     if (isTagInSuggestions) {
       setTags([...tags, tag]);
@@ -303,7 +307,7 @@ const EVPerformance = () => {
   };
 
   const handleTagClick = (index) => {
-    console.log("The tag at index " + index + " was clicked");
+    //console.log("The tag at index " + index + " was clicked");
   };
 
   const KeyCodes = {
@@ -327,10 +331,17 @@ const EVPerformance = () => {
       // completedBy: data.completedBy,
       file: data.file._id,
       reviewDate: new Date(data.reviewDate).toISOString().split("T")[0],
-      nextReviewDate: data.expiryDate
+      nextReviewDate: data.nextReviewDate
         ? new Date(data.nextReviewDate).toISOString().split("T")[0]
         : null,
     });
+    const addTags = suggestions
+      .filter((obj) =>
+        data?.completedBy.some((completedObj) => completedObj._id === obj.id)
+      )
+      .map((obj) => ({ id: obj.id, text: obj.text }));
+    //console.log(addTags, ":these are the tags ");
+    setTags(addTags);
     handleOpen();
     setFile(data.file);
   };
@@ -343,7 +354,7 @@ const EVPerformance = () => {
     setFile(null);
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
+    //console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -368,7 +379,7 @@ const EVPerformance = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         toast.error("Error Updating Benefits . Please try again.");
         setIsLoading(false);
       })
@@ -395,7 +406,7 @@ const EVPerformance = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         toast.error("Error Deleting Benefits. Please try again.");
         setIsDeleting(false);
       })
@@ -414,14 +425,14 @@ const EVPerformance = () => {
       .then(({ result, error }) => {
         if (result) {
           setSuggestionsData(result);
-          console.log("suggestions are:", result);
+          //console.log("suggestions are:", result);
 
           const suggestions = result?.users?.map((data) => ({
             id: data?.userData._id,
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
-              " " +
-              data?.personalInfo[0].lastName
+                " " +
+                data?.personalInfo[0].lastName
               : data?.userData.name,
           }));
 
@@ -431,7 +442,7 @@ const EVPerformance = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         toast.error("Error in Fetching . Please try again.");
         setIsLoading(false);
       })
@@ -439,7 +450,7 @@ const EVPerformance = () => {
         setIsLoading(false);
       });
   };
-  console.log(suggestions, "this is map  data for suggestions");
+  //console.log(suggestions, "this is map  data for suggestions");
 
   const [headerData, setHeaderData] = useState([]);
 
@@ -457,10 +468,12 @@ const EVPerformance = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
+  console.log("tags data:", tags);
+
   return (
     <>
       {isLoading ? (
@@ -605,6 +618,7 @@ const EVPerformance = () => {
                               <InputLabel>
                                 Completed By <InputSpan>*</InputSpan>
                               </InputLabel>
+
                               <ReactTags
                                 name="completedBy"
                                 tags={tags}
@@ -617,8 +631,9 @@ const EVPerformance = () => {
                                 inputFieldPosition="bottom"
                                 autocomplete
                                 placeholder="Add More"
-                              // editable
+                                // editable
                               />
+
                               <Errors>{byError}</Errors>
                             </FlexColumnForm>
                           </FlexContaierForm>
@@ -670,25 +685,27 @@ const EVPerformance = () => {
                                   //   message: "Required",
                                   // },
 
-                                  validate: (fieldValue) => {
-                                    const startDate = new Date(
-                                      getValues("reviewDate")
-                                    );
-                                    const endDate = fieldValue;
-                                    if (
-                                      startDate <= new Date(endDate) &&
-                                      endDate
-                                    ) {
-                                      setError("nextReviewDate", {
-                                        type: "custom",
-                                        message:
-                                          "End date must not be earlier than start date   ",
-                                      });
-                                    } else {
-                                      setError("nextReviewDate", {
-                                        type: "custom",
-                                        message: "",
-                                      });
+                                  onChange: (fieldValue) => {
+                                    const startDateValue =
+                                      getValues("reviewDate");
+
+                                    const endDateValue =
+                                      getValues("nextReviewDate");
+
+                                    if (endDateValue && startDateValue) {
+                                      const endDate = new Date(endDateValue);
+                                      const startDate = new Date(
+                                        startDateValue
+                                      );
+                                      if (startDate > endDate) {
+                                        return setError("nextReviewDate", {
+                                          type: "custom",
+                                          message:
+                                            "End date must not be earlier than start date",
+                                        });
+                                      } else {
+                                        return clearErrors("nextReviewDate");
+                                      }
                                     }
                                   },
                                 })}
@@ -704,10 +721,10 @@ const EVPerformance = () => {
                             style={{ width: "50%" }}
                             type="file"
                             {...register(`file`, {
-                              required: {
-                                value: update ? false : true,
-                                message: "Required",
-                              },
+                              // required: {
+                              //   value: update ? false : true,
+                              //   message: "Required",
+                              // },
                               onChange: (e) => {
                                 handleFileChange(e);
                               },
@@ -809,8 +826,9 @@ const EVPerformance = () => {
                               <TitlePara>Completed By</TitlePara>
                               <TitlePara>
                                 Date of Review:{" "}
-                                {moment(data.reviewDate).format("DD/MM/YYYY") ||
-                                  " - "}
+                                {data.reviewDate
+                                  ? moment(data.reviewDate).format("DD/MM/YYYY")
+                                  : " - "}
                               </TitlePara>
                             </FlexSpaceBetween>
                             <ViewPara
@@ -851,8 +869,10 @@ const EVPerformance = () => {
                                   <IconsEmployee src="/images/icons/File Text.svg" />{" "}
                                   {data.file?.originalName?.length <= 38
                                     ? data.file?.originalName
-                                    : data.file?.originalName?.substring(0, 38) +
-                                    "..." || " - "}
+                                    : data.file?.originalName?.substring(
+                                        0,
+                                        38
+                                      ) + "..." || " - "}
                                 </File>
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>
@@ -864,8 +884,8 @@ const EVPerformance = () => {
                                 Next Review on:{" "}
                                 {data.nextReviewDate
                                   ? moment(data.nextReviewDate).format(
-                                    "DD/MM/YYYY"
-                                  )
+                                      "DD/MM/YYYY"
+                                    )
                                   : " - "}
                               </ReviewsDiv>
                               <IconContainer>

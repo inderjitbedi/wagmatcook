@@ -105,7 +105,11 @@ const Disciplinary = () => {
   // update modal var
   const [openEdit, setOpenEdit] = useState(false);
   const HandleOpenEdit = () => setOpenEdit(true);
-  const HandleCloseEdit = () => setOpenEdit(false);
+  const HandleCloseEdit = () => {
+    setdescriptionLength(500);
+    setOpenEdit(false);
+    setErrors("");
+  };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -381,7 +385,7 @@ const Disciplinary = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength( 500 - value.length);
+      setdescriptionLength(500 - value.length);
       if (!value) {
         setErrors({
           ...errors,
@@ -459,7 +463,7 @@ const Disciplinary = () => {
       description: data.description,
       // requiredBcr: data.requiredBcr,
     });
-    setdescriptionLength(data.description.length);
+    setdescriptionLength(500 - data.description.length);
 
     HandleOpenEdit();
   };
@@ -558,8 +562,8 @@ const Disciplinary = () => {
                 <InputPara>
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  characters left
+                  {descriptionLength > -1 ? descriptionLength : 0} characters
+                  left
                 </InputPara>
                 {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
@@ -798,8 +802,8 @@ const Disciplinary = () => {
                 <InputPara>
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  characters left
+                  {descriptionLength > -1 ? descriptionLength : 0} characters
+                  left
                 </InputPara>
                 {/* <InputLabel>
               Requires BCR? <InputSpan>*</InputSpan>

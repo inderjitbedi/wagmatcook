@@ -119,7 +119,9 @@ const EmployeePersonal = () => {
                   headerData.personalInfo?.lastName,
                 ].join(" ")}
               </PersonalName>
-              <PersonalTitle>{headerData?.position?.title || "-"}</PersonalTitle>
+              <PersonalTitle>
+                {headerData?.position?.title || "-"}
+              </PersonalTitle>
               <PersonalDepartment>
                 {headerData.position?.department?.name || "-"}
               </PersonalDepartment>
@@ -216,7 +218,7 @@ const EmployeePersonal = () => {
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
-                    <TitlePara>Emergency Contact Number *</TitlePara>
+                    <TitlePara>Emergency Contact Number</TitlePara>
                     <ViewPara>
                       {result?.personalInfo?.emergencyContactNumber || " - "}
                     </ViewPara>
@@ -225,10 +227,10 @@ const EmployeePersonal = () => {
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Is Active </TitlePara>
-                    {result.personalInfo?.isActive ? (
+                    {result.personalInfo?.employee?.isActive ? (
                       <ViewPara style={{ color: "#34A853" }}>Active</ViewPara>
                     ) : (
-                      <ViewPara style={{ color: "red" }}>In Active</ViewPara>
+                      <ViewPara style={{ color: "red" }}>Inactive</ViewPara>
                     )}
                   </FlexColumn>
                 </FlexSpaceBetween>
@@ -245,8 +247,9 @@ const EmployeePersonal = () => {
                   <FlexColumn>
                     <TitlePara>Date of Birth</TitlePara>
                     <ViewPara>
-                      {moment(result.personalInfo?.dob).format("DD/MM/YYYY") ||
-                        " - "}
+                      {result.personalInfo?.dob
+                        ? moment(result.personalInfo?.dob).format("DD/MM/YYYY")
+                        : " - "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>

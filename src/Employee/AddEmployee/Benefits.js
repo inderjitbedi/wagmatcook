@@ -46,6 +46,7 @@ const Benefits = () => {
     reset,
     watch,
     setError,
+    clearErrors,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -339,26 +340,27 @@ const Benefits = () => {
                     {<Errors>{errors.startDate?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
-                    <InputLabel>
-                      End Date 
-                    </InputLabel>
+                    <InputLabel>End Date</InputLabel>
                     <Input
                       type="date"
                       {...register("endDate", {
-                        validate: (fieldValue) => {
-                          const startDate = new Date(getValues("startDate"));
-                          const endDate = fieldValue;
-                          if (startDate <= new Date(endDate) && endDate) {
-                            setError("endDate", {
-                              type: "custom",
-                              message:
-                                "End date must not be earlier than start date   ",
-                            });
-                          } else {
-                            setError("endDate", {
-                              type: "custom",
-                              message: "",
-                            });
+                        onChange: (fieldValue) => {
+                          const startDateValue = getValues("startDate");
+
+                          const endDateValue = getValues("endDate");
+
+                          if (endDateValue && startDateValue) {
+                            const endDate = new Date(endDateValue);
+                            const startDate = new Date(startDateValue);
+                            if (startDate > endDate) {
+                              return setError("endDate", {
+                                type: "custom",
+                                message:
+                                  "End date must not be earlier than start date",
+                              });
+                            } else {
+                              return clearErrors("endDate");
+                            }
                           }
                         },
                       })}

@@ -52,7 +52,7 @@ const SideBar = () => {
       to: "/organization-admin/disciplinary",
     },
     {
-      Title: "Leaves",
+      Title: "Leaves Type",
       src: "/svg/Leaves.svg",
       to: "/organization-admin/leaves",
     },
@@ -75,11 +75,11 @@ const SideBar = () => {
       src: "/svg/Reports.svg",
     },
   ];
- 
   const style = {
     textDecoration: "none",
     color: "#279AF1",
   };
+  console.log(orgData,"this is orgdata")
   return (
     <>
       {" "}
@@ -102,7 +102,9 @@ const SideBar = () => {
               </SideBarListLogo>
               <SideBarListTitle
                 style={
-                  location.pathname.indexOf(data.to) > -1 ? style : { color: "#5C5C5C" }
+                  location.pathname.indexOf(data.to) > -1
+                    ? style
+                    : { color: "#5C5C5C" }
                 }
               >
                 {" "}

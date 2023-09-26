@@ -55,29 +55,29 @@ const EVBenefits = () => {
       });
   };
   useEffect(() => {
-          GetHeadersData();
+    GetHeadersData();
 
     GetEmployeesBenefits();
   }, []);
-    const [headerData, setHeaderData] = useState([]);
-    const GetHeadersData = () => {
-      // setIsLoading(true);
-      const trimid = employeeid.trim();
-      let url = `/employee/header-info/${trimid}`;
-      httpClient({
-        method: "get",
-        url,
+  const [headerData, setHeaderData] = useState([]);
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setHeaderData(result);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error in fetching Personal info. Please try again.");
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {isLoading ? (
@@ -161,27 +161,36 @@ const EVBenefits = () => {
                     <TitlePara>Start Date</TitlePara>
                     <ViewPara>
                       {" "}
-                      {moment(result.benefit?.startDate).format("DD/MM/YYYY") ||
-                        " - "}{" "}
+                      {result.benefit?.startDate
+                        ? moment(result.benefit?.startDate).format("DD/MM/YYYY")
+                        : " - "}{" "}
                     </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>End Date </TitlePara>
                     <ViewPara>
-                        {result.benefit?.endDate ?   moment(result.benefit?.endDate).format("DD/MM/YYYY") :
-                        " - "}{" "}
+                      {result.benefit?.endDate
+                        ? moment(result.benefit?.endDate).format("DD/MM/YYYY")
+                        : " - "}{" "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
                 <FlexSpaceBetween>
                   <FlexColumn>
                     <TitlePara>Cost</TitlePara>
-                    <ViewPara>$ {result.benefit?.cost || " - "} </ViewPara>
+                    <ViewPara>
+                      {" "}
+                      {result.benefit?.cost
+                        ? "$" + result.benefit?.cost
+                        : " - "}{" "}
+                    </ViewPara>
                   </FlexColumn>
                   <FlexColumn>
                     <TitlePara>Employee Contribution rate (%)*</TitlePara>
                     <ViewPara>
-                      $ {result.benefit?.contributionRate || " - "}{" "}
+                      {result.benefit?.contributionRate
+                        ? "$" + result.benefit?.contributionRate
+                        : " - "}{" "}
                     </ViewPara>
                   </FlexColumn>
                 </FlexSpaceBetween>
