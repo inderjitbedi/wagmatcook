@@ -1,3 +1,4 @@
+const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const LeaveType = require("../models/leaveType");
 
 const leaveTypeController = {
@@ -60,6 +61,48 @@ const leaveTypeController = {
                     { name: { $regex: req.query.searchKey, $options: 'i' } },
                     { description: { $regex: req.query.searchKey, $options: 'i' } }
                 ];
+            }
+            const leaveTypes = await LeaveType.find(filters)
+                .skip(startIndex)
+                .limit(limit)
+                .sort({ order: 1 });
+
+            const totalLeaveTypes = await LeaveType.countDocuments(filters);
+            const totalPages = Math.ceil(totalLeaveTypes / req.query.limit);
+
+            res.status(200).json({
+                leaveTypes,
+                totalLeaveTypes,
+                currentPage: page,
+                totalPages,
+                message: 'Leave types fetched successfully'
+            });
+        } catch (error) {
+            console.error("leaveTypeController:list:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async employeeLeaveTypeList(req, res) {
+        try {
+            // if (!req.params.orgid) {
+            //     return res.status(400).json({ message: 'Please provide Organization Id' });
+            // }
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 9999;
+            const startIndex = (page - 1) * limit;
+
+            let filters = { isDeleted: false, isActive: true, organization: req.organization?._id || null };
+
+            if (req.query.searchKey) {
+                filters.$or = [
+                    { name: { $regex: req.query.searchKey, $options: 'i' } },
+                    { description: { $regex: req.query.searchKey, $options: 'i' } }
+                ];
+            }
+
+            const existingLeaveTypes = await EmployeeLeaveAllocation.find({ employee: req.params.employeeid, isDeleted: false }).distinct('leaveType');
+            if (existingLeaveTypes && existingLeaveTypes.length) {
+                filters._id = { $nin: existingLeaveTypes }
             }
             const leaveTypes = await LeaveType.find(filters)
                 .skip(startIndex)

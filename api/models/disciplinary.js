@@ -10,10 +10,10 @@ const disciplinarySchema = new mongoose.Schema({
         type: String,
         default: null,
     },
-    requiredBcr: {
-        type: Boolean,
-        default: false,
-    },
+    // requiredBcr: {
+    //     type: Boolean,
+    //     default: false,
+    // },
     order: {
         type: Number,
         default: null,

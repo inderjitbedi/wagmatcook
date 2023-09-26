@@ -23,7 +23,7 @@ export default function CompleteSignup() {
   const [formData, setFormData] = useState({
     name: "",
     email: email,
-    token: token
+    token: token,
   });
 
   const [errors, setErrors] = useState({
@@ -97,7 +97,10 @@ export default function CompleteSignup() {
         .then(({ result, error }: any) => {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
-            localStorage.setItem("organization", JSON.stringify(result?.organization));
+            localStorage.setItem(
+              "organization",
+              JSON.stringify(result?.organization)
+            );
             localStorage.setItem("token", result?.token);
             navigate("/organization-admin/organization-profile");
           }
@@ -106,20 +109,21 @@ export default function CompleteSignup() {
           console.error("Error:", error);
         });
     } else {
-      toast.warn("All fields are required")
+      toast.warn("All fields are required");
     }
   }
 
   return (
     <React.Fragment>
-
-
-      <div className="signup-form mt-8 mb-50" >
-        <Link to="/"><p className='upper-text'>Already have an account? <span className='cursor-pointer blue-text'>Login</span></p></Link>
+      <div className="signup-form mt-8 mb-50">
+        <Link to="/">
+          <p className="upper-text">
+            Already have an account?{" "}
+            <span className="cursor-pointer blue-text">Login</span>
+          </p>
+        </Link>
         <h1>Sign up as an Organization Admin</h1>
-        <p className="text">
-          Please provide your information
-        </p>
+        <p className="text">Please provide your information</p>
         <form onSubmit={handleSubmit} noValidate>
           <Box sx={{ mt: 1 }}>
             <InputLabel>
@@ -148,7 +152,9 @@ export default function CompleteSignup() {
               required
               fullWidth
               id="email"
-              name="email" disabled InputProps={{
+              name="email"
+              disabled
+              InputProps={{
                 readOnly: true,
               }}
               placeholder="Enter email"
@@ -206,7 +212,6 @@ export default function CompleteSignup() {
             </Button>
           </Box>
         </form>
-
       </div>
       {/* <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="info">

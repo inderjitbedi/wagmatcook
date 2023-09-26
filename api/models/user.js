@@ -68,6 +68,10 @@ const userSchema = new mongoose.Schema({
   receivedWelcomeEmail: {
     type: Boolean,
     default: false
+  },
+  personalInfo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EmployeePersonalInfo',
   }
 }, {
   timestamps: true,
