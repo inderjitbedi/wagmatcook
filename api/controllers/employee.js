@@ -1187,14 +1187,14 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'approver', populate: 'personalInfo' }, 'leaveType')
+            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate([{ path: 'approver', populate: 'personalInfo' }, 'leaveType'])
 
             res.status(200).json({
                 history,
                 message: 'Employee leave history fetched successfully'
             });
         } catch (error) {
-            console.error("employeeController:getBenefit:error -", error);
+            console.error("employeeController:getLeaveHistory:error -", error);
             res.status(400).json(error);
         }
     },
@@ -1206,13 +1206,13 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate({ path: 'approver', populate: 'personalInfo' }, 'leaveType')
+            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate([{ path: 'approver', populate: 'personalInfo' }, 'leaveType'])
             res.status(200).json({
                 request,
                 message: 'Employee leave request fetched successfully'
             });
         } catch (error) {
-            console.error("employeeController:getBenefit:error -", error);
+            console.error("employeeController:getLeaveRequest:error -", error);
             res.status(400).json(error);
         }
     },
