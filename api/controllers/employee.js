@@ -1187,7 +1187,16 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate([{ path: 'approver', populate: 'personalInfo' }, 'leaveType'])
+            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false }).populate({
+                path: 'approver',
+                populate: {
+                    path: 'personalInfo',
+                    model: 'EmployeePersonalInfo', // Replace with the actual model name
+                    populate: {
+                        path: 'photo',
+                    }
+                },
+            }, 'leaveType');
 
             res.status(200).json({
                 history,
@@ -1206,7 +1215,13 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate([{ path: 'approver', populate: 'personalInfo' }, 'leaveType'])
+            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate({
+                path: 'approver',
+                populate: {
+                    path: 'personalInfo',
+                    model: 'EmployeePersonalInfo', // Replace with the actual model name
+                },
+            }, 'leaveType');
             res.status(200).json({
                 request,
                 message: 'Employee leave request fetched successfully'
