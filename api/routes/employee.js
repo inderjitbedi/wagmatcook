@@ -144,5 +144,8 @@ router.post('/leave-allocation/:id', verifyOrgAdmin, employeeController.addLeave
 router.get('/leave-history/:id', verifyOrgAdmin, employeeController.getLeaveHistory);
 router.get('/leave-history/:id/:requestid', verifyOrgAdmin, employeeController.getLeaveHistory);
 router.post('/leave-history/:id/request', verifyOrgAdmin, employeeController.addLeaveRequest);
+router.post('/send-welcome-email', employeeController.sendWelcomeEmail);
+
+
 
 module.exports = router;

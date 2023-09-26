@@ -78,6 +78,7 @@ app.use('/api/dashboard', dashboardRoute);
 
 app.use("/api", express.static(path.join(__dirname, '../wagmatcook')));
 app.use("/api/media", express.static(path.join(__dirname, 'assets')));
+app.use("/api/public", express.static(path.join(__dirname, 'public')));
 app.use("/api/temp", express.static(path.join(__dirname, 'temp')));
 app.use("/api/uploads", express.static(path.join(__dirname, 'uploads')));
 

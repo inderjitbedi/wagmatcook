@@ -16,6 +16,7 @@ const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const EmployeeDocuments = require("../models/employeeDocuments");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const leaveStatus = require("../enum/leaveStatus");
+const sendGrid = require("../providers/sendGrid");
 
 
 const employeeController = {
@@ -1245,6 +1246,17 @@ const employeeController = {
 
             res.status(200).json({
                 request,
+                message: 'Employee leave request sent successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async sendWelcomeEmail(req, res) {
+        try {
+            await sendGrid.send('iinderjitbedi@gmail.com', 'welcome', { req });
+            res.status(200).json({
                 message: 'Employee leave request sent successfully'
             });
         } catch (error) {
