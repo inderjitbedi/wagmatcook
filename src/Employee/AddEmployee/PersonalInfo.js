@@ -36,6 +36,7 @@ import {
   Option,
   AlignFlex,
 } from "./AddEmployeeStyles";
+import API_URLS from "../../constants/apiUrls";
 
 const PersonalInfo = () => {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -108,7 +109,10 @@ const PersonalInfo = () => {
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/personal-info/${trimid}`;
+    let url = API_URLS.getEmployeePersonalInfo.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "get",
       url,
@@ -125,6 +129,8 @@ const PersonalInfo = () => {
             setValue(key, result.personalInfo[key]);
           });
           setValue("workEmail", result.personalInfo.employee.email);
+          setValue("isActive", result.personalInfo.employee.isActive);
+
           console.log("workemail", result.personalInfo.employee.email);
           if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
@@ -149,7 +155,7 @@ const PersonalInfo = () => {
   const HandleSubmitPersonalInfo = (data) => {
     // e.preventDefault();
     let dataCopy = data;
-    let url = `/employee/personal-info/${employeeid}`;
+    let url = API_URL.HandleSubmitPersonalInfo.replace(":employeeid",employeeid);
 
     setIsLoading(true);
 
@@ -253,9 +259,12 @@ const PersonalInfo = () => {
         </div>
       ) : (
         <EmployeeBody>
-          <BodyHeader>
-            <BodyHeaderTitle>Personal Information</BodyHeaderTitle>
-          </BodyHeader>
+          {!edit && (
+            <BodyHeader>
+              <BodyHeaderTitle>Personal Information</BodyHeaderTitle>
+            </BodyHeader>
+          )}
+
           <BodyMain>
             <BodyMainHeading>Basic Information</BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -693,7 +702,7 @@ const PersonalInfo = () => {
           </BodyMain>
         </EmployeeBody>
       )}
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

@@ -53,6 +53,8 @@ import {
   IconContainer,
   Icons,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 const style = {
   position: "absolute",
   top: "50%",
@@ -128,6 +130,8 @@ const EVDiscipline = () => {
     if (isEmptyObject(errors) && !update) {
       if (file) {
         data.file = file._id;
+      } else {
+        data.file = null;
       }
       AddNewDisciplinary(data);
     } else if (update) {
@@ -137,7 +141,7 @@ const EVDiscipline = () => {
   };
   const GetDisciplinary = () => {
     setIsLoading(true);
-    let url = `/disciplinary/list`;
+    let url = API_URLS.getDisciplinaryList;
     httpClient({
       method: "get",
       url,
@@ -161,7 +165,7 @@ const EVDiscipline = () => {
   const GetEmployeesDisciplinary = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/disciplinaries/${trimid}`;
+    let url = API_URLS.EmployeeDisciplinary.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -186,7 +190,10 @@ const EVDiscipline = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/disciplinary/${employeeid}`;
+    let url = API_URLS.submitEmployeeDisciplinary.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "post",
       url,
@@ -233,7 +240,7 @@ const EVDiscipline = () => {
 
       httpClient({
         method: "post",
-        url: `/employee/file/upload/${type}`,
+        url: API_URLS.uploadDocuments.replace(":type", type),
         data: binary,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -286,9 +293,7 @@ const EVDiscipline = () => {
     setValue("file", null);
   };
   useEffect(() => {
-
     setIsLoading(true);
-    GetHeadersData();
 
     GetDisciplinary();
     GetEmployeesDisciplinary();
@@ -302,7 +307,9 @@ const EVDiscipline = () => {
       disciplinary: data.disciplinary._id,
       file: data.file._id,
       issueDate: new Date(data.issueDate).toISOString().split("T")[0],
-      expiryDate: data.expiryDate ? new Date(data.expiryDate).toISOString().split("T")[0] : null,
+      expiryDate: data.expiryDate
+        ? new Date(data.expiryDate).toISOString().split("T")[0]
+        : null,
     });
     handleOpen();
     setFile(data.file);
@@ -320,7 +327,9 @@ const EVDiscipline = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/disciplinary/${employeeid}/${Id}`;
+    let url = API_URLS.getEmployeeDisciplinary
+      .replace(":id", Id)
+      .replace(":employeeid", employeeid);
 
     httpClient({
       method: "put",
@@ -350,7 +359,9 @@ const EVDiscipline = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = `/employee/disciplinary/${employeeid}/delete/${Id}`;
+    let url = API_URLS.deleteEmployeeDisciplinary
+      .replace(":id", Id)
+      .replace(":employeeid", employeeid);
     httpClient({
       method: "put",
       url,
@@ -375,25 +386,7 @@ const EVDiscipline = () => {
         setIsDeleting(false);
       });
   };
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+
   return (
     <>
       {isLoading ? (
@@ -417,29 +410,7 @@ const EVDiscipline = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader employeeid={employeeid} />
 
             {/* <EditButton style={{ marginRight: "54px" }}>
               <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -663,10 +634,10 @@ const EVDiscipline = () => {
                             type="file"
                             // accept="image/*,capture=camera"
                             {...register(`file`, {
-                              required: {
-                                value: update ? false : true,
-                                message: "Required",
-                              },
+                              // required: {
+                              //   value: update ? false : true,
+                              //   message: "Required",
+                              // },
                               onChange: (e) => {
                                 handleFileChange(e);
                               },
@@ -788,12 +759,15 @@ const EVDiscipline = () => {
                           </FlexSpaceBetween>
 
                           <FlexSpaceBetween>
-                            <ReviewsDiv>
-                              Expiry Date:{" "}
-                              {data.expiryDate
-                                ? moment(data.expiryDate).format("DD/MM/YYYY")
-                                : " - "}
-                            </ReviewsDiv>
+                            {data.expiryDate && (
+                              <ReviewsDiv>
+                                Expiry Date:{" "}
+                                {data.expiryDate
+                                  ? moment(data.expiryDate).format("DD/MM/YYYY")
+                                  : " - "}
+                              </ReviewsDiv>
+                            )}
+                            <div></div>
                             <IconContainer>
                               <Icons
                                 onClick={() => HandleUpdateAction(data)}
@@ -820,7 +794,7 @@ const EVDiscipline = () => {
       )}
       <DeleteModal
         openDelete={openDelete}
-        message="Are you sure you want to delete this Discipline"
+        message="Are you sure you want to delete this discipline?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}

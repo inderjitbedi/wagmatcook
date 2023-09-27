@@ -48,6 +48,7 @@ import {
   Errors,
   LoadMore,
 } from "./DisciplinaryStyles";
+import API_URLS from "../constants/apiUrls";
 
 const style = {
   position: "absolute",
@@ -150,7 +151,7 @@ const Disciplinary = () => {
   const HandleDelete = () => {
     setIsLoading(true);
 
-    let url = `/disciplinary/delete/${Id}`;
+    let url = API_URLS.deleteDisciplinary.replace(":id", IdleDeadline);
     httpClient({
       method: "put",
       url,
@@ -182,7 +183,9 @@ const Disciplinary = () => {
   // get disciplinary
   const GetDisciplinary = () => {
     setIsLoading(true);
-    let url = `/disciplinary/list?page=${page}&limit=10&searchKey=${searchValue}`;
+    let url = API_URLS.getDisciplinary
+      .replace("page", page)
+      .replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -224,7 +227,7 @@ const Disciplinary = () => {
   const HandleSubmit = (e) => {
     e.preventDefault();
 
-    let url = "/disciplinary/create";
+    let url = API_URLS.createDisciplinary;
     if (!formData.name) {
       setErrors((prevState) => {
         return {
@@ -286,7 +289,7 @@ const Disciplinary = () => {
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
-    let url = `/disciplinary/update/${Id}`;
+    let url = API_URLS.updateDisciplinary.replace(":id",Id);
     if (!upDateData.name) {
       setErrors((prevState) => {
         return {
@@ -406,7 +409,7 @@ const Disciplinary = () => {
   // Handle reorder
   const HandleReorder = (reOrder) => {
     console.log(reOrder, "this reorder");
-    let url = "/disciplinary/reorder";
+    let url = API_URLS.reorderDisciplinary;
 
     httpClient({
       method: "put",
@@ -527,45 +530,66 @@ const Disciplinary = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <ModalUpperDiv>
-                <ModalHeading>Add New Disciplinary Type</ModalHeading>
-                <ModalIcon
-                  onClick={() => {
-                    HandleClose();
-                    setErrors("");
-                    setFormData("");
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    height: "386px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 999,
                   }}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalUpperDiv>
-              <ModalUpperMid>
-                <InputLabel>
-                  Disciplinary Type Name <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="text"
-                  name="name"
-                  onChange={HandleChanges}
-                  value={formData.name}
-                />
-                <Errors>{errors.nameError}</Errors>
-                <InputLabel>
-                  Details <InputSpan>*</InputSpan>
-                </InputLabel>
-                <TextArea
-                  type="text"
-                  name="description"
-                  onChange={HandleChanges}
-                  value={formData.description}
-                />
+                >
+                  <RotatingLines
+                    strokeColor="#279AF1"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="52"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <>
+                  <ModalUpperDiv>
+                    <ModalHeading>Add New Disciplinary Type</ModalHeading>
+                    <ModalIcon
+                      onClick={() => {
+                        HandleClose();
+                        setErrors("");
+                        setFormData("");
+                      }}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  </ModalUpperDiv>
+                  <ModalUpperMid>
+                    <InputLabel>
+                      Disciplinary Type Name <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      name="name"
+                      onChange={HandleChanges}
+                      value={formData.name}
+                    />
+                    <Errors>{errors.nameError}</Errors>
+                    <InputLabel>
+                      Details <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <TextArea
+                      type="text"
+                      name="description"
+                      onChange={HandleChanges}
+                      value={formData.description}
+                    />
 
-                <InputPara>
-                  {" "}
-                  <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? descriptionLength : 0} characters
-                  left
-                </InputPara>
-                {/* <InputLabel>
+                    <InputPara>
+                      {" "}
+                      <Errors>{errors.descriptionError}</Errors>{" "}
+                      {descriptionLength > -1 ? descriptionLength : 0}{" "}
+                      characters left
+                    </InputPara>
+                    {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
                 </InputLabel>
 
@@ -578,17 +602,19 @@ const Disciplinary = () => {
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select> */}
-                {/* <Errors>{errors.requiredBcrError}</Errors> */}
-                <AddNewButton
-                  onClick={(e) => {
-                    HandleSubmit(e);
-                  }}
-                  disabled={isLoading}
-                  style={{ marginTop: "25px" }}
-                >
-                  Submit
-                </AddNewButton>
-              </ModalUpperMid>
+                    {/* <Errors>{errors.requiredBcrError}</Errors> */}
+                    <AddNewButton
+                      onClick={(e) => {
+                        HandleSubmit(e);
+                      }}
+                      disabled={isLoading}
+                      style={{ marginTop: "25px" }}
+                    >
+                      Submit
+                    </AddNewButton>
+                  </ModalUpperMid>
+                </>
+              )}
             </Box>
           </Modal>
         </DisciplinaryDiv>
@@ -748,7 +774,7 @@ const Disciplinary = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                height: "380px",
+                height: "386px",
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 999,
@@ -856,7 +882,31 @@ const Disciplinary = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem
+          onClick={HandleLogout}
+          style={{
+            color: "#EA4335",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </>
   );

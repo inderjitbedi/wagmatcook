@@ -43,7 +43,7 @@ const EmployeeDetailLayout = () => {
     Navigate("/");
   };
   return (
-    <div style={{width:"100%",boxSizing:"border-box"}}>
+    <div style={{ width: "100%", boxSizing: "border-box" }}>
       <DashHeader>
         <FlexContaier>
           <BackButton onClick={() => Navigate(-1)}>
@@ -99,7 +99,31 @@ const EmployeeDetailLayout = () => {
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+            <MenuItem
+              style={{
+                color: "#222B45",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={HandleLogout}
+              style={{
+                color: "#EA4335",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
         </DashHeaderSearch>
       </DashHeader>

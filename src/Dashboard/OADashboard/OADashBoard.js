@@ -68,6 +68,8 @@ import {
 import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 const OADashBoard = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orgData, setOrgData] = useState();
   const [disciplinaryData, setDisciplinaryData] = useState([]);
@@ -324,7 +326,31 @@ const OADashBoard = () => {
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+            <MenuItem
+              style={{
+                color: "#222B45",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={HandleLogout}
+              style={{
+                color: "#EA4335",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
           <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
           {orgData ? (
@@ -362,7 +388,7 @@ const OADashBoard = () => {
                 <div>
                   <SectionCardTitle>Total Departments</SectionCardTitle>
                   <SectionCardNumber>
-                    {departmentData.totalDepartments || 0 }
+                    {departmentData.totalDepartments || 0}
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/Department.svg" />
@@ -491,7 +517,13 @@ const OADashBoard = () => {
                 {employeeData?.employees?.map((data) => (
                   <CardEmployeeList>
                     <CardEmployeeDiv>
-                      <CardEmployeeImg src="/images/user.jpg" />
+                      <CardEmployeeImg
+                        src={
+                          data.photoInfo && data.photoInfo.length
+                            ? API_URL + data.photoInfo[0]?.path
+                            : "/images/User.jpg"
+                        }
+                      />
                       <CardLeavesDiv>
                         <MainCardPara>
                           {" "}
@@ -500,7 +532,9 @@ const OADashBoard = () => {
                             data.personalInfo[0]?.lastName,
                           ].join(" ")}
                         </MainCardPara>
-                        <MainCardParaLight>{data.positions?.title}</MainCardParaLight>
+                        <MainCardParaLight>
+                          {data.positions?.title}
+                        </MainCardParaLight>
                       </CardLeavesDiv>
                     </CardEmployeeDiv>
                     <CardEmployeePara>

@@ -44,6 +44,8 @@ import {
   Select,
   Option,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 
 const CellStyle = {
   color: "#8F9BB3",
@@ -127,7 +129,7 @@ const EvLeaveAlloacation = () => {
   };
   const GetLeavesType = () => {
     setIsLoading(true);
-    let url = `/leave-type/employee-list/${employeeid}`;
+    let url = API_URLS.getEmployeeLeaveList.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -152,7 +154,7 @@ const EvLeaveAlloacation = () => {
     setIsLoading(true);
     GetLeavesType();
     const trimid = employeeid.trim();
-    let url = `/employee/leave-allocations/${trimid}`;
+    let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -176,7 +178,10 @@ const EvLeaveAlloacation = () => {
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = `/employee/leave-allocation/${employeeid}`;
+    let url = API_URLS.submitEmployeeAllocation.replace(
+      ":employeeid",
+      employeeid
+    );
 
     let dataCopy = data;
     httpClient({
@@ -206,7 +211,9 @@ const EvLeaveAlloacation = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = `/employee/leave-allocation/${employeeid}/delete/${Id}`;
+    let url = API_URLS.deleteEmployeeAllocation
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -235,7 +242,9 @@ const EvLeaveAlloacation = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/leave-allocation/${employeeid}/${Id}`;
+    let url = API_URLS.getEmployeeAllocation
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
 
     httpClient({
       method: "put",
@@ -265,7 +274,7 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-    GetHeadersData();
+
 
     GetLeavesType();
     GetLeaveAlloaction();
@@ -286,25 +295,7 @@ const EvLeaveAlloacation = () => {
     clearErrors();
   };
   console.log("update bollean :", update);
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+
   return (
     <>
       {isLoading ? (
@@ -328,29 +319,7 @@ const EvLeaveAlloacation = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+           <CommenHeader employeeid={employeeid} />
           </FlexSpaceBetween>
           <LeaveDiv>
             Leaves Alloaction
@@ -545,7 +514,8 @@ const EvLeaveAlloacation = () => {
       )}
       <DeleteModal
         openDelete={openDelete}
-        message="Are you sure you want to delete this Leave Alloaction"
+        message="Are you sure you want to delete this 
+        leave alloaction?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}

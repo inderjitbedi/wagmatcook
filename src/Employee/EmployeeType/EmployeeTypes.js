@@ -48,6 +48,7 @@ import {
   Errors,
   LoadMore,
 } from "../../Disciplinary/DisciplinaryStyles";
+import API_URLS from "../../constants/apiUrls";
 
 const style = {
   position: "absolute",
@@ -151,7 +152,7 @@ const EmployeeTypes = () => {
   };
   const GetEmployeeTypes = () => {
     setIsLoading(true);
-    let url = `/employee-type/list?page=1&limit=10&searchKey=${searchValue}`;
+    let url = API_URLS.getEmployeeTypes.replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -197,7 +198,7 @@ const EmployeeTypes = () => {
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = "/employee-type/create";
+    let url = API_URLS.createEmployeeTypes;
 
     setIsLoading(true);
     let dataCopy = data;
@@ -228,7 +229,7 @@ const EmployeeTypes = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/employee-type/delete/${Id}`;
+    let url = API_URLS.deleteEmployeeTypes.replace(":id",Id);
     httpClient({
       method: "put",
       url,
@@ -255,7 +256,7 @@ const EmployeeTypes = () => {
   const HandleUpdate = (data) => {
     let dataCopy = data;
 
-    let url = `/employee-type/update/${Id}`;
+    let url = API_URLS.updateEmployeeTypes.replace(":id",Id);
 
     setIsLoading(true);
 
@@ -350,7 +351,7 @@ const EmployeeTypes = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "70vh",
+                  height: "300px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -552,7 +553,7 @@ const EmployeeTypes = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this Employee Type?"
+        message="Are you sure you want to delete this employee type?"
         isLoading={isLoading}
       />
       <Menu
@@ -571,7 +572,31 @@ const EmployeeTypes = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem
+          onClick={HandleLogout}
+          style={{
+            color: "#EA4335",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </>
   );

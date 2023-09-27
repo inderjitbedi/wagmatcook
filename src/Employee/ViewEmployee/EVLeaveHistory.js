@@ -52,6 +52,8 @@ import {
   Select,
   Option,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 const CellStyle = {
   color: "#8F9BB3",
   padding: "16px 8px",
@@ -191,17 +193,17 @@ const EVLeaveHistory = () => {
   const Navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
-    setUpdate(false)
-    clearErrors()
-    reset({})
-    setOpen(false)
+    setUpdate(false);
+    clearErrors();
+    reset({});
+    setOpen(false);
   };
   const [openThanks, setOpenThanks] = useState(false);
   const handleOpenThanks = () => setOpenThanks(true);
   const handleCloseThanks = () => setOpenThanks(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
-
+   const[isSatus,setIsSatus] = useState("")
   const [formData, setFormData] = useState([]);
   const [reportList, setReportList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
@@ -250,6 +252,7 @@ const EVLeaveHistory = () => {
       approver: data.approver?._id,
       status: data.status,
     });
+    setIsSatus(data.status);
     handleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -258,28 +261,10 @@ const EVLeaveHistory = () => {
     clearErrors();
     setDetailsLength(500);
   };
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+
   const GetReportList = () => {
     setIsLoading(true);
-    let url = `/employee/reports-to-list/`;
+    let url = API_URLS.getReporttoList;
     httpClient({
       method: "get",
       url,
@@ -296,14 +281,17 @@ const EVLeaveHistory = () => {
               return {
                 _id: user.user,
                 personalInfoId,
-                name: `${firstName} ${lastName}`,
+                name: `${firstName} ${lastName ? lastName : ""}`,
               };
             } else {
               const { _id: userDataId, name } = user.userData;
               return { _id: user.user, userDataId, name };
             }
           });
-          setReportList(extractedDataArray);
+          const filteredArray = extractedDataArray.filter(
+            (obj) => obj._id !== employeeid
+          );
+          setReportList(filteredArray);
           console.log("ideal data :", extractedDataArray);
         } else {
           //toast.warn("something went wrong ");
@@ -320,7 +308,7 @@ const EVLeaveHistory = () => {
   };
   const GetLeavesType = () => {
     setIsLoading(true);
-    let url = `/leave-type/employee-list/${employeeid}`;
+    let url = API_URLS.getLeaveTypeList;
     httpClient({
       method: "get",
       url,
@@ -344,7 +332,10 @@ const EVLeaveHistory = () => {
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = `/employee/leave-history/${employeeid}/request`;
+    let url = API_URLS.submitEmployeeLeaveHistory.replace(
+      ":employeeid",
+      employeeid
+    );
 
     let dataCopy = data;
     httpClient({
@@ -373,11 +364,9 @@ const EVLeaveHistory = () => {
       });
   };
   const GetLeaveHistory = () => {
-    GetHeadersData();
-
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/leave-history/${trimid}`;
+    let url = API_URLS.getLeaveHistory.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -428,29 +417,7 @@ const EVLeaveHistory = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader employeeid={employeeid} />
           </FlexSpaceBetween>
           <LeaveDiv>
             Leaves History
@@ -584,204 +551,228 @@ const EVLeaveHistory = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <ModalContainer>
-                <ModalHeading>
-                  {!update ? "Applying for Leaves" : "View Leaves"}
-                </ModalHeading>
-                <ModalIcon
-                  onClick={handleClose}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalContainer>
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    height: "380px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 999,
+                  }}
+                >
+                  <RotatingLines
+                    strokeColor="#279AF1"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="52"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <>
+                  <ModalContainer>
+                    <ModalHeading>
+                      {!update ? "Applying for Leaves" : "View Leaves"}
+                    </ModalHeading>
+                    <ModalIcon
+                      onClick={handleClose}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  </ModalContainer>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalFormContainer>
-                  {/* <SearchBox style={{ marginBottom: "16px" }}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <ModalFormContainer>
+                      {/* <SearchBox style={{ marginBottom: "16px" }}>
                     <SearchIcon src="/images/icons/searchIcon.svg" />
                     <SearchInput
                       type="text"
                       placeholder="Search..."
                     ></SearchInput>
                   </SearchBox> */}
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        From <InputSpan>*</InputSpan>{" "}
-                      </InputLabel>
-                      <Input
-                        readOnly={update}
-                        type="date"
-                        {...register("from", {
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                          onChange: (e) => {
-                            const endDate = new Date(getValues("to"));
-                            const startDate = new Date(e.target.value);
-                            if (startDate >= endDate && endDate) {
-                              setError("to", {
-                                type: "custom",
-                                message: "Must not be earlier than Start Date",
-                              });
-                            } else {
-                              setError("to", {
-                                type: "custom",
-                                message: "",
-                              });
-                            }
-                          },
-                        })}
-                      />
-                      {<Errors>{errors.from?.message}</Errors>}
-                    </FlexColumnForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        To <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input
-                        readOnly={update}
-                        type="date"
-                        {...register("to", {
-                          required: {
-                            value: true,
-                            message: " Required",
-                          },
-                          onChange: (fieldValue) => {
-                            const startDateValue = getValues("from");
-                            const endDateValue = getValues("to");
+                      <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            From <InputSpan>*</InputSpan>{" "}
+                          </InputLabel>
+                          <Input
+                            readOnly={update}
+                            type="date"
+                            {...register("from", {
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                              onChange: (e) => {
+                                const endDate = new Date(getValues("to"));
+                                const startDate = new Date(e.target.value);
+                                if (startDate >= endDate && endDate) {
+                                  setError("to", {
+                                    type: "custom",
+                                    message:
+                                      "Must not be earlier than Start Date",
+                                  });
+                                } else {
+                                  setError("to", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.from?.message}</Errors>}
+                        </FlexColumnForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            To <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Input
+                            readOnly={update}
+                            type="date"
+                            {...register("to", {
+                              required: {
+                                value: true,
+                                message: " Required",
+                              },
+                              onChange: (fieldValue) => {
+                                const startDateValue = getValues("from");
+                                const endDateValue = getValues("to");
 
-                            if (endDateValue && startDateValue) {
-                              const endDate = new Date(endDateValue);
-                              const startDate = new Date(startDateValue);
-                              if (startDate > endDate) {
-                                return setError("to", {
-                                  type: "custom",
-                                  message:
-                                    "End date must not be earlier than start date",
-                                });
-                              } else {
-                                return clearErrors("to");
-                              }
-                            }
-                          },
-                        })}
-                      />
-                      {<Errors>{errors.to?.message}</Errors>}
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Leave Type <InputSpan>*</InputSpan>{" "}
-                      </InputLabel>
+                                if (endDateValue && startDateValue) {
+                                  const endDate = new Date(endDateValue);
+                                  const startDate = new Date(startDateValue);
+                                  if (startDate > endDate) {
+                                    return setError("to", {
+                                      type: "custom",
+                                      message:
+                                        "End date must not be earlier than start date",
+                                    });
+                                  } else {
+                                    return clearErrors("to");
+                                  }
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.to?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Leave Type <InputSpan>*</InputSpan>{" "}
+                          </InputLabel>
 
-                      <Controller
-                        name="leaveType"
-                        control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                        }}
-                        render={({ field }) => (
-                          <Select {...field} disabled={update}>
-                            <Option>Select</Option>
-                            {leaveType?.map((data) => (
-                              <Option value={data._id}>{data.name}</Option>
-                            ))}
-                          </Select>
-                        )}
-                      />
-                      {<Errors>{errors.leaveType?.message}</Errors>}
-                    </FlexColumnForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Hours <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Input
-                        type="text"
-                        readOnly={update}
-                        {...register("hours", {
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                          validate: (fieldValue) => {
-                            return (
-                              (!isNaN(parseFloat(fieldValue)) &&
-                                isFinite(fieldValue)) ||
-                              "Invalid Hours number "
-                            );
-                          },
-                          pattern: {
-                            value: /^[+]?\d+(\.\d+)?$/,
-                            message: "Please enter valid hours",
-                          },
-                        })}
-                      />
-                      {<Errors>{errors.hours?.message}</Errors>}
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>Description</InputLabel>
-                      <Input
-                        type="text"
-                        readOnly={update}
-                        {...register("requesterComment", {
-                          // required: {
-                          //   value: true,
-                          //   message: "Required",
-                          // },
-                        })}
-                      />
-                      <Errors> {errors.requesterComment?.message} </Errors>
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Send Leave Request to <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Controller
-                        name="approver"
-                        control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                        }}
-                        render={({ field }) => (
-                          <Select {...field} disabled={update}>
-                            <Option>Select</Option>
-                            {reportList?.map((data) => (
-                              <Option value={data._id}>{data.name}</Option>
-                            ))}
-                          </Select>
-                        )}
-                      />
-                      {<Errors>{errors.approver?.message}</Errors>}
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  {!update ? (
-                    <ButtonBlue type="submit"> Submit</ButtonBlue>
-                  ) : (
-                    <span
-                      style={
-                        rows[0].status === "Pending"
-                          ? PendingStyle
-                          : ApprovedStyles
-                      }
-                    >
-                      {" "}
-                      {rows[0].status}{" "}
-                    </span>
-                  )}
-                </ModalFormContainer>
-              </form>
+                          <Controller
+                            name="leaveType"
+                            control={control}
+                            rules={{
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field} disabled={update}>
+                                <Option>Select</Option>
+                                {leaveType?.map((data) => (
+                                  <Option value={data._id}>{data.name}</Option>
+                                ))}
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.leaveType?.message}</Errors>}
+                        </FlexColumnForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Hours <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Input
+                            type="text"
+                            readOnly={update}
+                            {...register("hours", {
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                              validate: (fieldValue) => {
+                                return (
+                                  (!isNaN(parseFloat(fieldValue)) &&
+                                    isFinite(fieldValue)) ||
+                                  "Invalid Hours number "
+                                );
+                              },
+                              pattern: {
+                                value: /^[+]?\d+(\.\d+)?$/,
+                                message: "Please enter valid hours",
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.hours?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>Description</InputLabel>
+                          <Input
+                            type="text"
+                            readOnly={update}
+                            {...register("requesterComment", {
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
+                            })}
+                          />
+                          <Errors> {errors.requesterComment?.message} </Errors>
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Send Leave Request to <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Controller
+                            name="approver"
+                            control={control}
+                            rules={{
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field} disabled={update}>
+                                <Option>Select</Option>
+                                {reportList?.map((data) => (
+                                  <Option value={data._id}>{data.name}</Option>
+                                ))}
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.approver?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      {!update ? (
+                        <ButtonBlue type="submit"> Submit</ButtonBlue>
+                      ) : (
+                        <span
+                          style={
+                            isSatus === "PENDING"
+                              ? PendingStyle
+                              : ApprovedStyles
+                          }
+                        >
+                          {" "}
+                          {isSatus}{" "}
+                        </span>
+                      )}
+                    </ModalFormContainer>
+                  </form>
+                </>
+              )}
             </Box>
           </Modal>
           {/* thanks modal for leaves */}

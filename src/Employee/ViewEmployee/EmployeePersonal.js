@@ -22,6 +22,8 @@ import {
   TitlePara,
   ViewPara,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 
 const EmployeePersonal = () => {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -35,7 +37,7 @@ const EmployeePersonal = () => {
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/personal-info/${trimid}`;
+    let url = API_URLS.getEmployeePersonalInfo.replace(":employeeid",employeeid);
     httpClient({
       method: "get",
       url,
@@ -57,29 +59,9 @@ const EmployeePersonal = () => {
         setIsLoading(false);
       });
   };
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+ 
   useEffect(() => {
     GetEmployeesPersonalInfo();
-          GetHeadersData();
-
   }, []);
   console.log(result);
   return (
@@ -104,29 +86,7 @@ const EmployeePersonal = () => {
         </div>
       ) : (
         <MainBodyContainer>
-          <PersonalInfo>
-            <PersonalImg
-              src={
-                headerData.personalInfo?.photo
-                  ? API_URL + headerData.personalInfo.photo?.path
-                  : "/images/User.jpg"
-              }
-            />
-            <FlexColumn>
-              <PersonalName>
-                {[
-                  headerData.personalInfo?.firstName,
-                  headerData.personalInfo?.lastName,
-                ].join(" ")}
-              </PersonalName>
-              <PersonalTitle>
-                {headerData?.position?.title || "-"}
-              </PersonalTitle>
-              <PersonalDepartment>
-                {headerData.position?.department?.name || "-"}
-              </PersonalDepartment>
-            </FlexColumn>
-          </PersonalInfo>
+          <CommenHeader employeeid={employeeid} />
 
           <BasicInfoContainer>
             <BasicInfoDiv>

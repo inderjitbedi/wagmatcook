@@ -33,6 +33,7 @@ import {
   DeleteIcon,
   TrashDiv,
 } from "./AddEmployeeStyles";
+import API_URLS from "../../constants/apiUrls";
 
 const JobDetails = () => {
   const Navigate = useNavigate();
@@ -83,7 +84,7 @@ const JobDetails = () => {
   });
 
   const GetReportsToList = () => {
-    let url = `/employee/reports-to-list`;
+    let url = API_URLS.getReporttoList;
     httpClient({
       method: "get",
       url,
@@ -91,7 +92,7 @@ const JobDetails = () => {
       .then(({ result, error }) => {
         if (result) {
           const filteredArray = result.users.filter(
-            (obj) => obj.id !== employeeid
+            (obj) => obj.userData._id !== employeeid
           );
           setReportsToList(filteredArray);
         }
@@ -105,7 +106,7 @@ const JobDetails = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
 
-    let url = `/employee/job-details/${trimid}`;
+    let url = API_URLS.getEmployeeJobDetails.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -162,7 +163,10 @@ const JobDetails = () => {
   const HandleSubmitJobDetails = (data) => {
     // e.preventDefault();
     let dataCopy = { ...data };
-    let url = `/employee/job-details/${employeeid}`;
+    let url = API_URLS.submitEmployeeJobDetails.replace(
+      ":employeeid",
+      employeeid
+    );
 
     setIsLoading(true);
 
@@ -199,7 +203,7 @@ const JobDetails = () => {
   const GetDepartments = () => {
     //  setIsLoading(true);
 
-    let url = `/department/list`;
+    let url = API_URLS.getDepartmentsList;
     httpClient({
       method: "get",
       url,
@@ -224,7 +228,7 @@ const JobDetails = () => {
   };
   const GetEmployeeTypes = () => {
     setIsLoading(true);
-    let url = `/employee-type/list`;
+    let url = API_URLS.getEmployeeTypeList;
     httpClient({
       method: "get",
       url,
@@ -313,22 +317,25 @@ const JobDetails = () => {
         </div>
       ) : (
         <EmployeeBody>
-          <BodyHeader>
-            <BodyHeaderTitle>
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/personal-info/${employeeid}`
-                  )
-                }
-              >
-                {" "}
-                Personal Information{" "}
-              </span>
-              &#62; Job Details
-            </BodyHeaderTitle>
-          </BodyHeader>
+          {!edit && (
+            <BodyHeader>
+              <BodyHeaderTitle>
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/personal-info/${employeeid}`
+                    )
+                  }
+                >
+                  {" "}
+                  Personal Information{" "}
+                </span>
+                &#62; Job Details
+              </BodyHeaderTitle>
+            </BodyHeader>
+          )}
+
           <BodyMain>
             <BodyMainHeading style={{ marginBottom: "25px" }}>
               Job Details
@@ -465,11 +472,13 @@ const JobDetails = () => {
                           <Select {...field}>
                             <Option value="">Select</Option>
                             {reportsToList?.map((user) => (
-                              <Option value={user._id}>
+                              <Option value={user?.userData._id}>
                                 {user.personalInfo?.length
                                   ? user.personalInfo[0].firstName +
                                     " " +
-                                    user.personalInfo[0].lastName
+                                    (user?.personalInfo[0]?.lastName
+                                      ? user?.personalInfo[0]?.lastName
+                                      : " ")
                                   : user.userData.name}
                               </Option>
                             ))}

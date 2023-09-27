@@ -9,6 +9,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
 import ReactPaginate from "react-paginate";
+import API_URLS from "../constants/apiUrls";
+
 import {
   DashHeader,
   DashHeaderTitle,
@@ -208,7 +210,10 @@ const Departments = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list?page=${page}&limit=10&searchKey=${searchValue}`;
+    let url = API_URLS.getDpartments
+      .replace("page", page)
+      .replace("searchValue", searchValue);
+    
     httpClient({
       method: "get",
       url,
@@ -243,7 +248,7 @@ const Departments = () => {
   const HandleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = { ...formData };
-    let url = "/department/create";
+    let url = API_URLS.createDepartments;
 
     if (!formData.name) {
       setErrors((prevState) => {
@@ -302,7 +307,7 @@ const Departments = () => {
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
-    let url = `/department/update/${Id}`;
+    let url = API_URLS.updateDepartments.replace(":id",Id);
     if (!upDateData.name) {
       setErrors((prevState) => {
         return {
@@ -369,7 +374,7 @@ const Departments = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/department/delete/${Id}`;
+    let url = API_URLS.deleteDepartments.replace(":id",Id);
     httpClient({
       method: "put",
       url,
@@ -474,7 +479,31 @@ const Departments = () => {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+          <MenuItem
+            style={{
+              color: "#222B45",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "20px",
+            }}
+          >
+            Settings
+          </MenuItem>
+          <MenuItem
+            onClick={HandleLogout}
+            style={{
+              color: "#EA4335",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "20px",
+            }}
+          >
+            Logout
+          </MenuItem>
         </Menu>
         <DepartmentFilterContainer>
           {/* <DepartmentFilterdiv>
@@ -490,64 +519,87 @@ const Departments = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <ModalUpperDiv>
-                <ModalHeading>Add New Department</ModalHeading>
-                <ModalIcon
-                  onClick={() => {
-                    HandleClose();
-                    setErrors("");
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    height: "441px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 999,
                   }}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalUpperDiv>
-
-              <ModalUpperMid>
-                <InputLabel>
-                  Department Name <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  placeholder="Department Name"
-                  onChange={HandleChange}
-                  value={formData.name}
-                  name="name"
-                  type="text"
-                />
-                <Errors>{errors.nameError}</Errors>
-
-                <InputLabel>
-                  Description <InputSpan>*</InputSpan>
-                </InputLabel>
-                <TextArea
-                  placeholder="Description"
-                  onChange={HandleChange}
-                  value={formData.description}
-                  type="text"
-                  name="description"
-                />
-                <InputPara>
-                  {" "}
-                  <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? descriptionLength : 0}{" "}
-                  characters left
-                </InputPara>
-              </ModalUpperMid>
-              <ModalBottom>
-                <AddNewButton
-                  type="submit"
-                  onClick={(e) => {
-                    HandleSubmit(e);
-                  }}
-                  disabled={isLoading}
                 >
-                  Add New
-                </AddNewButton>
-                <CancelButton
-                  onClick={HandleClose}
-                  style={{ cursor: "pointer" }}
-                >
-                  Cancel
-                </CancelButton>
-              </ModalBottom>
+                  <RotatingLines
+                    strokeColor="#279AF1"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="52"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <>
+                  <ModalUpperDiv>
+                    <ModalHeading>Add New Department</ModalHeading>
+                    <ModalIcon
+                      onClick={() => {
+                        HandleClose();
+                        setErrors("");
+                      }}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  </ModalUpperDiv>
+
+                  <ModalUpperMid>
+                    <InputLabel>
+                      Department Name <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      placeholder="Department Name"
+                      onChange={HandleChange}
+                      value={formData.name}
+                      name="name"
+                      type="text"
+                    />
+                    <Errors>{errors.nameError}</Errors>
+
+                    <InputLabel>
+                      Description <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <TextArea
+                      placeholder="Description"
+                      onChange={HandleChange}
+                      value={formData.description}
+                      type="text"
+                      name="description"
+                    />
+                    <InputPara>
+                      {" "}
+                      <Errors>{errors.descriptionError}</Errors>{" "}
+                      {descriptionLength > -1 ? descriptionLength : 0}{" "}
+                      characters left
+                    </InputPara>
+                  </ModalUpperMid>
+                  <ModalBottom>
+                    <AddNewButton
+                      type="submit"
+                      onClick={(e) => {
+                        HandleSubmit(e);
+                      }}
+                      disabled={isLoading}
+                    >
+                      Add New
+                    </AddNewButton>
+                    <CancelButton
+                      onClick={HandleClose}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Cancel
+                    </CancelButton>
+                  </ModalBottom>
+                </>
+              )}
             </Box>
           </Modal>
           <Modal
