@@ -155,7 +155,10 @@ const PersonalInfo = () => {
   const HandleSubmitPersonalInfo = (data) => {
     // e.preventDefault();
     let dataCopy = data;
-    let url = API_URL.HandleSubmitPersonalInfo.replace(":employeeid",employeeid);
+    let url = API_URL.submitEmployeePersonalInfo.replace(
+      ":employeeid",
+      employeeid
+    );
 
     setIsLoading(true);
 
