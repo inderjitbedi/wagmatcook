@@ -86,13 +86,21 @@ const SideBar = () => {
     color: "#279AF1",
   };
   console.log(orgData, "this is orgdata");
+  let API_URL = process.env.REACT_APP_API_URL;
+
   return (
     <>
       {" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
-        <SideBarLogo src="/images/User.jpg" />
+        <SideBarLogo
+          src={
+            orgData?.logo 
+              ? API_URL + orgData?.logo?.path
+              : "/images/User.jpg"
+          }
+        />
         <SideBarLogodiv>
           <SideBarLogoPara> Organization</SideBarLogoPara>
           <SideBarLogoHead>{orgData?.name}</SideBarLogoHead>

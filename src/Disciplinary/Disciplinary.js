@@ -151,7 +151,7 @@ const Disciplinary = () => {
   const HandleDelete = () => {
     setIsLoading(true);
 
-    let url = API_URLS.deleteDisciplinary.replace(":id", IdleDeadline);
+    let url = API_URLS.deleteDisciplinary.replace(":id",Id);
     httpClient({
       method: "put",
       url,

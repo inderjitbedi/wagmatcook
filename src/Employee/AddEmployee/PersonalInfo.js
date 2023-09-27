@@ -155,7 +155,7 @@ const PersonalInfo = () => {
   const HandleSubmitPersonalInfo = (data) => {
     // e.preventDefault();
     let dataCopy = data;
-    let url = API_URL.submitEmployeePersonalInfo.replace(
+    let url = API_URLS.submitEmployeePersonalInfo.replace(
       ":employeeid",
       employeeid
     );
@@ -593,16 +593,14 @@ const PersonalInfo = () => {
               <FormContainer>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>
-                      Employee ID <InputSpan>*</InputSpan>
-                    </InputLabel>
+                    <InputLabel>Employee ID</InputLabel>
                     <Input
                       type="text"
                       {...register("employeeId", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
+                        // required: {
+                        //   value: true,
+                        //   message: "Required",
+                        // },
                       })}
                     />
                     {<Errors> {errors.employeeId?.message} </Errors>}
@@ -633,10 +631,18 @@ const PersonalInfo = () => {
                 </FlexContaierForm>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>SIN</InputLabel>
+                    <InputLabel>
+                      SIN <InputSpan>*</InputSpan>
+                    </InputLabel>
                     <Controller
                       name="sin"
                       control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
                       defaultValue=""
                       render={({ field }) => (
                         <InputMask

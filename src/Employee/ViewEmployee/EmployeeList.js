@@ -490,7 +490,7 @@ const Employee = () => {
                         src={
                           data.photoInfo && data.photoInfo.length
                             ? API_URL + data.photoInfo[0]?.path
-                            : "/images/User.jpg"
+                            : API_URL
                         }
                       />
                       <TabelParaContainer>

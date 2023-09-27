@@ -51,6 +51,8 @@ import {
   ModalThanksHeading,
   Select,
   Option,
+  InputPara,
+  TextArea,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -197,13 +199,14 @@ const EVLeaveHistory = () => {
     clearErrors();
     reset({});
     setOpen(false);
+    setDetailsLength(500);
   };
   const [openThanks, setOpenThanks] = useState(false);
   const handleOpenThanks = () => setOpenThanks(true);
   const handleCloseThanks = () => setOpenThanks(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
-  const [isSatus, setIsSatus] = useState("")
+  const [isSatus, setIsSatus] = useState("");
   const [formData, setFormData] = useState([]);
   const [reportList, setReportList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
@@ -242,7 +245,8 @@ const EVLeaveHistory = () => {
   const HandleUpdateAction = (data) => {
     setUpdate(true);
     setId(data._id);
-    setDetailsLength(500 - data?.description?.length);
+    setDetailsLength(500 - data?.requesterComment?.length);
+
     reset({
       leaveType: data.leaveType._id,
       from: new Date(data.from).toISOString().split("T")[0],
@@ -716,16 +720,38 @@ const EVLeaveHistory = () => {
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>Description</InputLabel>
-                          <Input
+                          <TextArea
                             type="text"
-                            readOnly={update}
                             {...register("requesterComment", {
-                              // required: {
-                              //   value: true,
-                              //   message: "Required",
-                              // },
+                              required: {
+                                value: true,
+                                message: " Required",
+                              },
+                              maxLength: {
+                                value: 500,
+                                message: "Details exceeds  500 characters ",
+                              },
+
+                              onChange: (value) => {
+                                setDetailsLength(
+                                  500 - value.target.value.length
+                                );
+                              },
                             })}
                           />
+                          <InputPara>
+                            {" "}
+                            {
+                              <Errors>
+                                {errors.requesterComment?.message}
+                              </Errors>
+                            }{" "}
+                            <span style={{ justifySelf: "flex-end" }}>
+                              {" "}
+                              {detailsLength > -1 ? detailsLength : 0}{" "}
+                              Characters left
+                            </span>
+                          </InputPara>
                           <Errors> {errors.requesterComment?.message} </Errors>
                         </FlexColumnForm>
                       </FlexContaierForm>

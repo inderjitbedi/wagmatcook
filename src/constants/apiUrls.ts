@@ -60,7 +60,7 @@ const API_URLS = {
   submitEmployeeDisciplinary:`/employee/disciplinary/:employeeid`,
   getDisciplinaryList: `/disciplinary/list`,
   EmployeeDisciplinary: `/employee/disciplinaries/:employeeid`,
-  getEmployeeDisciplinary: `/employee/disciplinaries/:employeeid/:id`,
+  getEmployeeDisciplinary: `/employee/disciplinary/:employeeid/:id`,
 
   deleteEmployeeDisciplinary: `/employee/disciplinary/:employeeid/delete/:id`,
 
@@ -79,7 +79,7 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   getEmployeeLeaveList: `/leave-type/employee-list/:employeeid`,
   EmployeeAllocation: `/employee/leave-allocations/:employeeid`,
 
-  getEmployeeAllocation: `/employee/leave-allocations/:employeeid/:id`,
+  getEmployeeAllocation: `/employee/leave-allocation/:employeeid/:id`,
   deleteEmployeeAllocation: `/employee/leave-allocation/:employeeid/delete/:id`,
   // employee Documents
   getEmployeeDocuments: `/employee/documents/:employeeid`,
