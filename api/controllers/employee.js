@@ -198,59 +198,8 @@ const employeeController = {
                     $limit: limit,
                 },
             ]);
-            // const employees = await User.aggregate([
-            //     {
-            //         $match: filters,
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: 'userorganizations',
-            //             localField: '_id',
-            //             foreignField: 'user',
-            //             as: 'userOrganizations',
-            //         },
-            //     },
-            //     {
-            //         $match: {
-            //             'userOrganizations.organization': req.organization?._id || null,
-            //         },
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: 'employeepersonalinfos',
-            //             localField: '_id',
-            //             foreignField: 'employee',
-            //             as: 'personalInfo',
-            //         },
-            //     },
 
-            //     {
-            //         $lookup: {
-            //             from: 'employeejobdetails',
-            //             localField: '_id',
-            //             foreignField: 'employee',
-            //             as: 'jobDetails',
-            //         },
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: 'files',
-            //             localField: 'personalInfo.photo',
-            //             foreignField: '_id',
-            //             as: 'photoInfo',
-            //         },
-            //     },
 
-            //     {
-            //         $skip: startIndex,
-            //     },
-            //     {
-            //         $limit: limit,
-            //     }
-
-            // ]);
-
-            // const totalEmployees = await User.countDocuments(filters);
             const totalEmployees = await UserOrganization.aggregate([
                 {
                     $lookup: {
@@ -265,8 +214,8 @@ const employeeController = {
                 },
                 {
                     $match: {
-                        'userData.isActive': true,     // Filter by isActive in the User collection
-                        'userData.isDeleted': false,   // Filter by isDeleted in the User collection
+                        'userData.isActive': true,
+                        'userData.isDeleted': false,
                         'organization': req.organization?._id || null,
                         'userData.role': { $ne: roles.ORG_ADMIN },
                     },

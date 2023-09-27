@@ -203,7 +203,7 @@ const EVLeaveHistory = () => {
   const handleCloseThanks = () => setOpenThanks(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
-   const[isSatus,setIsSatus] = useState("")
+  const [isSatus, setIsSatus] = useState("")
   const [formData, setFormData] = useState([]);
   const [reportList, setReportList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
