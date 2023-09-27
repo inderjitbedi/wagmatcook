@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import API_URLS from "../constants/apiUrls";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -125,7 +126,7 @@ const OABenefits = () => {
 
   const GetBenefits = () => {
     setIsLoading(true);
-    let url = `/benefit/list?page=1&limit=10&searchKey=${searchValue}`;
+    let url = API_URLS.getOaBenefits.replace("searchValue", searchValue );
     httpClient({
       method: "get",
       url,
@@ -154,7 +155,7 @@ const OABenefits = () => {
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = "/benefit/create";
+    let url = API_URLS.createBenefits;
 
     setIsLoading(true);
     let dataCopy = data;
@@ -185,7 +186,7 @@ const OABenefits = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/benefit/delete/${Id}`;
+    let url = API_URLS.deleteBenefits.replace(":id",Id);
     httpClient({
       method: "put",
       url,
@@ -213,7 +214,7 @@ const OABenefits = () => {
     console.log("update Data:", data);
     let dataCopy = data;
 
-    let url = `/benefit/update/${Id}`;
+    let url = API_URLS.updateBenefits.replace(":id",Id);
 
     setIsLoading(true);
 
@@ -566,7 +567,7 @@ const OABenefits = () => {
         isLoading={isLoading}
       />
       <Menu
-        sx={{ margin: "0px" }}
+        sx={{ margin: "0px", }}
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={anchorEl}
@@ -581,7 +582,31 @@ const OABenefits = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem
+          onClick={HandleLogout}
+          style={{
+            color: "#EA4335",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </>
   );

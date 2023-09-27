@@ -217,7 +217,7 @@ export const UploadPara = styled.p`
 `;
 export const FlexContaierForm = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   /* margin-bottom: 16px; */
   width: 100%;

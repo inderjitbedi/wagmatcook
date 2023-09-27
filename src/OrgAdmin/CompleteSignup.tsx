@@ -102,7 +102,7 @@ export default function CompleteSignup() {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem(
-              "organization",
+              "org",
               JSON.stringify(result?.organization)
             );
             setIsLoading(false);

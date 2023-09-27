@@ -50,6 +50,8 @@ import {
   CertificateContainer,
   AlignFlex,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 const style = {
   position: "absolute",
   top: "50%",
@@ -110,7 +112,7 @@ const EmployeeJobDetails = () => {
   const GetEmployeesJobDetails = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/job-details/${trimid}`;
+    let url = API_URLS.getEmployeeJobDetails.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -135,7 +137,7 @@ const EmployeeJobDetails = () => {
   const GetDepartments = () => {
     setIsLoading(true);
 
-    let url = `/department/list`;
+    let url = API_URLS.getDepartmentsList;
     httpClient({
       method: "get",
       url,
@@ -159,7 +161,7 @@ const EmployeeJobDetails = () => {
   };
   const GetEmployeeTypes = () => {
     setIsLoading(true);
-    let url = `/employee-type/list`;
+    let url = API_URLS.getEmployeeTypeList;
     httpClient({
       method: "get",
       url,
@@ -181,7 +183,7 @@ const EmployeeJobDetails = () => {
       });
   };
   const GetReportsToList = () => {
-    let url = `/employee/reports-to-list`;
+    let url = API_URLS.getReporttoList;
     httpClient({
       method: "get",
       url,
@@ -189,7 +191,7 @@ const EmployeeJobDetails = () => {
       .then(({ result, error }) => {
         if (result) {
           const filteredArray = result.users.filter(
-            (obj) => obj.id !== employeeid
+            (obj) => obj.userData._id !== employeeid
           );
           setReportsToList(filteredArray);
         }
@@ -203,7 +205,10 @@ const EmployeeJobDetails = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/job-details/position/${employeeid}`;
+    let url = API_URLS.addSinglePsoitionDetail.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "post",
       url,
@@ -228,32 +233,12 @@ const EmployeeJobDetails = () => {
       });
   };
   useEffect(() => {
-    GetHeadersData();
-
     GetEmployeesJobDetails();
     GetDepartments();
     GetReportsToList();
     GetEmployeeTypes();
   }, []);
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+
   return (
     <>
       {isLoading ? (
@@ -277,29 +262,7 @@ const EmployeeJobDetails = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader employeeid={employeeid} />
 
             <EditButton
               style={{ marginRight: "54px" }}
@@ -422,7 +385,10 @@ const EmployeeJobDetails = () => {
                           </FlexColumn>
                           <FlexColumn>
                             <TitlePara>Reports to</TitlePara>
-                            <ViewPara> {data?.reportsTo || " - "} </ViewPara>
+                            <ViewPara>
+                              {" "}
+                              {data?.reportsTo.name || " - "}{" "}
+                            </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
                         <FlexSpaceBetween>
@@ -489,7 +455,7 @@ const EmployeeJobDetails = () => {
                         style={{
                           display: "flex",
                           width: "100%",
-                          height: "380px",
+                          height: "500px",
                           justifyContent: "center",
                           alignItems: "center",
                           zIndex: 999,
@@ -635,11 +601,13 @@ const EmployeeJobDetails = () => {
                                   <Select {...field}>
                                     <Option value="">Select</Option>
                                     {reportsToList?.map((user) => (
-                                      <Option value={user._id}>
+                                      <Option value={user?.userData?._id}>
                                         {user.personalInfo?.length
                                           ? user.personalInfo[0].firstName +
                                             " " +
-                                            user.personalInfo[0].lastName
+                                            (user?.personalInfo[0]?.lastName
+                                              ? user?.personalInfo[0]?.lastName
+                                              : " ")
                                           : user.userData.name}
                                       </Option>
                                     ))}

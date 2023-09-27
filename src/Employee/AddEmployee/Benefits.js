@@ -27,6 +27,7 @@ import {
   Select,
   Option,
 } from "./AddEmployeeStyles";
+import API_URLS from "../../constants/apiUrls";
 const Benefits = () => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
@@ -62,7 +63,10 @@ const Benefits = () => {
   const HandleSubmitBenefits = (data) => {
     // e.preventDefault();
     let dataCopy = data;
-    let url = `/employee/benefit/${employeeid}`;
+    let url = API_URLS.submitEmployeeBenefits.replace(
+      ":employeeid",
+      employeeid
+    );
 
     setIsLoading(true);
 
@@ -113,7 +117,7 @@ const Benefits = () => {
   // get Benefits
   const GetBenefits = () => {
     setIsLoading(true);
-    let url = `/benefit/list`;
+    let url = API_URLS.getEmployeeBenefitsList;
     httpClient({
       method: "get",
       url,
@@ -138,8 +142,8 @@ const Benefits = () => {
 
   const GetEmployeesBenefits = (data) => {
     setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/benefit/${trimid}`;
+    // const trimid = employeeid.trim();
+    let url = API_URLS.getEmployeeBenefits.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -160,7 +164,6 @@ const Benefits = () => {
             (benefit) => benefit._id === result.benefit.benefit._id
           );
           const description = findBenefit?.description;
-
 
           reset(result.benefit);
           setValue("benefit", result.benefit.benefit);
@@ -218,32 +221,34 @@ const Benefits = () => {
         </div>
       ) : (
         <EmployeeBody style={{ height: "75%" }}>
-          <BodyHeader>
-            <BodyHeaderTitle>
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/personal-info/${employeeid}`
-                  )
-                }
-              >
-                {" "}
-                Personal Information &#62;{" "}
-              </span>{" "}
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/job-details/${employeeid}`
-                  )
-                }
-              >
-                Job Details &#62;
-              </span>{" "}
-              Benefits
-            </BodyHeaderTitle>
-          </BodyHeader>
+          {!edit && (
+            <BodyHeader>
+              <BodyHeaderTitle>
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/personal-info/${employeeid}`
+                    )
+                  }
+                >
+                  {" "}
+                  Personal Information &#62;{" "}
+                </span>{" "}
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/job-details/${employeeid}`
+                    )
+                  }
+                >
+                  Job Details &#62;
+                </span>{" "}
+                Benefits
+              </BodyHeaderTitle>
+            </BodyHeader>
+          )}
           <BodyMain>
             <BodyMainHeading style={{ marginBottom: "25px" }}>
               Benefits

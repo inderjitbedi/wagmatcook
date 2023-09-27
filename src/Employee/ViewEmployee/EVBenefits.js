@@ -22,6 +22,8 @@ import {
   TitlePara,
   ViewPara,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 const EVBenefits = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -32,7 +34,7 @@ const EVBenefits = () => {
   const GetEmployeesBenefits = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/benefit/${trimid}`;
+    let url = API_URLS.getEmployeeBenefits.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -55,29 +57,11 @@ const EVBenefits = () => {
       });
   };
   useEffect(() => {
-    GetHeadersData();
+  
 
     GetEmployeesBenefits();
   }, []);
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+ 
   return (
     <>
       {isLoading ? (
@@ -101,29 +85,7 @@ const EVBenefits = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+           <CommenHeader employeeid={employeeid}/>
 
             <EditButton
               onClick={() =>

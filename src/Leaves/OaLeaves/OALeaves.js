@@ -71,6 +71,7 @@ import {
   HeaderDiv,
   HeaderTitle,
 } from "../../Disciplinary/DisciplinaryStyles";
+import API_URLS from "../../constants/apiUrls";
 const style = {
   position: "absolute",
   top: "50%",
@@ -249,7 +250,7 @@ const OALeaves = () => {
   };
   const GetLeavesType = () => {
     setIsLoading(true);
-    let url = `/leave-type/list?page=1&limit=10&searchKey=${searchValue}`;
+    let url = API_URLS.getLeaveType.replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -273,7 +274,7 @@ const OALeaves = () => {
   };
   const HandleSubmitLeavesType = (data) => {
     let dataCopy = { ...data, order: leaves?.length + 1 };
-    let url = `/leave-type/create`;
+    let url = API_URLS.createLeaveType;
 
     setIsLoading(true);
 
@@ -303,7 +304,7 @@ const OALeaves = () => {
   const HandleUpdate = (data) => {
     let dataCopy = data;
 
-    let url = `/leave-type/update/${Id}`;
+    let url = API_URLS.updateLeaveType.replace(":id",Id);
 
     setIsLoading(true);
 
@@ -335,7 +336,7 @@ const OALeaves = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/leave-type/delete/${Id}`;
+    let url = API_URLS.deleteLeaveType.replace(":id",Id);
     httpClient({
       method: "put",
       url,
@@ -364,7 +365,7 @@ const OALeaves = () => {
   };
   const HandleReorder = (reOrder) => {
     console.log(reOrder, "this reorder");
-    let url = "/leave-type/reorder";
+    let url = API_URLS.reorderLeaveType;
 
     httpClient({
       method: "put",
@@ -459,7 +460,31 @@ const OALeaves = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem
+          onClick={HandleLogout}
+          style={{
+            color: "#EA4335",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
       <DepartmentFilterContainer style={{ marginBottom: "20px" }}>
         {/* <DepartmentFilterdiv>
@@ -482,7 +507,7 @@ const OALeaves = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "70vh",
+                  height: "380px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -800,7 +825,7 @@ const OALeaves = () => {
                             <TableCell
                               sx={CellStyle2}
                               align="center"
-                            //   style={{ maxWidth: "10px" }}
+                              //   style={{ maxWidth: "10px" }}
                             >
                               {" "}
                               <ActionIconDiv

@@ -151,6 +151,7 @@ export const CardEmployeespan = styled.span`
 export const CardEmployeeImg = styled.img`
   width: 40px;
   height: 40px;
+  border-radius: 50%;
 `;
 
 export const CardLeavesList = styled.div`

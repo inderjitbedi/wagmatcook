@@ -303,7 +303,31 @@ const SAOrganization = () => {
               horizontal: "left",
             }}
           >
-            <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+            <MenuItem
+              style={{
+                color: "#222B45",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Settings
+            </MenuItem>
+            <MenuItem
+              onClick={HandleLogout}
+              style={{
+                color: "#EA4335",
+                fontFamily: "Inter",
+                fontSize: "14px",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "20px",
+              }}
+            >
+              Logout
+            </MenuItem>
           </Menu>
           <DisciplinaryDiv>
             <DisciplinaryHeading>All Organizations</DisciplinaryHeading>

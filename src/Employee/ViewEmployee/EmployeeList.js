@@ -275,7 +275,31 @@ const Employee = () => {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+          <MenuItem
+            style={{
+              color: "#222B45",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "20px",
+            }}
+          >
+            Settings
+          </MenuItem>
+          <MenuItem
+            onClick={HandleLogout}
+            style={{
+              color: "#EA4335",
+              fontFamily: "Inter",
+              fontSize: "14px",
+              fontStyle: "normal",
+              fontWeight: 600,
+              lineHeight: "20px",
+            }}
+          >
+            Logout
+          </MenuItem>
         </Menu>
       </DashHeader>
       <DepartmentFilterContainer>
@@ -488,9 +512,11 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                    { data.jobDetails[0]?.startDate?   moment(data.jobDetails[0]?.startDate).format(
-                      "DD/MM/YYYY"
-                    ) : " - "}
+                    {data.jobDetails[0]?.startDate
+                      ? moment(data.jobDetails[0]?.startDate).format(
+                          "DD/MM/YYYY"
+                        )
+                      : " - "}
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>

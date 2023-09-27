@@ -44,6 +44,8 @@ import {
   UploadImageLight,
   IconContainer,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 
 const EVDocuments = () => {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -78,7 +80,7 @@ const EVDocuments = () => {
   const GetDocuments = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/documents/${trimid}`;
+    let url = API_URLS.getEmployeeDocuments.replace(":employeeid",employeeid);
     httpClient({
       method: "get",
       url,
@@ -102,7 +104,7 @@ const EVDocuments = () => {
   const HandleSubmit = (e, data) => {
     e.preventDefault();
 
-    let url = `/employee/documents/${employeeid}`;
+    let url = API_URLS.getEmployeeDocuments.replace(":employeeid", employeeid);
     if (!data) {
       setErrors({ fileError: "Required" });
       return;
@@ -138,7 +140,7 @@ const EVDocuments = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = `/employee/documents/${employeeid}/delete/${Id}`;
+    let url = API_URLS.deleteEmployeeDocument.replace(":employeeid",employeeid).replace(":id",Id);
     httpClient({
       method: "put",
       url,
@@ -177,7 +179,6 @@ const EVDocuments = () => {
   };
 
   useEffect(() => {
-    GetHeadersData();
 
     GetDocuments();
 
@@ -231,7 +232,7 @@ const EVDocuments = () => {
 
       httpClient({
         method: "post",
-        url: `/employee/file/upload/${type}`,
+        url: API_URLS.uploadDocuments.replace(":type",type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -274,25 +275,7 @@ const EVDocuments = () => {
       toast.error("Unsuported file type.");
     }
   };
-  const [headerData, setHeaderData] = useState([]);
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+ 
   return (
     <>
       {isLoading ? (
@@ -316,29 +299,7 @@ const EVDocuments = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader  employeeid={employeeid}/>
 
             {/* <EditButton style={{ marginRight: "54px" }}>
           <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -575,7 +536,7 @@ const EVDocuments = () => {
       </Modal>
       <DeleteModal
         openDelete={openDelete}
-        message="Are you sure you want to delete this Document"
+        message="Are you sure you want to delete this document?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}

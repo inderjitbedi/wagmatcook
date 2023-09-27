@@ -38,6 +38,7 @@ import {
   LightPara,
   RemoveContainer,
 } from "./AddEmployeeStyles";
+import API_URLS from "../../constants/apiUrls";
 
 const CertificatesInfo = () => {
   const Navigate = useNavigate();
@@ -94,7 +95,10 @@ const CertificatesInfo = () => {
       }),
     };
 
-    let url = `/employee/certificates/${employeeid}`;
+    let url = API_URLS.submitEmployeeCertificates.replace(
+      ":employeeid",
+      employeeid
+    );
 
     setIsLoading(true);
 
@@ -177,7 +181,7 @@ const CertificatesInfo = () => {
 
       httpClient({
         method: "post",
-        url: `/employee/file/upload/${type}`,
+        url: API_URLS.uploadDocuments.replace(":type",type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -215,7 +219,10 @@ const CertificatesInfo = () => {
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/certificates/${trimid}`;
+    let url = API_URLS.getEmployeeCertificates.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "get",
       url,
@@ -304,43 +311,46 @@ const CertificatesInfo = () => {
         </div>
       ) : (
         <EmployeeBody style={{ height: "max-content" }}>
-          <BodyHeader>
-            <BodyHeaderTitle>
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/personal-info/${employeeid}`
-                  )
-                }
-              >
-                {" "}
-                Personal Information &#62;{" "}
-              </span>{" "}
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/job-details/${employeeid}`
-                  )
-                }
-              >
-                Job Details &#62;
-              </span>
-              <span
-                style={{ color: "#8B8B8B", cursor: "pointer" }}
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/benefits/${employeeid}`
-                  )
-                }
-              >
-                {" "}
-                Benefits &#62;{" "}
-              </span>{" "}
-              Certificates
-            </BodyHeaderTitle>
-          </BodyHeader>
+          {!edit && (
+            <BodyHeader>
+              <BodyHeaderTitle>
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/personal-info/${employeeid}`
+                    )
+                  }
+                >
+                  {" "}
+                  Personal Information &#62;{" "}
+                </span>{" "}
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/job-details/${employeeid}`
+                    )
+                  }
+                >
+                  Job Details &#62;
+                </span>
+                <span
+                  style={{ color: "#8B8B8B", cursor: "pointer" }}
+                  onClick={() =>
+                    Navigate(
+                      `/organization-admin/employee/benefits/${employeeid}`
+                    )
+                  }
+                >
+                  {" "}
+                  Benefits &#62;{" "}
+                </span>{" "}
+                Certificates
+              </BodyHeaderTitle>
+            </BodyHeader>
+          )}
+
           <BodyMain>
             <BodyMainHeading style={{ marginBottom: "25px" }}>
               Certificates Info
@@ -441,9 +451,7 @@ const CertificatesInfo = () => {
                       />
                     </FlexColumnForm>
                     <FlexColumnForm>
-                      <InputLabel>
-                        Expiry
-                      </InputLabel>
+                      <InputLabel>Expiry</InputLabel>
                       <Input
                         type="date"
                         {...register(`certificates.${index}.expiryDate`, {
@@ -453,15 +461,16 @@ const CertificatesInfo = () => {
                           //   message: "Required",
                           // },
                           validate: (fieldValue) => {
-                            const startDateValue = 
-                              getValues(`certificates.${index}.completionDate`)
-                          
+                            const startDateValue = getValues(
+                              `certificates.${index}.completionDate`
+                            );
+
                             const endDateValue = getValues(
                               `certificates.${index}.expiryDate`
                             );
 
                             if (endDateValue && startDateValue) {
-                               const endDate = new Date(endDateValue);
+                              const endDate = new Date(endDateValue);
                               const startDate = new Date(startDateValue);
                               if (startDate > endDate) {
                                 return setError(
@@ -472,10 +481,11 @@ const CertificatesInfo = () => {
                                       "End date must not be earlier than start date   ",
                                   }
                                 );
-                               }
-                              ;
+                              }
                             } else {
-                              return clearErrors(`certificates.${index}.expiryDate`);
+                              return clearErrors(
+                                `certificates.${index}.expiryDate`
+                              );
                             }
                           },
                         })}

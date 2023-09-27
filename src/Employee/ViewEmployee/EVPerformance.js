@@ -58,6 +58,8 @@ import {
   IconContainer,
   Icons,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 
 const style = {
   position: "absolute",
@@ -110,7 +112,10 @@ const EVPerformance = () => {
     setValue,
     clearErrors,
     setError,
-  } = useForm({ mode: "all" });
+  } = useForm({
+    mode: "all", defaultValues: {
+      file: null,
+  } });
 
   const [byError, setByError] = useState(null);
   const onSubmit = (data) => {
@@ -128,6 +133,8 @@ const EVPerformance = () => {
       //console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
+      } else {
+        data.file = null;
       }
       if (tags) {
         const ids = tags.map((data) => data.id);
@@ -187,7 +194,7 @@ const EVPerformance = () => {
 
       httpClient({
         method: "post",
-        url: `/employee/file/upload/${type}`,
+        url: API_URLS.uploadDocuments.replace(":type",type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -220,7 +227,10 @@ const EVPerformance = () => {
     if (!byError) {
       setIsLoading(true);
 
-      let url = `/employee/review/${employeeid}`;
+      let url = API_URLS.submitEmployeePerformance.replace(
+        ":employeeid",
+        employeeid
+      );
       httpClient({
         method: "post",
         url,
@@ -251,7 +261,7 @@ const EVPerformance = () => {
   const GetEmployeesProformance = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/reviews/${trimid}`;
+    let url = API_URLS.EmployeePerformance.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -273,7 +283,6 @@ const EVPerformance = () => {
       });
   };
   useEffect(() => {
-    GetHeadersData();
 
     GetEmployeesProformance();
     GetSuggestionsList();
@@ -359,7 +368,10 @@ const EVPerformance = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/review/${employeeid}/${Id}`;
+    let url = API_URLS.addEmployeePerformance.replace(
+      ":employeeid",
+      employeeid
+    ).replace(":id",Id);
 
     httpClient({
       method: "put",
@@ -390,7 +402,9 @@ const EVPerformance = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = `/employee/review/${employeeid}/delete/${Id}`;
+    let url = API_URLS.deleteEmployeePerformance
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -418,7 +432,7 @@ const EVPerformance = () => {
   const [suggestions, setSuggestions] = useState([]);
   const GetSuggestionsList = () => {
     setIsLoading(true);
-    let url = `/employee/completed-by-list`;
+    let url = API_URLS.suggestionList;
     httpClient({
       method: "get",
       url,
@@ -433,7 +447,7 @@ const EVPerformance = () => {
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
                 " " +
-                data?.personalInfo[0].lastName
+                (data?.personalInfo[0].lastName ? data?.personalInfo[0].lastName : " " )
               : data?.userData.name,
           }));
 
@@ -453,26 +467,6 @@ const EVPerformance = () => {
   };
   //console.log(suggestions, "this is map  data for suggestions");
 
-  const [headerData, setHeaderData] = useState([]);
-
-  const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
   // console.log("tags data:", tags);
   console.log(byError);
 
@@ -499,29 +493,7 @@ const EVPerformance = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader employeeid={employeeid} />
 
             {/* <EditButton style={{ marginRight: "54px" }}>
               <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -1011,7 +983,7 @@ const EVPerformance = () => {
       </Modal>
       <DeleteModal
         openDelete={openDelete}
-        message="Are you sure you want to delete this Review"
+        message="Are you sure you want to delete this proformance review?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}

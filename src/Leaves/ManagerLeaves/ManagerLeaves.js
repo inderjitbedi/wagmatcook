@@ -222,7 +222,31 @@ const ManagerLeaves = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={HandleLogout}>Logout</MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Settings
+        </MenuItem>
+        <MenuItem
+          onClick={HandleLogout}
+          style={{
+            color: "#EA4335",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
       <HeaderDiv>
         <HeaderTitle>All Leaves</HeaderTitle>
@@ -345,9 +369,7 @@ const ManagerLeaves = () => {
                     2
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                          <span style={ApprovedStyles}>
-                              Approved
-                    </span>
+                    <span style={ApprovedStyles}>Approved</span>
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
                     <ActionIconDiv style={{ justifyContent: "center" }}>

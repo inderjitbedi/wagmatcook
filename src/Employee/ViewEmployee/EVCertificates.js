@@ -43,6 +43,8 @@ import {
   File,
   IconsEmployee,
 } from "./ViewEmployeeStyle";
+import API_URLS from "../../constants/apiUrls";
+import CommenHeader from "./CommenHeader";
 
 const style = {
   position: "absolute",
@@ -117,7 +119,10 @@ const EVCertificates = () => {
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = `/employee/Certificates/${trimid}`;
+    let url = API_URLS.getEmployeeCertificates.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "get",
       url,
@@ -143,7 +148,10 @@ const EVCertificates = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = `/employee/certificate/${employeeid}`;
+    let url = API_URLS.addSingleEmployeeCertificate.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "post",
       url,
@@ -203,7 +211,7 @@ const EVCertificates = () => {
 
       httpClient({
         method: "post",
-        url: `/employee/file/upload/${type}`,
+        url: API_URLS.uploadDocuments.replace(":type", type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -234,29 +242,8 @@ const EVCertificates = () => {
   };
   console.log(result);
   useEffect(() => {
-          GetHeadersData();
-
     GetEmployeesCertificates();
   }, []);
-    const [headerData, setHeaderData] = useState([]);
-    const GetHeadersData = () => {
-      // setIsLoading(true);
-      const trimid = employeeid.trim();
-      let url = `/employee/header-info/${trimid}`;
-      httpClient({
-        method: "get",
-        url,
-      })
-        .then(({ result, error }) => {
-          if (result) {
-            setHeaderData(result);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error in fetching Personal info. Please try again.");
-        });
-    };
 
   return (
     <>
@@ -281,29 +268,7 @@ const EVCertificates = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <PersonalInfo>
-              <PersonalImg
-                src={
-                  headerData.personalInfo?.photo
-                    ? API_URL + headerData.personalInfo.photo?.path
-                    : "/images/User.jpg"
-                }
-              />
-              <FlexColumn>
-                <PersonalName>
-                  {[
-                    headerData.personalInfo?.firstName,
-                    headerData.personalInfo?.lastName,
-                  ].join(" ")}
-                </PersonalName>
-                <PersonalTitle>
-                  {headerData?.position?.title || "-"}
-                </PersonalTitle>
-                <PersonalDepartment>
-                  {headerData.position?.department?.name || "-"}
-                </PersonalDepartment>
-              </FlexColumn>
-            </PersonalInfo>
+            <CommenHeader employeeid={employeeid} />
 
             <EditButton
               style={{ marginRight: "54px" }}
@@ -488,9 +453,7 @@ const EVCertificates = () => {
                                   },
                                 })}
                               />
-                              {(
-                                <Errors>{errors.expiryDate?.message}</Errors>
-                              )}
+                              {<Errors>{errors.expiryDate?.message}</Errors>}
                             </FlexColumnForm>
                           </FlexContaierForm>
                           <input
