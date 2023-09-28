@@ -36,6 +36,26 @@ export const DashHeaderSearch = styled.div`
   align-items: center;
   gap: 24px;
 `;
+export const FlexContaier = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+export const BackButton = styled.button`
+  border-radius: 88px;
+  border: 1px solid #8f9bb3;
+  padding: 0.5em 0.75em;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  color: #222b45;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+  text-transform: capitalize;
+`;
 export const DashNotification = styled.img``;
 export const SearchBox = styled.div`
   border-radius: 1px;

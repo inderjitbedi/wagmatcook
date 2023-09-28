@@ -374,11 +374,9 @@ const ManagerLeaves = () => {
                   <TableCell align="left" sx={CellStyle2}>
                     <ActionIconDiv style={{ justifyContent: "center" }}>
                       <ActionIcons
-                        // onClick={() =>
-                        //   Navigate(
-                        //     `/organization-admin/employee/details/personal-info/${data._id}`
-                        //   )
-                        // }
+                        onClick={() =>
+                          Navigate(`/manager-management/leaves-request`)
+                        }
                         src="/images/icons/eye.svg"
                       />
                     </ActionIconDiv>

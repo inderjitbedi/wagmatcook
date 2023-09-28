@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import {
   SidebarTitle,
   SideBarListTitle,
@@ -13,57 +13,21 @@ import {
 } from "../OADashboard/SideBarStyles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const ManagerSideBar = () => {
-    const location = useLocation();
-     const [orgData, setOrgData] = useState();
-     const SideBarData = [
-       {
-         Title: "Dashboard",
-         src: "/svg/Dashboard.svg",
-         to: "/manager-management/dashboard",
-       },
-
-       {
-         Title: "Employee",
-         src: "/svg/Employee.svg",
-         to: "/manager-management/employee-list",
-         active: "employee-details",
-       },
-
-       {
-         Title: "Leaves",
-         src: "/svg/managerleaves.svg",
-         to: "/manager-management/leaves",
-       },
-       {
-         Title: "Events",
-         src: "/svg/fire.svg",
-         //  to: "/organization-admin/leaves",
-       },
-       {
-         Title: "Accounts",
-         src: "/svg/person.svg",
-         //  to: "/organization-admin/leaves",
-       },
-       {
-         Title: "Helpdesk",
-         src: "/svg/alert-circle.svg",
-         //  to: "/organization-admin/leaves",
-       },
-     ];
-      const style = {
-        textDecoration: "none",
-        color: "#279AF1",
-    };
-     useEffect(() => {
-       let org = localStorage.getItem("org");
-       if (org) {
-         let parsedUser = JSON.parse(org);
-         setOrgData(parsedUser);
-       }
-     }, []);
+const HRSideBar = () => {
+  const location = useLocation();
+  const [orgData, setOrgData] = useState();
+  const style = {
+    textDecoration: "none",
+    color: "#279AF1",
+  };
+  useEffect(() => {
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+    }
+  }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-  
   return (
     <>
       {" "}
@@ -84,7 +48,7 @@ const ManagerSideBar = () => {
       <SideBarList>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/dashboard"
+          to="/hr-management/dashboard"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -139,7 +103,7 @@ const ManagerSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/employee-list"
+          to="/hr-management/employee-list"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -174,7 +138,7 @@ const ManagerSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/leaves"
+          to="/hr-management/leaves"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -230,7 +194,7 @@ const ManagerSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/events"
+          to="/hr-management/events"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -252,7 +216,7 @@ const ManagerSideBar = () => {
               />
               <mask
                 id="mask0_1509_1510"
-                style={{maskType:"luminance"}}
+                style={{ maskType: "luminance" }}
                 maskUnits="userSpaceOnUse"
                 x="3"
                 y="2"
@@ -286,7 +250,7 @@ const ManagerSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/account"
+          to="/hr-management/account"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -321,7 +285,7 @@ const ManagerSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/helpdesk"
+          to="/hr-management/helpdesk"
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -378,6 +342,6 @@ const ManagerSideBar = () => {
       </SideBarList>
     </>
   );
-}
+};
 
-export default ManagerSideBar
+export default HRSideBar;
