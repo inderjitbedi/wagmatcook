@@ -7,7 +7,7 @@ const upload = require('../providers/uploadFile');
 const fileController = require('../controllers/file');
 const roles = require('../enum/roles');
 
-// router.get('/employee/leaves', verifyToken(roles.MANAGER), orgController.create);
+router.get('/leave-history', verifyToken(roles.MANAGER), orgController.create);
 
 
 module.exports = router;
