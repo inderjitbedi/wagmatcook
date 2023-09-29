@@ -137,9 +137,9 @@ router.get('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAG
 router.post('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addDocument);
 router.put('/documents/:id/delete/:documentid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteDocument);
 
-router.put('/leave-allocation/:id/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateLeaveAllocation);
+router.put('/leave-allocation/:id/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.updateLeaveAllocation);
 router.get('/leave-allocations/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveAllocations);
-router.post('/leave-allocation/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addLeaveAllocation);
+router.post('/leave-allocation/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.addLeaveAllocation);
 router.put('/leave-allocation/:id/delete/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteLeaveAllocation);
 
 router.get('/leave-history/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveHistory);
