@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import EmployeeSideBar from "./EmployeeSideBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import HREmployeeSidebar from "./HREmployeeSidebar";
+
 import {
   Dashboard,
   DashNav,
@@ -24,23 +25,23 @@ import {
   BodyContainer,
   SideBarContainer,
   MainBodyContainer,
-} from "./ViewEmployeeStyle";
-const EmployeeDetailLayout = () => {
-  const Navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
-  const { employeeid } = useParams();
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
+} from "../ViewEmployee/ViewEmployeeStyle";
+const HREmployeeLayout = () => {
+     const Navigate = useNavigate();
+     const [anchorEl, setAnchorEl] = useState(null);
+     const openMenu = Boolean(anchorEl);
+     const { employeeid } = useParams();
+     const handleClickMenu = (event) => {
+       setAnchorEl(event.currentTarget);
+     };
+     const handleCloseMenu = () => {
+       setAnchorEl(null);
+     };
+     const HandleLogout = () => {
+       localStorage.clear();
+       handleCloseMenu();
+       Navigate("/");
+     };
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       <DashHeader>
@@ -132,7 +133,7 @@ const EmployeeDetailLayout = () => {
         </BodyHeader>
         <BodyContainer>
           <SideBarContainer>
-            <EmployeeSideBar employeeId={employeeid} />
+            <HREmployeeSidebar employeeId={employeeid} />
           </SideBarContainer>
           <div style={{ width: "80%" }}>
             <Outlet />
@@ -143,4 +144,4 @@ const EmployeeDetailLayout = () => {
   );
 };
 
-export default EmployeeDetailLayout;
+export default HREmployeeLayout;

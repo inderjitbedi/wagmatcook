@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import DeleteModal from "../../Modals/DeleteModal";
 import AddNewEmployeeModal from "../AddEmployee/AddNewEmployeeModal";
 import Menu from "@mui/material/Menu";
@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
+import ROLES from "../../constants/roles";
 import moment from "moment";
 import { useForm, Controller } from "react-hook-form";
 
@@ -85,10 +86,13 @@ const Employee = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
+  const location = useLocation();
+
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
   let searchTimer;
+
   const HandleSearchCahnge = (e) => {
     setSearchValue(e.target.value);
     clearTimeout(searchTimer);
@@ -96,6 +100,8 @@ const Employee = () => {
       setDelayedSearchValue(e.target.value);
     }, delayDuration);
   };
+
+  const [userType, setUserType] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
@@ -141,7 +147,7 @@ const Employee = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
         toast.error("Error creating Employee. Please try again.");
         setIsLoading(false);
       })
@@ -149,16 +155,21 @@ const Employee = () => {
         setIsLoading(false);
       });
   };
-  console.log("result of the fetch api ", result);
+  // console.log("result of the fetch api ", result);
   // caling the fetch employee list api
   useEffect(() => {
     GetEmployees();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    }
   }, []);
-
+  console.log("user type", userType);
   const HandleSubmitData = (data) => {
     return data;
   };
-  console.log("submit data ", HandleSubmitData());
+  // console.log("submit data ", HandleSubmitData());
   // Add New Employee Post api  user name and email
 
   const FilterData = [
@@ -214,7 +225,7 @@ const Employee = () => {
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        // console.error("Error:", error);
         toast.error("Error in deleting employee. Please try again.");
         setIsLoading(false);
       })
@@ -525,11 +536,21 @@ const Employee = () => {
                   <TableCell align="left" sx={Celllstyle2}>
                     <IconContainer>
                       <Icons
-                        onClick={() =>
-                          Navigate(
-                            `/organization-admin/employee/details/personal-info/${data._id}`
-                          )
-                        }
+                        onClick={() => {
+                          if (userType === "MANAGER") {
+                            Navigate(
+                              `/manager-management/employee-details/personal-info/${data._id}`
+                            );
+                          } else if (userType === "HUMAN_RESOURCE") {
+                            Navigate(
+                              `/hr-management/employee-details/personal-info/${data._id}`
+                            );
+                          } else {
+                            Navigate(
+                              `/organization-admin/employee/details/personal-info/${data._id}`
+                            );
+                          }
+                        }}
                         src="/images/icons/eye.svg"
                       />
                       <Icons

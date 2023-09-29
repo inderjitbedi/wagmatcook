@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import EmployeeSideBar from "./EmployeeSideBar";
-import { useNavigate, useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useNavigate, useParams } from "react-router-dom";
+import HRAccountSidebar from "./HRAccountSidebar";
 import {
   Dashboard,
   DashNav,
@@ -24,32 +24,32 @@ import {
   BodyContainer,
   SideBarContainer,
   MainBodyContainer,
-} from "./ViewEmployeeStyle";
-const EmployeeDetailLayout = () => {
-  const Navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
-  const { employeeid } = useParams();
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
+} from "../Employee/ViewEmployee/ViewEmployeeStyle";
+const HRAccountLayout = () => {
+     const Navigate = useNavigate();
+     const [anchorEl, setAnchorEl] = useState(null);
+     const openMenu = Boolean(anchorEl);
+     const { employeeid } = useParams();
+     const handleClickMenu = (event) => {
+       setAnchorEl(event.currentTarget);
+     };
+     const handleCloseMenu = () => {
+       setAnchorEl(null);
+     };
+     const HandleLogout = () => {
+       localStorage.clear();
+       handleCloseMenu();
+       Navigate("/");
+     };
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       <DashHeader>
         <FlexContaier>
-          <BackButton onClick={() => Navigate(-1)}>
+          {/* <BackButton onClick={() => Navigate(-1)}>
             <IconsEmployee src="/images/icons/ArrowLeft.svg" />
             Back
-          </BackButton>
-          <DashHeaderTitle>Employee</DashHeaderTitle>
+          </BackButton> */}
+          <DashHeaderTitle>My Profile</DashHeaderTitle>
         </FlexContaier>
 
         <DashHeaderSearch>
@@ -127,14 +127,14 @@ const EmployeeDetailLayout = () => {
         </DashHeaderSearch>
       </DashHeader>
       <EmployeeBody>
-        <BodyHeader>
+        {/* <BodyHeader>
           <BodyHeading>Employee Details</BodyHeading>
-        </BodyHeader>
+        </BodyHeader> */}
         <BodyContainer>
-          <SideBarContainer>
-            <EmployeeSideBar employeeId={employeeid} />
+          <SideBarContainer style={{ paddingTop: "35px" }}>
+            <HRAccountSidebar employeeId={employeeid} />
           </SideBarContainer>
-          <div style={{ width: "80%" }}>
+          <div style={{ width: "80%", paddingTop: "35px" }}>
             <Outlet />
           </div>
         </BodyContainer>
@@ -143,4 +143,4 @@ const EmployeeDetailLayout = () => {
   );
 };
 
-export default EmployeeDetailLayout;
+export default HRAccountLayout;
