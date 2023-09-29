@@ -44,11 +44,11 @@ const HRAccountSidebar = (props) => {
          Title: "Benefits",
          to: "/hr-management/account/benefits/" + props.employeeId,
        },
-       {
-         Title: "Leave Allocation",
-         to:
-           "/hr-management/account/leave-alloacation/" + props.employeeId,
-       },
+      //  {
+      //    Title: "Leave Allocation",
+      //    to:
+      //      "/hr-management/account/leave-alloacation/" + props.employeeId,
+      //  },
        {
          Title: "Leave History",
          to: "/hr-management/account/leave-history/" + props.employeeId,

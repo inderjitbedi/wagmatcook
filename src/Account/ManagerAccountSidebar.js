@@ -48,12 +48,7 @@ const ManagerAccountSidebar = (props) => {
          to:
            "/manager-management/account/benefits/" + props.employeeId,
        },
-       {
-         Title: "Leave Allocation",
-         to:
-           "/manager-management/account/leave-alloacation/" +
-           props.employeeId,
-       },
+     
        {
          Title: "Leave History",
          to:

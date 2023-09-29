@@ -97,16 +97,18 @@ export const MainCardTitleDiv = styled.div`
 `;
 export const MainCardPara = styled.p`
   font-size: 14px;
-  line-height: 0px;
+  line-height: 18px;
   font-weight: 600;
   color: #222b45;
   text-transform: capitalize;
+  margin:0;
 `;
 export const MainCardParaLight = styled.p`
   font-size: 14px;
-  line-height: 0px;
+  line-height: 18px;
   font-weight: 400;
   color: #8f9bb3;
+  margin:0;
 `;
 export const MainCardView = styled.p`
   color: #279af1;

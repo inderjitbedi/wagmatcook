@@ -35,6 +35,11 @@ import {
   DashCardIcons,
   DashCardPri,
   DashCardTitle2,
+  NotificationsContainer,
+  NotificationsHeader,
+  FlexNotificationContainer,
+  NotificationHeading,
+  NotificationIcon,
 } from "./OADashBoardStyles";
 import {
   SectionCard,
@@ -95,7 +100,6 @@ const OADashBoard = () => {
   //   }
   // }, []);
 
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -143,6 +147,16 @@ const OADashBoard = () => {
     handleCloseMenu();
     navigate("/");
   };
+  const [anchorElNotification, setAnchorElNotification] = useState(null);
+  const openMenuNotification = Boolean(anchorEl);
+  const handleClickMenuNotification = (event) => {
+    setAnchorElNotification(event.currentTarget);
+    console.log("working menu for notification");
+  };
+  const handleCloseMenuNotification = () => {
+    setAnchorElNotification(null);
+  };
+
   const GetDisciplinary = () => {
     //  setIsLoading(true);
     let url = `/disciplinary/list?limit=3`;
@@ -238,24 +252,24 @@ const OADashBoard = () => {
         setIsLoading(false);
       });
   };
-  
-    useEffect(() => {
-      let user = localStorage.getItem("user");
-      if (user) {
-        let parsedUser = JSON.parse(user);
-        setUser(parsedUser);
-      }
-      let org = localStorage.getItem("org");
-      if (org) {
-        let parsedUser = JSON.parse(org);
-        setOrgData(parsedUser);
-      }
-      setIsLoading(true);
-      GetDisciplinary();
-      GetEmployees();
-      GetDepartments();
-      GetLeavesType();
-    }, []);
+
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+    }
+    setIsLoading(true);
+    GetDisciplinary();
+    GetEmployees();
+    GetDepartments();
+    GetLeavesType();
+  }, []);
   return (
     <>
       {isLoading ? (
@@ -287,7 +301,11 @@ const OADashBoard = () => {
                 <SearchInput type="text" placeholder="Search..."></SearchInput>
                 <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
-              <DashNotification src="/images/icons/Notifications.svg" />
+              <DashNotification
+                style={{ cursor: "pointer" }}
+                onClick={handleClickMenuNotification}
+                src="/images/icons/Notifications.svg"
+              />
               <div
                 style={{
                   display: "flex",
@@ -295,7 +313,7 @@ const OADashBoard = () => {
                   cursor: "pointer",
                   gap: "5px",
                 }}
-                onClick={(event) => handleClickMenu(event)}
+                onClick={handleClickMenu}
               >
                 {" "}
                 <DepartmentIconImg src="/images/icons/Logout.svg" />
@@ -580,7 +598,7 @@ const OADashBoard = () => {
                 </MainCardTitleDiv>
                 {leavesData?.leaveTypes.map((data) => (
                   <CardLeavesList>
-                    <CardLeavesDiv>
+                    <CardLeavesDiv style={{ width: "50%" }}>
                       <MainCardPara>{data.name}</MainCardPara>
                       <MainCardParaLight>{data.description}</MainCardParaLight>
                     </CardLeavesDiv>
@@ -593,7 +611,7 @@ const OADashBoard = () => {
                       }}
                     >
                       <CardLeavesPara>
-                        Max Carry Over: {data.maxCarryOver}
+                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver}
                       </CardLeavesPara>
 
                       <CardLeavesButton
@@ -634,6 +652,25 @@ const OADashBoard = () => {
               </DashCard>
             )}
           </DashCardContainer>
+          {/* <Menu
+            anchorEl={anchorElNotification}
+            open={openMenuNotification}
+            onClose={handleCloseMenuNotification}
+          >
+            <MenuItem>
+              <NotificationsContainer>
+                <NotificationsHeader>
+                  <FlexNotificationContainer>
+                    <NotificationHeading>Notifications</NotificationHeading>
+                  </FlexNotificationContainer>
+                  <FlexNotificationContainer>
+                    <NotificationHeading>Mark all as read</NotificationHeading>
+                    <NotificationIcon src="/svg/outline.svg" />
+                  </FlexNotificationContainer>
+                </NotificationsHeader>
+              </NotificationsContainer>
+            </MenuItem>
+          </Menu> */}
         </>
       )}
     </>

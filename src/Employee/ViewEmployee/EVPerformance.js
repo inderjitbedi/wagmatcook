@@ -12,11 +12,12 @@ import { useForm } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import moment from "moment";
 import NoDocumentfound from "../NoDocumentfound";
 import { WithContext as ReactTags } from "react-tag-input";
 import DeleteModal from "../../Modals/DeleteModal";
+import ROLES from "../../constants/roles";
 
 import {
   IconsEmployee,
@@ -77,6 +78,9 @@ const style = {
 };
 const EVPerformance = () => {
   let API_URL = process.env.REACT_APP_API_URL;
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
 
   const { employeeid } = useParams();
   const Navigate = useNavigate();
@@ -113,9 +117,11 @@ const EVPerformance = () => {
     clearErrors,
     setError,
   } = useForm({
-    mode: "all", defaultValues: {
+    mode: "all",
+    defaultValues: {
       file: null,
-  } });
+    },
+  });
 
   const [byError, setByError] = useState(null);
   const onSubmit = (data) => {
@@ -194,7 +200,7 @@ const EVPerformance = () => {
 
       httpClient({
         method: "post",
-        url: API_URLS.uploadDocuments.replace(":type",type),
+        url: API_URLS.uploadDocuments.replace(":type", type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -283,9 +289,18 @@ const EVPerformance = () => {
       });
   };
   useEffect(() => {
-
     GetEmployeesProformance();
     GetSuggestionsList();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+     if (location.pathname.indexOf("account") > -1) {
+       setIsAccount(true);
+     }
   }, []);
 
   const [tags, setTags] = useState([]);
@@ -368,10 +383,9 @@ const EVPerformance = () => {
     setIsLoading(true);
     let dataCopy = data;
 
-    let url = API_URLS.addEmployeePerformance.replace(
-      ":employeeid",
-      employeeid
-    ).replace(":id",Id);
+    let url = API_URLS.addEmployeePerformance
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
 
     httpClient({
       method: "put",
@@ -447,7 +461,9 @@ const EVPerformance = () => {
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
                 " " +
-                (data?.personalInfo[0].lastName ? data?.personalInfo[0].lastName : " " )
+                (data?.personalInfo[0].lastName
+                  ? data?.personalInfo[0].lastName
+                  : " ")
               : data?.userData.name,
           }));
 
@@ -505,9 +521,13 @@ const EVPerformance = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Reviews</BasicHeading>
-                <AddNewButton onClick={HandleOpenAddNewAction}>
-                  Add New Review
-                </AddNewButton>
+                {userType === ROLES.EMPLOYEE ? (
+                  " "
+                ) : (
+                  <AddNewButton onClick={HandleOpenAddNewAction}>
+                    Add New Review
+                  </AddNewButton>
+                )}
               </FlexSpaceBetween>
               {/* modal t add new review  */}
               <Modal
@@ -812,7 +832,8 @@ const EVPerformance = () => {
                                 fontSize: "14px",
                                 fontStyle: "normal",
                                 fontWeight: 700,
-                                lineHeight: "1px",
+                                lineHeight: "18px",
+                                margin: 0,
                               }}
                             >
                               {data?.personalInfo
@@ -840,22 +861,24 @@ const EVPerformance = () => {
                                 download
                                 style={{ textDecoration: "none" }}
                               >
-                                <File>
-                                  {" "}
-                                  <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                                  {data.file?.originalName?.length <= 38
-                                    ? data.file?.originalName
-                                    : data.file?.originalName?.substring(
-                                        0,
-                                        38
-                                      ) + "..." || " - "}
-                                </File>
+                                {data.file && (
+                                  <File>
+                                    {" "}
+                                    <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                    {data.file?.originalName?.length <= 38
+                                      ? data.file?.originalName
+                                      : data.file?.originalName?.substring(
+                                          0,
+                                          38
+                                        ) + "..." || " - "}
+                                  </File>
+                                )}
                               </Link>
                               {/* <AddNewButton onClick={handleOpenFollow}>
                               Add Follow-up
                             </AddNewButton> */}
                             </FlexSpaceBetween>
-                            <FlexSpaceBetween>
+                            <FlexSpaceBetween style={{ alignItems: "center" }}>
                               {data.nextReviewDate && (
                                 <ReviewsDiv>
                                   Next Review on:{" "}
@@ -868,17 +891,26 @@ const EVPerformance = () => {
                               )}
                               <div></div>
                               <IconContainer style={{ alignSelf: "flex-end" }}>
-                                <Icons
-                                  onClick={() => HandleUpdateAction(data)}
-                                  src="/images/icons/Pendown.svg"
-                                />
-                                <Icons
-                                  onClick={() => {
-                                    setId(data._id);
-                                    HandleOpenDelete();
-                                  }}
-                                  src="/images/icons/Trash-2.svg"
-                                />
+                                {userType === ROLES.EMPLOYEE || isAccount ? (
+                                  ""
+                                ) : (
+                                  <Icons
+                                    onClick={() => HandleUpdateAction(data)}
+                                    src="/images/icons/Pendown.svg"
+                                  />
+                                )}
+                                {userType === ROLES.EMPLOYEE ||
+                                userType === ROLES.MANAGER || isAccount ? (
+                                  ""
+                                ) : (
+                                  <Icons
+                                    onClick={() => {
+                                      setId(data._id);
+                                      HandleOpenDelete();
+                                    }}
+                                    src="/images/icons/Trash-2.svg"
+                                  />
+                                )}
                               </IconContainer>
                             </FlexSpaceBetween>
                           </FlexColumn>

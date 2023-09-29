@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import moment from "moment";
+import ROLES from "../../constants/roles";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -28,6 +30,9 @@ const EVBenefits = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+
   const { employeeid } = useParams();
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,11 +62,16 @@ const EVBenefits = () => {
       });
   };
   useEffect(() => {
-  
-
     GetEmployeesBenefits();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
   }, []);
- 
+
   return (
     <>
       {isLoading ? (
@@ -85,19 +95,33 @@ const EVBenefits = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-           <CommenHeader employeeid={employeeid}/>
+            <CommenHeader employeeid={employeeid} />
 
-            <EditButton
-              onClick={() =>
-                Navigate(
-                  `/organization-admin/employee/benefits/${employeeid}/${true}?`
-                )
-              }
-              style={{ marginRight: "54px" }}
-            >
-              <ButtonIcon src="/images/icons/Pen 2.svg" />
-              Edit
-            </EditButton>
+            {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
+              " "
+            ) : userType === ROLES.HR ? (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(`/hr-management/benefits/${employeeid}/${true}?`)
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            ) : (
+              <EditButton
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/benefits/${employeeid}/${true}?`
+                  )
+                }
+                style={{ marginRight: "54px" }}
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            )}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>

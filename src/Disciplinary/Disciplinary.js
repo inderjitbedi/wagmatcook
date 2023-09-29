@@ -649,7 +649,11 @@ const Disciplinary = () => {
                     <TableCell sx={CellHeadStyles} align="left">
                       Order No.
                     </TableCell>
-                    <TableCell sx={CellHeadStyles} align="left">
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "150px" }}
+                    >
                       Name
                     </TableCell>
                     <TableCell sx={CellHeadStyles} align="left">

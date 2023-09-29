@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import DeleteModal from "../../Modals/DeleteModal";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import NoDocumentfound from "../NoDocumentfound";
+import ROLES from "../../constants/roles";
 
 import {
   FlexContaier,
@@ -49,6 +50,9 @@ import CommenHeader from "./CommenHeader";
 
 const EVDocuments = () => {
   let API_URL = process.env.REACT_APP_API_URL;
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
 
   const style = {
     position: "absolute",
@@ -80,7 +84,7 @@ const EVDocuments = () => {
   const GetDocuments = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = API_URLS.getEmployeeDocuments.replace(":employeeid",employeeid);
+    let url = API_URLS.getEmployeeDocuments.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
@@ -140,7 +144,9 @@ const EVDocuments = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = API_URLS.deleteEmployeeDocument.replace(":employeeid",employeeid).replace(":id",Id);
+    let url = API_URLS.deleteEmployeeDocument
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -179,7 +185,6 @@ const EVDocuments = () => {
   };
 
   useEffect(() => {
-
     GetDocuments();
 
     const el = document.getElementById("filedrop");
@@ -192,6 +197,16 @@ const EVDocuments = () => {
         drop.current.removeEventListener("drop", handleDrop);
       };
     }
+     if (location.pathname.indexOf("manager") > -1) {
+       setUserType(ROLES.MANAGER);
+     } else if (location.pathname.indexOf("hr") > -1) {
+       setUserType(ROLES.HR);
+     } else if (location.pathname.indexOf("user") > -1) {
+       setUserType(ROLES.EMPLOYEE);
+    }
+      if (location.pathname.indexOf("account") > -1) {
+        setIsAccount(true);
+      }
   }, []);
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -232,7 +247,7 @@ const EVDocuments = () => {
 
       httpClient({
         method: "post",
-        url: API_URLS.uploadDocuments.replace(":type",type),
+        url: API_URLS.uploadDocuments.replace(":type", type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -275,7 +290,7 @@ const EVDocuments = () => {
       toast.error("Unsuported file type.");
     }
   };
- 
+
   return (
     <>
       {isLoading ? (
@@ -299,7 +314,7 @@ const EVDocuments = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <CommenHeader  employeeid={employeeid}/>
+            <CommenHeader employeeid={employeeid} />
 
             {/* <EditButton style={{ marginRight: "54px" }}>
           <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -313,9 +328,9 @@ const EVDocuments = () => {
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
-                <ButtonBlue onClick={() => handleOpen()}>
+               {isAccount ? " " : <ButtonBlue onClick={() => handleOpen()}>
                   New Document
-                </ButtonBlue>
+                </ButtonBlue>}
               </FlexSpaceBetween>
               {result?.documents?.length === 0 ? (
                 <NoDocumentfound message="No documents to show" />
@@ -523,8 +538,8 @@ const EVDocuments = () => {
 
                   <ButtonBlue
                     style={{ marginTop: "25px" }}
-                      onClick={(e) => HandleSubmit(e, file)}
-                      disabled={isUploading}
+                    onClick={(e) => HandleSubmit(e, file)}
+                    disabled={isUploading}
                   >
                     Submit
                   </ButtonBlue>

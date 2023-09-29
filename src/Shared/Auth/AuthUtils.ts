@@ -9,10 +9,13 @@ const redirectToDashboard = (role: any, navigate: any) => {
       navigate("/organization-admin/dashboard");
       break;
     case ROLES.HR:
-      navigate("/organization-admin/dashboard");
+      navigate("/hr-management/dashboard");
       break;
     case ROLES.MANAGER:
-      navigate("/organization-admin/dashboard");
+      navigate("/manager-management/dashboard");
+      break;
+     case ROLES.EMPLOYEE:
+      navigate("/user-management/dashboard");
       break;
     default:
       navigate("/"); // Redirect to a default page for unknown roles

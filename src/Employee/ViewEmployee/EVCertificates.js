@@ -5,9 +5,11 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link,useLocation } from "react-router-dom";
 import NoDocumentfound from "../NoDocumentfound";
 import moment from "moment";
+import ROLES from "../../constants/roles";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -64,6 +66,10 @@ const EVCertificates = () => {
 
   const { employeeid } = useParams();
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -243,6 +249,16 @@ const EVCertificates = () => {
   console.log(result);
   useEffect(() => {
     GetEmployeesCertificates();
+     if (location.pathname.indexOf("manager") > -1) {
+       setUserType(ROLES.MANAGER);
+     } else if (location.pathname.indexOf("hr") > -1) {
+       setUserType(ROLES.HR);
+     } else if (location.pathname.indexOf("user") > -1) {
+       setUserType(ROLES.EMPLOYEE);
+    }
+     if (location.pathname.indexOf("account") > -1) {
+       setIsAccount(true);
+     }
   }, []);
 
   return (
@@ -270,24 +286,60 @@ const EVCertificates = () => {
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <CommenHeader employeeid={employeeid} />
 
-            <EditButton
-              style={{ marginRight: "54px" }}
-              onClick={() =>
-                Navigate(
-                  `/organization-admin/employee/certificates-info/${employeeid}/${true}?`
-                )
-              }
-            >
-              <ButtonIcon src="/images/icons/Pen 2.svg" />
-              Edit
-            </EditButton>
+            {userType === ROLES.EMPLOYEE || isAccount ? (
+              ""
+            ) : userType === ROLES.MANAGER ? (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(
+                    `/manager-management/certificates-info/${employeeid}/${true}?`
+                  )
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            ) : userType === ROLES.HR ? (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(
+                    `/hr-management/certificates-info/${employeeid}/${true}?`
+                  )
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            ) : (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/certificates-info/${employeeid}/${true}?`
+                  )
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            )}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Employee Certifications</BasicHeading>
-                <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                {userType === ROLES.EMPLOYEE || isAccount ? (
+                  ""
+                ) : userType === ROLES.MANAGER ? (
+                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                ) : userType === ROLES.HR ? (
+                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                ) : (
+                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                )}
               </FlexSpaceBetween>
               {/* add new modal  */}
               <Modal

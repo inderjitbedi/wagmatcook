@@ -183,3 +183,36 @@ export const PaginationButton = styled.button`
   border:none;
   cursor: pointer;
 `;
+export const NotificationsContainer = styled.div`
+  width: 444px;
+  height: 311px;
+  border: 1px solid #e3e3e3;
+  background: #fff;
+  overflow-y: scroll;
+  
+`;
+export const NotificationsHeader = styled.div`
+  width: 100%;
+  border-bottom: 1px solid #e3e3e3;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const FlexNotificationContainer = styled.div`
+display: flex;
+gap:8px;
+`;
+export const NotificationHeading = styled.h1`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0px;
+`;
+export const NotificationIcon = styled.img`
+  width: 16px;
+  height: 16px;
+`;

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import InputMask from "react-input-mask";
+import ROLES from "../../constants/roles";
 
 import {
   HeaderEmployee,
@@ -45,7 +46,8 @@ const PersonalInfo = () => {
   const [getWorkEmail, setWorkEmail] = useState("");
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-
+const location = useLocation();
+const [userType, setUserType] = useState("");
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
     file: "",
