@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { verifyOrgAdmin } = require('../middlewares/jwtMiddleware');
+const { verifyToken } = require('../middlewares/jwtMiddleware');
 const employeeController = require('../controllers/employee');
 const { handleMulterError } = require('../middlewares/jwtMiddleware');
 const upload = require('../providers/uploadFile');
 
 const fileController = require('../controllers/file');
+const roles = require('../enum/roles');
 
-router.post('/add', verifyOrgAdmin, employeeController.add);
-router.get('/list', verifyOrgAdmin, employeeController.list);
-router.put('/delete/:id', verifyOrgAdmin, employeeController.delete);
+router.post('/add', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.add);
+router.get('/list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.list);
+router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.delete);
 
 
 
@@ -96,54 +97,56 @@ router.put('/delete/:id', verifyOrgAdmin, employeeController.delete);
  *       500:
  *         description: Internal Server Error
  */
-router.put('/personal-info/:id', verifyOrgAdmin, employeeController.updatePersonalInfo);
-router.get('/personal-info/:id', verifyOrgAdmin, employeeController.getPersonalInfo);
+router.put('/personal-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updatePersonalInfo);
+router.get('/personal-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getPersonalInfo);
 
-router.get('/header-info/:id', verifyOrgAdmin, employeeController.getEmployeeHeaderInfo);
+router.get('/header-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getEmployeeHeaderInfo);
 
-router.put('/job-details/:id', verifyOrgAdmin, employeeController.updateJobDetails);
-router.get('/job-details/:id', verifyOrgAdmin, employeeController.getJobDetails);
-router.post('/job-details/position/:id', verifyOrgAdmin, employeeController.addPosition);
+router.put('/job-details/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.updateJobDetails);
+router.get('/job-details/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getJobDetails);
+router.post('/job-details/position/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.addPosition);
 
-router.get('/reports-to-list', verifyOrgAdmin, employeeController.getReportsToList);
-router.get('/completed-by-list', verifyOrgAdmin, employeeController.getCompletedByListWithSearch);
+router.get('/reports-to-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getReportsToList);
+router.get('/completed-by-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getCompletedByListWithSearch);
 
-router.put('/benefit/:id', verifyOrgAdmin, employeeController.updateBenefit);
-router.get('/benefit/:id', verifyOrgAdmin, employeeController.getBenefit);
+router.put('/benefit/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.updateBenefit);
+router.get('/benefit/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getBenefit);
 
-router.put('/certificates/:id', verifyOrgAdmin, employeeController.updateCertificates);
-router.get('/certificates/:id', verifyOrgAdmin, employeeController.getCertificates);
-router.post('/certificate/:id', verifyOrgAdmin, employeeController.addCertificate);
+router.put('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateCertificates);
+router.get('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getCertificates);
+router.post('/certificate/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addCertificate);
 
-router.post('/type', verifyOrgAdmin, employeeController.addType);
-router.put('/type/:id', verifyOrgAdmin, employeeController.updateType);
-router.get('/types', verifyOrgAdmin, employeeController.getTypes);
+router.post('/type', verifyToken([roles.ORG_ADMIN]), employeeController.addType);
+router.put('/type/:id', verifyToken([roles.ORG_ADMIN]), employeeController.updateType);
+router.get('/types', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getTypes);
 
-router.get('/reviews/:id', verifyOrgAdmin, employeeController.getReviews);
-router.post('/review/:id', verifyOrgAdmin, employeeController.addReview);
-router.put('/review/:id/:reviewid', verifyOrgAdmin, employeeController.updateReview);
-router.put('/review/:id/delete/:reviewid', verifyOrgAdmin, employeeController.deleteReview);
+router.get('/reviews/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getReviews);
+router.post('/review/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addReview);
+router.put('/review/:id/:reviewid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateReview);
+router.put('/review/:id/delete/:reviewid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteReview);
 
 
-router.get('/disciplinaries/:id', verifyOrgAdmin, employeeController.getDisciplinaries);
-router.post('/disciplinary/:id', verifyOrgAdmin, employeeController.addDisciplinary);
-router.put('/disciplinary/:id/:disciplinaryid', verifyOrgAdmin, employeeController.updateDisciplinary);
-router.put('/disciplinary/:id/delete/:disciplinaryid', verifyOrgAdmin, employeeController.deleteDisciplinary);
+router.get('/disciplinaries/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getDisciplinaries);
+router.post('/disciplinary/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addDisciplinary);
+router.put('/disciplinary/:id/:disciplinaryid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateDisciplinary);
+router.put('/disciplinary/:id/delete/:disciplinaryid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteDisciplinary);
 
-router.post('/file/upload/:type', verifyOrgAdmin, upload.single('file'), handleMulterError, fileController.upload);
+router.post('/file/upload/:type', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), upload.single('file'), handleMulterError, fileController.upload);
 
-router.put('/documents/:id/delete/:documentid', verifyOrgAdmin, employeeController.deleteDocument);
-router.get('/documents/:id', verifyOrgAdmin, employeeController.getDocuments);
-router.post('/documents/:id', verifyOrgAdmin, employeeController.addDocument);
+router.get('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getDocuments);
+router.post('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addDocument);
+router.put('/documents/:id/delete/:documentid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteDocument);
 
-router.put('/leave-allocation/:id/delete/:allocationid', verifyOrgAdmin, employeeController.deleteLeaveAllocation);
-router.put('/leave-allocation/:id/:allocationid', verifyOrgAdmin, employeeController.updateLeaveAllocation);
-router.get('/leave-allocations/:id', verifyOrgAdmin, employeeController.getLeaveAllocations);
-router.post('/leave-allocation/:id', verifyOrgAdmin, employeeController.addLeaveAllocation);
+router.put('/leave-allocation/:id/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateLeaveAllocation);
+router.get('/leave-allocations/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getLeaveAllocations);
+router.post('/leave-allocation/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addLeaveAllocation);
+router.put('/leave-allocation/:id/delete/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteLeaveAllocation);
 
-router.get('/leave-history/:id', verifyOrgAdmin, employeeController.getLeaveHistory);
-router.get('/leave-history/:id/:requestid', verifyOrgAdmin, employeeController.getLeaveHistory);
-router.post('/leave-history/:id/request', verifyOrgAdmin, employeeController.addLeaveRequest);
+router.get('/leave-history/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getLeaveHistory);
+router.get('/leave-history/:id/:requestid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getLeaveHistory);
+router.post('/leave-history/:id/request', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addLeaveRequest);
+
+
 router.post('/send-welcome-email', employeeController.sendWelcomeEmail);
 
 

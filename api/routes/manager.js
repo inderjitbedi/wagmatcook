@@ -7,8 +7,7 @@ const upload = require('../providers/uploadFile');
 const fileController = require('../controllers/file');
 const roles = require('../enum/roles');
 
-router.post('/register', verifyToken([roles.ORG_ADMIN]), orgController.create);
-router.post('/file/upload/:type', verifyToken([roles.ORG_ADMIN]), upload.single('file'), handleMulterError, fileController.upload);
+// router.get('/employee/leaves', verifyToken(roles.MANAGER), orgController.create);
 
 
 module.exports = router;
