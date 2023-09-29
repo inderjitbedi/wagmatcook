@@ -298,9 +298,9 @@ const EVPerformance = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-     if (location.pathname.indexOf("account") > -1) {
-       setIsAccount(true);
-     }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
 
   const [tags, setTags] = useState([]);
@@ -460,10 +460,10 @@ const EVPerformance = () => {
             id: data?.userData._id,
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
-                " " +
-                (data?.personalInfo[0].lastName
-                  ? data?.personalInfo[0].lastName
-                  : " ")
+              " " +
+              (data?.personalInfo[0].lastName
+                ? data?.personalInfo[0].lastName
+                : " ")
               : data?.userData.name,
           }));
 
@@ -625,7 +625,7 @@ const EVPerformance = () => {
                                 inputFieldPosition="bottom"
                                 autocomplete
                                 placeholder="Add More"
-                                // editable
+                              // editable
                               />
 
                               <Errors>{byError}</Errors>
@@ -663,7 +663,7 @@ const EVPerformance = () => {
                                 <span style={{ justifySelf: "flex-end" }}>
                                   {" "}
                                   {detailsLength > -1 ? detailsLength : 0}{" "}
-                                  Characters left
+                                  characters left
                                 </span>
                               </InputPara>
                             </FlexColumnForm>
@@ -868,9 +868,9 @@ const EVPerformance = () => {
                                     {data.file?.originalName?.length <= 38
                                       ? data.file?.originalName
                                       : data.file?.originalName?.substring(
-                                          0,
-                                          38
-                                        ) + "..." || " - "}
+                                        0,
+                                        38
+                                      ) + "..." || " - "}
                                   </File>
                                 )}
                               </Link>
@@ -884,8 +884,8 @@ const EVPerformance = () => {
                                   Next Review on:{" "}
                                   {data.nextReviewDate
                                     ? moment(data.nextReviewDate).format(
-                                        "DD/MM/YYYY"
-                                      )
+                                      "DD/MM/YYYY"
+                                    )
                                     : " - "}
                                 </ReviewsDiv>
                               )}
@@ -900,7 +900,7 @@ const EVPerformance = () => {
                                   />
                                 )}
                                 {userType === ROLES.EMPLOYEE ||
-                                userType === ROLES.MANAGER || isAccount ? (
+                                  userType === ROLES.MANAGER || isAccount ? (
                                   ""
                                 ) : (
                                   <Icons

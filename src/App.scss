@@ -614,3 +614,17 @@ input[type="checkbox"] {
   cursor: pointer;
   padding-right: 0;
 }
+
+
+
+::-webkit-scrollbar {
+  width: 6px;
+  overflow: auto;
+  background-color: #F5F5F5;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}

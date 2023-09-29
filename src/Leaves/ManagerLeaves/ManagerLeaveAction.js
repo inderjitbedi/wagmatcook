@@ -41,7 +41,7 @@ const ManagerLeaveAction = () => {
   const navigate = useNavigate();
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
-  const HandleCloseDelete = () => setOpenDelete(false); 
+  const HandleCloseDelete = () => setOpenDelete(false);
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const [detailsLength, setDetailsLength] = useState(500);
@@ -191,7 +191,7 @@ const ManagerLeaveAction = () => {
                     {<Errors></Errors>}{" "}
                     <span style={{ justifySelf: "flex-end" }}>
                       {" "}
-                      {detailsLength > -1 ? detailsLength : 0} Characters left
+                      {detailsLength > -1 ? detailsLength : 0} characters left
                     </span>
                   </InputPara>
                 </ColumnFlexDiv>
@@ -217,8 +217,8 @@ const ManagerLeaveAction = () => {
         src="/svg/Calendar Mark.svg"
         message="You have approved this leave request and the user will be notified."
         HandleCloseDelete={HandleCloseDelete}
-        // isLoading={isDeleting}
-        // HandleDelete={HandleDelete}
+      // isLoading={isDeleting}
+      // HandleDelete={HandleDelete}
       />
     </>
   );

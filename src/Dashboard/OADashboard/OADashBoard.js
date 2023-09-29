@@ -148,7 +148,7 @@ const OADashBoard = () => {
     navigate("/");
   };
   const [anchorElNotification, setAnchorElNotification] = useState(null);
-  const openMenuNotification = Boolean(anchorEl);
+  const openMenuNotification = Boolean(anchorElNotification);
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
     console.log("working menu for notification");

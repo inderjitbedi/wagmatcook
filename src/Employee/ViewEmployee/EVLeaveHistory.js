@@ -916,7 +916,7 @@ const EVLeaveHistory = () => {
                             <span style={{ justifySelf: "flex-end" }}>
                               {" "}
                               {detailsLength > -1 ? detailsLength : 0}{" "}
-                              Characters left
+                              characters left
                             </span>
                           </InputPara>
                         </FlexColumnForm>
