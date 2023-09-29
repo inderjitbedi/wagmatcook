@@ -6,7 +6,9 @@ import { RotatingLines } from "react-loader-spinner";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import NoDocumentfound from "../NoDocumentfound";
-import { useNavigate, useParams } from "react-router-dom";
+import ROLES from "../../constants/roles";
+
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -71,6 +73,10 @@ const EmployeeJobDetails = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -237,6 +243,16 @@ const EmployeeJobDetails = () => {
     GetDepartments();
     GetReportsToList();
     GetEmployeeTypes();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
 
   return (
@@ -264,24 +280,48 @@ const EmployeeJobDetails = () => {
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <CommenHeader employeeid={employeeid} />
 
-            <EditButton
-              style={{ marginRight: "54px" }}
-              onClick={() =>
-                Navigate(
-                  `/organization-admin/employee/job-details/${employeeid}/${true}?`
-                )
-              }
-            >
-              <ButtonIcon src="/images/icons/Pen 2.svg" />
-              Edit
-            </EditButton>
+            {userType === ROLES.MANAGER ||
+            userType === ROLES.EMPLOYEE ||
+            isAccount ? (
+              " "
+            ) : userType === ROLES.HR ? (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(`/hr-management/job-details/${employeeid}/${true}?`)
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            ) : (
+              <EditButton
+                style={{ marginRight: "54px" }}
+                onClick={() =>
+                  Navigate(
+                    `/organization-admin/employee/job-details/${employeeid}/${true}?`
+                  )
+                }
+              >
+                <ButtonIcon src="/images/icons/Pen 2.svg" />
+                Edit
+              </EditButton>
+            )}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Employment Details</BasicHeading>
-                <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                {userType === ROLES.MANAGER ||
+                userType === ROLES.EMPLOYEE ||
+                isAccount ? (
+                  " "
+                ) : userType === ROLES.HR ? (
+                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                ) : (
+                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                )}
               </FlexSpaceBetween>
 
               <BasicDetailsDiv>

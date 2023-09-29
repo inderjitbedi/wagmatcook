@@ -32,6 +32,8 @@ import {
   TextArea,
   AddNewButton,
   Greypara,
+  InputPara,
+  Errors,
 } from "./ActionsStyles";
 import LeaveActionModal from "./LeaveActionModal";
 
@@ -42,6 +44,8 @@ const ManagerLeaveAction = () => {
   const HandleCloseDelete = () => setOpenDelete(false); 
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
+  const [detailsLength, setDetailsLength] = useState(500);
+
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -182,6 +186,14 @@ const ManagerLeaveAction = () => {
                 <ColumnFlexDiv>
                   <Titledark style={{ fontWeight: "600" }}>Comment</Titledark>
                   <TextArea type="text" />
+                  <InputPara>
+                    {" "}
+                    {<Errors></Errors>}{" "}
+                    <span style={{ justifySelf: "flex-end" }}>
+                      {" "}
+                      {detailsLength > -1 ? detailsLength : 0} Characters left
+                    </span>
+                  </InputPara>
                 </ColumnFlexDiv>
               </FormContainer>
               <FormContainer>

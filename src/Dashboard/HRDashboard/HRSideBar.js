@@ -16,6 +16,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 const HRSideBar = () => {
   const location = useLocation();
   const [orgData, setOrgData] = useState();
+  const [userData, setUserData] = useState();
+
   const style = {
     textDecoration: "none",
     color: "#279AF1",
@@ -25,6 +27,11 @@ const HRSideBar = () => {
     if (org) {
       let parsedUser = JSON.parse(org);
       setOrgData(parsedUser);
+    }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUserData(parsedUser);
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
@@ -46,10 +53,7 @@ const HRSideBar = () => {
       </SideBarLogoContainer>
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
       <SideBarList>
-        <Link
-          style={{ textDecoration: "none" }}
-          to="/hr-management/dashboard"
-        >
+        <Link style={{ textDecoration: "none" }} to="/hr-management/dashboard">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -136,10 +140,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
-          style={{ textDecoration: "none" }}
-          to="/hr-management/leaves"
-        >
+        <Link style={{ textDecoration: "none" }} to="/hr-management/leaves">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -192,10 +193,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
-          style={{ textDecoration: "none" }}
-          to="/hr-management/events"
-        >
+        <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -250,7 +248,7 @@ const HRSideBar = () => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/hr-management/account"
+          to={`/hr-management/account/personal-info/${userData?._id}`}
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -283,10 +281,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
-          style={{ textDecoration: "none" }}
-          to="/hr-management/helpdesk"
-        >
+        <Link style={{ textDecoration: "none" }} to="/hr-management/helpdesk">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

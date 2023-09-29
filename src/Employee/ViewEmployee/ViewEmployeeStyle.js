@@ -220,6 +220,7 @@ export const PersonalImg = styled.img`
   height: 94px;
   border-radius: 94px;
   border: 2px solid #fff;
+  object-fit: cover;
 `;
 export const FlexColumn = styled.div`
   display: flex;
@@ -227,6 +228,53 @@ export const FlexColumn = styled.div`
   gap: 8px;
   width: 50%;
 `;
+export const SectionCard = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+  justify-content: space-between;
+`;
+export const SectionCardContainer = styled.div`
+  border-radius: 8px;
+  flex: 1 1 250px;
+  background-color:#fff;
+  padding: 16px 20px 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const Sectionlighttitle = styled.h1`
+  color: #8f9bb3;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 171.429% */
+  margin:0;
+`;
+export const Sectionsmalltitle = styled.h1`
+  color: #8f9bb3;
+  text-align: right;
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  margin: 0;
+  align-self: flex-end;
+`;
+export const Sectiondarktitle = styled.p`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
+`;
+
+
 export const PersonalName = styled.h1`
   color: #222b45;
   font-family: Inter;
@@ -269,6 +317,7 @@ export const FlexSpaceBetween = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  align-items:flex-start;
 `;
 export const EditButton = styled.label`
   border-radius: 88px;
@@ -321,7 +370,7 @@ export const ViewPara = styled.p`
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 0px;
+  line-height: 18px;
   text-transform: capitalize;
 `;
 export const TimelineDiv = styled.div`
@@ -500,6 +549,7 @@ export const TextArea = styled.textarea`
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
+  outline: none;
 `;
 export const InputPara = styled.p`
   color: #737992;

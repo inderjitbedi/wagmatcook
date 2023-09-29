@@ -48,6 +48,8 @@ import ManagerLeaveAction from "../Leaves/ManagerLeaves/ManagerLeaveAction";
 import HRLayout from "../Dashboard/HRDashboard/HRLayout";
 import HREmployeeLayout from "../Employee/HREmployee/HREmployeeLayout";
 import HRAccountLayout from "../Account/HRAccountLayout";
+import UserLayout from "../Dashboard/UserDashboard/UserLayout";
+import UserAccountLayout from "../Account/UserAccountLayout";
 const Routes: any = [
   {
     component: signup,
@@ -729,6 +731,145 @@ const Routes: any = [
         },
           {
             component: HRAccountLayout,
+            path: "account",
+            title: "Employee ",
+            to: "/",
+            type: "private",
+            children: [
+
+              {
+                component: EmployeePersonal,
+                path: "personal-info/:employeeid",
+                title: "EmployeePersonal ",
+                to: "/",
+                type: "private",
+                index: true,
+              },
+
+              {
+                component: EmployeeJobDetails,
+                path: "job-details/:employeeid",
+                title: "EmployeeJobDetails ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVBenefits,
+                path: "benefits/:employeeid",
+                title: "Benefits ",
+                to: "/",
+                type: "private",
+              },
+
+              {
+                component: EVLeaveHistory,
+                path: "leave-history/:employeeid",
+                title: "EVLeaveHistory ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVCertificates,
+                path: "certificates/:employeeid",
+                title: "EVCertificates ",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVDiscipline,
+                path: "discipline/:employeeid",
+                title: "EVDiscipline ",
+                to: "/",
+                type: "private",
+              },
+                {
+                component: EvLeaveAlloacation,
+                path: "leave-alloacation/:employeeid",
+                title: "Leave Alloaction",
+                to: "/",
+                type: "private",
+              },
+              {
+                component: EVDocuments,
+                path: "documents/:employeeid",
+                title: "EVDocuments ",
+                to: "/",
+                type: "private",
+
+              },
+              {
+                component: EVPerformance,
+                path: "performance/:employeeid",
+                title: "EVPerformance ",
+                to: "/",
+                type: "private",
+
+              },
+            ],
+        },
+          
+
+      
+    ],
+  },
+      {
+    component: UserLayout,
+    path: "/user-management",
+    title: "HR",
+    to: "/",
+    type: "private",
+      children: [
+     {
+        component: ManagerDashBoard,
+        path: "dashboard",
+        title: "Manager DashBoard",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: EVLeaveHistory,
+        path: "leaves/:employeeid?",
+        title: "Leaves",
+        to: "/",
+        type: "private",
+        index: true,
+        },
+       
+           {
+            component: Benefits,
+            path: "benefits/:employeeid/:edit?",
+            title: "Benefits ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: CertificatesInfo,
+            path: "certificates-info/:employeeid/:edit?",
+            title: "CertificatesInfo ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: JobDetails,
+            path: "job-details/:employeeid/:edit?",
+            title: "JobDetails ",
+            to: "/",
+            type: "private",
+
+          },
+          {
+            component: PersonalInfo,
+            path: "personal-info/:employeeid/:edit?",
+            title: "PersonalInfo ",
+            to: "/",
+            type: "private",
+
+        },
+          {
+            component: UserAccountLayout,
             path: "account",
             title: "Employee ",
             to: "/",

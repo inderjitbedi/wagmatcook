@@ -87,6 +87,7 @@ const Employee = () => {
 
   const Navigate = useNavigate();
   const location = useLocation();
+  const [userType, setUserType] = useState("");
 
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
@@ -101,7 +102,6 @@ const Employee = () => {
     }, delayDuration);
   };
 
-  const [userType, setUserType] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
@@ -163,6 +163,8 @@ const Employee = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
     }
   }, []);
   console.log("user type", userType);
@@ -320,10 +322,14 @@ const Employee = () => {
           ))} */}
         </DepartmentFilterdiv>
 
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <AddNewButton>Send Welcome</AddNewButton>{" "}
-          <AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>
-        </div>
+        {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
+          " "
+        ) : (
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <AddNewButton>Send Welcome</AddNewButton>{" "}
+            {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
+          </div>
+        )}
       </DepartmentFilterContainer>
       <Modal
         open={openWelcome}
@@ -537,11 +543,11 @@ const Employee = () => {
                     <IconContainer>
                       <Icons
                         onClick={() => {
-                          if (userType === "MANAGER") {
+                          if (userType === ROLES.MANAGER) {
                             Navigate(
                               `/manager-management/employee-details/personal-info/${data._id}`
                             );
-                          } else if (userType === "HUMAN_RESOURCE") {
+                          } else if (userType === ROLES.HR) {
                             Navigate(
                               `/hr-management/employee-details/personal-info/${data._id}`
                             );
@@ -553,21 +559,29 @@ const Employee = () => {
                         }}
                         src="/images/icons/eye.svg"
                       />
-                      <Icons
-                        onClick={() =>
-                          Navigate(
-                            `/organization-admin/employee/personal-info/${data._id}`
-                          )
-                        }
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <Icons
-                        onClick={() => {
-                          setId(data._id);
-                          HandleOpenDelete();
-                        }}
-                        src="/images/icons/Trash-2.svg"
-                      />
+                      {userType === ROLES.MANAGER ? (
+                        ""
+                      ) : (
+                        <Icons
+                          onClick={() =>
+                         {   Navigate(
+                              `/organization-admin/employee/personal-info/${data._id}`
+                            )}
+                          }
+                          src="/images/icons/Pendown.svg"
+                        />
+                      )}
+                      {userType === ROLES.MANAGER ? (
+                        ""
+                      ) : (
+                        <Icons
+                          onClick={() => {
+                            setId(data._id);
+                            HandleOpenDelete();
+                          }}
+                          src="/images/icons/Trash-2.svg"
+                        />
+                      )}
                     </IconContainer>
                   </TableCell>
                 </TableRow>

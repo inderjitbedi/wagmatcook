@@ -6,9 +6,10 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link,useLocation } from "react-router-dom";
 import NoDocumentfound from "../NoDocumentfound";
 import DeleteModal from "../../Modals/DeleteModal";
+import ROLES from "../../constants/roles";
 
 import moment from "moment";
 import {
@@ -74,6 +75,10 @@ const EVDiscipline = () => {
 
   const { employeeid } = useParams();
   const Navigate = useNavigate();
+    const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+  
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -297,16 +302,26 @@ const EVDiscipline = () => {
 
     GetDisciplinary();
     GetEmployeesDisciplinary();
+     if (location.pathname.indexOf("manager") > -1) {
+       setUserType(ROLES.MANAGER);
+     } else if (location.pathname.indexOf("hr") > -1) {
+       setUserType(ROLES.HR);
+     } else if (location.pathname.indexOf("user") > -1) {
+       setUserType(ROLES.EMPLOYEE);
+    }
+      if (location.pathname.indexOf("account") > -1) {
+        setIsAccount(true);
+      }
   }, []);
   const HandleUpdateAction = (data) => {
     setUpdate(true);
-    setId(data._id);
+    // setId(data._id);
     setDetailsLength(500 - data.details?.length);
     reset({
-      details: data.details,
-      disciplinary: data.disciplinary._id,
-      file: data.file._id,
-      issueDate: new Date(data.issueDate).toISOString().split("T")[0],
+      details: data?.details,
+      disciplinary: data.disciplinary?._id,
+      file: data?.file?._id,
+      issueDate: new Date(data?.issueDate).toISOString().split("T")[0],
       expiryDate: data.expiryDate
         ? new Date(data.expiryDate).toISOString().split("T")[0]
         : null,
@@ -422,9 +437,13 @@ const EVDiscipline = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Disciplinary Details</BasicHeading>
-                <AddNewButton onClick={HandleOpenAddNewAction}>
-                  Add New{" "}
-                </AddNewButton>
+                {userType === ROLES.EMPLOYEE || isAccount ? (
+                  ""
+                ) : (
+                  <AddNewButton onClick={HandleOpenAddNewAction}>
+                    Add New{" "}
+                  </AddNewButton>
+                )}
               </FlexSpaceBetween>
               {/* modal add disciplinary */}
               <Modal
@@ -673,7 +692,7 @@ const EVDiscipline = () => {
                               ) : file?.originalName.length <= 32 ? (
                                 file?.originalName
                               ) : (
-                                file.originalName.substring(0, 30) + "..."
+                                file?.originalName.substring(0, 30) + "..."
                               )}
                             </EditButton>
                             {file && (
@@ -747,18 +766,20 @@ const EVDiscipline = () => {
                               download
                               style={{ textDecoration: "none" }}
                             >
-                              <File>
-                                {" "}
-                                <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                                {data.file.originalName?.length <= 38
-                                  ? data.file.originalName
-                                  : data.file.originalName.substring(0, 38) +
-                                      "..." || " - "}
-                              </File>
+                              {data.file && (
+                                <File>
+                                  {" "}
+                                  <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                  {data.file?.originalName?.length <= 38
+                                    ? data.file?.originalName
+                                    : data.file?.originalName.substring(0, 38) +
+                                        "..." || " - "}
+                                </File>
+                              )}
                             </Link>
                           </FlexSpaceBetween>
 
-                          <FlexSpaceBetween>
+                          <FlexSpaceBetween style={{alignItems:"center"}}>
                             {data.expiryDate && (
                               <ReviewsDiv>
                                 Expiry Date:{" "}
@@ -769,17 +790,30 @@ const EVDiscipline = () => {
                             )}
                             <div></div>
                             <IconContainer>
-                              <Icons
-                                onClick={() => HandleUpdateAction(data)}
-                                src="/images/icons/Pendown.svg"
-                              />
-                              <Icons
-                                onClick={() => {
-                                  setId(data._id);
-                                  HandleOpenDelete();
-                                }}
-                                src="/images/icons/Trash-2.svg"
-                              />
+                              {userType === ROLES.EMPLOYEE || isAccount ? (
+                                ""
+                              ) : (
+                                <Icons
+                                    onClick={() => {
+                                      HandleUpdateAction(data)
+                                      // setId(data._id)
+                                    }}
+                                  src="/images/icons/Pendown.svg"
+                                />
+                              )}
+
+                              {userType === ROLES.EMPLOYEE ||
+                              userType === ROLES.MANAGER  || isAccount ? (
+                                ""
+                              ) : (
+                                <Icons
+                                  onClick={() => {
+                                    setId(data._id);
+                                    HandleOpenDelete();
+                                  }}
+                                  src="/images/icons/Trash-2.svg"
+                                />
+                              )}
                             </IconContainer>
                           </FlexSpaceBetween>
                         </FlexColumn>

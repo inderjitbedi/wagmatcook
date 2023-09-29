@@ -16,6 +16,23 @@ export const PendingStyle = styled.p`
   font-weight: 600;
   line-height: 24px;
 `;
+export const InputPara = styled.p`
+  color: #737992;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0px; /* 171.429% */
+  display: flex;
+  justify-content: space-between;
+`;
+export const Errors = styled.p`
+  display: block;
+  color: red;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 12px;
+  margin-top: 2px;
+`;
 export const Main = styled.div`
   border-radius: 8px;
   border: 1px solid #eff4fa;

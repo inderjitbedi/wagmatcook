@@ -15,9 +15,21 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import moment from "moment";
+import ROLES from "../../constants/roles";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import {
+  DashHeader,
+  DashHeaderSearch,
+  DashHeaderTitle,
+  DashNotification,
+  SearchBox,
+  SearchIcon,
+  SearchInput,
+  DepartmentFilterContainer,
+  DepartmentFilterdiv,
   MainBodyContainer,
   PersonalInfo,
   PersonalImg,
@@ -42,9 +54,6 @@ import {
   ModalIcon,
   ModalFormContainer,
   InputSpan,
-  SearchBox,
-  SearchInput,
-  SearchIcon,
   ModalThanks,
   ModalIconDelete,
   ModalThanksImg,
@@ -53,6 +62,11 @@ import {
   Option,
   InputPara,
   TextArea,
+  SectionCard,
+  SectionCardContainer,
+  Sectionlighttitle,
+  Sectiondarktitle,
+  Sectionsmalltitle,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -186,7 +200,25 @@ const ApprovedStyles = {
   fontWeight: 600,
   lineHeight: "24px",
 };
+
 const EVLeaveHistory = () => {
+  const [anchorEl, setAnchorEl] = useState(false);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+    handleCloseMenu();
+    Navigate("/");
+  };
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -369,7 +401,7 @@ const EVLeaveHistory = () => {
   };
   const GetLeaveHistory = () => {
     setIsLoading(true);
-    const trimid = employeeid.trim();
+    // const trimid = employeeid?.trim();
     let url = API_URLS.getLeaveHistory.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
@@ -395,9 +427,24 @@ const EVLeaveHistory = () => {
     GetReportList();
     GetLeavesType();
     GetLeaveHistory();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-
+  console.log("this is account:", isAccount, userType);
+  const userstyle = {
+    padding: "16px 20px",
+    background: "#fff",
+    borderRadius: "8px 8px 0px 0px"
+  };
   return (
     <>
       {isLoading ? (
@@ -420,15 +467,134 @@ const EVLeaveHistory = () => {
         </div>
       ) : (
         <MainBodyContainer>
-          <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <CommenHeader employeeid={employeeid} />
-          </FlexSpaceBetween>
-          <LeaveDiv>
+          {userType === ROLES.EMPLOYEE && (
+            <DashHeader>
+              <DashHeaderTitle>Employee</DashHeaderTitle>
+              <DashHeaderSearch>
+                {/* <SearchBox>
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+              value={searchValue}
+              onChange={(e) => HandleSearchCahnge(e)}
+            ></SearchInput>
+            <SearchIcon src="/images/icons/searchIcon.svg" />
+          </SearchBox> */}
+                <DashNotification src="/images/icons/Notifications.svg" />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    gap: "5px",
+                  }}
+                  onClick={(event) => handleClickMenu(event)}
+                >
+                  <DashNotification src="/images/icons/Logout.svg" />
+                  <img
+                    src="/images/icons/arrowdown.svg"
+                    style={{
+                      width: "5px",
+                      height: "9px",
+                      transform: anchorEl ? "rotate(180deg)" : undefined,
+                    }}
+                  />
+                </div>
+              </DashHeaderSearch>
+              <Menu
+                sx={{ margin: "0px" }}
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorEl}
+                open={openMenu}
+                onClose={handleCloseMenu}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem
+                  style={{
+                    color: "#222B45",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "20px",
+                  }}
+                >
+                  Settings
+                </MenuItem>
+                <MenuItem
+                  onClick={HandleLogout}
+                  style={{
+                    color: "#EA4335",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "20px",
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
+            </DashHeader>
+          )}
+          {userType === ROLES.EMPLOYEE ? (
+            ""
+          ) : (
+            <FlexSpaceBetween style={{ alignItems: "center" }}>
+              <CommenHeader employeeid={employeeid} />
+            </FlexSpaceBetween>
+          )}
+          {userType === ROLES.EMPLOYEE && (
+            <SectionCard>
+              <SectionCardContainer>
+                <FlexColumn>
+                  <Sectionlighttitle>Earned Leave</Sectionlighttitle>
+                  <Sectiondarktitle>0</Sectiondarktitle>
+                </FlexColumn>
+                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
+              </SectionCardContainer>
+              <SectionCardContainer>
+                <FlexColumn>
+                  <Sectionlighttitle>Casual-Sick Leave</Sectionlighttitle>
+                  <Sectiondarktitle>0</Sectiondarktitle>
+                </FlexColumn>
+                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
+              </SectionCardContainer>
+              <SectionCardContainer>
+                <FlexColumn>
+                  <Sectionlighttitle>Restricted Holiday</Sectionlighttitle>
+                  <Sectiondarktitle>0</Sectiondarktitle>
+                </FlexColumn>
+                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
+              </SectionCardContainer>
+              <SectionCardContainer>
+                <FlexColumn>
+                  <Sectionlighttitle>Loss of Pay</Sectionlighttitle>
+                  <Sectiondarktitle>0</Sectiondarktitle>
+                </FlexColumn>
+              </SectionCardContainer>
+            </SectionCard>
+          )}
+
+          <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
             Leaves History
-            <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-              New Request
-            </ButtonBlue>
+            {isAccount ? (
+              "true"
+            ) : (
+              <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+                New Request
+              </ButtonBlue>
+            )}
           </LeaveDiv>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -722,11 +888,12 @@ const EVLeaveHistory = () => {
                           <InputLabel>Description</InputLabel>
                           <TextArea
                             type="text"
+                            readOnly={update}
                             {...register("requesterComment", {
-                              required: {
-                                value: true,
-                                message: " Required",
-                              },
+                              // required: {
+                              //   value: true,
+                              //   message: " Required",
+                              // },
                               maxLength: {
                                 value: 500,
                                 message: "Details exceeds  500 characters ",
@@ -752,7 +919,6 @@ const EVLeaveHistory = () => {
                               Characters left
                             </span>
                           </InputPara>
-                          <Errors> {errors.requesterComment?.message} </Errors>
                         </FlexColumnForm>
                       </FlexContaierForm>
                       <FlexContaierForm>

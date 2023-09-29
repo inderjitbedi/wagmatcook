@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import moment from "moment";
+import ROLES from "../../constants/roles";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -29,15 +31,21 @@ const EmployeePersonal = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+
   const { employeeid } = useParams();
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const GetEmployeesPersonalInfo = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
-    let url = API_URLS.getEmployeePersonalInfo.replace(":employeeid",employeeid);
+    let url = API_URLS.getEmployeePersonalInfo.replace(
+      ":employeeid",
+      employeeid
+    );
     httpClient({
       method: "get",
       url,
@@ -59,9 +67,19 @@ const EmployeePersonal = () => {
         setIsLoading(false);
       });
   };
- 
+
   useEffect(() => {
     GetEmployeesPersonalInfo();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
   console.log(result);
   return (
@@ -92,16 +110,44 @@ const EmployeePersonal = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Basic Information</BasicHeading>
-                <EditButton
-                  onClick={() =>
-                    Navigate(
-                      `/organization-admin/employee/personal-info/${employeeid}/${true}?`
-                    )
-                  }
-                >
-                  <ButtonIcon src="/images/icons/Pen 2.svg" />
-                  Edit
-                </EditButton>
+                {isAccount || userType === ROLES.EMPLOYEE ? (
+                  ""
+                ) : userType === ROLES.MANAGER ? (
+                  <EditButton
+                    style={{ marginRight: "54px" }}
+                    onClick={() =>
+                      Navigate(
+                        `/manager-management/personal-info/${employeeid}/${true}?`
+                      )
+                    }
+                  >
+                    <ButtonIcon src="/images/icons/Pen 2.svg" />
+                    Edit
+                  </EditButton>
+                ) : userType === ROLES.HR ? (
+                  <EditButton
+                    style={{ marginRight: "54px" }}
+                    onClick={() =>
+                      Navigate(
+                        `/hr-management/personal-info/${employeeid}/${true}?`
+                      )
+                    }
+                  >
+                    <ButtonIcon src="/images/icons/Pen 2.svg" />
+                    Edit
+                  </EditButton>
+                ) : (
+                  <EditButton
+                    onClick={() =>
+                      Navigate(
+                        `/organization-admin/employee/personal-info/${employeeid}/${true}?`
+                      )
+                    }
+                  >
+                    <ButtonIcon src="/images/icons/Pen 2.svg" />
+                    Edit
+                  </EditButton>
+                )}
               </FlexSpaceBetween>
               <BasicDetailsDiv>
                 <FlexSpaceBetween>
