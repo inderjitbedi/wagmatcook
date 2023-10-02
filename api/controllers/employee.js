@@ -67,13 +67,25 @@ const employeeController = {
                 },
                 {
                     $lookup: {
+                        from: 'employeepositionhistories',
+                        localField: '_id',
+                        foreignField: 'employee',
+                        as: 'positions',
+                    },
+                },
+                {
+                    $lookup: {
                         from: 'files',
                         localField: 'personalInfo.photo',
                         foreignField: '_id',
                         as: 'photoInfo',
                     },
                 },
-
+                {
+                    $sort: {
+                        'positions.startDate': -1, // Sort by startDate in descending order
+                    },
+                },
                 {
                     $skip: startIndex,
                 },
