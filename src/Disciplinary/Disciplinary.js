@@ -16,6 +16,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -121,9 +122,7 @@ const Disciplinary = () => {
   const [result, setResult] = useState([]);
   const [descriptionLength, setdescriptionLength] = useState(500);
   const [searchValue, setSearchValue] = useState("");
-  const [delayedSearchValue, setDelayedSearchValue] = useState("");
-  const delayDuration = 1000; // Set the delay duration in milliseconds
-  let searchTimer;
+ 
   const [disciplinaryData, setDisciplinaryData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -215,13 +214,10 @@ const Disciplinary = () => {
       });
   };
   useEffect(() => {
-    //     let isLoggedIn = localStorage.getItem("isLoggedIn");
-    // if (!isLoggedIn) {
-    //   Navigate("/");
-    // } else {
+ 
     GetDisciplinary();
-    // }
-  }, []);
+   
+  }, [searchValue]);
 
   //create new enter in table
   const HandleSubmit = (e) => {
@@ -429,13 +425,9 @@ const Disciplinary = () => {
       });
   };
 
-  const HandleSearchCahnge = (e) => {
-    setSearchValue(e.target.value);
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      setDelayedSearchValue(e.target.value);
-    }, delayDuration);
-  };
+   const HandleSearchCahnge = (data) => {
+     setSearchValue(data);
+   };
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -486,40 +478,10 @@ const Disciplinary = () => {
   return (
     <>
       <>
-        <DashHeader>
-          <DashHeaderTitle>Disciplinary Types</DashHeaderTitle>
-          <DashHeaderSearch>
-            <SearchBox>
-              <SearchInput
-                type="text"
-                placeholder="Search..."
-                value={searchValue}
-                onChange={(e) => HandleSearchCahnge(e)}
-              ></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-            </SearchBox>
-            <DashNotification src="/images/icons/Notifications.svg" />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                gap: "5px",
-              }}
-              onClick={(event) => handleClickMenu(event)}
-            >
-              <DashNotification src="/images/icons/Logout.svg" />
-              <img
-                src="/images/icons/arrowdown.svg"
-                style={{
-                  width: "5px",
-                  height: "9px",
-                  transform: anchorEl ? "rotate(180deg)" : undefined,
-                }}
-              />
-            </div>
-          </DashHeaderSearch>
-        </DashHeader>
+        <CommenDashHeader
+          onSearch={HandleSearchCahnge}
+          text="Disciplinary Types"
+        />
         <DisciplinaryDiv>
           <DisciplinaryHeading>All Disciplinary Types</DisciplinaryHeading>
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
@@ -646,7 +608,7 @@ const Disciplinary = () => {
                       background: "#FBFBFB",
                     }}
                   >
-                    <TableCell sx={CellHeadStyles} align="left">
+                    <TableCell sx={CellHeadStyles} align="left" style={{width:"100px"}}>
                       Order No.
                     </TableCell>
                     <TableCell
@@ -813,7 +775,7 @@ const Disciplinary = () => {
                   name="name"
                   onChange={HandleChangesEdit}
                   value={upDateData.name}
-                // placeholder={name}
+                  // placeholder={name}
                 />
                 <Errors>{errors.nameError}</Errors>
                 <InputLabel>
@@ -824,7 +786,7 @@ const Disciplinary = () => {
                   name="description"
                   onChange={HandleChangesEdit}
                   value={upDateData.description}
-                // placeholder={descriptio}
+                  // placeholder={descriptio}
                 />
                 <Errors style={{ display: "inline-block" }}>
                   {errors.descriptionError}

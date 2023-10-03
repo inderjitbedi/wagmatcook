@@ -625,7 +625,7 @@ export const CertificateContainer = styled.div`
   border: 1.5px solid #eff4fa;
   background: #fff;
   padding: 16px;
-  width: 100%;
+  width: 80%;
   margin-bottom: 16px;
 `;
 export const CertificateTitle = styled.div`

@@ -16,6 +16,8 @@ import { useForm } from "react-hook-form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import DeleteModal from "../../Modals/DeleteModal";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -95,20 +97,14 @@ const EmployeeTypes = () => {
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [delayedSearchValue, setDelayedSearchValue] = useState("");
-  const delayDuration = 1000; // Set the delay duration in milliseconds
-  let searchTimer;
-
+ 
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
-  const HandleSearchCahnge = (e) => {
-    setSearchValue(e.target.value);
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      setDelayedSearchValue(e.target.value);
-    }, delayDuration);
-  };
+ 
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -131,7 +127,7 @@ const EmployeeTypes = () => {
   } = useForm({
     mode: "all",
     defaultValues: {
-      name: ""
+      name: "",
     },
   });
 
@@ -288,43 +284,35 @@ const EmployeeTypes = () => {
   };
   useEffect(() => {
     GetEmployeeTypes();
-  }, [delayedSearchValue]);
+  }, [searchValue]);
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    // const reorderedData = Array.from(result.employeeTypes); 
+    // const [movedItem] = reorderedData.splice(result.source.index, 1);
+    // reorderedData.splice(result.destination.index, 0, movedItem);
+    // console.log("drag is working ");
+    // setResult(reorderedData);
+    // HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+  };
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 10px 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
   return (
     <>
-      <DashHeader>
-        <DashHeaderTitle>Employee Types</DashHeaderTitle>
-        <DashHeaderSearch>
-          <SearchBox>
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              value={searchValue}
-              onChange={(e) => HandleSearchCahnge(e)}
-            ></SearchInput>
-            <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
-          <DashNotification src="/images/icons/Notifications.svg" />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: "5px",
-            }}
-            onClick={(event) => handleClickMenu(event)}
-          >
-            <DashNotification src="/images/icons/Logout.svg" />
-            <img
-              src="/images/icons/arrowdown.svg"
-              style={{
-                width: "5px",
-                height: "9px",
-                transform: anchorEl ? "rotate(180deg)" : undefined,
-              }}
-            />
-          </div>
-        </DashHeaderSearch>
-      </DashHeader>
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Employee Types" />
+
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Employee Types</DisciplinaryHeading>
         <AddNewButton
@@ -469,85 +457,126 @@ const EmployeeTypes = () => {
           />
         </div>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
-                }}
-              >
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "300px" }}
-                  align="left"
-                >
-                  Employee Type
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "500px" }}
-                  align="left"
-                >
-                  {/* Description */}
-                </TableCell>
-
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "100px" }}
-                  align="left"
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {!result.employeeTypes?.length && (
-                <TableRow sx={{ height: "200px" }}>
-                  <TableCell align="center" colSpan={3}>
-                    No Employee Types Found
-                  </TableCell>
-                </TableRow>
-              )}
-              {result?.employeeTypes?.map((data, index) => (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
                 <TableRow
                   sx={{
-                    "&:last-child td, &:last-child th": {
-                      border: 0,
-                    },
-                    background: "#fff",
+                    background: "#FBFBFB",
                   }}
-                  key={data._id}
                 >
-                  <TableCell sx={CellStyle} align="left">
-                    {data.name}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    align="left"
+                    style={{ width: "20px" }}
+                  >
+                    Order&nbsp;No.
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {/* {data.description} */}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "300px" }}
+                    align="left"
+                  >
+                    Employee Type
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    <ActionIconDiv>
-                      <ActionIcons
-                        onClick={() => {
-                          HandleUpdateAction(data);
-                        }}
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <ActionIcons
-                        onClick={() => {
-                          HandleOpenDelete();
-                          setId(data._id);
-                        }}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                    </ActionIconDiv>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "500px" }}
+                    align="left"
+                  >
+                    {/* Description */}
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "100px" }}
+                    align="left"
+                  >
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <Droppable droppableId="table">
+                {(provided, snapshot) => (
+                  <TableBody
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDraggingOver)}
+                  >
+                    {!result.employeeTypes?.length && (
+                      <TableRow sx={{ height: "200px" }}>
+                        <TableCell align="center" colSpan={3}>
+                          No Employee Types Found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {result?.employeeTypes?.map((data, index) => (
+                      <Draggable
+                        key={data._id}
+                        draggableId={data._id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <TableRow
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: 0,
+                              },
+                              background: "#fff",
+                            }}
+                            key={data._id}
+                          >
+                            <TableCell sx={CellStyle2} align="left">
+                              <MenuIconDiv>
+                                <MenuIcon
+                                  {...provided.dragHandleProps}
+                                  src="/images/icons/Menu Dots.svg "
+                                  style={{ cursor: "grab" }}
+                                />
+                                {data?.order}
+                              </MenuIconDiv>
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {data.name}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {/* {data.description} */}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {" "}
+                              <ActionIconDiv>
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleUpdateAction(data);
+                                  }}
+                                  src="/images/icons/Pendown.svg"
+                                />
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleOpenDelete();
+                                    setId(data._id);
+                                  }}
+                                  src="/images/icons/Trash-2.svg"
+                                />
+                              </ActionIconDiv>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </Draggable>
+                    ))}
+                  </TableBody>
+                )}
+              </Droppable>
+            </Table>
+          </TableContainer>
+        </DragDropContext>
       )}
       <DeleteModal
         openDelete={openDelete}

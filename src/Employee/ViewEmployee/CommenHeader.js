@@ -48,7 +48,9 @@ const CommenHeader = ({ employeeid }) => {
         <PersonalName>
           {[
             headerData.personalInfo?.firstName,
-            headerData.personalInfo?.lastName,
+            headerData.personalInfo?.lastName
+              ? headerData.personalInfo?.lastName
+              : "",
           ].join(" ")}
         </PersonalName>
         <PersonalTitle>{headerData?.position?.title || "-"}</PersonalTitle>

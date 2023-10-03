@@ -73,3 +73,18 @@ export const SideBarListTitle = styled.p`
   line-height: 0px;
   cursor: pointer;
 `;
+export const SidebarArrow = styled.img`
+
+`;
+export const FlexContainer = styled.div`
+display: flex;
+justify-content: space-between;
+gap:25px;
+align-items: center;
+`;
+export const DropDownContainer = styled.div`
+  width: 100%;
+  padding: 0px 10px;
+  /* background-color: #8f9bb3; */
+margin-top: -15px;
+`;

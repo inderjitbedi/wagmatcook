@@ -5,10 +5,10 @@ import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import moment from "moment";
 import ROLES from "../../constants/roles";
+import PersonalInfo from "../AddEmployee/PersonalInfo";
 
 import {
   MainBodyContainer,
-  PersonalInfo,
   PersonalImg,
   FlexColumn,
   PersonalName,
@@ -67,7 +67,7 @@ const EmployeePersonal = () => {
         setIsLoading(false);
       });
   };
-
+  const [isEdit, setIsEdit] = useState(false);
   useEffect(() => {
     GetEmployeesPersonalInfo();
     if (location.pathname.indexOf("manager") > -1) {
@@ -80,7 +80,7 @@ const EmployeePersonal = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, []);
+  }, [isEdit]);
   console.log(result);
   return (
     <>
@@ -103,198 +103,211 @@ const EmployeePersonal = () => {
           />
         </div>
       ) : (
-        <MainBodyContainer>
-          <CommenHeader employeeid={employeeid} />
+        <>
+          {isEdit ? (
+            <PersonalInfo isEdit={isEdit} setIsEdit={setIsEdit} />
+          ) : (
+            <MainBodyContainer>
+              <CommenHeader employeeid={employeeid} />
 
-          <BasicInfoContainer>
-            <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                <BasicHeading>Basic Information</BasicHeading>
-                {isAccount || userType === ROLES.EMPLOYEE ? (
-                  ""
-                ) : userType === ROLES.MANAGER ? (
-                  <EditButton
-                    style={{ marginRight: "54px" }}
-                    onClick={() =>
-                      Navigate(
-                        `/manager-management/personal-info/${employeeid}/${true}?`
-                      )
-                    }
-                  >
-                    <ButtonIcon src="/images/icons/Pen 2.svg" />
-                    Edit
-                  </EditButton>
-                ) : userType === ROLES.HR ? (
-                  <EditButton
-                    style={{ marginRight: "54px" }}
-                    onClick={() =>
-                      Navigate(
-                        `/hr-management/personal-info/${employeeid}/${true}?`
-                      )
-                    }
-                  >
-                    <ButtonIcon src="/images/icons/Pen 2.svg" />
-                    Edit
-                  </EditButton>
-                ) : (
-                  <EditButton
-                    onClick={() =>
-                      Navigate(
-                        `/organization-admin/employee/personal-info/${employeeid}/${true}?`
-                      )
-                    }
-                  >
-                    <ButtonIcon src="/images/icons/Pen 2.svg" />
-                    Edit
-                  </EditButton>
-                )}
-              </FlexSpaceBetween>
-              <BasicDetailsDiv>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Name</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.firstName || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Last Name</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.lastName || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Address</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.address || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Province</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.province || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>City</TitlePara>
-                    <ViewPara>{result?.personalInfo?.city || " - "}</ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Postal Code</TitlePara>
-                    <ViewPara style={{ textTransform: "uppercase" }}>
-                      {result?.personalInfo?.postalCode || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Home Phone</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.homePhone || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Personal (mobile)</TitlePara>
-                    <ViewPara>{result?.personalInfo?.mobile || " - "}</ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Email - Personal</TitlePara>
-                    <ViewPara style={{ textTransform: "none" }}>
-                      {result?.personalInfo?.personalEmail || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Email - Work</TitlePara>
-                    <ViewPara style={{ textTransform: "none" }}>
-                      {result?.personalInfo?.employee.email || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Emergency Contact </TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.emergencyContact || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Emergency Contact Number</TitlePara>
-                    <ViewPara>
-                      {result?.personalInfo?.emergencyContactNumber || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Is Active </TitlePara>
-                    {result.personalInfo?.employee?.isActive ? (
-                      <ViewPara style={{ color: "#34A853" }}>Active</ViewPara>
+              <BasicInfoContainer>
+                <BasicInfoDiv>
+                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                    <BasicHeading>Basic Information</BasicHeading>
+                    {isAccount || userType === ROLES.EMPLOYEE ? (
+                      ""
+                    ) : userType === ROLES.MANAGER ? (
+                      <EditButton
+                        style={{ marginRight: "54px" }}
+                        onClick={() =>
+                          Navigate(
+                            `/manager-management/personal-info/${employeeid}/${true}?`
+                          )
+                        }
+                      >
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
+                    ) : userType === ROLES.HR ? (
+                      <EditButton
+                        style={{ marginRight: "54px" }}
+                        onClick={() =>
+                          Navigate(
+                            `/hr-management/personal-info/${employeeid}/${true}?`
+                          )
+                        }
+                      >
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
                     ) : (
-                      <ViewPara style={{ color: "red" }}>Inactive</ViewPara>
+                      <EditButton
+                        onClick={() => setIsEdit(true)
+                        
+                        }
+                      >
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
                     )}
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <BasicHeading style={{ marginTop: "53px" }}>
-                  Basic Information
-                </BasicHeading>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Employee </TitlePara>
-                    <ViewPara>
-                      {result.personalInfo?.employeeId || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Date of Birth</TitlePara>
-                    <ViewPara>
-                      {result.personalInfo?.dob
-                        ? moment(result.personalInfo?.dob).format("DD/MM/YYYY")
-                        : " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>SIN</TitlePara>
-                    <ViewPara>{result.personalInfo?.sin || " - "}</ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Gender</TitlePara>
-                    {result.personalInfo?.gender === 1 ? (
-                      <ViewPara> Male</ViewPara>
-                    ) : result.personalInfo?.gender === 2 ? (
-                      <ViewPara> Female</ViewPara>
-                    ) : result.personalInfo?.gender === 3 ? (
-                      <ViewPara> Non-Binary</ViewPara>
-                    ) : (
-                      <ViewPara> - </ViewPara>
-                    )}
-                  </FlexColumn>
-                </FlexSpaceBetween>
+                  </FlexSpaceBetween>
+                  <BasicDetailsDiv>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Name</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.firstName || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Last Name</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.lastName || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Address</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.address || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Province</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.province || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>City</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.city || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Postal Code</TitlePara>
+                        <ViewPara style={{ textTransform: "uppercase" }}>
+                          {result?.personalInfo?.postalCode || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Home Phone</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.homePhone || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Personal (mobile)</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.mobile || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Email - Personal</TitlePara>
+                        <ViewPara style={{ textTransform: "none" }}>
+                          {result?.personalInfo?.personalEmail || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Email - Work</TitlePara>
+                        <ViewPara style={{ textTransform: "none" }}>
+                          {result?.personalInfo?.employee.email || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Emergency Contact </TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.emergencyContact || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Emergency Contact Number</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.emergencyContactNumber ||
+                            " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Is Active </TitlePara>
+                        {result.personalInfo?.employee?.isActive ? (
+                          <ViewPara style={{ color: "#34A853" }}>
+                            Active
+                          </ViewPara>
+                        ) : (
+                          <ViewPara style={{ color: "red" }}>Inactive</ViewPara>
+                        )}
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <BasicHeading style={{ marginTop: "53px" }}>
+                      Basic Information
+                    </BasicHeading>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Employee </TitlePara>
+                        <ViewPara>
+                          {result.personalInfo?.employeeId || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Date of Birth</TitlePara>
+                        <ViewPara>
+                          {result.personalInfo?.dob
+                            ? moment(result.personalInfo?.dob).format(
+                                "DD/MM/YYYY"
+                              )
+                            : " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>SIN</TitlePara>
+                        <ViewPara>{result.personalInfo?.sin || " - "}</ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Gender</TitlePara>
+                        {result.personalInfo?.gender === 1 ? (
+                          <ViewPara> Male</ViewPara>
+                        ) : result.personalInfo?.gender === 2 ? (
+                          <ViewPara> Female</ViewPara>
+                        ) : result.personalInfo?.gender === 3 ? (
+                          <ViewPara> Non-Binary</ViewPara>
+                        ) : (
+                          <ViewPara> - </ViewPara>
+                        )}
+                      </FlexColumn>
+                    </FlexSpaceBetween>
 
-                {/* band number and is status */}
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Pronouns </TitlePara>
-                    <ViewPara>
-                      {result.personalInfo?.pronouns || " - "}
-                    </ViewPara>
-                  </FlexColumn>
-                  {/* <FlexColumn>
+                    {/* band number and is status */}
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Pronouns </TitlePara>
+                        <ViewPara>
+                          {result.personalInfo?.pronouns || " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                      {/* <FlexColumn>
                     <TitlePara>Band Number</TitlePara>
                     <ViewPara>JHGTRYSG4542DES</ViewPara>
                   </FlexColumn> */}
-                </FlexSpaceBetween>
-              </BasicDetailsDiv>
-            </BasicInfoDiv>
-          </BasicInfoContainer>
-        </MainBodyContainer>
+                    </FlexSpaceBetween>
+                  </BasicDetailsDiv>
+                </BasicInfoDiv>
+              </BasicInfoContainer>
+            </MainBodyContainer>
+          )}
+        </>
       )}
     </>
   );

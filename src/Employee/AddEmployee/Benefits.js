@@ -28,7 +28,7 @@ import {
   Option,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
-const Benefits = () => {
+const Benefits = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
 
@@ -77,9 +77,10 @@ const Benefits = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          if (edit) {
+          if (isEdit) {
             // Navigate(`/organization-admin/employee/list`);
-            Navigate(-1);
+            // Navigate(-1);
+            setIsEdit(false);
             toast.success(result.message);
           } else {
             Navigate(
@@ -183,24 +184,47 @@ const Benefits = () => {
   };
 
   useEffect(() => {
+    GetHeadersData();
     GetBenefits();
     // GetEmployeesBenefits();
   }, []);
+    const [headerData, setHeaderData] = useState([]);
+
+    const GetHeadersData = () => {
+      // setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = `/employee/header-info/${trimid}`;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setHeaderData(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error in fetching Personal info. Please try again.");
+        });
+    };
   return (
     <>
-      <HeaderEmployee>
-        <FlexContaier>
-          <BackButton onClick={() => Navigate(-1)}>
-            {" "}
-            <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-            Back
-          </BackButton>
-          <HeaderTitle>
-            {edit ? "Update  Employee  Benefits " : "Add New Employee"}
-          </HeaderTitle>
-        </FlexContaier>
-        <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-      </HeaderEmployee>
+      {!isEdit && (
+        <HeaderEmployee>
+          <FlexContaier>
+            <BackButton onClick={() => Navigate(-1)}>
+              {" "}
+              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+              Back
+            </BackButton>
+            <HeaderTitle>
+              {isEdit ? "Update  Employee  Benefits " : "Add New Employee"}
+            </HeaderTitle>
+          </FlexContaier>
+          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
+        </HeaderEmployee>
+      )}
       {isLoading ? (
         <div
           style={{
@@ -221,9 +245,16 @@ const Benefits = () => {
         </div>
       ) : (
         <EmployeeBody style={{ height: "75%" }}>
-          {!edit && (
+          {!isEdit && (
             <BodyHeader>
               <BodyHeaderTitle>
+                {[
+                  headerData.personalInfo?.firstName,
+                  headerData.personalInfo?.lastName
+                    ? headerData.personalInfo?.lastName
+                    : "",
+                ].join(" ")}
+                &nbsp;&#62;&nbsp;
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
                   onClick={() =>
@@ -432,7 +463,7 @@ const Benefits = () => {
               </FormContainer>
 
               <FlexContaier style={{ marginTop: "25px" }}>
-                {!edit && (
+                {!isEdit && (
                   <ButtonGrey
                     onClick={() => {
                       Navigate(
@@ -450,7 +481,7 @@ const Benefits = () => {
                     handleSubmit(onSubmit);
                   }}
                 >
-                  {edit ? "Update" : "Continue"}
+                  {isEdit ? "Update" : "Continue"}
                 </ButtonBlue>
               </FlexContaier>
             </form>

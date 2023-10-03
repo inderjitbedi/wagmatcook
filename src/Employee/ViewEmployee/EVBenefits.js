@@ -5,6 +5,7 @@ import { RotatingLines } from "react-loader-spinner";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import moment from "moment";
 import ROLES from "../../constants/roles";
+import Benefits from "../AddEmployee/Benefits";
 
 import {
   MainBodyContainer,
@@ -28,6 +29,7 @@ import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
 const EVBenefits = () => {
   let API_URL = process.env.REACT_APP_API_URL;
+  const [isEdit, setIsEdit] = useState(false);
 
   const Navigate = useNavigate();
   const location = useLocation();
@@ -70,7 +72,7 @@ const EVBenefits = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, []);
+  }, [isEdit]);
 
   return (
     <>
@@ -93,97 +95,103 @@ const EVBenefits = () => {
           />
         </div>
       ) : (
-        <MainBodyContainer>
-          <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <CommenHeader employeeid={employeeid} />
+        <>
+          {isEdit ? (
+            <Benefits isEdit={isEdit} setIsEdit={setIsEdit} />
+          ) : (
+            <MainBodyContainer>
+              <FlexSpaceBetween style={{ alignItems: "center" }}>
+                <CommenHeader employeeid={employeeid} />
 
-            {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
-              " "
-            ) : userType === ROLES.HR ? (
-              <EditButton
-                style={{ marginRight: "54px" }}
-                onClick={() =>
-                  Navigate(`/hr-management/benefits/${employeeid}/${true}?`)
-                }
-              >
-                <ButtonIcon src="/images/icons/Pen 2.svg" />
-                Edit
-              </EditButton>
-            ) : (
-              <EditButton
-                onClick={() =>
-                  Navigate(
-                    `/organization-admin/employee/benefits/${employeeid}/${true}?`
-                  )
-                }
-                style={{ marginRight: "54px" }}
-              >
-                <ButtonIcon src="/images/icons/Pen 2.svg" />
-                Edit
-              </EditButton>
-            )}
-          </FlexSpaceBetween>
-
-          <BasicInfoContainer>
-            <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                <BasicHeading>Employee Benefits</BasicHeading>
+                {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
+                  " "
+                ) : userType === ROLES.HR ? (
+                  <EditButton
+                    style={{ marginRight: "54px" }}
+                    onClick={() => setIsEdit(true)}
+                  >
+                    <ButtonIcon src="/images/icons/Pen 2.svg" />
+                    Edit
+                  </EditButton>
+                ) : (
+                  <EditButton
+                    onClick={() => setIsEdit(true)}
+                    style={{ marginRight: "54px" }}
+                  >
+                    <ButtonIcon src="/images/icons/Pen 2.svg" />
+                    Edit
+                  </EditButton>
+                )}
               </FlexSpaceBetween>
-              <BasicDetailsDiv>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Benefit Name</TitlePara>
-                    <ViewPara>{result.benefit?.benefit.name || "-"}</ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Description </TitlePara>
-                    <ViewPara>
-                      {result.benefit?.benefit.description || "-"}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Start Date</TitlePara>
-                    <ViewPara>
-                      {" "}
-                      {result.benefit?.startDate
-                        ? moment(result.benefit?.startDate).format("DD/MM/YYYY")
-                        : " - "}{" "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>End Date </TitlePara>
-                    <ViewPara>
-                      {result.benefit?.endDate
-                        ? moment(result.benefit?.endDate).format("DD/MM/YYYY")
-                        : " - "}{" "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-                <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Cost</TitlePara>
-                    <ViewPara>
-                      {" "}
-                      {result.benefit?.cost
-                        ? "$" + result.benefit?.cost
-                        : " - "}{" "}
-                    </ViewPara>
-                  </FlexColumn>
-                  <FlexColumn>
-                    <TitlePara>Employee Contribution rate (%)*</TitlePara>
-                    <ViewPara>
-                      {result.benefit?.contributionRate
-                        ? "$" + result.benefit?.contributionRate
-                        : " - "}{" "}
-                    </ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween>
-              </BasicDetailsDiv>
-            </BasicInfoDiv>
-          </BasicInfoContainer>
-        </MainBodyContainer>
+
+              <BasicInfoContainer>
+                <BasicInfoDiv>
+                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                    <BasicHeading>Employee Benefits</BasicHeading>
+                  </FlexSpaceBetween>
+                  <BasicDetailsDiv>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Benefit Name</TitlePara>
+                        <ViewPara>
+                          {result.benefit?.benefit.name || "-"}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Description </TitlePara>
+                        <ViewPara>
+                          {result.benefit?.benefit.description || "-"}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Start Date</TitlePara>
+                        <ViewPara>
+                          {" "}
+                          {result.benefit?.startDate
+                            ? moment(result.benefit?.startDate).format(
+                                "DD/MM/YYYY"
+                              )
+                            : " - "}{" "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>End Date </TitlePara>
+                        <ViewPara>
+                          {result.benefit?.endDate
+                            ? moment(result.benefit?.endDate).format(
+                                "DD/MM/YYYY"
+                              )
+                            : " - "}{" "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn>
+                        <TitlePara>Cost</TitlePara>
+                        <ViewPara>
+                          {" "}
+                          {result.benefit?.cost
+                            ? "$" + result.benefit?.cost
+                            : " - "}{" "}
+                        </ViewPara>
+                      </FlexColumn>
+                      <FlexColumn>
+                        <TitlePara>Employee Contribution rate (%)*</TitlePara>
+                        <ViewPara>
+                          {result.benefit?.contributionRate
+                            ? "$" + result.benefit?.contributionRate
+                            : " - "}{" "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                  </BasicDetailsDiv>
+                </BasicInfoDiv>
+              </BasicInfoContainer>
+            </MainBodyContainer>
+          )}
+        </>
       )}
     </>
   );

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { useNavigate, useParams,useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import InputMask from "react-input-mask";
 import ROLES from "../../constants/roles";
+import { ErrorMessage } from "@hookform/error-message";
 
 import {
   HeaderEmployee,
@@ -39,15 +40,15 @@ import {
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 
-const PersonalInfo = () => {
+const PersonalInfo = ({isEdit,setIsEdit}) => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
   const [getWorkEmail, setWorkEmail] = useState("");
   const { employeeid, edit } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-const location = useLocation();
-const [userType, setUserType] = useState("");
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
     file: "",
@@ -100,6 +101,7 @@ const [userType, setUserType] = useState("");
     formState: { errors },
     setValue,
     reset,
+
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -149,6 +151,8 @@ const [userType, setUserType] = useState("");
       });
   };
   useEffect(() => {
+    GetHeadersData();
+
     GetEmployeesPersonalInfo();
   }, []);
 
@@ -171,10 +175,13 @@ const [userType, setUserType] = useState("");
     })
       .then(({ result, error }) => {
         if (result) {
-          if (edit) {
+          if (isEdit) {
             // Navigate(`/organization-admin/employee/list`);
-            Navigate(-1);
+            // Navigate(-1);
+            setIsEdit(false)
             toast.success(result.message);
+          
+
           } else {
             Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           }
@@ -226,23 +233,61 @@ const [userType, setUserType] = useState("");
     boxSizing: "border-box",
     outline: "none", // Removed outline color
   };
+   const [headerData, setHeaderData] = useState([]);
 
+   const GetHeadersData = () => {
+     // setIsLoading(true);
+     const trimid = employeeid.trim();
+     let url = `/employee/header-info/${trimid}`;
+     httpClient({
+       method: "get",
+       url,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           setHeaderData(result);
+         }
+       })
+       .catch((error) => {
+         console.error("Error:", error);
+         toast.error("Error in fetching Personal info. Please try again.");
+       });
+   };
+  const Province = [
+    "Alberta",
+    "British Columbia",
+    "Manitoba",
+    "New Brunswick",
+    "Newfoundland and Labrador",
+    "Nova Scotia",
+    "Ontario",
+    "Prince Edward Island",
+    "Quebec",
+    "Saskatchewan",
+    "Northwest Territories",
+    "Nunavut",
+    "Yukon",
+  ];
   return (
     <>
-      <HeaderEmployee>
-        <FlexContaier>
-          <BackButton onClick={() => Navigate(-1)}>
-            {" "}
-            <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-            Back
-          </BackButton>
-          <HeaderTitle>
-            {" "}
-            {edit ? "Update  Employee  Personal Info " : "Add New Employee "}
-          </HeaderTitle>
-        </FlexContaier>
-        <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-      </HeaderEmployee>
+      {!isEdit && (
+        <HeaderEmployee>
+          <FlexContaier>
+            <BackButton onClick={() => Navigate(-1)}>
+              {" "}
+              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+              Back
+            </BackButton>
+            <HeaderTitle>
+              {" "}
+              {isEdit
+                ? "Update  Employee  Personal Info "
+                : "Add New Employee "}
+            </HeaderTitle>
+          </FlexContaier>
+          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
+        </HeaderEmployee>
+      )}
 
       {isLoading ? (
         <div
@@ -264,9 +309,17 @@ const [userType, setUserType] = useState("");
         </div>
       ) : (
         <EmployeeBody>
-          {!edit && (
+          {!isEdit && (
             <BodyHeader>
-              <BodyHeaderTitle>Personal Information</BodyHeaderTitle>
+              <BodyHeaderTitle>
+                {[
+                  headerData.personalInfo?.firstName,
+                  headerData.personalInfo?.lastName
+                    ? headerData.personalInfo?.lastName
+                    : "",
+                ].join(" ")}
+                &nbsp;&#62;&nbsp; Personal Information{" "}
+              </BodyHeaderTitle>
             </BodyHeader>
           )}
 
@@ -382,16 +435,29 @@ const [userType, setUserType] = useState("");
                     <InputLabel>
                       Province <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("province", {
+                    <Controller
+                      name={`province`}
+                      control={control}
+                      rules={{
                         required: {
                           value: true,
                           message: "Required",
                         },
-                      })}
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option value="">Select</Option>
+                          {Province.map((data) => (
+                            <Option value={data}>{data}</Option>
+                          ))}
+                        </Select>
+                      )}
                     />
-                    {<Errors> {errors.province?.message} </Errors>}
+                    <ErrorMessage
+                      as={<Errors />}
+                      errors={errors}
+                      name={`province`}
+                    />
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -575,6 +641,7 @@ const [userType, setUserType] = useState("");
                         type="checkbox"
                         {...register(`isActive`, {})}
                         id={`isBebEligible`}
+                        defaultChecked={true}
                       />
                       <InputLabel
                         htmlFor={`isBebEligible`}
@@ -707,7 +774,7 @@ const [userType, setUserType] = useState("");
                   handleSubmit(onSubmit);
                 }}
               >
-                {edit ? "Update" : "Continue"}
+                {isEdit ? "Update" : "Continue"}
               </ButtonBlue>
             </form>
           </BodyMain>
