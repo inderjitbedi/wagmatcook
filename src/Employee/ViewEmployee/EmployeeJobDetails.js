@@ -324,7 +324,7 @@ const EmployeeJobDetails = () => {
                   </FlexSpaceBetween>
 
                   <BasicDetailsDiv>
-                    {result?.positions?.length === 0 ? (
+                    {/* {result?.positions?.length === 0 ? (
                       <NoDocumentfound message="No job details to show" />
                     ) : (
                       <>
@@ -434,7 +434,7 @@ const EmployeeJobDetails = () => {
                                 </ViewPara>
                               </FlexColumn>
                             </FlexSpaceBetween>
-
+                         
                             <FlexSpaceBetween>
                               <FlexColumn>
                                 <TitlePara>Is BEB Eligible?</TitlePara>
@@ -448,46 +448,78 @@ const EmployeeJobDetails = () => {
                                   {data?.isPrimary ? "Yes" : "No"}
                                 </ViewPara>
                               </FlexColumn>
-                              {/* <FlexColumn>
-                            <TitlePara>Status</TitlePara>
-                            {result.isActive ? (
-                              <ViewPara style={{ color: "#34A853" }}>
-                                Active
-                              </ViewPara>
-                            ) : (
-                              <ViewPara style={{ color: "red" }}>
-                                Inactive
-                              </ViewPara>
-                            )}
-                          </FlexColumn> */}
+                             
                             </FlexSpaceBetween>
-                            {/* <FlexSpaceBetween>
-                  <FlexColumn>
-                    <TitlePara>Duration of Employment</TitlePara>
-                    <ViewPara>2 Years 3 months</ViewPara>
-                  </FlexColumn>
-                </FlexSpaceBetween> */}
-                            {/* <FlexSpaceBetween>
-                          <FlexColumn>
-                            <TitlePara>Employee Type</TitlePara>
-                            <ViewPara>
-                              {" "}
-                              {data?.employeeType?.name || " - "}{" "}
-                            </ViewPara>
-                          </FlexColumn>
-                        </FlexSpaceBetween> */}
-                            <FlexSpaceBetween>
+                           
+                               <FlexSpaceBetween>
                               <FlexColumn>
                                 <TitlePara>Jurisdiction</TitlePara>
                                 <ViewPara>
                                   {data?.jurisdiction || " - "}
                                 </ViewPara>
                               </FlexColumn>
+                             
                             </FlexSpaceBetween>
                           </CertificateContainer>
                         ))}
                       </>
-                    )}
+                    )} */}
+                    <VerticalTimeline
+                      layout={"1-column-left"}
+                      lineColor={"#EFF4FA"}
+                      style={{
+                        padding: "0px",
+                        margin: "0px",
+                        maxWidth: "100%",
+                      }}
+                    >
+                      {result?.positions?.map((data) => (
+                        <VerticalTimelineElement
+                          className="vertical-timeline-element--work"
+                          contentStyle={{
+                            outine: "none",
+                            boxShadow: "none",
+                            border: "none",
+                          }}
+                          iconStyle={{
+                            width: "18px",
+                            height: "18px",
+                            background: "#fff",
+                            border: "1.5px solid #8F9BB3",
+                            borderRadius: "50%",
+                            boxShadow: "none",
+                            outine: "none",
+                            marginLeft: "10px",
+                          }}
+                          intersectionObserverProps={{
+                            margin: "0px 0px 0px 0px",
+                          }}
+                          style={{ margin: "0px" }}
+                        >
+                          <TimelineDiv>
+                            <FlexColumn style={{ gap: "4px" }}>
+                              <TitlePara>{data.title || " - "}</TitlePara>
+                              <ViewPara>{data.department?.name || " - "}</ViewPara>
+                            </FlexColumn>
+                            <TitlePara>
+                              From:{" "}
+                              {data.startDate
+                                ? moment(data.startDate).format(
+                                    "DD / MM / YYYY"
+                                  )
+                                : " - "}
+                              <span style={{ marginLeft: "14px" }}>
+                                {" "}
+                                To:
+                                {data.endDate
+                                  ? moment(data.endDate).format("DD/MM/YYYY")
+                                  : " - "}
+                              </span>{" "}
+                            </TitlePara>
+                          </TimelineDiv>
+                        </VerticalTimelineElement>
+                      ))}
+                    </VerticalTimeline>
 
                     {/* add new modal  */}
 

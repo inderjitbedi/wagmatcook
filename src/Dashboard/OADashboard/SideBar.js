@@ -209,10 +209,10 @@ const SideBar = () => {
         </Link>
         <SideBarListContainer>
           <FlexContainer onClick={toggleSubMenu}>
-            <SideBarListTitle style={isOpen ? style : { color: "#5C5C5C" }}>
+            <SideBarListTitle >
               Organization Settings(OA)
             </SideBarListTitle>
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="9"
               height="5"
@@ -230,12 +230,11 @@ const SideBar = () => {
                 d="M8.79723 0.195262C9.06759 0.455612 9.06759 0.877722 8.79723 1.13807L4.98954 4.80474C4.71917 5.06509 4.28083 5.06509 4.01046 4.80474L0.202772 1.13807C-0.0675917 0.877722 -0.0675917 0.455612 0.202772 0.195262C0.473135 -0.0650873 0.91148 -0.0650873 1.18184 0.195262L4.5 3.39052L7.81816 0.195262C8.08852 -0.0650874 8.52686 -0.0650874 8.79723 0.195262Z"
                 fill={isOpen ? "#279AF1" : "#5C5C5C"}
               />
-            </svg>
+            </svg> */}
           </FlexContainer>
           
         </SideBarListContainer>
-        {isOpen && (
-          <DropDownContainer>
+       
             <Link
               style={{ textDecoration: "none" }}
               to="/organization-admin/departments"
@@ -544,8 +543,7 @@ const SideBar = () => {
                 </SideBarListTitle>
               </SideBarListContainer>
             </Link>
-          </DropDownContainer>
-        )}
+        
 
         {/* <Link
           style={{ textDecoration: "none" }}

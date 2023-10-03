@@ -403,7 +403,7 @@ const OALeaves = () => {
   }, [searchValue]);
   return (
     <div>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leaves" />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
 
       <Menu
         sx={{ margin: "0px" }}
