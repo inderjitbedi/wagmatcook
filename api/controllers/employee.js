@@ -528,7 +528,7 @@ const employeeController = {
 
             // const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
-            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).sort({ 'startDate': -1 })
+            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department reportsTo employeeType').sort({ 'startDate': -1 })
 
             // const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
