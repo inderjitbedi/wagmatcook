@@ -131,7 +131,7 @@ const EmployeeTypes = () => {
   } = useForm({
     mode: "all",
     defaultValues: {
-      name:""
+      name: ""
     },
   });
 
@@ -186,7 +186,7 @@ const EmployeeTypes = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset({name:data.name});
+    reset({ name: data.name });
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -229,7 +229,7 @@ const EmployeeTypes = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = API_URLS.deleteEmployeeTypes.replace(":id",Id);
+    let url = API_URLS.deleteEmployeeTypes.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -256,7 +256,7 @@ const EmployeeTypes = () => {
   const HandleUpdate = (data) => {
     let dataCopy = data;
 
-    let url = API_URLS.updateEmployeeTypes.replace(":id",Id);
+    let url = API_URLS.updateEmployeeTypes.replace(":id", Id);
 
     setIsLoading(true);
 

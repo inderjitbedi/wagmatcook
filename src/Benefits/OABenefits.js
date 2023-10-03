@@ -126,7 +126,7 @@ const OABenefits = () => {
 
   const GetBenefits = () => {
     setIsLoading(true);
-    let url = API_URLS.getOaBenefits.replace("searchValue", searchValue );
+    let url = API_URLS.getOaBenefits.replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -186,7 +186,7 @@ const OABenefits = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = API_URLS.deleteBenefits.replace(":id",Id);
+    let url = API_URLS.deleteBenefits.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -214,7 +214,7 @@ const OABenefits = () => {
     console.log("update Data:", data);
     let dataCopy = data;
 
-    let url = API_URLS.updateBenefits.replace(":id",Id);
+    let url = API_URLS.updateBenefits.replace(":id", Id);
 
     setIsLoading(true);
 

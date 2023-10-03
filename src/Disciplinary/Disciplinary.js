@@ -151,7 +151,7 @@ const Disciplinary = () => {
   const HandleDelete = () => {
     setIsLoading(true);
 
-    let url = API_URLS.deleteDisciplinary.replace(":id",Id);
+    let url = API_URLS.deleteDisciplinary.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -289,7 +289,7 @@ const Disciplinary = () => {
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
-    let url = API_URLS.updateDisciplinary.replace(":id",Id);
+    let url = API_URLS.updateDisciplinary.replace(":id", Id);
     if (!upDateData.name) {
       setErrors((prevState) => {
         return {
@@ -813,7 +813,7 @@ const Disciplinary = () => {
                   name="name"
                   onChange={HandleChangesEdit}
                   value={upDateData.name}
-                  // placeholder={name}
+                // placeholder={name}
                 />
                 <Errors>{errors.nameError}</Errors>
                 <InputLabel>
@@ -824,7 +824,7 @@ const Disciplinary = () => {
                   name="description"
                   onChange={HandleChangesEdit}
                   value={upDateData.description}
-                  // placeholder={descriptio}
+                // placeholder={descriptio}
                 />
                 <Errors style={{ display: "inline-block" }}>
                   {errors.descriptionError}

@@ -169,7 +169,7 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength( 500 - value.length);
+      setdescriptionLength(500 - value.length);
 
       if (!value) {
         setErrors({
@@ -194,7 +194,7 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength( 500 - value.length);
+      setdescriptionLength(500 - value.length);
 
       if (!value) {
         setErrors({
@@ -213,7 +213,7 @@ const Departments = () => {
     let url = API_URLS.getDpartments
       .replace("page", page)
       .replace("searchValue", searchValue);
-    
+
     httpClient({
       method: "get",
       url,
@@ -268,7 +268,7 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-    
+
     }
     if (
       formData.name &&
@@ -307,7 +307,7 @@ const Departments = () => {
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
 
-    let url = API_URLS.updateDepartments.replace(":id",Id);
+    let url = API_URLS.updateDepartments.replace(":id", Id);
     if (!upDateData.name) {
       setErrors((prevState) => {
         return {
@@ -326,7 +326,7 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-    
+
     }
     if (
       upDateData.description &&
@@ -357,7 +357,7 @@ const Departments = () => {
             setUpDateData("");
             setErrors("");
             toast.success(result.message); //Departments Updated Successfully");
-            
+
           } else {
             //toast.warn("something went wrong ");
           }
@@ -374,7 +374,7 @@ const Departments = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = API_URLS.deleteDepartments.replace(":id",Id);
+    let url = API_URLS.deleteDepartments.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -793,7 +793,7 @@ const Departments = () => {
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
                   {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
-                  Characters left
+                  characters left
                 </InputPara>
               </ModalUpperMid>
               <ModalBottom>

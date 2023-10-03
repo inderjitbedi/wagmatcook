@@ -67,13 +67,25 @@ const employeeController = {
                 },
                 {
                     $lookup: {
+                        from: 'employeepositionhistories',
+                        localField: '_id',
+                        foreignField: 'employee',
+                        as: 'positions',
+                    },
+                },
+                {
+                    $lookup: {
                         from: 'files',
                         localField: 'personalInfo.photo',
                         foreignField: '_id',
                         as: 'photoInfo',
                     },
                 },
-
+                {
+                    $sort: {
+                        'positions.startDate': -1, // Sort by startDate in descending order
+                    },
+                },
                 {
                     $skip: startIndex,
                 },
@@ -492,7 +504,7 @@ const employeeController = {
             }
 
             const existingPositionIds = updatedPositions.map((code) => code._id);
-            await EmployeePositionHistory.updateMany({ _id: { $nin: existingPositionIds } }, { isDeleted: true }, { new: true });
+            await EmployeePositionHistory.updateMany({ employee: req.params.id, _id: { $nin: existingPositionIds } }, { isDeleted: true }, { new: true });
 
             await User.findByIdAndUpdate(req.params.id, { role: primaryPositions[0].role, isActive });
 
@@ -516,14 +528,12 @@ const employeeController = {
 
             // const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
 
-            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department reportsTo employee employeeType').sort({ 'startDate': -1 })
+            const positions = await EmployeePositionHistory.find({ employee: req.params.id, isDeleted: false }).populate('department reportsTo employeeType').sort({ 'startDate': -1 })
 
             // const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
 
             res.status(200).json({
-                // details,
                 positions,
-                // personalInfo,
                 message: 'Employee job details fetched successfully'
             });
 
@@ -652,7 +662,7 @@ const employeeController = {
             };
 
             const existingCertificateIds = updatedCertificates.map((code) => code._id);
-            await EmployeeCertificates.updateMany({ _id: { $nin: existingCertificateIds } }, { isDeleted: true }, { new: true });
+            await EmployeeCertificates.updateMany({ employee: req.params.id, _id: { $nin: existingCertificateIds } }, { isDeleted: true }, { new: true });
 
 
             res.status(200).json({
