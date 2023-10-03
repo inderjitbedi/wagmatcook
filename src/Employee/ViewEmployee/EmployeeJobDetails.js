@@ -347,7 +347,7 @@ const EmployeeJobDetails = () => {
                           <FlexColumn>
                             <TitlePara>Department</TitlePara>
                             <ViewPara>
-                              {data?.department?.name || " - "}
+                              {data?.department?.name || " - " }
                             </ViewPara>
                           </FlexColumn>
                           <FlexColumn>

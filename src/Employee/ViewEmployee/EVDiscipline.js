@@ -315,7 +315,7 @@ const EVDiscipline = () => {
   }, []);
   const HandleUpdateAction = (data) => {
     setUpdate(true);
-    // setId(data._id);
+    setId(data._id);
     setDetailsLength(500 - data.details?.length);
     reset({
       details: data?.details,

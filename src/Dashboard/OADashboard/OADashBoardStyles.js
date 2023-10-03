@@ -119,6 +119,7 @@ export const DashCardContainer = styled.div`
   gap: 24px;
   flex-wrap: wrap;
   margin-bottom: 40px;
+  /* justify-content: space-between; */
 `;
 export const DashCard = styled.div`
   padding: 16px 25px;

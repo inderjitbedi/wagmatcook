@@ -148,7 +148,7 @@ const OADashBoard = () => {
     navigate("/");
   };
   const [anchorElNotification, setAnchorElNotification] = useState(null);
-  const openMenuNotification = Boolean(anchorEl);
+  const openMenuNotification = Boolean(anchorElNotification);
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
     console.log("working menu for notification");
@@ -301,11 +301,13 @@ const OADashBoard = () => {
                 <SearchInput type="text" placeholder="Search..."></SearchInput>
                 <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
-              <DashNotification
+
+              <div
                 style={{ cursor: "pointer" }}
                 onClick={handleClickMenuNotification}
-                src="/images/icons/Notifications.svg"
-              />
+              >
+                <DashNotification src="/images/icons/Notifications.svg" />
+              </div>
               <div
                 style={{
                   display: "flex",
@@ -652,7 +654,7 @@ const OADashBoard = () => {
               </DashCard>
             )}
           </DashCardContainer>
-          {/* <Menu
+          <Menu
             anchorEl={anchorElNotification}
             open={openMenuNotification}
             onClose={handleCloseMenuNotification}
@@ -670,7 +672,7 @@ const OADashBoard = () => {
                 </NotificationsHeader>
               </NotificationsContainer>
             </MenuItem>
-          </Menu> */}
+          </Menu>
         </>
       )}
     </>
