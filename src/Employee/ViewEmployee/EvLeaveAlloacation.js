@@ -193,7 +193,7 @@ const EvLeaveAlloacation = () => {
         if (result) {
           handleClose();
           reset();
-          toast.success(result.message); //Benefit created successfully.");
+          toast.success(result.message);
           GetLeaveAlloaction();
         } else {
           //toast.warn("something went wrong ");
@@ -319,7 +319,7 @@ const EvLeaveAlloacation = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-           <CommenHeader employeeid={employeeid} />
+            <CommenHeader employeeid={employeeid} />
           </FlexSpaceBetween>
           <LeaveDiv>
             Leaves Alloaction

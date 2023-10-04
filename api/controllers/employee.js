@@ -1180,13 +1180,26 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
-            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate({
-                path: 'responder',
-                populate: {
-                    path: 'personalInfo',
-                    model: 'EmployeePersonalInfo', // Replace with the actual model name
-                },
-            }, 'leaveType')
+            const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false })
+                .populate([{
+                    path: 'employee',
+                    populate: {
+                        path: 'personalInfo',
+                        populate: {
+                            path: 'photo'
+                        }
+                    }
+                }, {
+                    path: 'responder',
+                    populate: {
+                        path: 'personalInfo',
+                        populate: {
+                            path: 'photo'
+                        }
+                    }
+                }, {
+                    path: 'leaveType'
+                }])
             res.status(200).json({
                 request,
                 message: 'Employee leave request fetched successfully'
@@ -1259,7 +1272,8 @@ const employeeController = {
                 burnedHours += leave.hours
             }
 
-
+            console.log(allocation.leaveType.name, allocation?.totalAllocation);
+            console.log(requestedHours, burnedHours);
             if (req.body.isApproved && (requestedHours > (allocation?.totalAllocation - burnedHours))) {
                 return res.status(400).json({ message: 'Insufficent balance' });
             }
@@ -1285,7 +1299,7 @@ const employeeController = {
             await notification.save();
 
             res.status(200).json({
-                message: `Employee leave request ${type.toLowerCase()} successfully`
+                message: `Employee leave request ${req.body.isApproved ? 'approved' : 'rejected'} successfully`
             });
         } catch (error) {
             console.error("employeeController:update:error -", error);

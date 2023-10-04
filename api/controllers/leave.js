@@ -12,13 +12,32 @@ const leaveController = {
 
             let filters = { isDeleted: false, responder: req.user._id };
 
-            if (req.query.searchKey) {
-                filters.$or = [
-                    { name: { $regex: req.query.searchKey, $options: 'i' } },
-                    { description: { $regex: req.query.searchKey, $options: 'i' } }
-                ];
-            }
-            const leaves = await EmployeeLeaveHistory.find(filters)
+            // if (req.query.searchKey) {
+            //     filters.$or = [
+            //         { name: { $regex: req.query.searchKey, $options: 'i' } },
+            //         { description: { $regex: req.query.searchKey, $options: 'i' } }
+            //     ];
+            // }
+            const leaves = await EmployeeLeaveHistory.find(filters).populate([{
+                path: 'employee',
+                populate: {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo'
+                    }
+                }
+            },
+            {
+                path: 'responder',
+                populate: {
+                    path: 'personalInfo',
+                    // populate: {
+                    //     path: 'photo'
+                    // }
+                }
+            }, {
+                path: 'leaveType'
+            }])
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });

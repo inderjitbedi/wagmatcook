@@ -97,14 +97,14 @@ const EmployeeTypes = () => {
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
   const [searchValue, setSearchValue] = useState("");
- 
+
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
- 
+
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -207,7 +207,7 @@ const EmployeeTypes = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success(result.message); //Benefit created successfully.");
+          toast.success(result.message);
           GetEmployeeTypes();
         } else {
           //toast.warn("something went wrong ");

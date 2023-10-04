@@ -285,7 +285,7 @@ const EVLeaveHistory = () => {
       to: new Date(data.to).toISOString().split("T")[0],
       hours: data.hours,
       requesterComment: data.requesterComment,
-      approver: data.approver?._id,
+      responder: data.responder?._id,
       status: data.status,
     });
     setIsSatus(data.status);
@@ -384,7 +384,7 @@ const EVLeaveHistory = () => {
           handleClose();
           reset();
           GetLeaveHistory();
-          toast.success(result.message); //Benefit created successfully.");
+          toast.success(result.message);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -674,7 +674,7 @@ const EVLeaveHistory = () => {
                       </TabelDiv>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.approver?.name || " - "}
+                      {data.responder?.name || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.from
@@ -927,7 +927,7 @@ const EVLeaveHistory = () => {
                             Send Leave Request to <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Controller
-                            name="approver"
+                            name="responder"
                             control={control}
                             rules={{
                               required: {
@@ -944,7 +944,7 @@ const EVLeaveHistory = () => {
                               </Select>
                             )}
                           />
-                          {<Errors>{errors.approver?.message}</Errors>}
+                          {<Errors>{errors.responder?.message}</Errors>}
                         </FlexColumnForm>
                       </FlexContaierForm>
                       {!update ? (

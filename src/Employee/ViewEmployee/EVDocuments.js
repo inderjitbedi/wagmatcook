@@ -125,7 +125,7 @@ const EVDocuments = () => {
           if (result) {
             handleClose();
             setFile("");
-            toast.success(result.message); //Benefit created successfully.");
+            toast.success(result.message);
             GetDocuments();
           } else {
             //toast.warn("something went wrong ");
@@ -197,16 +197,16 @@ const EVDocuments = () => {
         drop.current.removeEventListener("drop", handleDrop);
       };
     }
-     if (location.pathname.indexOf("manager") > -1) {
-       setUserType(ROLES.MANAGER);
-     } else if (location.pathname.indexOf("hr") > -1) {
-       setUserType(ROLES.HR);
-     } else if (location.pathname.indexOf("user") > -1) {
-       setUserType(ROLES.EMPLOYEE);
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
     }
-      if (location.pathname.indexOf("account") > -1) {
-        setIsAccount(true);
-      }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
@@ -328,7 +328,7 @@ const EVDocuments = () => {
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
-               {isAccount ? " " : <ButtonBlue onClick={() => handleOpen()}>
+                {isAccount ? " " : <ButtonBlue onClick={() => handleOpen()}>
                   New Document
                 </ButtonBlue>}
               </FlexSpaceBetween>
@@ -352,8 +352,8 @@ const EVDocuments = () => {
                             getFileType(data?.file) === "pdf"
                               ? "/images/icons/FilePdf.svg"
                               : getFileType(data?.file) === "doc"
-                              ? "/images/icons/FileText.svg"
-                              : "/images/icons/File3.svg"
+                                ? "/images/icons/FileText.svg"
+                                : "/images/icons/File3.svg"
                           }
                         />
                         <ViewPara>{data.file?.originalName}</ViewPara>

@@ -57,7 +57,7 @@ const OABenefits = () => {
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
- 
+
   // add new modal
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -73,7 +73,7 @@ const OABenefits = () => {
   const HandleCloseDelete = () => setOpenDelete(false);
   const [detailsLength, setDetailsLength] = useState(500);
 
- const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -165,7 +165,7 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success(result.message); //Benefit created successfully.");
+          toast.success(result.message);
           GetBenefits();
         } else {
           //toast.warn("something went wrong ");
@@ -292,30 +292,30 @@ const OABenefits = () => {
     clearErrors();
     setDetailsLength(500);
   };
- const onDragEnd = (result) => {
-   if (!result.destination) return;
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
-  //  const reorderedData = Array.from(leaves);
-  //  const [movedItem] = reorderedData.splice(result.source.index, 1);
-  //  reorderedData.splice(result.destination.index, 0, movedItem);
-  //  console.log("drag is working ");
-  //  setLeaves(reorderedData);
-  //  HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
- };
+    //  const reorderedData = Array.from(leaves);
+    //  const [movedItem] = reorderedData.splice(result.source.index, 1);
+    //  reorderedData.splice(result.destination.index, 0, movedItem);
+    //  console.log("drag is working ");
+    //  setLeaves(reorderedData);
+    //  HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+  };
 
- const getItemStyle = (isDragging, draggableStyle) => ({
-   // some basic styles to make the items look a bit nicer
-   userSelect: "none",
-   margin: "0 10px 0 0 ",
-   background: isDragging ? "#279AF1" : "#fff",
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 10px 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
 
-   // styles we need to apply on draggables
-   ...draggableStyle,
- });
- const getListStyle = (isDraggingOver) => ({
-   background: isDraggingOver ? "#fff" : "#fff",
-   padding: "2px",
- });
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Benefits"} />
