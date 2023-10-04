@@ -4,6 +4,7 @@ const notificationType = require("../enum/notificationType");
 const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const LeaveType = require("../models/leaveType");
+const Notifications = require("../models/notification");
 const User = require("../models/user");
 
 const leaveController = {
@@ -35,9 +36,6 @@ const leaveController = {
                 path: 'responder',
                 populate: {
                     path: 'personalInfo',
-                    // populate: {
-                    //     path: 'photo'
-                    // }
                 }
             }, {
                 path: 'leaveType'
