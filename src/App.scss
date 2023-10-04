@@ -628,3 +628,26 @@ input[type="checkbox"] {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
+.MuiPaper-root.MuiPaper-elevation{
+  background-color: #fff;
+}
+.css-6hp17o-MuiList-root-MuiMenu-list {
+    padding-top: 0px !important;
+      padding-bottom: 0px !important;
+
+}
+.css-106c1u2-MuiBadge-badge{
+  min-width: 12px !important;
+  width: 12px !important;
+    height: 12px !important;
+    background-color: #279AF1 !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    font-size: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    top:2px !important;
+    right: 3px !important;
+
+}

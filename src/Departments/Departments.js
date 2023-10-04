@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
 import ReactPaginate from "react-paginate";
 import API_URLS from "../constants/apiUrls";
+import CommenDashHeader from "../Dashboard/CommenDashHeader";
 
 import {
   DashHeader,
@@ -125,20 +126,16 @@ const Departments = () => {
   ];
   // const TempData = [1, 2, 3, 4, 5];
   const [searchValue, setSearchValue] = useState("");
-  const [delayedSearchValue, setDelayedSearchValue] = useState("");
-  const delayDuration = 1000; // Set the delay duration in milliseconds
-  let searchTimer;
+  
+
+ const HandleSearchCahnge = (data) => {
+   setSearchValue(data);
+ };
   const [departmentData, setDepartmentData] = useState([]);
   const [Id, setId] = useState("");
 
   const [page, setPage] = useState(1);
-  const HandleSearchCahnge = (e) => {
-    setSearchValue(e.target.value);
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      setDelayedSearchValue(e.target.value);
-    }, delayDuration);
-  };
+ 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -236,12 +233,9 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-    // let isLoggedIn = localStorage.getItem("isLoggedIn");
-    // if (!isLoggedIn) {
-    //   Navigate("/");
-    // } else {
+   
     GetDepartments();
-    // }
+  
   }, [page]);
 
 
@@ -422,89 +416,8 @@ const Departments = () => {
   return (
     <div style={{ height: "100%" }}>
       <>
-        <DashHeader>
-          <DashHeaderDepartment>
-            <DashHeaderTitle>Departments</DashHeaderTitle>
-          </DashHeaderDepartment>
+        <CommenDashHeader onSearch={HandleSearchCahnge} text="Departments" />
 
-          <DepartmentIconContainer>
-            <DashHeaderSearch>
-              <SearchBox>
-                <SearchInput
-                  type="text"
-                  placeholder="Search..."
-                  onChange={HandleSearchCahnge}
-                  value={searchValue}
-                ></SearchInput>
-                <SearchIcon src="/images/icons/searchIcon.svg" />
-              </SearchBox>
-            </DashHeaderSearch>
-            {/* <DepartmentIconImg src="/images/icons/Messages.svg" /> */}
-            <DepartmentIconImg src="/images/icons/Notifications.svg" />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                cursor: "pointer",
-                gap: "5px",
-              }}
-              onClick={(event) => handleClickMenu(event)}
-            >
-              {" "}
-              <DepartmentIconImg src="/images/icons/Logout.svg" />
-              <img
-                src="/images/icons/arrowdown.svg"
-                style={{
-                  width: "5px",
-                  height: "9px",
-                  transform: anchorEl ? "rotate(180deg)" : undefined,
-                }}
-              />
-            </div>
-          </DepartmentIconContainer>
-        </DashHeader>
-        <Menu
-          sx={{ margin: "0px" }}
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <MenuItem
-            style={{
-              color: "#222B45",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: "20px",
-            }}
-          >
-            Settings
-          </MenuItem>
-          <MenuItem
-            onClick={HandleLogout}
-            style={{
-              color: "#EA4335",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: "20px",
-            }}
-          >
-            Logout
-          </MenuItem>
-        </Menu>
         <DepartmentFilterContainer>
           {/* <DepartmentFilterdiv>
             {FilterData.map((data) => (

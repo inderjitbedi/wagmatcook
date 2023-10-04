@@ -181,7 +181,7 @@ const CertificatesInfo = () => {
 
       httpClient({
         method: "post",
-        url: API_URLS.uploadDocuments.replace(":type",type),
+        url: API_URLS.uploadDocuments.replace(":type", type),
         data: binary, // Use 'data' to send the FormData
         headers: {
           "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
@@ -271,11 +271,32 @@ const CertificatesInfo = () => {
       });
   };
   useEffect(() => {
+    GetHeadersData();
     GetEmployeesCertificates();
     if (!getValues("certificates").length) {
       append(initialPosition);
     }
   }, []);
+  const [headerData, setHeaderData] = useState([]);
+
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       <HeaderEmployee>
@@ -314,6 +335,13 @@ const CertificatesInfo = () => {
           {!edit && (
             <BodyHeader>
               <BodyHeaderTitle>
+                {[
+                  headerData.personalInfo?.firstName,
+                  headerData.personalInfo?.lastName
+                    ? headerData.personalInfo?.lastName
+                    : "",
+                ].join(" ")}
+                &nbsp;&#62;&nbsp;
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
                   onClick={() =>
@@ -503,10 +531,10 @@ const CertificatesInfo = () => {
                       <input
                         type="file"
                         {...register(`certificates.${index}.file`, {
-                          required: {
-                            value: edit ? false : true,
-                            message: "Required",
-                          },
+                          // required: {
+                          //   value: edit ? false : true,
+                          //   message: "Required",
+                          // },
 
                           onChange: (e) => {
                             handleFileChange(e, index);

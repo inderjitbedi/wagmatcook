@@ -105,7 +105,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/hr-management/employee-list"
         >
@@ -139,7 +139,7 @@ const HRSideBar = () => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link style={{ textDecoration: "none" }} to="/hr-management/leaves">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -193,7 +193,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link style={{ textDecoration: "none" }} to="/hr-management/events">
+        {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -333,7 +333,7 @@ const HRSideBar = () => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
       </SideBarList>
     </>
   );

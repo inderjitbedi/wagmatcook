@@ -35,7 +35,7 @@ import {
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 
-const JobDetails = () => {
+const JobDetails = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const [departmentData, setDepartmentData] = useState([]);
@@ -155,6 +155,7 @@ const JobDetails = () => {
 
   useEffect(() => {
     GetDepartments();
+    GetHeadersData();
     GetEmployeeTypes();
     GetReportsToList();
     // GetEmployeesJobDetails();
@@ -178,9 +179,10 @@ const JobDetails = () => {
       .then(({ result, error }) => {
         if (result) {
           // console.log(result);
-          if (edit) {
+          if (isEdit) {
             // Navigate(`/organization-admin/employee/list`);
-            Navigate(-1);
+            // Navigate(-1);
+            setIsEdit(false);
             toast.success(result.message);
           } else {
             Navigate(`/organization-admin/employee/benefits/${employeeid}`);
@@ -280,23 +282,44 @@ const JobDetails = () => {
     }
     // console.log("form submmited", data);
   };
+   const [headerData, setHeaderData] = useState([]);
 
+   const GetHeadersData = () => {
+     // setIsLoading(true);
+     const trimid = employeeid.trim();
+     let url = `/employee/header-info/${trimid}`;
+     httpClient({
+       method: "get",
+       url,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           setHeaderData(result);
+         }
+       })
+       .catch((error) => {
+         console.error("Error:", error);
+         toast.error("Error in fetching Personal info. Please try again.");
+       });
+   };
   return (
     <>
-      <HeaderEmployee>
-        <FlexContaier>
-          <BackButton onClick={() => Navigate(-1)}>
-            {" "}
-            <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-            Back
-          </BackButton>
-          <HeaderTitle>
-            {" "}
-            {edit ? "Update Employee Job Details " : "Add New Employee "}
-          </HeaderTitle>
-        </FlexContaier>
-        <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-      </HeaderEmployee>
+      {!isEdit && (
+        <HeaderEmployee>
+          <FlexContaier>
+            <BackButton onClick={() => Navigate(-1)}>
+              {" "}
+              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+              Back
+            </BackButton>
+            <HeaderTitle>
+              {" "}
+              {isEdit ? "Update Employee Job Details " : "Add New Employee "}
+            </HeaderTitle>
+          </FlexContaier>
+          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
+        </HeaderEmployee>
+      )}
       {isLoading ? (
         <div
           style={{
@@ -317,9 +340,16 @@ const JobDetails = () => {
         </div>
       ) : (
         <EmployeeBody>
-          {!edit && (
+          {!isEdit && (
             <BodyHeader>
               <BodyHeaderTitle>
+                {[
+                  headerData.personalInfo?.firstName,
+                  headerData.personalInfo?.lastName
+                    ? headerData.personalInfo?.lastName
+                    : "",
+                ].join(" ")}
+                &nbsp;&#62;&nbsp;
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
                   onClick={() =>
@@ -342,7 +372,10 @@ const JobDetails = () => {
             </BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
               {fields.map((field, index) => (
-                <FormContainer key={field.id}>
+                <FormContainer
+                  key={field.id}
+                  style={isEdit ? { width: "80%" } : { width: "60%" }}
+                >
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
@@ -391,8 +424,8 @@ const JobDetails = () => {
                           <Select {...field}>
                             <Option>Select</Option>
                             <Option value="EMPLOYEE"> User </Option>
-                            <Option value="HUMAN_RESOURCE"> HR </Option>
-                            <Option value="MANAGER"> Manager </Option>
+                            <Option value="MANAGER"> Manager</Option>
+                            <Option value="HR">HR </Option>
                           </Select>
                         )}
                       />
@@ -747,7 +780,7 @@ const JobDetails = () => {
                     </FlexColumnForm>
                   </FlexContaierForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm style={{ width: "50%" }}>
+                    <FlexColumnForm>
                       <InputLabel>
                         Hours per week <InputSpan>*</InputSpan>
                       </InputLabel>
@@ -775,6 +808,34 @@ const JobDetails = () => {
                         as={<Errors />}
                         errors={errors}
                         name={`positions.${index}.hoursPerWeek`}
+                      />
+                    </FlexColumnForm>
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Jurisdiction
+                        <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Controller
+                        name={`positions.${index}.jurisdiction`}
+                        control={control}
+                        rules={{
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        }}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Option>Select</Option>
+                            <Option value="Federal">Federal</Option>
+                            <Option value="Provincial">Provincial</Option>
+                          </Select>
+                        )}
+                      />
+                      <ErrorMessage
+                        as={<Errors />}
+                        errors={errors}
+                        name={`positions.${index}.jurisdiction`}
                       />
                     </FlexColumnForm>
                   </FlexContaierForm>
@@ -856,11 +917,11 @@ const JobDetails = () => {
               </FlexContaierForm> */}
 
               <FlexContaier style={{ marginTop: "25px" }}>
-                {!edit && (
+                {!isEdit && (
                   <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
                 )}
                 <ButtonBlue type="submit">
-                  {edit ? "Update" : "Continue"}
+                  {isEdit ? "Update" : "Continue"}
                 </ButtonBlue>
               </FlexContaier>
             </form>

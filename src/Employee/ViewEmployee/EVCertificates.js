@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link,useLocation } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import NoDocumentfound from "../NoDocumentfound";
 import moment from "moment";
 import ROLES from "../../constants/roles";
@@ -44,6 +44,8 @@ import {
   LightPara,
   File,
   IconsEmployee,
+  IconContainer,
+  Icons,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -70,7 +72,6 @@ const EVCertificates = () => {
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
 
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -79,6 +80,31 @@ const EVCertificates = () => {
     reset({});
     clearErrors();
     setOpen(false);
+    setFile(null);
+  };
+  const [Id, setId] = useState("");
+
+  const [update, setUpdate] = useState(false);
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    reset({
+      title: data.title,
+      provider: data.provider,
+      file: data.file._id,
+      completionDate: new Date(data.completionDate).toISOString().split("T")[0],
+      expiryDate: data.expiryDate
+        ? new Date(data.expiryDate).toISOString().split("T")[0]
+        : null,
+    });
+    handleOpen();
+    setFile(data.file);
+  };
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
+    handleOpen();
+    reset({});
+    clearErrors();
     setFile(null);
   };
   const [result, setResult] = useState([]);
@@ -112,16 +138,20 @@ const EVCertificates = () => {
       }
       return true;
     }
-    if (isEmptyObject(errors)) {
+    if (isEmptyObject(errors) && !update) {
       console.log(file);
+
       if (file) {
         data.file = file._id;
+      } else {
+        data.file = null;
       }
-
       AddNewCertificates(data);
+    } else if (update) {
     }
     console.log("form submmited :", data);
   };
+
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -249,16 +279,16 @@ const EVCertificates = () => {
   console.log(result);
   useEffect(() => {
     GetEmployeesCertificates();
-     if (location.pathname.indexOf("manager") > -1) {
-       setUserType(ROLES.MANAGER);
-     } else if (location.pathname.indexOf("hr") > -1) {
-       setUserType(ROLES.HR);
-     } else if (location.pathname.indexOf("user") > -1) {
-       setUserType(ROLES.EMPLOYEE);
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
     }
-     if (location.pathname.indexOf("account") > -1) {
-       setIsAccount(true);
-     }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
 
   return (
@@ -286,7 +316,7 @@ const EVCertificates = () => {
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <CommenHeader employeeid={employeeid} />
 
-            {userType === ROLES.EMPLOYEE || isAccount ? (
+            {/* {userType === ROLES.EMPLOYEE || isAccount ? (
               ""
             ) : userType === ROLES.MANAGER ? (
               <EditButton
@@ -324,7 +354,7 @@ const EVCertificates = () => {
                 <ButtonIcon src="/images/icons/Pen 2.svg" />
                 Edit
               </EditButton>
-            )}
+            )} */}
           </FlexSpaceBetween>
 
           <BasicInfoContainer>
@@ -334,11 +364,17 @@ const EVCertificates = () => {
                 {userType === ROLES.EMPLOYEE || isAccount ? (
                   ""
                 ) : userType === ROLES.MANAGER ? (
-                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                  <AddNewButton onClick={HandleOpenAddNewAction}>
+                    Add New
+                  </AddNewButton>
                 ) : userType === ROLES.HR ? (
-                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                  <AddNewButton onClick={HandleOpenAddNewAction}>
+                    Add New
+                  </AddNewButton>
                 ) : (
-                  <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                  <AddNewButton onClick={HandleOpenAddNewAction}>
+                    Add New
+                  </AddNewButton>
                 )}
               </FlexSpaceBetween>
               {/* add new modal  */}
@@ -382,7 +418,10 @@ const EVCertificates = () => {
                           <FlexContaierForm>
                             <FlexColumnForm>
                               <InputLabel>
-                                Certificate Title <InputSpan>*</InputSpan>
+                                {update
+                                  ? " Update Certificate"
+                                  : "Certificate Title "}
+                                <InputSpan>*</InputSpan>
                               </InputLabel>
                               <Input
                                 type="text"
@@ -512,10 +551,10 @@ const EVCertificates = () => {
                             style={{ width: "50%" }}
                             type="file"
                             {...register(`file`, {
-                              required: {
-                                value: true,
-                                message: "Required",
-                              },
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
                               onChange: (e) => {
                                 handleFileChange(e);
                               },
@@ -561,7 +600,9 @@ const EVCertificates = () => {
                           {errors.file && (
                             <Errors> {errors.file?.message} </Errors>
                           )}
-                          <ButtonBlue type="submit">Submit</ButtonBlue>
+                          <ButtonBlue type="submit">
+                            {update ? " Update" : "Submit"}
+                          </ButtonBlue>
                         </ModalFormContainer>
                       </form>
                     </>
@@ -604,23 +645,49 @@ const EVCertificates = () => {
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
-                        {data.file && (
-                          <Link
-                            to={API_URL + data.file?.path}
-                            target="_blank"
-                            download
-                            style={{ textDecoration: "none" }}
-                          >
-                            <File>
-                              {" "}
-                              <IconsEmployee src="/images/icons/File Text.svg" />{" "}
-                              {data.file?.originalName?.length <= 38
-                                ? data.file?.originalName
-                                : data.file?.originalName.substring(0, 38) +
-                                    "..." || " - "}
-                            </File>
-                          </Link>
-                        )}
+                        <FlexSpaceBetween>
+                          {data.file && (
+                            <Link
+                              to={API_URL + data.file?.path}
+                              target="_blank"
+                              download
+                              style={{ textDecoration: "none" }}
+                            >
+                              <File>
+                                {" "}
+                                <IconsEmployee src="/images/icons/File Text.svg" />{" "}
+                                {data.file?.originalName?.length <= 38
+                                  ? data.file?.originalName
+                                  : data.file?.originalName.substring(0, 38) +
+                                      "..." || " - "}
+                              </File>
+                            </Link>
+                          )}
+                          <div></div>
+                          <IconContainer style={{ alignSelf: "flex-end" }}>
+                            {userType === ROLES.EMPLOYEE || isAccount ? (
+                              ""
+                            ) : (
+                              <Icons
+                                onClick={() => HandleUpdateAction(data)}
+                                src="/images/icons/Pendown.svg"
+                              />
+                            )}
+                            {/* {userType === ROLES.EMPLOYEE ||
+                            userType === ROLES.MANAGER ||
+                            isAccount ? (
+                              ""
+                            ) : (
+                              <Icons
+                                onClick={() => {
+                                  setId(data._id);
+                                  // HandleOpenDelete();
+                                }}
+                                src="/images/icons/Trash-2.svg"
+                              />
+                            )} */}
+                          </IconContainer>
+                        </FlexSpaceBetween>
                       </CertificateContainer>
                     ))}
                   </>

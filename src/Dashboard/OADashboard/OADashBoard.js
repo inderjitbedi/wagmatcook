@@ -8,7 +8,8 @@ import OADashBoardNext from "./OADashBoardNext.js";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
-
+import Badge from "@mui/material/Badge";
+import SettingsModal from "../../Modals/SettingsModal.js";
 import {
   Dashboard,
   DashNav,
@@ -40,6 +41,13 @@ import {
   FlexNotificationContainer,
   NotificationHeading,
   NotificationIcon,
+  NotificationList,
+  NotificationUserImg,
+  NotificationListText,
+  NotificationListTextLight,
+  NotificationFlexCol,
+  NotificationSelect,
+  NotificationOption,
 } from "./OADashBoardStyles";
 import {
   SectionCard,
@@ -74,6 +82,9 @@ import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 const OADashBoard = () => {
   let API_URL = process.env.REACT_APP_API_URL;
+const [openSettings, setOpenSettings] = React.useState(false);
+const HandleOpenSettings = () => setOpenSettings(true);
+const HandleCloseSettings = () => setOpenSettings(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orgData, setOrgData] = useState();
@@ -301,11 +312,14 @@ const OADashBoard = () => {
                 <SearchInput type="text" placeholder="Search..."></SearchInput>
                 <SearchIcon src="/images/icons/searchIcon.svg" />
               </SearchBox>
-              <DashNotification
-                style={{ cursor: "pointer" }}
-                onClick={handleClickMenuNotification}
-                src="/images/icons/Notifications.svg"
-              />
+              <Badge badgeContent={8} color="primary" size="small">
+                <div
+                  style={{ cursor: "pointer" }}
+                  onClick={handleClickMenuNotification}
+                >
+                  <DashNotification src="/images/icons/Notifications.svg" />
+                </div>
+              </Badge>
               <div
                 style={{
                   display: "flex",
@@ -353,6 +367,7 @@ const OADashBoard = () => {
                 fontWeight: 600,
                 lineHeight: "20px",
               }}
+              onClick={HandleOpenSettings}
             >
               Settings
             </MenuItem>
@@ -652,25 +667,68 @@ const OADashBoard = () => {
               </DashCard>
             )}
           </DashCardContainer>
-          {/* <Menu
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
             anchorEl={anchorElNotification}
             open={openMenuNotification}
             onClose={handleCloseMenuNotification}
           >
-            <MenuItem>
-              <NotificationsContainer>
-                <NotificationsHeader>
-                  <FlexNotificationContainer>
-                    <NotificationHeading>Notifications</NotificationHeading>
-                  </FlexNotificationContainer>
-                  <FlexNotificationContainer>
-                    <NotificationHeading>Mark all as read</NotificationHeading>
-                    <NotificationIcon src="/svg/outline.svg" />
-                  </FlexNotificationContainer>
-                </NotificationsHeader>
-              </NotificationsContainer>
-            </MenuItem>
-          </Menu> */}
+            <NotificationsContainer>
+              <NotificationsHeader>
+                <FlexNotificationContainer>
+                  <NotificationHeading>Notifications</NotificationHeading>
+                  <NotificationSelect>
+                    <NotificationOption>All</NotificationOption>
+                    <NotificationOption>Last Week</NotificationOption>
+                    <NotificationOption>Last Month</NotificationOption>
+                    <NotificationOption>Last 24 Hrs</NotificationOption>
+                  </NotificationSelect>
+                </FlexNotificationContainer>
+                <FlexNotificationContainer>
+                  <NotificationHeading>Mark all as read</NotificationHeading>
+                  <NotificationIcon src="/svg/outline.svg" />
+                </FlexNotificationContainer>
+              </NotificationsHeader>
+              <NotificationList>
+                <NotificationUserImg src="/images/User.jpg" />
+                <NotificationFlexCol>
+                  <NotificationListText>
+                    Ray Arnold request a Lieu Time, 26 Sep,2023
+                  </NotificationListText>
+                  <NotificationListTextLight>
+                    Yesterday at 11:42 PM
+                  </NotificationListTextLight>
+                </NotificationFlexCol>
+              </NotificationList>
+              <NotificationList>
+                <NotificationUserImg src="/images/User.jpg" />
+                <NotificationFlexCol>
+                  <NotificationListText>
+                    Ray Arnold request a Lieu Time, 26 Sep,2023
+                  </NotificationListText>
+                  <NotificationListTextLight>
+                    Yesterday at 11:42 PM
+                  </NotificationListTextLight>
+                </NotificationFlexCol>
+              </NotificationList>
+              <NotificationList>
+                <NotificationUserImg src="/images/User.jpg" />
+                <NotificationFlexCol>
+                  <NotificationListText>
+                    Ray Arnold request a Lieu Time, 26 Sep,2023
+                  </NotificationListText>
+                  <NotificationListTextLight>
+                    Yesterday at 11:42 PM
+                  </NotificationListTextLight>
+                </NotificationFlexCol>
+              </NotificationList>
+            </NotificationsContainer>
+          </Menu>
+          <SettingsModal
+            openSettings={openSettings}
+            HandleCloseSettings={HandleCloseSettings}
+          />
         </>
       )}
     </>

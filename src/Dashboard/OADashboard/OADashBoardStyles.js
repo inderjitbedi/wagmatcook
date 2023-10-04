@@ -119,6 +119,8 @@ export const DashCardContainer = styled.div`
   gap: 24px;
   flex-wrap: wrap;
   margin-bottom: 40px;
+  /* justify-content: space-between; */
+  align-items: baseline;
 `;
 export const DashCard = styled.div`
   padding: 16px 25px;
@@ -165,10 +167,10 @@ export const DashCardPara = styled.p`
 export const DashCardIcons = styled.img``;
 export const DashCardPri = styled.div``;
 export const Pagination = styled.div`
-display:flex;
-gap:8px;
-align-items: center;
-`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
 export const PaginationButton = styled.button`
   color: #222b45;
   text-align: center;
@@ -180,16 +182,16 @@ export const PaginationButton = styled.button`
   padding: 10px 19.5px;
   border-radius: 6px;
   background: #e9e9ee;
-  border:none;
+  border: none;
   cursor: pointer;
 `;
 export const NotificationsContainer = styled.div`
   width: 444px;
-  height: 311px;
-  border: 1px solid #e3e3e3;
+  box-sizing: border-box;
+  max-height: 311px;
+  border-bottom: 1px solid #e3e3e3;
   background: #fff;
   overflow-y: scroll;
-  
 `;
 export const NotificationsHeader = styled.div`
   width: 100%;
@@ -197,11 +199,13 @@ export const NotificationsHeader = styled.div`
   padding: 12px 16px;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
   justify-content: space-between;
 `;
 export const FlexNotificationContainer = styled.div`
-display: flex;
-gap:8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
 `;
 export const NotificationHeading = styled.h1`
   color: #222b45;
@@ -215,4 +219,63 @@ export const NotificationHeading = styled.h1`
 export const NotificationIcon = styled.img`
   width: 16px;
   height: 16px;
+`;
+export const NotificationList = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e3e3e3;
+  width: 100%;
+  box-sizing: border-box;
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+export const NotificationUserImg = styled.img`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`;
+export const NotificationListText = styled.p`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0px;
+`;
+export const NotificationListTextLight = styled.p`
+  color: #a5acb8;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0px;
+`;
+export const NotificationFlexCol = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+`;
+export const NotificationSelect = styled.select`
+  color:  #9ea0aa;
+ border: none;
+ background: transparent;
+ outline: none;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+`;
+export const NotificationOption = styled.option`
+  color: #9ea0aa;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
 `;

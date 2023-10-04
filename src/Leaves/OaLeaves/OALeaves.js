@@ -17,7 +17,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useForm, Controller } from "react-hook-form";
-
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -173,17 +173,12 @@ const OALeaves = () => {
   };
   const FilterData = ["All", "Vacation", "Sick", "Time in Lieu", "Other"];
   const [searchValue, setSearchValue] = useState("");
-  const [delayedSearchValue, setDelayedSearchValue] = useState("");
-  const delayDuration = 1000; // Set the delay duration in milliseconds
-  let searchTimer;
+  
+ 
   const [Id, setId] = useState("");
-  const HandleSearchCahnge = (e) => {
-    setSearchValue(e.target.value);
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      setDelayedSearchValue(e.target.value);
-    }, delayDuration);
-  };
+   const HandleSearchCahnge = (data) => {
+     setSearchValue(data);
+   };
   const HandleLogout = () => {
     localStorage.clear();
     handleCloseMenu();
@@ -304,7 +299,7 @@ const OALeaves = () => {
   const HandleUpdate = (data) => {
     let dataCopy = data;
 
-    let url = API_URLS.updateLeaveType.replace(":id",Id);
+    let url = API_URLS.updateLeaveType.replace(":id", Id);
 
     setIsLoading(true);
 
@@ -336,7 +331,7 @@ const OALeaves = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = API_URLS.deleteLeaveType.replace(":id",Id);
+    let url = API_URLS.deleteLeaveType.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -388,7 +383,12 @@ const OALeaves = () => {
     setUpdate(true);
     setId(data._id);
     setdescriptionLength(500 - data?.description?.length);
-    reset({ name: data.name, description: data.description, maxCarryOver: data.maxCarryOver, isActive: data.isActive });
+    reset({
+      name: data.name,
+      description: data.description,
+      maxCarryOver: data.maxCarryOver,
+      isActive: data.isActive,
+    });
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -400,50 +400,11 @@ const OALeaves = () => {
   };
   useEffect(() => {
     GetLeavesType();
-  }, [delayedSearchValue]);
+  }, [searchValue]);
   return (
     <div>
-      <DashHeader>
-        <DashHeaderDepartment>
-          <DashHeaderTitle>Leaves</DashHeaderTitle>
-        </DashHeaderDepartment>
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
 
-        <DepartmentIconContainer>
-          <DashHeaderSearch>
-            <SearchBox>
-              <SearchInput
-                type="text"
-                placeholder="Search..."
-                onChange={HandleSearchCahnge}
-                value={searchValue}
-              ></SearchInput>
-              <SearchIcon src="/images/icons/searchIcon.svg" />
-            </SearchBox>
-          </DashHeaderSearch>
-          {/* <DepartmentIconImg src="/images/icons/Messages.svg" /> */}
-          <DepartmentIconImg src="/images/icons/Notifications.svg" />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: "5px",
-            }}
-            onClick={(event) => handleClickMenu(event)}
-          >
-            {" "}
-            <DepartmentIconImg src="/images/icons/Logout.svg" />
-            <img
-              src="/images/icons/arrowdown.svg"
-              style={{
-                width: "5px",
-                height: "9px",
-                transform: anchorEl ? "rotate(180deg)" : undefined,
-              }}
-            />
-          </div>
-        </DepartmentIconContainer>
-      </DashHeader>
       <Menu
         sx={{ margin: "0px" }}
         id="demo-positioned-menu"
@@ -575,7 +536,7 @@ const OALeaves = () => {
                     left
                   </InputPara>
                   <InputLabel>
-                    Max carry-over <InputSpan>*</InputSpan>
+                    Max carry-over(Hrs) <InputSpan>*</InputSpan>
                   </InputLabel>
                   <Input
                     {...register("maxCarryOver", {
@@ -611,6 +572,7 @@ const OALeaves = () => {
                       type="checkbox"
                       {...register("isActive", {})}
                       id="isEligible"
+                      defaultChecked={true}
                     />
                     <InputLabel
                       htmlFor="isEligible"

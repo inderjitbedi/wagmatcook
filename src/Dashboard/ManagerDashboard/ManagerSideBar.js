@@ -25,33 +25,33 @@ const ManagerSideBar = () => {
          to: "/manager-management/dashboard",
        },
 
-       {
-         Title: "Employee",
-         src: "/svg/Employee.svg",
-         to: "/manager-management/employee-list",
-         active: "employee-details",
-       },
+      //  {
+      //    Title: "Employee",
+      //    src: "/svg/Employee.svg",
+      //    to: "/manager-management/employee-list",
+      //    active: "employee-details",
+      //  },
 
        {
          Title: "Leaves",
          src: "/svg/managerleaves.svg",
          to: "/manager-management/leaves",
        },
-       {
-         Title: "Events",
-         src: "/svg/fire.svg",
-         //  to: "/organization-admin/leaves",
-       },
-       {
-         Title: "Accounts",
-         src: "/svg/person.svg",
-         //  to: "/organization-admin/leaves",
-       },
-       {
-         Title: "Helpdesk",
-         src: "/svg/alert-circle.svg",
-         //  to: "/organization-admin/leaves",
-       },
+      //  {
+      //    Title: "Events",
+      //    src: "/svg/fire.svg",
+      //    //  to: "/organization-admin/leaves",
+      //  },
+      //  {
+      //    Title: "Accounts",
+      //    src: "/svg/person.svg",
+      //    //  to: "/organization-admin/leaves",
+      //  },
+      //  {
+      //    Title: "Helpdesk",
+      //    src: "/svg/alert-circle.svg",
+      //    //  to: "/organization-admin/leaves",
+      //  },
      ];
       const style = {
         textDecoration: "none",
@@ -144,7 +144,7 @@ const ManagerSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/employee-list"
         >
@@ -178,7 +178,7 @@ const ManagerSideBar = () => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/leaves"
@@ -234,8 +234,10 @@ const ManagerSideBar = () => {
               Leaves
             </SideBarListTitle>
           </SideBarListContainer>
+
         </Link>
-        <Link
+
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/events"
         >
@@ -381,7 +383,9 @@ const ManagerSideBar = () => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
+
+
       </SideBarList>
     </>
   );

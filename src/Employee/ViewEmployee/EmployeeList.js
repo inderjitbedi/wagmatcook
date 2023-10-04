@@ -20,6 +20,7 @@ import { RotatingLines } from "react-loader-spinner";
 import ROLES from "../../constants/roles";
 import moment from "moment";
 import { useForm, Controller } from "react-hook-form";
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 
 import {
   DashHeader,
@@ -90,17 +91,12 @@ const Employee = () => {
   const [userType, setUserType] = useState("");
 
   const [searchValue, setSearchValue] = useState("");
-  const [delayedSearchValue, setDelayedSearchValue] = useState("");
-  const delayDuration = 1000; // Set the delay duration in milliseconds
-  let searchTimer;
+ 
 
-  const HandleSearchCahnge = (e) => {
-    setSearchValue(e.target.value);
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      setDelayedSearchValue(e.target.value);
-    }, delayDuration);
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
   };
+  
 
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -239,82 +235,8 @@ const Employee = () => {
 
   return (
     <>
-      <DashHeader>
-        <DashHeaderTitle>Employee</DashHeaderTitle>
-        <DashHeaderSearch>
-          {/* <SearchBox>
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              value={searchValue}
-              onChange={(e) => HandleSearchCahnge(e)}
-            ></SearchInput>
-            <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox> */}
-          <DashNotification src="/images/icons/Notifications.svg" />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: "5px",
-            }}
-            onClick={(event) => handleClickMenu(event)}
-          >
-            <DashNotification src="/images/icons/Logout.svg" />
-            <img
-              src="/images/icons/arrowdown.svg"
-              style={{
-                width: "5px",
-                height: "9px",
-                transform: anchorEl ? "rotate(180deg)" : undefined,
-              }}
-            />
-          </div>
-        </DashHeaderSearch>
-        <Menu
-          sx={{ margin: "0px" }}
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={openMenu}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <MenuItem
-            style={{
-              color: "#222B45",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: "20px",
-            }}
-          >
-            Settings
-          </MenuItem>
-          <MenuItem
-            onClick={HandleLogout}
-            style={{
-              color: "#EA4335",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontStyle: "normal",
-              fontWeight: 600,
-              lineHeight: "20px",
-            }}
-          >
-            Logout
-          </MenuItem>
-        </Menu>
-      </DashHeader>
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Employee" />
+
       <DepartmentFilterContainer>
         <DepartmentFilterdiv>
           {/* {FilterData.map((data) => (
@@ -529,8 +451,8 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                    {data.jobDetails[0]?.startDate
-                      ? moment(data.jobDetails[0]?.startDate).format(
+                    {data.positions[0]?.startDate
+                      ? moment(data.positions[0]?.startDate).format(
                           "DD/MM/YYYY"
                         )
                       : " - "}
@@ -563,11 +485,11 @@ const Employee = () => {
                         ""
                       ) : (
                         <Icons
-                          onClick={() =>
-                         {   Navigate(
+                          onClick={() => {
+                            Navigate(
                               `/organization-admin/employee/personal-info/${data._id}`
-                            )}
-                          }
+                            );
+                          }}
                           src="/images/icons/Pendown.svg"
                         />
                       )}
