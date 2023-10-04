@@ -13,7 +13,7 @@ router.get('/types', verifyToken([roles.ORG_ADMIN]), employeeController.getTypes
 
 router.get('/history', verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]), leaveController.list);
 router.get('/history/:id/:requestid', verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveRequest);
-router.put('/history/:id/:requestid/respond', verifyToken([roles.HR, roles.MANAGER]), employeeController.respondLeaveRequest);
+router.put('/history/:id/:requestid/respond', verifyToken([roles.HR, roles.MANAGER]), leaveController.respondLeaveRequest);
 
 
 
