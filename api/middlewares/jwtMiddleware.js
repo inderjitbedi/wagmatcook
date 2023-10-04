@@ -37,7 +37,7 @@ function verifyToken(roles = []) {
         return res.status(401).send('Failed to authenticate token');
       }
 
-      const user = await User.findOne({ email: decoded.email });
+      const user = await User.findOne({ email: decoded.email }).populate('personalInfo');;
       if (!user) {
         return res.status(401).send({ message: 'Unauthorized!' });
       }

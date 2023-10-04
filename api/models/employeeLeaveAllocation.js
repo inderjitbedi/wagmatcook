@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
     leaveType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'LeaveType',
-        required: true,
+        default: null,
     },
     totalAllocation: {
         type: Number,

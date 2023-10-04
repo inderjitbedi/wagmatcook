@@ -29,14 +29,11 @@ const schema = new mongoose.Schema({
         type: String,
         default: null,
     },
-    approver: {
+    responder: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-
-
-
-    approverComment: {
+    responderComment: {
         type: String,
         default: null,
     },

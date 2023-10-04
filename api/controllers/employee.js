@@ -17,6 +17,9 @@ const EmployeeDocuments = require("../models/employeeDocuments");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const leaveStatus = require("../enum/leaveStatus");
 const sendGrid = require("../providers/sendGrid");
+const Notifications = require("../models/notification");
+const notificationType = require("../enum/notificationType");
+const notificationConstants = require("../constants/notificationConstants");
 
 
 const employeeController = {
@@ -1148,16 +1151,17 @@ const employeeController = {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
 
+
             const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false })
                 .populate({
-                    path: 'approver',
+                    path: 'responder',
                     populate: {
                         path: 'personalInfo',
                         populate: {
                             path: 'photo',
                         },
                     },
-                }).populate('leaveType');
+                }).populate('leaveType').sort({ createdAt: -1 });;
 
             res.status(200).json({
                 history,
@@ -1177,12 +1181,12 @@ const employeeController = {
             }
 
             const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false }).populate({
-                path: 'approver',
+                path: 'responder',
                 populate: {
                     path: 'personalInfo',
                     model: 'EmployeePersonalInfo', // Replace with the actual model name
                 },
-            }, 'leaveType');
+            }, 'leaveType')
             res.status(200).json({
                 request,
                 message: 'Employee leave request fetched successfully'
@@ -1195,17 +1199,93 @@ const employeeController = {
 
     async addLeaveRequest(req, res) {
         try {
-            const user = await User.findOne({ _id: req.params.id })
+            const user = await User.findOne({ _id: req.params.id }).populate('personalInfo')
             if (!user) {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+            let { leaveType, hours: requestedHours } = req.body
+            let allocation = await EmployeeLeaveAllocation.findOne({ leaveType, employee: req.params.id, isDeleted: false }).populate('leaveType')
+            if (!allocation)
+                return res.status(400).json({ message: 'Leave type not allocated.' });
+
+            let burnedHours = 0
+            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false }).select('hours')
+
+            for (const leave of leaves) {
+                burnedHours += leave.hours
+            }
+
+            if (requestedHours > (allocation?.totalAllocation - burnedHours)) {
+                return res.status(400).json({ message: 'Insufficent balance' });
             }
 
             const request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id, status: leaveStatus.PENDING });
             await request.save();
 
+            const notification = new Notifications({
+                title: notificationConstants[notificationType.LEAVE_REQUEST].title?.replace('{sender}', [user.personalInfo.firstName, user.personalInfo.lastName].join(' ')).replace('{leavetype}', allocation.leaveType.name) || '',
+                description: notificationConstants[notificationType.LEAVE_REQUEST].description || '',
+                type: notificationType.LEAVE_REQUEST,
+                sender: req.params.id,
+                receiver: req.body.responder
+            });
+            await notification.save();
             res.status(200).json({
-                request,
                 message: 'Employee leave request sent successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async respondLeaveRequest(req, res) {
+        try {
+            const user = await User.findOne({ _id: req.params.id }).populate('personalInfo')
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+
+            let { leaveType, hours: requestedHours } = req.body
+            let allocation = await EmployeeLeaveAllocation.findOne({ leaveType, employee: req.params.id, isDeleted: false }).populate('leaveType')
+            if (!allocation)
+                return res.status(400).json({ message: 'Leave type not allocated.' });
+
+
+
+            let burnedHours = 0
+            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false }).select('hours');
+            for (const leave of leaves) {
+                burnedHours += leave.hours
+            }
+
+
+            if (req.body.isApproved && (requestedHours > (allocation?.totalAllocation - burnedHours))) {
+                return res.status(400).json({ message: 'Insufficent balance' });
+            }
+
+            let payload = {
+                ...req.body,
+                employee: req.params.id,
+                responder: req.user._id,
+                status: req.body.isApproved ? leaveStatus.APPROVED : leaveStatus.REJECTED
+            }
+
+            const request = await EmployeeLeaveHistory.findOneAndUpdate({ _id: req.params.requestid }, payload);
+            await request.save();
+
+            let type = req.body.isApproved ? notificationType.LEAVE_APPROVED : notificationType.LEAVE_REJECTED
+            const notification = new Notifications({
+                title: notificationConstants[type].title?.replace('{responder}', [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ')).replace('{leavetype}', allocation.leaveType.name) || '',
+                description: notificationConstants[type].description || '',
+                type: type,
+                sender: req.user._id,
+                receiver: req.params.id
+            });
+            await notification.save();
+
+            res.status(200).json({
+                message: `Employee leave request ${type.toLowerCase()} successfully`
             });
         } catch (error) {
             console.error("employeeController:update:error -", error);

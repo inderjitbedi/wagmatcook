@@ -11,7 +11,7 @@ const infoSchema = new mongoose.Schema({
     file: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'File',
-        required:true
+        // required:true
     },
     title: {
         type: String,

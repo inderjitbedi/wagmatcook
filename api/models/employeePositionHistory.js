@@ -17,6 +17,10 @@ const infoSchema = new mongoose.Schema({
         default: null,
         enum: Object.values(roles),
     },
+    jurisdiction: {
+        type: String,
+        default: null,
+    },
     department: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',

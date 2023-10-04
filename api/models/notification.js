@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const notificationType = require('../enum/notificationType');
 
-const benefitSchema = new mongoose.Schema({
+const notificationsSchema = new mongoose.Schema({
     title: {
         type: String,
         default: null,
@@ -38,6 +38,6 @@ const benefitSchema = new mongoose.Schema({
 });
 
 
-const Benefit = mongoose.model('Benefit', benefitSchema);
+const Notifications = mongoose.model('Notifications', notificationsSchema);
 
-module.exports = Benefit;
+module.exports = Notifications;

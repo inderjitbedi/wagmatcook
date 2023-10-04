@@ -17,6 +17,7 @@ const orgAdminRoute = require('./routes/orgAdmin')
 const employeeRoute = require('./routes/employee')
 const employeeTypeRoute = require('./routes/employeeType')
 const dashboardRoute = require('./routes/dashboard')
+const leaveRoute = require('./routes/leaves')
 
 
 
@@ -68,6 +69,7 @@ app.use('/api/department', departmentRoute);
 app.use('/api/benefit', benefitRoute);
 app.use('/api/employee-type', employeeTypeRoute);
 app.use('/api/leave-type', leaveTypeRoute);
+app.use('/api/leave', leaveRoute);
 app.use('/api/disciplinary', disciplinaryRoute);
 app.use('/api/super-admin', superAdminRoute);
 app.use('/api/organization-admin', orgAdminRoute);
