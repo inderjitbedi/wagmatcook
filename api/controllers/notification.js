@@ -48,7 +48,7 @@ const leaveTypeController = {
 
 
 
-            const notifications = await Notifications.find(filters)
+            const notifications = await Notifications.find(filters).populate({ path: 'sender', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });
