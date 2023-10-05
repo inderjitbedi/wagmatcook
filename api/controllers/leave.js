@@ -76,7 +76,10 @@ const leaveController = {
 
             let burnedHours = 0;
             let requestedHours = 0;
-            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false }).select('hours');
+            let leaves = await EmployeeLeaveHistory.find({
+                leaveType: leaveType, employee: req.params.id, isDeleted: false,
+                status: { $ne: leaveStatus.REJECTED }
+            }).select('hours');
             for (const leave of leaves) {
                 if (leave._id === req.params.requestid) {
                     requestedHours = leave.hours

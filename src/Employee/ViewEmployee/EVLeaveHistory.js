@@ -201,6 +201,21 @@ const ApprovedStyles = {
   lineHeight: "24px",
 };
 
+const RejectedStyles = {
+  borderRadius: "100px",
+  background: "#FFE6E3",
+  display: "inline-flex",
+  padding: "2px 12px",
+  alignItems: "center",
+  color: "#EA4335",
+  textAlign: "center",
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "24px",
+};
+
 const EVLeaveHistory = () => {
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
@@ -493,7 +508,7 @@ const EVLeaveHistory = () => {
       ) : (
         <MainBodyContainer>
           {userType === ROLES.EMPLOYEE && (
-              <FlexSpaceBetween style={{ alignItems: "center" }}>
+            <FlexSpaceBetween style={{ alignItems: "center" }}>
               <CommenHeader employeeid={employeeid} />
             </FlexSpaceBetween>
           )}
@@ -648,8 +663,8 @@ const EVLeaveHistory = () => {
                       <span
                         style={
                           data.status === "PENDING"
-                            ? PendingStyle
-                            : ApprovedStyles
+                            ? PendingStyle : (data.status === "APPROVED" ?
+                              ApprovedStyles : RejectedStyles)
                         }
                       >
                         {" "}
@@ -913,8 +928,11 @@ const EVLeaveHistory = () => {
                         <span
                           style={
                             isSatus === "PENDING"
-                              ? PendingStyle
-                              : ApprovedStyles
+                              ? PendingStyle : (isSatus === "APPROVED" ?
+                                ApprovedStyles : RejectedStyles)
+                            // isSatus === "PENDING"
+                            //   ? PendingStyle
+                            //   : ApprovedStyles
                           }
                         >
                           {" "}

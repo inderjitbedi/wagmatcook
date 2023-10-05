@@ -1337,7 +1337,7 @@ const employeeController = {
                 return res.status(400).json({ message: 'Leave type not allocated.' });
 
             let burnedHours = 0
-            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false }).select('hours')
+            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false, status: { $ne: leaveStatus.REJECTED } }).select('hours')
 
             for (const leave of leaves) {
                 burnedHours += leave.hours
