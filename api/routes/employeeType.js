@@ -9,6 +9,7 @@ router.put('/update/:id', verifyToken([roles.ORG_ADMIN]), employeeTypeController
 router.put('/delete/:id', verifyToken([roles.ORG_ADMIN]), employeeTypeController.delete);
 router.get('/list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeTypeController.list); // /list?page=1&limit=10&searchKey=search_keyword
 router.get('/detail/:id', verifyToken([roles.ORG_ADMIN]), employeeTypeController.detail);
+router.put('/reorder', verifyToken([roles.ORG_ADMIN]), employeeTypeController.reorder);  // disciplinaries: [id,id,id]
 
 module.exports = router;
 

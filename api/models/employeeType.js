@@ -10,6 +10,9 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
         required: true,
+    }, order: {
+        type: Number,
+        default: null,
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

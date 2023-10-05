@@ -231,6 +231,24 @@ const orgController = {
       res.status(400).json(error);
     }
   },
+
+  async sendWelcomeEmail(req, res) {
+    try {
+
+      let users = await User.find({ isActive: true, receivedWelcomeEmail: false });
+
+      // for (const user of users) {
+      sendGrid.send("iinderjitbedi@gmail.com", 'welcome', { req });
+      // }
+      res.status(200).json({
+        message: 'Employee leave request sent successfully'
+      });
+    } catch (error) {
+      console.error("employeeController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
 };
 
 module.exports = orgController;

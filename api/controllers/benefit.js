@@ -51,7 +51,7 @@ const benefitController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization : req.organization?._id || null };
+            let filters = { isDeleted: false, organization: req.organization?._id || null };
 
             if (req.query.searchKey) {
                 filters.$or = [
@@ -62,7 +62,7 @@ const benefitController = {
             const benefits = await Benefit.find(filters)
                 .skip(startIndex)
                 .limit(limit)
-                .sort({ createdAt: -1 });
+                .sort({ order: 1 });
 
             const totalBenefits = await Benefit.countDocuments(filters);
             const totalPages = Math.ceil(totalBenefits / req.query.limit);
@@ -77,6 +77,39 @@ const benefitController = {
         } catch (error) {
             console.error("benefitController:list:error -", error);
             res.status(400).json(error);
+        }
+    },
+
+    async reorder(req, res) {
+        try {
+            req.body.updatedBy = req.user._id;
+            let benefits = req.body.benefits
+            benefits.forEach(async (benefit, i) => {
+                await Benefit.findByIdAndUpdate(benefit, { order: i + 1 });
+            });
+            const page = 1;
+            const limit = 10;
+            const startIndex = (page - 1) * limit;
+
+            let filters = { isDeleted: false, organization: req.organization?._id || null };
+
+            benefits = await Benefit.find(filters)
+                .skip(startIndex)
+                .limit(limit)
+                .sort({ order: 1 });
+
+            const totalBenefits = await Benefit.countDocuments(filters);
+            const totalPages = Math.ceil(totalBenefits / req.query.limit);
+
+            res.status(200).json({
+                benefits,
+                totalBenefits,
+                currentPage: page,
+                totalPages, message: 'Benefits reordered successfully'
+            });
+        } catch (error) {
+            console.error("\n\benefitController:reorder:error -", error);
+            res.status(400).json({ message: error.toString() });;
         }
     },
 }
