@@ -9,6 +9,9 @@ const benefitSchema = new mongoose.Schema({
     description: {
         type: String,
         default: null,
+    }, order: {
+        type: Number,
+        default: null,
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
