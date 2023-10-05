@@ -133,6 +133,59 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+    async getActiveList(req, res) {
+        try {
+
+            const employees = await UserOrganization.aggregate([
+                {
+                    $match: {
+                        organization: req.organization?._id || null,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                {
+                    $unwind: '$userData',
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos',
+                        localField: 'user',
+                        foreignField: 'employee',
+                        as: 'personalInfo',
+                    },
+                },
+
+                {
+                    $unwind: '$personalInfo',
+                },
+                {
+                    $match: {
+                        'userData.isDeleted': false,
+                        'userData.isActive': true,
+                        $or: [
+                            { 'userData.email': { $regex: req.query.searchKey || '', $options: 'i' } },
+                            { 'personalInfo.firstName': { $regex: req.query.searchKey || '', $options: 'i' } },
+                            { 'personalInfo.lastName': { $regex: req.query.searchKey || '', $options: 'i' } },
+                        ],
+                    },
+                },
+            ]);
+            res.status(200).json({
+                employees,
+                message: 'Employees fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:list:error -", error);
+            res.status(400).json(error);
+        }
+    },
     async dashboardList(req, res) {
         try {
             const page = parseInt(req.query.page) || 1;
