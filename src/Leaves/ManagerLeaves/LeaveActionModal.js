@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
 import { RotatingLines } from "react-loader-spinner";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
+import ROLES from "../../constants/roles";
+
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 374,
+  width: 420,
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -43,7 +46,7 @@ const ModalThanksHeading = styled.p`
   font-style: normal;
   font-weight: 600;
   line-height: 22px;
-  width: 70%;
+  width: 80%;
   text-align: center;
 `;
 const DeleteButton = styled.button`
@@ -74,11 +77,24 @@ const AddNewButton = styled.button`
 const LeaveActionModal = ({
   openDelete,
   HandleCloseDelete,
-  HandleDelete,
+  HandleSubmitLeave,
   isLoading,
-    message,
-    src,
+  message,
+  src,
+  buttonValue,
 }) => {
+  const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  useEffect(() => {
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+  }, []);
   return (
     <Modal
       open={openDelete}
@@ -116,14 +132,16 @@ const LeaveActionModal = ({
             <ModalThanksHeading>{message}</ModalThanksHeading>
             <AddNewButton
               onClick={() => {
-                // HandleCloseDelete();
-                HandleDelete();
-                //   HandleReorder();
+                if (userType === ROLES.MANAGER) {
+                  Navigate(`/manager-management/leaves`);
+                } else if (userType === ROLES.HR) {
+                  Navigate(`/hr-management/leaves`);
+                }
+                HandleCloseDelete();
               }}
-              disabled={isLoading}
+              // disabled={isLoading}
             >
-              {" "}
-              ok{" "}
+              {buttonValue}
             </AddNewButton>
           </ModalThanks>
         )}

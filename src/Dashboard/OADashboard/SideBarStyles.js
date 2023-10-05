@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-
 //sidebar styled components
 
 export const SidebarTitle = styled.p`
@@ -48,6 +47,7 @@ export const SideBarList = styled.div`
   padding: 32px;
   gap: 20px;
 `;
+
 export const SideBarListContainer = styled.div`
   display: flex;
   gap: 11px;
@@ -56,7 +56,7 @@ export const SideBarListContainer = styled.div`
   &:hover img path {
     fill: #279af1;
   }
-  &:hover p {
+  &:hover {
     color: #279af1;
   }
 `;
@@ -72,19 +72,19 @@ export const SideBarListTitle = styled.p`
   font-weight: 600;
   line-height: 0px;
   cursor: pointer;
+ 
 `;
-export const SidebarArrow = styled.img`
-
-`;
+export const SidebarArrow = styled.img``;
 export const FlexContainer = styled.div`
-display: flex;
-justify-content: space-between;
-gap:25px;
-align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+  margin-bottom: -30px;
 `;
 export const DropDownContainer = styled.div`
   width: 100%;
   padding: 0px 10px;
   /* background-color: #8f9bb3; */
-margin-top: -15px;
+  margin-top: -15px;
 `;

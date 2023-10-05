@@ -141,11 +141,7 @@ const EmployeePersonal = () => {
                         Edit
                       </EditButton>
                     ) : (
-                      <EditButton
-                        onClick={() => setIsEdit(true)
-                        
-                        }
-                      >
+                      <EditButton onClick={() => setIsEdit(true)}>
                         <ButtonIcon src="/images/icons/Pen 2.svg" />
                         Edit
                       </EditButton>
@@ -234,6 +230,14 @@ const EmployeePersonal = () => {
                         <ViewPara>
                           {result?.personalInfo?.emergencyContactNumber ||
                             " - "}
+                        </ViewPara>
+                      </FlexColumn>
+                    </FlexSpaceBetween>
+                    <FlexSpaceBetween>
+                      <FlexColumn style={{ width: "50%" }}>
+                        <TitlePara>Jurisdiction</TitlePara>
+                        <ViewPara>
+                          {result?.personalInfo?.jurisdiction || " - "}
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>

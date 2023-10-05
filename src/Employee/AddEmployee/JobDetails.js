@@ -158,7 +158,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     GetHeadersData();
     GetEmployeeTypes();
     GetReportsToList();
-    // GetEmployeesJobDetails();
+    GetEmployeesJobDetails();
   }, []);
 
   const HandleSubmitJobDetails = (data) => {
@@ -213,7 +213,6 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
       .then(({ result, error }) => {
         if (result) {
           setDepartmentData(result.departments);
-          GetEmployeesJobDetails();
           // console.log(result.departments, "result.departments ");
         } else {
           //toast.warn("something went wrong ");
@@ -780,9 +779,10 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                     </FlexColumnForm>
                   </FlexContaierForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm>
+                    <FlexColumnForm style={{width:"50%"}}>
                       <InputLabel>
                         Hours per week <InputSpan>*</InputSpan>
+                        
                       </InputLabel>
                       <Input
                         type="text"
@@ -810,34 +810,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         name={`positions.${index}.hoursPerWeek`}
                       />
                     </FlexColumnForm>
-                    <FlexColumnForm>
-                      <InputLabel>
-                        Jurisdiction
-                        <InputSpan>*</InputSpan>
-                      </InputLabel>
-                      <Controller
-                        name={`positions.${index}.jurisdiction`}
-                        control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                        }}
-                        render={({ field }) => (
-                          <Select {...field}>
-                            <Option>Select</Option>
-                            <Option value="Federal">Federal</Option>
-                            <Option value="Provincial">Provincial</Option>
-                          </Select>
-                        )}
-                      />
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`positions.${index}.jurisdiction`}
-                      />
-                    </FlexColumnForm>
+                   
                   </FlexContaierForm>
 
                   <FlexContaierForm

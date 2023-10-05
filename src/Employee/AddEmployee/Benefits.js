@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
+import SuccessfullModal from "./SuccessfullModal";
+
 import {
   HeaderEmployee,
   BackButton,
@@ -31,7 +33,12 @@ import API_URLS from "../../constants/apiUrls";
 const Benefits = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
-
+  const [openThanks, setOpenThanks] = useState(false);
+  const HandleOpenThanks = () => setOpenThanks(true);
+  const HandleCloseThanks = () => {
+    Navigate(`/organization-admin/employee/list`);
+    setOpenThanks(false);
+  };
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
@@ -83,9 +90,11 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             setIsEdit(false);
             toast.success(result.message);
           } else {
-            Navigate(
-              `/organization-admin/employee/certificates-info/${employeeid}`
-            );
+            // Navigate(
+            //   `/organization-admin/employee/certificates-info/${employeeid}`
+            // );
+            HandleOpenThanks();
+
           }
 
           setFormData(result);
@@ -488,6 +497,10 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           </BodyMain>
         </EmployeeBody>
       )}
+      <SuccessfullModal
+        openThanks={openThanks}
+        HandleCloseThanks={HandleCloseThanks}
+      />
     </>
   );
 };

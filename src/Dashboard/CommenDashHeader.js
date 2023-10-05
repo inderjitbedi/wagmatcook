@@ -4,7 +4,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Badge from "@mui/material/Badge";
 import SettingsModal from "../Modals/SettingsModal";
-
+import httpClient from "../api/httpClient";
+import { toast } from "react-toastify";
+import API_URLS from "../constants/apiUrls";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -42,7 +44,7 @@ const CommenDashHeader = ({ onSearch,text }) => {
   const handleCloseMenuNotification = () => {
     setAnchorElNotification(null);
   };
-
+  const [notificationList, setNotificationList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(false);
@@ -75,6 +77,33 @@ const CommenDashHeader = ({ onSearch,text }) => {
 
     return () => clearTimeout(searchTimer); 
   }, [searchValue]);
+  const GetNotificationList= () => {
+    //  setIsLoading(true);
+    let url = API_URLS.getNotificationList
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setNotificationList(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        //  setIsLoading(false);
+      })
+      .finally(() => {
+        //  setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    GetNotificationList();
+  }, [])
+  
   return (
     <>
       <DashHeader>
@@ -145,6 +174,19 @@ const CommenDashHeader = ({ onSearch,text }) => {
             lineHeight: "20px",
           }}
           onClick={HandleOpenSettings}
+        >
+          Organization Profile
+        </MenuItem>
+        <MenuItem
+          style={{
+            color: "#222B45",
+            fontFamily: "Inter",
+            fontSize: "14px",
+            fontStyle: "normal",
+            fontWeight: 600,
+            lineHeight: "20px",
+          }}
+         
         >
           Settings
         </MenuItem>

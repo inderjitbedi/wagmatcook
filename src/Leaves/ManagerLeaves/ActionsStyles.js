@@ -6,9 +6,42 @@ export const PendingStyle = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 12px;
+  padding: 4px 12px;
   margin: 0;
   color: #e88b00;
+
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+`;
+export const ApproveStyle = styled.p`
+  border-radius: 100px;
+  background: #c8ffc7;
+  color: #0d7d0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 12px;
+  margin: 0;
+
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+`;
+export const RejectedStyle = styled.p`
+  border-radius: 100px;
+  background: #ffe6e3;
+  color: #ea4335;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 12px;
+  margin: 0;
 
   font-family: Inter;
   font-size: 14px;

@@ -84,7 +84,15 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   // employee Documents
   getEmployeeDocuments: `/employee/documents/:employeeid`,
   deleteEmployeeDocument: `/employee/documents/:employeeid/delete/:id`,
-  
+  // leaves api
+  getLeaves: `/leave/history`,
+  getLeaveDetails: `/leave/history/:employeeid/:requestid`,
+  respondLeave:`/leave/history/:employeeid/:requestid/respond`,
+  //notification api
+  getNotificationList: `/notification/list`,
+  getNotificationCount: `notification/unread`,
+  notificationRealAll: `/notification/read`,
+  markReadNotification:`/notification/mark-read`
 };
 
 export default API_URLS;
