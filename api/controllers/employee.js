@@ -169,6 +169,7 @@ const employeeController = {
                     $match: {
                         'userData.isDeleted': false,
                         'userData.isActive': true,
+                        'userData.role': { $ne: roles.ORG_ADMIN },
                         $or: [
                             { 'userData.email': { $regex: req.query.searchKey || '', $options: 'i' } },
                             { 'personalInfo.firstName': { $regex: req.query.searchKey || '', $options: 'i' } },
