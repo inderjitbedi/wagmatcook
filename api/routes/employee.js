@@ -115,6 +115,8 @@ router.get('/benefit/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER
 router.put('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateCertificates);
 router.get('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getCertificates);
 router.post('/certificate/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addCertificate);
+router.put('/certificate/:id/:certificateid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateCertificate);
+router.put('/certificate/:id/delete/:certificateid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.deleteDisciplinary);
 
 router.post('/type', verifyToken([roles.ORG_ADMIN]), employeeController.addType);
 router.put('/type/:id', verifyToken([roles.ORG_ADMIN]), employeeController.updateType);
@@ -148,7 +150,6 @@ router.post('/leave-history/:id/request', verifyToken([roles.ORG_ADMIN, roles.HR
 router.get('/active-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getActiveList);
 
 
-router.post('/send-welcome-email', employeeController.sendWelcomeEmail);
 
 
 

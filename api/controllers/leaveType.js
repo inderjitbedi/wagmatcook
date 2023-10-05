@@ -137,12 +137,6 @@ const leaveTypeController = {
 
             let filters = { isDeleted: false, organization: req.organization?._id || null };
 
-            if (req.query.searchKey) {
-                filters.$or = [
-                    { name: { $regex: req.query.searchKey, $options: 'i' } },
-                    { description: { $regex: req.query.searchKey, $options: 'i' } }
-                ];
-            }
             leaveTypes = await LeaveType.find(filters)
                 .skip(startIndex)
                 .limit(limit)
