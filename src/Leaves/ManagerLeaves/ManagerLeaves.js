@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,9 +8,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
-
+import httpClient from "../../api/httpClient";
+import { toast } from "react-toastify";
+import API_URLS from "../../constants/apiUrls";
+import moment from "moment";
+import ROLES from "../../constants/roles";
 
 import {
   DashHeader,
@@ -19,47 +23,13 @@ import {
   SearchInput,
   DashHeaderSearch,
   SearchIcon,
-  Pagination,
-  PaginationButton,
 } from "../../Dashboard/OADashboard/OADashBoardStyles";
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
   DepartmentIconImg,
-  DepartmentFilterContainer,
-  AddNewButton,
-  DepartmentFilterdiv,
-  DepartmentFilterButton,
-  DepartmentCardContainer,
-  DepartmentCardDiv,
-  DepartmentCardImg,
-  DepartmentCardPara,
-  DepartmentCardParaLit,
-  DepartmentCardButtoncolor,
-  DepartmentCardButtongrey,
-  DepartmentButtonContainer,
-  ModalUpperDiv,
-  ModalHeading,
-  ModalIcon,
-  ModalUpperMid,
-  ModalBottom,
-  CancelButton,
-  Input,
-  TextArea,
-  ModalThanks,
-  ModalThanksImg,
-  ModalThanksHeading,
-  Errors,
-  LoadMore,
-  InputPara,
 } from "../../Departments/DepartmentsStyles";
 import {
-  InputLabel,
-  InputSpan,
-  DisciplinaryDiv,
-  DisciplinaryHeading,
-  MenuIcon,
-  MenuIconDiv,
   ActionIconDiv,
   ActionIcons,
   HeaderDiv,
@@ -69,6 +39,7 @@ import {
   TabelDiv,
   TabelImg,
 } from "../../Disciplinary/DisciplinaryStyles";
+import { PendingStyle,ApproveStyle,RejectedStyle } from "./ActionsStyles";
 const style = {
   position: "absolute",
   top: "50%",
@@ -104,40 +75,13 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "15px",
 };
-const PendingStyle = {
-  borderRadius: "100px",
-  background: "#FFF1DD",
-  display: "inline-flex",
-  padding: "2px 12px",
-  alignItems: "center",
-  color: "#E88B00",
-  textAlign: "center",
-  fontFamily: "Inter",
-  fontSize: "14px",
-  fontStyle: "normal",
-  fontWeight: 600,
-  lineHeight: "24px",
-};
-const ApprovedStyles = {
-  borderRadius: "100px",
-  background: "#C8FFC7",
-  display: "inline-flex",
-  padding: "2px 12px",
-  alignItems: "center",
-  color: "var(--green-90, #0D7D0B)",
-  textAlign: "center",
-  fontFamily: "Inter",
-  fontSize: "14px",
-  fontStyle: "normal",
-  fontWeight: 600,
-  lineHeight: "24px",
-};
 const ManagerLeaves = () => {
   const Navigate = useNavigate();
-
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const Data = [1, 2, 3, 4, 5, 6, 7, 8];
   const [isLoading, setIsLoading] = useState(false);
-
+  const [result, setResult] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const delayDuration = 1000; // Set the delay duration in milliseconds
@@ -162,6 +106,40 @@ const ManagerLeaves = () => {
     handleCloseMenu();
     Navigate("/");
   };
+  const GetLeavesHistory = () => {
+    setIsLoading(true);
+    let url = API_URLS.getLeaves;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        //  toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    GetLeavesHistory();
+       if (location.pathname.indexOf("manager") > -1) {
+         setUserType(ROLES.MANAGER);
+       } else if (location.pathname.indexOf("hr") > -1) {
+         setUserType(ROLES.HR);
+       } else if (location.pathname.indexOf("user") > -1) {
+         setUserType(ROLES.EMPLOYEE);
+       }
+  }, []);
+  let API_URL = process.env.REACT_APP_API_URL;
 
   return (
     <div>
@@ -326,14 +304,14 @@ const ManagerLeaves = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Data?.length == 0 && (
+              {result?.leaves?.length == 0 && (
                 <TableRow sx={{ height: "200px" }}>
                   <TableCell align="center" colSpan={7}>
                     No Leaves found
                   </TableCell>
                 </TableRow>
               )}
-              {Data?.map((data, index) => (
+              {result?.leaves?.map((data, index) => (
                 <TableRow
                   key={data.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -344,11 +322,22 @@ const ManagerLeaves = () => {
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
                     <TabelDiv>
-                      <TabelImg src={"/images/User.jpg"} />
+                      <TabelImg
+                        src={
+                          data.employee?.personalInfo?.photo
+                            ? API_URL + data.employee?.personalInfo?.photo?.path
+                            : "/images/User.jpg"
+                        }
+                      />
                       <div>
-                        <TabelDarkPara> Baki Hanma</TabelDarkPara>
+                        <TabelDarkPara>
+                          {data.employee?.personalInfo?.firstName +
+                            (data.employee?.personalInfo?.lastName
+                              ? data.employee?.personalInfo?.lastName
+                              : " ")}
+                        </TabelDarkPara>
                         <TabelLightPara style={{ textTransform: "none" }}>
-                          Smaple@email.com
+                          {data.employee?.email}
                         </TabelLightPara>
                       </div>
                     </TabelDiv>
@@ -357,26 +346,48 @@ const ManagerLeaves = () => {
                     Design
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    20/09/2002
+                    {data.from ? moment(data.from).format("DD/MM/YYYY") : " - "}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    20/09/2022
+                    {data.to ? moment(data.to).format("DD/MM/YYYY") : " - "}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    Lieu Time
+                    {data.leaveType?.name}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    2
+                    {data.hours}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    <span style={ApprovedStyles}>Approved</span>
+                    {data.status === "PENDING" ? (
+                      <PendingStyle style={{ padding: "4px 0px" }}>
+                        {data.status}
+                      </PendingStyle>
+                    ) : data.status === "APPROVED" ? (
+                      <ApproveStyle style={{ padding: "4px 0px" }}>
+                        {data.status}
+                      </ApproveStyle>
+                    ) : data.status === "REJECTED" ? (
+                      <RejectedStyle style={{ padding: "4px 0px" }}>
+                        {data.status}
+                      </RejectedStyle>
+                    ) : (
+                      " - "
+                    )}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
                     <ActionIconDiv style={{ justifyContent: "center" }}>
                       <ActionIcons
-                        onClick={() =>
-                          Navigate(`/manager-management/leaves-request`)
-                        }
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/leaves-request/${data.employee._id}/${data._id}`
+                            );
+                          } else if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/leaves-request/${data.employee._id}/${data._id}`
+                            );
+                          }
+                        }}
                         src="/images/icons/eye.svg"
                       />
                     </ActionIconDiv>

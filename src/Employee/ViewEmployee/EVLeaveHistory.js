@@ -342,23 +342,48 @@ const EVLeaveHistory = () => {
         setIsLoading(false);
       });
   };
-  const GetLeavesType = () => {
+  // const GetLeavesType = () => {
+  //   setIsLoading(true);
+  //   let url = API_URLS.getLeaveTypeList;
+  //   httpClient({
+  //     method: "get",
+  //     url,
+  //   })
+  //     .then(({ result, error }) => {
+  //       if (result) {
+  //         setLeaveType(result.leaveTypes);
+  //       } else {
+  //         //toast.warn("something went wrong ");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       toast.error("Error creating department. Please try again.");
+  //       setIsLoading(false);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+  const GetLeaveAlloaction = () => {
     setIsLoading(true);
-    let url = API_URLS.getLeaveTypeList;
+    // GetLeavesType();
+    const trimid = employeeid.trim();
+    let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
     httpClient({
       method: "get",
       url,
     })
       .then(({ result, error }) => {
         if (result) {
-          setLeaveType(result.leaveTypes);
+          setLeaveType(result.allocations);
         } else {
           //toast.warn("something went wrong ");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
+        toast.error("Error Adding Benefits. Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
@@ -425,7 +450,7 @@ const EVLeaveHistory = () => {
   };
   useEffect(() => {
     GetReportList();
-    GetLeavesType();
+    GetLeaveAlloaction();
     GetLeaveHistory();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -443,7 +468,7 @@ const EVLeaveHistory = () => {
   const userstyle = {
     padding: "16px 20px",
     background: "#fff",
-    borderRadius: "8px 8px 0px 0px"
+    borderRadius: "8px 8px 0px 0px",
   };
   return (
     <>
@@ -674,7 +699,12 @@ const EVLeaveHistory = () => {
                       </TabelDiv>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.responder?.name || " - "}
+                      {(data.responder?.personalInfo?.firstName
+                        ? data.responder?.personalInfo?.firstName
+                        : " - ") +
+                        (data.responder?.personalInfo.lastName
+                          ? data.responder?.personalInfo.lastName
+                          : " ")}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.from
@@ -775,13 +805,13 @@ const EVLeaveHistory = () => {
                                 message: "Required",
                               },
                               onChange: (e) => {
-                                const endDate = new Date(getValues("to"));
+                                const endDate = getValues("to");
                                 const startDate = new Date(e.target.value);
-                                if (startDate >= endDate && endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
                                   setError("to", {
                                     type: "custom",
                                     message:
-                                      "Must not be earlier than Start Date",
+                                      "End date must not be earlier than start date",
                                   });
                                 } else {
                                   setError("to", {
@@ -808,6 +838,7 @@ const EVLeaveHistory = () => {
                               },
                               onChange: (fieldValue) => {
                                 const startDateValue = getValues("from");
+
                                 const endDateValue = getValues("to");
 
                                 if (endDateValue && startDateValue) {
@@ -848,7 +879,9 @@ const EVLeaveHistory = () => {
                               <Select {...field} disabled={update}>
                                 <Option>Select</Option>
                                 {leaveType?.map((data) => (
-                                  <Option value={data._id}>{data.name}</Option>
+                                  <Option value={data.leaveType?._id}>
+                                    {data.leaveType?.name}
+                                  </Option>
                                 ))}
                               </Select>
                             )}

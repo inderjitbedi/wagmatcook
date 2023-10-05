@@ -635,6 +635,32 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
+                  <FlexColumnForm style={{width:"50%"}}>
+                    <InputLabel>
+                      Jurisdiction
+                      <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Controller
+                      name={`jurisdiction`}
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option>Select</Option>
+                          <Option value="Federal">Federal</Option>
+                          <Option value="Provincial">Provincial</Option>
+                        </Select>
+                      )}
+                    />
+                    <Errors>{errors.jurisdiction?.message}</Errors>
+                  </FlexColumnForm>
+                </FlexContaierForm>
+                <FlexContaierForm>
                   <FlexColumnForm>
                     <AlignFlex>
                       <input

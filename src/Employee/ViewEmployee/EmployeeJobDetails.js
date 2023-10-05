@@ -499,7 +499,9 @@ const EmployeeJobDetails = () => {
                           <TimelineDiv>
                             <FlexColumn style={{ gap: "4px" }}>
                               <TitlePara>{data.title || " - "}</TitlePara>
-                              <ViewPara>{data.department?.name || " - "}</ViewPara>
+                              <ViewPara>
+                                {data.department?.name || " - "}
+                              </ViewPara>
                             </FlexColumn>
                             <TitlePara>
                               From:{" "}
@@ -622,7 +624,10 @@ const EmployeeJobDetails = () => {
                                           {" "}
                                           Manager{" "}
                                         </Option>
-                                        <Option value="HR"> HR</Option>
+                                        <Option value="HUMAN_RESOURCE">
+                                          {" "}
+                                          HR
+                                        </Option>
                                       </Select>
                                     )}
                                   />
@@ -1000,34 +1005,7 @@ const EmployeeJobDetails = () => {
                                     </Errors>
                                   }
                                 </FlexColumnForm>
-                                <FlexColumnForm>
-                                  <InputLabel>
-                                    Jurisdiction
-                                    <InputSpan>*</InputSpan>
-                                  </InputLabel>
-                                  <Controller
-                                    name={`jurisdiction`}
-                                    control={control}
-                                    rules={{
-                                      required: {
-                                        value: true,
-                                        message: "Required",
-                                      },
-                                    }}
-                                    render={({ field }) => (
-                                      <Select {...field}>
-                                        <Option>Select</Option>
-                                        <Option value="Federal">Federal</Option>
-                                        <Option value="Provincial">
-                                          Provincial
-                                        </Option>
-                                      </Select>
-                                    )}
-                                  />
-                                  <Errors>
-                                    {errors.jurisdiction?.message}
-                                  </Errors>
-                                </FlexColumnForm>
+                              
                               </FlexContaierForm>
                               <FlexContaierForm
                                 style={{

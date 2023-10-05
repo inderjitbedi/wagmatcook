@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import Badge from "@mui/material/Badge";
 import SettingsModal from "../../Modals/SettingsModal.js";
+import CommenDashHeader from "../CommenDashHeader.js";
 import {
   Dashboard,
   DashNav,
@@ -263,7 +264,11 @@ const HandleCloseSettings = () => setOpenSettings(false);
         setIsLoading(false);
       });
   };
+ const [searchValue, setSearchValue] = useState("");
 
+ const HandleSearchCahnge = (data) => {
+   setSearchValue(data);
+ };
   useEffect(() => {
     let user = localStorage.getItem("user");
     if (user) {
@@ -305,43 +310,8 @@ const HandleCloseSettings = () => setOpenSettings(false);
       ) : (
         <>
           <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-          <DashHeader>
-            <DashHeaderTitle>Dashboard</DashHeaderTitle>
-            <DashHeaderSearch>
-              <SearchBox>
-                <SearchInput type="text" placeholder="Search..."></SearchInput>
-                <SearchIcon src="/images/icons/searchIcon.svg" />
-              </SearchBox>
-              <Badge badgeContent={8} color="primary" size="small">
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={handleClickMenuNotification}
-                >
-                  <DashNotification src="/images/icons/Notifications.svg" />
-                </div>
-              </Badge>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  gap: "5px",
-                }}
-                onClick={handleClickMenu}
-              >
-                {" "}
-                <DepartmentIconImg src="/images/icons/Logout.svg" />
-                <img
-                  src="/images/icons/arrowdown.svg"
-                  style={{
-                    width: "5px",
-                    height: "9px",
-                    transform: anchorEl ? "rotate(180deg)" : undefined,
-                  }}
-                />
-              </div>
-            </DashHeaderSearch>
-          </DashHeader>
+            <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+
           <Menu
             sx={{ margin: "0px" }}
             id="demo-positioned-menu"

@@ -73,6 +73,7 @@ const SharedSignin = () => {
         });
     } else {
       toast.warn("All fields are required");
+      setIsLoading(false);
     }
   }
   return (
