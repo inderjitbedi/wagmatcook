@@ -26,20 +26,24 @@ export const SideBarLogo = styled.img`
 export const SideBarLogodiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap:10px; */
+  gap:5px;
 `;
 export const SideBarLogoHead = styled.p`
   color: #222222;
   font-size: 16px;
   font-weight: 700;
-  line-height: 0px;
+  line-height: 22px;
+  margin: 0;
+
 `;
 
 export const SideBarLogoPara = styled.p`
   font-size: 12px;
   font-weight: 400;
-  line-height: 0px;
+  line-height: 16px;
   color: #686868;
+  width: 100%;
+  margin: 0;
 `;
 export const SideBarList = styled.div`
   display: flex;

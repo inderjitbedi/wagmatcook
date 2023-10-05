@@ -9,7 +9,7 @@ import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import NoDocumentfound from "../NoDocumentfound";
 import moment from "moment";
 import ROLES from "../../constants/roles";
-
+import DeleteModal from "../../Modals/DeleteModal";
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -91,7 +91,7 @@ const EVCertificates = () => {
     reset({
       title: data.title,
       provider: data.provider,
-      file: data.file._id,
+      file: data.file?._id ? data.file?._id : null,
       completionDate: new Date(data.completionDate).toISOString().split("T")[0],
       expiryDate: data.expiryDate
         ? new Date(data.expiryDate).toISOString().split("T")[0]
@@ -110,7 +110,10 @@ const EVCertificates = () => {
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
-
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
   const [formData, setFormData] = useState([]);
   const {
     register,
@@ -148,6 +151,12 @@ const EVCertificates = () => {
       }
       AddNewCertificates(data);
     } else if (update) {
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
+      HandleUpdate(data);
     }
     console.log("form submmited :", data);
   };
@@ -209,6 +218,70 @@ const EVCertificates = () => {
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    //console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.updateEmployeeCertificate
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetEmployeesCertificates();
+          setUpdate(false);
+          handleClose();
+          reset();
+          toast.success(result.message); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteEmployeeCertificates
+      .replace(":employeeid", employeeid)
+      .replace(":id", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetEmployeesCertificates();
+
+          toast.success(result.message);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
       });
   };
   const getFileType = (file) => {
@@ -407,7 +480,10 @@ const EVCertificates = () => {
                   ) : (
                     <>
                       <ModalContainer>
-                        <ModalHeading>New Certificate</ModalHeading>
+                        <ModalHeading>
+                          {" "}
+                          {update ? " Update Certificate" : "New Certificate"}
+                        </ModalHeading>
                         <ModalIcon
                           onClick={handleClose}
                           src="/images/icons/Alert-Circle.svg"
@@ -418,9 +494,7 @@ const EVCertificates = () => {
                           <FlexContaierForm>
                             <FlexColumnForm>
                               <InputLabel>
-                                {update
-                                  ? " Update Certificate"
-                                  : "Certificate Title "}
+                                Certificate Title
                                 <InputSpan>*</InputSpan>
                               </InputLabel>
                               <Input
@@ -673,7 +747,7 @@ const EVCertificates = () => {
                                 src="/images/icons/Pendown.svg"
                               />
                             )}
-                            {/* {userType === ROLES.EMPLOYEE ||
+                            {userType === ROLES.EMPLOYEE ||
                             userType === ROLES.MANAGER ||
                             isAccount ? (
                               ""
@@ -681,11 +755,11 @@ const EVCertificates = () => {
                               <Icons
                                 onClick={() => {
                                   setId(data._id);
-                                  // HandleOpenDelete();
+                                  HandleOpenDelete();
                                 }}
                                 src="/images/icons/Trash-2.svg"
                               />
-                            )} */}
+                            )}
                           </IconContainer>
                         </FlexSpaceBetween>
                       </CertificateContainer>
@@ -697,6 +771,13 @@ const EVCertificates = () => {
           </BasicInfoContainer>
         </MainBodyContainer>
       )}
+      <DeleteModal
+        openDelete={openDelete}
+        message="Are you sure you want to delete this certificate?"
+        HandleCloseDelete={HandleCloseDelete}
+        isLoading={isDeleting}
+        HandleDelete={HandleDelete}
+      />
     </>
   );
 };

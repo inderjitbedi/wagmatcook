@@ -16,6 +16,7 @@ const API_URLS = {
   createBenefits: `/benefit/create`,
   deleteBenefits: `/benefit/delete/:id`,
   updateBenefits: `/benefit/update/:id`,
+  reorderBenefits:`/benefit/reorder`,
   //Oa Departmnets
   getDpartments: `/department/list?page=page&limit=10&searchKey=searchValue`,
   createDepartments: `/department/create`,
@@ -41,6 +42,8 @@ const API_URLS = {
   submitEmployeeCertificates: `/employee/certificates/:employeeid`,
   getEmployeeCertificates: `/employee/certificates/:employeeid`,
   addSingleEmployeeCertificate: `/employee/certificate/:employeeid`,
+  updateEmployeeCertificate: `/employee/certificate/:employeeid/:id`,
+  deleteEmployeeCertificates:`/employee/certificate/:employeeid/delete/:id`,
   // employee add jobdetails api
   getReporttoList: `/employee/reports-to-list`,
   getEmployeeJobDetails: `/employee/job-details/:employeeid`,
@@ -56,6 +59,7 @@ const API_URLS = {
   deleteEmployeeTypes: `/employee-type/delete/:id`,
   createEmployeeTypes: `/employee-type/create`,
   updateEmployeeTypes: `/employee-type/update/:id`,
+  reorderEmployeeType:`/employee-type/reorder`,
   // employee disciplinary api
   submitEmployeeDisciplinary:`/employee/disciplinary/:employeeid`,
   getDisciplinaryList: `/disciplinary/list`,
@@ -90,9 +94,11 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   respondLeave:`/leave/history/:employeeid/:requestid/respond`,
   //notification api
   getNotificationList: `/notification/list`,
-  getNotificationCount: `notification/unread`,
-  notificationRealAll: `/notification/read`,
-  markReadNotification:`/notification/mark-read`
+  getNotificationCount: `/notification/unread-count`,
+  notificationReadAll: `/notification/read-all`,
+  markReadNotification: `/notification/mark-read`,
+  // active user
+  getActiveUser:`employee/active-list`,
 };
 
 export default API_URLS;

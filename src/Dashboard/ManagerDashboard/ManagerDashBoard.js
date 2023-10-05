@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import CommenDashHeader from "../CommenDashHeader";
 
 import {
   DashHeader,
@@ -47,82 +48,16 @@ const ManagerDashBoard = () => {
     navigate("/");
   };
   const array6 = [1, 1, 1, 1, 1, 1];
-  const array5 = [1, 2, 1, 2,];
+  const array5 = [1, 2, 1, 2];
+  const [searchValue, setSearchValue] = useState("");
 
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   return (
     <>
-      <DashHeader>
-        <DashHeaderTitle>Dashboard</DashHeaderTitle>
-        <DashHeaderSearch>
-          <SearchBox>
-            <SearchInput type="text" placeholder="Search..."></SearchInput>
-            <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox>
-          <DashNotification src="/images/icons/Notifications.svg" />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: "5px",
-            }}
-            onClick={(event) => handleClickMenu(event)}
-          >
-            {" "}
-            <DashNotification src="/images/icons/Logout.svg" />
-            <img
-              src="/images/icons/arrowdown.svg"
-              style={{
-                width: "5px",
-                height: "9px",
-                transform: anchorEl ? "rotate(180deg)" : undefined,
-              }}
-            />
-          </div>
-        </DashHeaderSearch>
-      </DashHeader>
-      <Menu
-        sx={{ margin: "0px" }}
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem
-          style={{
-            color: "#222B45",
-            fontFamily: "Inter",
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "20px",
-          }}
-        >
-          Settings
-        </MenuItem>
-        <MenuItem
-          onClick={HandleLogout}
-          style={{
-            color: "#EA4335",
-            fontFamily: "Inter",
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "20px",
-          }}
-        >
-          Logout
-        </MenuItem>
-      </Menu>
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+
       <Heading_24> Good Evening</Heading_24>
       <CardContainer>
         <FlexColContainer>
@@ -146,7 +81,7 @@ const ManagerDashBoard = () => {
             <CardList>
               <FlexContainer>
                 <CardIcons src="/images/icons/empty-box 1.svg" />
-                <CardSubGrey style={{fontSize:"14px"}} > 
+                <CardSubGrey style={{ fontSize: "14px" }}>
                   All good! You've nothing new to track.
                 </CardSubGrey>
               </FlexContainer>

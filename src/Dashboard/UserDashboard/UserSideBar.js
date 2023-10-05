@@ -12,29 +12,50 @@ import {
   SideBarList,
 } from "../OADashboard/SideBarStyles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import httpClient from "../../api/httpClient";
 
 const UserSideBar = () => {
-    const location = useLocation();
+  const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
-  
-    const style = {
-      textDecoration: "none",
-      color: "#279AF1",
-    };
-    useEffect(() => {
-      let org = localStorage.getItem("org");
-      if (org) {
-        let parsedUser = JSON.parse(org);
-        setOrgData(parsedUser);
-      }
-      let user = localStorage.getItem("user");
-      if (user) {
-        let parsedUser = JSON.parse(user);
-        setUserData(parsedUser);
-      }
-    }, []);
-    let API_URL = process.env.REACT_APP_API_URL;
+  const [headerData, setHeaderData] = useState([]);
+
+  const GetHeadersData = (id) => {
+    // setIsLoading(true);
+
+    let url = `/employee/header-info/${id}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
+  const style = {
+    textDecoration: "none",
+    color: "#279AF1",
+  };
+  useEffect(() => {
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+      GetHeadersData(parsedUser._id);
+    }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUserData(parsedUser);
+    }
+  }, []);
+  let API_URL = process.env.REACT_APP_API_URL;
   return (
     <>
       {" "}
@@ -43,12 +64,24 @@ const UserSideBar = () => {
       <SideBarLogoContainer>
         <SideBarLogo
           src={
-            orgData?.logo ? API_URL + orgData?.logo?.path : "/images/User.jpg"
+            headerData?.personalInfo?.photo
+              ? API_URL + headerData?.personalInfo?.photo?.path
+              : "/images/User.jpg"
           }
         />
         <SideBarLogodiv>
-          <SideBarLogoHead>{orgData?.name || "Tom Holland"}</SideBarLogoHead>
-          <SideBarLogoPara>Design Manager</SideBarLogoPara>
+          <SideBarLogoHead>
+            {(headerData?.personalInfo?.firstName
+              ? headerData?.personalInfo?.firstName
+              : " -") +
+              (headerData?.personalInfo?.lastName
+                ? headerData?.personalInfo?.lastName
+                : " -")}
+          </SideBarLogoHead>
+          <SideBarLogoPara>
+            {" "}
+            {headerData?.position?.department?.name || "-"}
+          </SideBarLogoPara>
         </SideBarLogodiv>
       </SideBarLogoContainer>
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
@@ -109,7 +142,10 @@ const UserSideBar = () => {
           </SideBarListContainer>
         </Link>
 
-        <Link style={{ textDecoration: "none" }} to={`/user-management/leaves/${userData?._id}`}>
+        <Link
+          style={{ textDecoration: "none" }}
+          to={`/user-management/leaves/${userData?._id}`}
+        >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

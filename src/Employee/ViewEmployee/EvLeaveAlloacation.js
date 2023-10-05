@@ -11,10 +11,12 @@ import Paper from "@mui/material/Paper";
 import { ButtonBlue } from "../AddEmployee/AddEmployeeStyles";
 import { useForm, Controller } from "react-hook-form";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import DeleteModal from "../../Modals/DeleteModal";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
+import ROLES from "../../constants/roles";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -77,7 +79,9 @@ const style = {
 };
 const EvLeaveAlloacation = () => {
   let API_URL = process.env.REACT_APP_API_URL;
-
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
   const [open, setOpen] = useState(false);
   const { employeeid } = useParams();
   const Navigate = useNavigate();
@@ -274,10 +278,18 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-
-
     GetLeavesType();
     GetLeaveAlloaction();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, []);
   const HandleUpdateAction = (data) => {
     setUpdate(true);
@@ -323,9 +335,13 @@ const EvLeaveAlloacation = () => {
           </FlexSpaceBetween>
           <LeaveDiv>
             Leaves Alloaction
-            <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-              New Alloaction
-            </ButtonBlue>
+            {userType === ROLES.EMPLOYEE ? (
+              " "
+            ) : (
+              <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+                New Alloaction
+              </ButtonBlue>
+            )}
           </LeaveDiv>
 
           <TableContainer component={Paper}>
@@ -385,20 +401,30 @@ const EvLeaveAlloacation = () => {
 
                     <TableCell align="center" sx={Celllstyle2}>
                       <IconContainer>
-                        <Icons
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            HandleUpdateAction(data);
-                          }}
-                          src="/images/icons/Pendown.svg"
-                        />
-                        <Icons
-                          onClick={() => {
-                            setId(data._id);
-                            HandleOpenDelete();
-                          }}
-                          src="/images/icons/Trash-2.svg"
-                        />
+                        {/* {userType === ROLES.EMPLOYEE || isAccount ? (
+                          ""
+                        ) : (
+                          <Icons
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )} */}
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ||
+                        isAccount ? (
+                          " "
+                        ) : (
+                          <Icons
+                            onClick={() => {
+                              setId(data._id);
+                              HandleOpenDelete();
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
                       </IconContainer>
                     </TableCell>
                   </TableRow>

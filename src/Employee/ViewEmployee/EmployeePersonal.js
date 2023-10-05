@@ -117,26 +117,12 @@ const EmployeePersonal = () => {
                     {isAccount || userType === ROLES.EMPLOYEE ? (
                       ""
                     ) : userType === ROLES.MANAGER ? (
-                      <EditButton
-                        style={{ marginRight: "54px" }}
-                        onClick={() =>
-                          Navigate(
-                            `/manager-management/personal-info/${employeeid}/${true}?`
-                          )
-                        }
-                      >
+                      <EditButton onClick={() => setIsEdit(true)}>
                         <ButtonIcon src="/images/icons/Pen 2.svg" />
                         Edit
                       </EditButton>
                     ) : userType === ROLES.HR ? (
-                      <EditButton
-                        style={{ marginRight: "54px" }}
-                        onClick={() =>
-                          Navigate(
-                            `/hr-management/personal-info/${employeeid}/${true}?`
-                          )
-                        }
-                      >
+                      <EditButton onClick={() => setIsEdit(true)}>
                         <ButtonIcon src="/images/icons/Pen 2.svg" />
                         Edit
                       </EditButton>

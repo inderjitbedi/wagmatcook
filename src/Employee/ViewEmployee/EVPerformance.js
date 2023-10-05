@@ -6,7 +6,6 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 
-
 import "react-vertical-timeline-component/style.min.css";
 import "./Employee.css";
 import { useForm } from "react-hook-form";
@@ -379,7 +378,7 @@ const EVPerformance = () => {
     setDetailsLength(500);
     setFile(null);
   };
-  
+
   const HandleUpdate = (data) => {
     //console.log("update Data:", data);
     setIsLoading(true);
@@ -462,10 +461,10 @@ const EVPerformance = () => {
             id: data?.userData._id,
             text: data?.personalInfo?.length
               ? data?.personalInfo[0].firstName +
-              " " +
-              (data?.personalInfo[0].lastName
-                ? data?.personalInfo[0].lastName
-                : " ")
+                " " +
+                (data?.personalInfo[0].lastName
+                  ? data?.personalInfo[0].lastName
+                  : " ")
               : data?.userData.name,
           }));
 
@@ -523,7 +522,7 @@ const EVPerformance = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                 <BasicHeading>Reviews</BasicHeading>
-                {userType === ROLES.EMPLOYEE ? (
+                {userType === ROLES.EMPLOYEE || isAccount ? (
                   " "
                 ) : (
                   <AddNewButton onClick={HandleOpenAddNewAction}>
@@ -627,7 +626,7 @@ const EVPerformance = () => {
                                 inputFieldPosition="bottom"
                                 autocomplete
                                 placeholder="Add More"
-                              // editable
+                                // editable
                               />
 
                               <Errors>{byError}</Errors>
@@ -870,9 +869,9 @@ const EVPerformance = () => {
                                     {data.file?.originalName?.length <= 38
                                       ? data.file?.originalName
                                       : data.file?.originalName?.substring(
-                                        0,
-                                        38
-                                      ) + "..." || " - "}
+                                          0,
+                                          38
+                                        ) + "..." || " - "}
                                   </File>
                                 )}
                               </Link>
@@ -886,8 +885,8 @@ const EVPerformance = () => {
                                   Next Review on:{" "}
                                   {data.nextReviewDate
                                     ? moment(data.nextReviewDate).format(
-                                      "DD/MM/YYYY"
-                                    )
+                                        "DD/MM/YYYY"
+                                      )
                                     : " - "}
                                 </ReviewsDiv>
                               )}
@@ -902,7 +901,8 @@ const EVPerformance = () => {
                                   />
                                 )}
                                 {userType === ROLES.EMPLOYEE ||
-                                  userType === ROLES.MANAGER || isAccount ? (
+                                userType === ROLES.MANAGER ||
+                                isAccount ? (
                                   ""
                                 ) : (
                                   <Icons

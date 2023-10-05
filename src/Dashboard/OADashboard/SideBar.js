@@ -561,7 +561,7 @@ const SideBar = () => {
                 }
               >
                 {" "}
-                Leaves Type
+                Leave Types
               </SideBarListTitle>
             </SideBarListContainer>
           </Link>

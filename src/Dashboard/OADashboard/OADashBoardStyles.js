@@ -6,6 +6,7 @@ export const Dashboard = styled.div`
   width: 100%;
   height: 100vh;
 `;
+
 export const DashNav = styled.div`
   width: 18%;
   background-color: #ffffff;
@@ -56,7 +57,15 @@ export const BackButton = styled.button`
   cursor: pointer;
   text-transform: capitalize;
 `;
-export const DashNotification = styled.img``;
+export const IconsEmployee = styled.img`
+  display: inline-block;
+  cursor: pointer;
+`;
+export const DashNotification = styled.img`
+width: 24px;
+height: 24px;
+border-radius: 50%;
+`;
 export const SearchBox = styled.div`
   border-radius: 1px;
   background-color: #ffffff;
@@ -196,7 +205,7 @@ export const NotificationsContainer = styled.div`
 export const NotificationsHeader = styled.div`
   width: 100%;
   border-bottom: 1px solid #e3e3e3;
-  padding: 12px 16px;
+  padding: 20px 16px 12px 16px;
   display: flex;
   align-items: center;
   box-sizing: border-box;
