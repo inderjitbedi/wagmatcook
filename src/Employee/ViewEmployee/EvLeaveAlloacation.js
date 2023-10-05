@@ -154,7 +154,7 @@ const EvLeaveAlloacation = () => {
         setIsLoading(false);
       });
   };
-  const GetLeaveAlloaction = () => {
+  const GetLeaveAllocation = () => {
     setIsLoading(true);
     GetLeavesType();
     const trimid = employeeid.trim();
@@ -198,7 +198,7 @@ const EvLeaveAlloacation = () => {
           handleClose();
           reset();
           toast.success(result.message);
-          GetLeaveAlloaction();
+          GetLeaveAllocation();
         } else {
           //toast.warn("something went wrong ");
         }
@@ -226,7 +226,7 @@ const EvLeaveAlloacation = () => {
         if (result) {
           HandleCloseDelete();
           setId("");
-          GetLeaveAlloaction();
+          GetLeaveAllocation();
           toast.success(result.message); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
@@ -258,7 +258,7 @@ const EvLeaveAlloacation = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetLeaveAlloaction();
+          GetLeaveAllocation();
           setUpdate(false);
           handleClose();
           reset();
@@ -279,7 +279,7 @@ const EvLeaveAlloacation = () => {
   };
   useEffect(() => {
     GetLeavesType();
-    GetLeaveAlloaction();
+    GetLeaveAllocation();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -334,12 +334,12 @@ const EvLeaveAlloacation = () => {
             <CommenHeader employeeid={employeeid} />
           </FlexSpaceBetween>
           <LeaveDiv>
-            Leaves Alloaction
+            Leaves Allocation
             {userType === ROLES.EMPLOYEE ? (
               " "
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-                New Alloaction
+                New Allocation
               </ButtonBlue>
             )}
           </LeaveDiv>
@@ -365,7 +365,7 @@ const EvLeaveAlloacation = () => {
                     sx={{ ...CellStyle, maxWidth: "184px" }}
                     align="left"
                   >
-                    Total&nbsp;Allocation
+                    Total&nbsp;Allocation (Hrs)
                   </TableCell>
 
                   <TableCell sx={{ ...CellStyle }} align="left">
@@ -413,8 +413,8 @@ const EvLeaveAlloacation = () => {
                           />
                         )} */}
                         {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ||
-                        isAccount ? (
+                          userType === ROLES.MANAGER ||
+                          isAccount ? (
                           " "
                         ) : (
                           <Icons
@@ -465,8 +465,8 @@ const EvLeaveAlloacation = () => {
                   <ModalContainer>
                     <ModalHeading>
                       {!update
-                        ? "Leave Alloaction"
-                        : "Update Leaves Alloaction"}
+                        ? "Leave Allocation"
+                        : "Update Leaves Allocation"}
                     </ModalHeading>
                     <ModalIcon
                       onClick={handleClose}
@@ -503,7 +503,7 @@ const EvLeaveAlloacation = () => {
                       </FlexContaierForm>
                       <FlexColumnForm>
                         <InputLabel>
-                          Total Alloaction <InputSpan>*</InputSpan>
+                          Total Allocation (Hrs) <InputSpan>*</InputSpan>
                         </InputLabel>
                         <Input
                           type="text"
@@ -514,7 +514,7 @@ const EvLeaveAlloacation = () => {
                             },
                             pattern: {
                               value: /^[+]?\d+(\.\d+)?$/,
-                              message: "Please enter valid alloaction",
+                              message: "Please enter valid Allocation",
                             },
                             validate: (fieldValue) => {
                               return (
@@ -541,7 +541,7 @@ const EvLeaveAlloacation = () => {
       <DeleteModal
         openDelete={openDelete}
         message="Are you sure you want to delete this 
-        leave alloaction?"
+        leave Allocation?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}
