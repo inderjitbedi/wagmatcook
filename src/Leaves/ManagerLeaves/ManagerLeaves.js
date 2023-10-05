@@ -599,6 +599,7 @@ const ManagerLeaves = () => {
                     value={selectedEmployee}
                     onChange={(event, newValue) => {
                       setSelectedEmployee(newValue);
+                      setSearchValue("employee",newValue._id)
                     }}
                     options={options}
                     loading={loading}

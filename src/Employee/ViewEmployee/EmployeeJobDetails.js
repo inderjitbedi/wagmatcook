@@ -286,8 +286,8 @@ const EmployeeJobDetails = () => {
                 <CommenHeader employeeid={employeeid} />
 
                 {userType === ROLES.MANAGER ||
-                  userType === ROLES.EMPLOYEE ||
-                  isAccount ? (
+                userType === ROLES.EMPLOYEE ||
+                isAccount ? (
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton
@@ -313,8 +313,8 @@ const EmployeeJobDetails = () => {
                   <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                     <BasicHeading>Employment Details</BasicHeading>
                     {userType === ROLES.MANAGER ||
-                      userType === ROLES.EMPLOYEE ||
-                      isAccount ? (
+                    userType === ROLES.EMPLOYEE ||
+                    isAccount ? (
                       " "
                     ) : userType === ROLES.HR ? (
                       <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
@@ -434,6 +434,15 @@ const EmployeeJobDetails = () => {
                                 </ViewPara>
                               </FlexColumn>
                             </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                              <FlexColumn>
+                                <TitlePara>Hours per week</TitlePara>
+                                <ViewPara>
+                                  {data?.jurisdiction || " - "}
+                                </ViewPara>
+                              </FlexColumn>
+                            
+                            </FlexSpaceBetween>
                          
                             <FlexSpaceBetween>
                               <FlexColumn>
@@ -507,8 +516,8 @@ const EmployeeJobDetails = () => {
                               From:{" "}
                               {data.startDate
                                 ? moment(data.startDate).format(
-                                  "DD / MM / YYYY"
-                                )
+                                    "DD / MM / YYYY"
+                                  )
                                 : " - "}
                               <span style={{ marginLeft: "14px" }}>
                                 {" "}
@@ -706,11 +715,11 @@ const EmployeeJobDetails = () => {
                                           <Option value={user?.userData?._id}>
                                             {user.personalInfo?.length
                                               ? user.personalInfo[0].firstName +
-                                              " " +
-                                              (user?.personalInfo[0]?.lastName
-                                                ? user?.personalInfo[0]
-                                                  ?.lastName
-                                                : " ")
+                                                " " +
+                                                (user?.personalInfo[0]?.lastName
+                                                  ? user?.personalInfo[0]
+                                                      ?.lastName
+                                                  : " ")
                                               : user.userData.name}
                                           </Option>
                                         ))}
@@ -975,7 +984,7 @@ const EmployeeJobDetails = () => {
                               <FlexContaierForm
                                 style={{ alignItems: "flex-start" }}
                               >
-                                <FlexColumnForm style={{ width: "50%" }}>
+                                <FlexColumnForm>
                                   <InputLabel>
                                     Hours per week <InputSpan>*</InputSpan>
                                   </InputLabel>
@@ -1005,7 +1014,34 @@ const EmployeeJobDetails = () => {
                                     </Errors>
                                   }
                                 </FlexColumnForm>
-                              
+                                <FlexColumnForm>
+                                  <InputLabel>
+                                    Jurisdiction
+                                    <InputSpan>*</InputSpan>
+                                  </InputLabel>
+                                  <Controller
+                                    name={`jurisdiction`}
+                                    control={control}
+                                    rules={{
+                                      required: {
+                                        value: true,
+                                        message: "Required",
+                                      },
+                                    }}
+                                    render={({ field }) => (
+                                      <Select {...field}>
+                                        <Option>Select</Option>
+                                        <Option value="Federal">Federal</Option>
+                                        <Option value="Provincial">
+                                          Provincial
+                                        </Option>
+                                      </Select>
+                                    )}
+                                  />
+                                  <Errors>
+                                    {errors.jurisdiction?.message}
+                                  </Errors>
+                                </FlexColumnForm>
                               </FlexContaierForm>
                               <FlexContaierForm
                                 style={{
@@ -1072,10 +1108,10 @@ const EmployeeJobDetails = () => {
                               <ButtonBlue
                                 type="submit"
                                 style={{ marginTop: "25px" }}
-                              // disabled={!isDirty}
-                              // onClick={() => {
-                              //   handleSubmit(onSubmit);
-                              // }}
+                                // disabled={!isDirty}
+                                // onClick={() => {
+                                //   handleSubmit(onSubmit);
+                                // }}
                               >
                                 Submit
                               </ButtonBlue>

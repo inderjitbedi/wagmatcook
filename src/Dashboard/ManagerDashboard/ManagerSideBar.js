@@ -120,8 +120,12 @@ const ManagerSideBar = () => {
         />
         <SideBarLogodiv>
           <SideBarLogoHead>
-            {(headerData?.personalInfo?.firstName ? headerData?.personalInfo
-              ?.firstName : " -") + (headerData?.personalInfo?.lastName ? headerData?.personalInfo?.lastName : " -")}
+            {(headerData?.personalInfo?.firstName
+              ? headerData?.personalInfo?.firstName
+              : " -") +
+              (headerData?.personalInfo?.lastName
+                ? headerData?.personalInfo?.lastName
+                : " -")}
           </SideBarLogoHead>
           <SideBarLogoPara>
             {headerData?.position?.department?.name || "-"}
@@ -185,7 +189,7 @@ const ManagerSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-         <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/employee-list"
         >
@@ -219,7 +223,7 @@ const ManagerSideBar = () => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> 
+        </Link>  */}
         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/leaves"
@@ -276,7 +280,7 @@ const ManagerSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-{/* 
+        {/* 
          <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/events"
@@ -333,7 +337,7 @@ const ManagerSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to={`/manager-management/account/personal-info/${userData?._id}`}
         >
@@ -423,7 +427,7 @@ const ManagerSideBar = () => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> 
+        </Link>  */}
       </SideBarList>
     </>
   );
