@@ -40,9 +40,13 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const location = useLocation();
 
   const [openSettings, setOpenSettings] = React.useState(false);
-  const HandleOpenSettings = () => setOpenSettings(true);
+  const HandleOpenSettings = () => {
+    setOpenSettings(true)
+    GetOrgProfile();
+  };
   const HandleCloseSettings = () => setOpenSettings(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isProfile, setIsProfile] = useState([]);
   const [notificationCount, setNotificationCount] = useState([]);
   const [anchorElNotification, setAnchorElNotification] = useState(null);
   const openMenuNotification = Boolean(anchorElNotification);
@@ -62,6 +66,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const [searchValue, setSearchValue] = useState("");
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(false);
+  const [orgProfile, setOrgProfile] = useState([]);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -214,6 +219,29 @@ const CommenDashHeader = ({ onSearch, text }) => {
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
+   const GetOrgProfile = () => {
+     setIsProfile(true);
+     let url = API_URLS.getOrgProfile;
+     httpClient({
+       method: "get",
+       url,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           setOrgProfile(result);
+         } else {
+           //toast.warn("something went wrong ");
+         }
+       })
+       .catch((error) => {
+         console.error("Error:", error);
+         toast.error("Error creating department. Please try again.");
+         setIsProfile(false);
+       })
+       .finally(() => {
+         setIsProfile(false);
+       });
+   };
 
   useEffect(() => {
     // GetNotificationList()
@@ -256,7 +284,9 @@ const CommenDashHeader = ({ onSearch, text }) => {
         </FlexContaier>
 
         <DashHeaderSearch>
-          {location.pathname.indexOf("details") > -1 ? " " :
+          {location.pathname.indexOf("details") > -1 ? (
+            " "
+          ) : (
             <SearchBox>
               <SearchInput
                 type="text"
@@ -266,7 +296,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
               ></SearchInput>
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
-           }
+          )}
           <Badge
             badgeContent={notificationCount?.count}
             color="primary"
@@ -445,6 +475,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       <SettingsModal
         openSettings={openSettings}
         HandleCloseSettings={HandleCloseSettings}
+        isProfile={isProfile}
       />
     </>
   );

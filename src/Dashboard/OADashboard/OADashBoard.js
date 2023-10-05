@@ -83,8 +83,11 @@ import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 const OADashBoard = () => {
   let API_URL = process.env.REACT_APP_API_URL;
-const [openSettings, setOpenSettings] = React.useState(false);
-const HandleOpenSettings = () => setOpenSettings(true);
+const [openSettings, setOpenSettings] = useState(false);
+  const HandleOpenSettings = () => {
+    setOpenSettings(true)
+    
+  };
 const HandleCloseSettings = () => setOpenSettings(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);

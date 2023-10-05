@@ -64,8 +64,8 @@ const SharedSignin = () => {
             localStorage.setItem("user-email", formData.email);
             navigate("/verify-otp");
             toast.success(result.message);
-            setIsLoading(false);
           }
+          setIsLoading(false);
         })
         .catch((error: any) => {
           console.error("Error:", error);

@@ -142,7 +142,7 @@ const ButtonBlue = styled.button`
   margin-top: 25px;
 `;
 
-const SettingsModal = ({ openSettings, HandleCloseSettings }) => {
+const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
   const {
     register,
     control,
@@ -242,72 +242,95 @@ const SettingsModal = ({ openSettings, HandleCloseSettings }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <ModalContainer>
-          <ModalIconDelete
-            onClick={() => {
-              HandleCloseSettings();
-              reset({});
-              clearErrors();
-            }}
-            src="/images/icons/Alert-Circle.svg"
-          />
-          <ModalHeading>Organization details</ModalHeading>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <UploadDiv>
-              <input
-                style={{ width: "50%" }}
-                type="file"
-                // onChange={handleFileChange}
-                id="upload"
-                className="custom"
+        <>
+          {" "}
+          {isProfile ? (
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                height: "300px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <RotatingLines
+                strokeColor="#279AF1"
+                strokeWidth="3"
+                animationDuration="0.75"
+                width="52"
+                visible={true}
               />
+            </div>
+          ) : (
+            <ModalContainer>
+              <ModalIconDelete
+                onClick={() => {
+                  HandleCloseSettings();
+                  reset({});
+                  clearErrors();
+                }}
+                src="/images/icons/Alert-Circle.svg"
+              />
+              <ModalHeading>Organization details</ModalHeading>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <UploadDiv>
+                  <input
+                    style={{ width: "50%" }}
+                    type="file"
+                    // onChange={handleFileChange}
+                    id="upload"
+                    className="custom"
+                  />
 
-              <UploadLabel htmlFor="upload">
-                <UploadImg src="/svg/Camera.svg" />
-                <UploadText>Upload Photo</UploadText>
-              </UploadLabel>
-            </UploadDiv>
-            <FlexColumnForm>
-              <InputLabel>
-                Name <InputSpan>*</InputSpan>
-              </InputLabel>
-              <Input
-                type="text"
-                {...register("name", {
-                  required: {
-                    value: true,
-                    message: "Required",
-                  },
-                })}
-              />
-              {errors.name && <Errors>{errors.name?.message}</Errors>}
-            </FlexColumnForm>
-            <FlexColumnForm>
-              <InputLabel>
-                Size <InputSpan>*</InputSpan>
-              </InputLabel>
-              <Input
-                type="text"
-                {...register("size", {
-                  required: {
-                    value: true,
-                    message: "Required",
-                  },
-                  validate: (fieldValue) => {
-                    return (
-                      (!isNaN(parseFloat(fieldValue)) &&
-                        isFinite(fieldValue)) ||
-                      "Must be a number"
-                    );
-                  },
-                })}
-              />
-              {errors.size && <Errors>{errors.size?.message}</Errors>}
-            </FlexColumnForm>
+                  <UploadLabel htmlFor="upload">
+                    <UploadImg src="/svg/Camera.svg" />
+                    <UploadText>Upload Photo</UploadText>
+                  </UploadLabel>
+                </UploadDiv>
+                <FlexColumnForm>
+                  <InputLabel>
+                    Name <InputSpan>*</InputSpan>
+                  </InputLabel>
+                  <Input
+                    type="text"
+                    {...register("name", {
+                      required: {
+                        value: true,
+                        message: "Required",
+                      },
+                    })}
+                  />
+                  {errors.name && <Errors>{errors.name?.message}</Errors>}
+                </FlexColumnForm>
+                <FlexColumnForm>
+                  <InputLabel>
+                    Size <InputSpan>*</InputSpan>
+                  </InputLabel>
+                  <Input
+                    type="text"
+                    {...register("size", {
+                      required: {
+                        value: true,
+                        message: "Required",
+                      },
+                      validate: (fieldValue) => {
+                        return (
+                          (!isNaN(parseFloat(fieldValue)) &&
+                            isFinite(fieldValue)) ||
+                          "Must be a number"
+                        );
+                      },
+                    })}
+                  />
+                  {errors.size && <Errors>{errors.size?.message}</Errors>}
+                </FlexColumnForm>
 
-            <ButtonBlue type="submit">Submit</ButtonBlue>
-          </form>
-        </ModalContainer>
+                <ButtonBlue type="submit">Submit</ButtonBlue>
+              </form>
+            </ModalContainer>
+          )}
+        </>
       </Box>
     </Modal>
   );

@@ -98,7 +98,10 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   notificationReadAll: `/notification/read-all`,
   markReadNotification: `/notification/mark-read`,
   // active user
-  getActiveUser:`employee/active-list`,
+  getActiveUser: `employee/active-list`,
+  // org profile settings api 
+  getOrgProfile: `/organization/details`,
+  updateOrgProfile:`/organization/update`,
 };
 
 export default API_URLS;
