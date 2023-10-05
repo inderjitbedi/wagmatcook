@@ -678,8 +678,14 @@ const employeeController = {
             if (!user) {
                 return res.status(400).json({ message: 'Employee doesn\'t exists' });
             }
-
-            const certificate = new EmployeeCertificates({ ...req.body, employee: req.params.id });
+            let certificate = req.body;
+            if (certificate.file) {
+                let file = await File.findOne({ _id: certificate.file });
+                if (file) {
+                    certificate.file = await fileController.moveToUploads(req, file)
+                }
+            }
+            certificate = new EmployeeCertificates({ ...certificate, employee: req.params.id });
             await certificate.save();
 
             res.status(200).json({
@@ -704,9 +710,11 @@ const employeeController = {
             let updatedCertificates = []
 
             for (const certificate of certificates) {
-                let file = await File.findOne({ _id: certificate.file });
-                if (file) {
-                    certificate.file = await fileController.moveToUploads(req, file)
+                if (certificate.file) {
+                    let file = await File.findOne({ _id: certificate.file });
+                    if (file) {
+                        certificate.file = await fileController.moveToUploads(req, file)
+                    }
                 }
                 if (certificate._id) {
                     const existingCertificate = await EmployeeCertificates.findByIdAndUpdate(certificate._id, { $set: { ...certificate, employee: req.params.id } }, { new: true });
@@ -721,6 +729,37 @@ const employeeController = {
             const existingCertificateIds = updatedCertificates.map((code) => code._id);
             await EmployeeCertificates.updateMany({ employee: req.params.id, _id: { $nin: existingCertificateIds } }, { isDeleted: true }, { new: true });
 
+
+            res.status(200).json({
+                message: 'Employee certificates updated successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
+    async updateCertificate(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+            let certificate = req.body;
+            if (certificate.file) {
+                let file = await File.findOne({ _id: certificate.file });
+                if (file) {
+                    certificate.file = await fileController.moveToUploads(req, file)
+                }
+            }
+            // if (certificate._id) {
+            const existingCertificate = await EmployeeCertificates.findByIdAndUpdate(req.params.certificateid, { $set: { ...certificate, employee: req.params.id } }, { new: true });
+            // } else {
+            //     const newCertificate = new EmployeeCertificates({ ...certificate, employee: req.params.id });
+            //     await newCertificate.save();
+            // }
 
             res.status(200).json({
                 message: 'Employee certificates updated successfully'
@@ -750,6 +789,28 @@ const employeeController = {
             res.status(400).json(error);
         }
     },
+
+    async deleteCertificate(req, res) {
+        try {
+
+            const user = await User.findOne({ _id: req.params.id })
+            if (!user) {
+                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+            }
+
+            const certificate = await EmployeeCertificates.findOneAndUpdate({ _id: req.params.certificateid }, { isDeleted: true });
+
+            res.status(200).json({
+                certificate,
+                message: 'Employee certificate deleted successfully'
+            });
+
+        } catch (error) {
+            console.error("employeeController:update:error -", error);
+            res.status(400).json(error);
+        }
+    },
+
 
     async getReviews(req, res) {
         try {
