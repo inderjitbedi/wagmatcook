@@ -281,26 +281,26 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     }
     // console.log("form submmited", data);
   };
-   const [headerData, setHeaderData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
 
-   const GetHeadersData = () => {
-     // setIsLoading(true);
-     const trimid = employeeid.trim();
-     let url = `/employee/header-info/${trimid}`;
-     httpClient({
-       method: "get",
-       url,
-     })
-       .then(({ result, error }) => {
-         if (result) {
-           setHeaderData(result);
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error in fetching Personal info. Please try again.");
-       });
-   };
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
     <>
       {!isEdit && (
@@ -507,10 +507,10 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                               <Option value={user?.userData._id}>
                                 {user.personalInfo?.length
                                   ? user.personalInfo[0].firstName +
-                                    " " +
-                                    (user?.personalInfo[0]?.lastName
-                                      ? user?.personalInfo[0]?.lastName
-                                      : " ")
+                                  " " +
+                                  (user?.personalInfo[0]?.lastName
+                                    ? user?.personalInfo[0]?.lastName
+                                    : " ")
                                   : user.userData.name}
                               </Option>
                             ))}

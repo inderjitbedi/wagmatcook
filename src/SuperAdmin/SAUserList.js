@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import SASideBar from './SideBar/SASideBar'
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -55,9 +55,9 @@ const CellStyle2 = {
   lineHeight: "15px",
 };
 const SAUserList = () => {
-    const FilterData = [
-    "Org Admins","Managers","HR","Employees"
-    ];
+  const FilterData = [
+    "Org Admins", "Managers", "HUMAN_RESOURCE", "Employees"
+  ];
   const disciplinaryData = [
     {
       _id: "64f015b3f1b4113adc352819",
@@ -108,7 +108,7 @@ const SAUserList = () => {
       requiredBcr: true,
       order: 1,
     },
-  
+
     {
       _id: "64f015b3f1b4113adc352819",
       name: "test user ",
@@ -139,8 +139,8 @@ const SAUserList = () => {
               <SearchInput
                 type="text"
                 placeholder="Search..."
-                // value={searchValue}
-                // onChange={(e) => setSearchValue(e.target.value)}
+              // value={searchValue}
+              // onChange={(e) => setSearchValue(e.target.value)}
               ></SearchInput>
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
@@ -154,8 +154,8 @@ const SAUserList = () => {
             ))}
           </DepartmentFilterdiv>
           {/* <AddNewButton onClick={HandleOpen}>Add New</AddNewButton> */}
-        
-       
+
+
         </DepartmentFilterContainer>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -165,7 +165,7 @@ const SAUserList = () => {
                   background: "#FBFBFB",
                 }}
               >
-             
+
                 <TableCell sx={CellHeadStyles} align="left">
                   Name
                 </TableCell>

@@ -196,6 +196,41 @@ const orgController = {
       res.status(400).json(error);
     }
   },
+  async update(req, res) {
+    try {
+
+      let file = await File.findOne({ _id: req.body.file });
+      if (file) {
+        req.body.logo = await fileController.moveToUploads(req, file);
+      }
+      const org = await Organization.findOneAndUpdate({
+        _id: req.organization._id
+      }, req.body);
+
+      res.status(200).json({
+        message: "Organization profile updated successfully.",
+      });
+    } catch (error) {
+      console.error("organizationController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async details(req, res) {
+    try {
+      const details = await Organization.findOne({
+        _id: req.organization._id
+      }).populate('logo');
+
+      res.status(200).json({
+        details,
+        message: "Organization profile fetched successfully.",
+      });
+    } catch (error) {
+      console.error("organizationController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
 };
 
 module.exports = orgController;
