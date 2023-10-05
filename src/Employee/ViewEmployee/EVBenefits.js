@@ -30,6 +30,7 @@ import CommenHeader from "./CommenHeader";
 const EVBenefits = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const [isEdit, setIsEdit] = useState(false);
+  const [isAccount, setIsAccount] = useState(false);
 
   const Navigate = useNavigate();
   const location = useLocation();
@@ -72,6 +73,9 @@ const EVBenefits = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
+     if (location.pathname.indexOf("account") > -1) {
+       setIsAccount(true);
+     }
   }, [isEdit]);
 
   return (
@@ -103,7 +107,7 @@ const EVBenefits = () => {
               <FlexSpaceBetween style={{ alignItems: "center" }}>
                 <CommenHeader employeeid={employeeid} />
 
-                {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
+                {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE || isAccount ? (
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton

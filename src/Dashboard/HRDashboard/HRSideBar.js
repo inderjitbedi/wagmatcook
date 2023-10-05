@@ -12,6 +12,7 @@ import {
   SideBarList,
 } from "../OADashboard/SideBarStyles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import httpClient from "../../api/httpClient";
 
 const HRSideBar = () => {
   const location = useLocation();
@@ -32,9 +33,30 @@ const HRSideBar = () => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUserData(parsedUser);
+      GetHeadersData(parsedUser._id);
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
+    const [headerData, setHeaderData] = useState([]);
+
+    const GetHeadersData = (id) => {
+      // setIsLoading(true);
+
+      let url = `/employee/header-info/${id}`;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setHeaderData(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // toast.error("Error in fetching Personal info. Please try again.");
+        });
+    };
   return (
     <>
       {" "}
@@ -43,12 +65,24 @@ const HRSideBar = () => {
       <SideBarLogoContainer>
         <SideBarLogo
           src={
-            orgData?.logo ? API_URL + orgData?.logo?.path : "/images/User.jpg"
+            headerData?.personalInfo?.photo
+              ? API_URL + headerData?.personalInfo?.photo?.path
+              : "/images/User.jpg"
           }
         />
         <SideBarLogodiv>
-          <SideBarLogoHead>{orgData?.name || "Tom Holland"}</SideBarLogoHead>
-          <SideBarLogoPara>Design Manager</SideBarLogoPara>
+          <SideBarLogoHead>
+            {" "}
+            {(headerData?.personalInfo?.firstName
+              ? headerData?.personalInfo?.firstName
+              : " -") +
+              (headerData?.personalInfo?.lastName
+                ? headerData?.personalInfo?.lastName
+                : " -")}
+          </SideBarLogoHead>
+          <SideBarLogoPara>
+            {headerData?.position?.department?.name}
+          </SideBarLogoPara>
         </SideBarLogodiv>
       </SideBarLogoContainer>
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
@@ -105,7 +139,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* <Link
+        <Link
           style={{ textDecoration: "none" }}
           to="/hr-management/employee-list"
         >
@@ -139,7 +173,7 @@ const HRSideBar = () => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> */}
+        </Link> 
         <Link style={{ textDecoration: "none" }} to="/hr-management/leaves">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -193,7 +227,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
+         <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -333,7 +367,7 @@ const HRSideBar = () => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> */}
+        </Link> 
       </SideBarList>
     </>
   );

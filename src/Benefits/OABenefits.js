@@ -104,7 +104,7 @@ const OABenefits = () => {
       description: "",
     },
   });
-
+  const [benefits, setBenefits] = useState([]);
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -120,7 +120,27 @@ const OABenefits = () => {
       HandleUpdate(data);
     }
   };
+  const HandleReorder = (reOrder) => {
+    console.log(reOrder, "this reorder");
+    let url = API_URLS.reorderBenefits;
 
+    httpClient({
+      method: "put",
+      url,
+      data: { benefits: reOrder },
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          GetBenefits();
+        } else {
+          ////toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
   const GetBenefits = () => {
     setIsLoading(true);
     let url = API_URLS.getOaBenefits.replace("searchValue", searchValue);
@@ -131,6 +151,7 @@ const OABenefits = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          setBenefits(result.benefits);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -155,7 +176,7 @@ const OABenefits = () => {
     let url = API_URLS.createBenefits;
 
     setIsLoading(true);
-    let dataCopy = data;
+    let dataCopy = { ...data, order: benefits?.length + 1 };
     httpClient({
       method: "post",
       url,
@@ -190,6 +211,9 @@ const OABenefits = () => {
     })
       .then(({ result, error }) => {
         if (result) {
+          let FilteredArray = benefits.filter((data) => data._id !== Id);
+          let ReorderArray = FilteredArray.map((data) => data._id);
+          HandleReorder(ReorderArray);
           HandleCloseDelete();
           setId("");
           GetBenefits();
@@ -295,12 +319,12 @@ const OABenefits = () => {
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    //  const reorderedData = Array.from(leaves);
-    //  const [movedItem] = reorderedData.splice(result.source.index, 1);
-    //  reorderedData.splice(result.destination.index, 0, movedItem);
-    //  console.log("drag is working ");
-    //  setLeaves(reorderedData);
-    //  HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+    const reorderedData = Array.from(benefits);
+    const [movedItem] = reorderedData.splice(result.source.index, 1);
+    reorderedData.splice(result.destination.index, 0, movedItem);
+    console.log("drag is working ");
+    setBenefits(reorderedData);
+    HandleReorder(reorderedData.map((item) => item._id)); 
   };
 
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -521,7 +545,7 @@ const OABenefits = () => {
                         </TableCell>
                       </TableRow>
                     )}
-                    {result?.benefits?.map((data, index) => (
+                    {benefits?.map((data, index) => (
                       <Draggable
                         key={data._id}
                         draggableId={data._id}

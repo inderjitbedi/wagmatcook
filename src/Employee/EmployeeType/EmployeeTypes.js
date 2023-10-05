@@ -104,7 +104,7 @@ const EmployeeTypes = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
   const HandleCloseDelete = () => setOpenDelete(false);
-
+  const [employeeTypes, setEmployeeType] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
@@ -156,6 +156,7 @@ const EmployeeTypes = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          setEmployeeType(result.employeeTypes);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -169,6 +170,7 @@ const EmployeeTypes = () => {
         setIsLoading(false);
       });
   };
+  // const [employeeTypes, setEmployeeType] = useState;
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
   const HandleClose = () => {
@@ -193,11 +195,11 @@ const EmployeeTypes = () => {
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
+    let dataCopy = { ...data, order: employeeTypes?.length + 1 };
     setIsLoading(true);
     let url = API_URLS.createEmployeeTypes;
 
     setIsLoading(true);
-    let dataCopy = data;
     httpClient({
       method: "post",
       url,
@@ -232,6 +234,10 @@ const EmployeeTypes = () => {
     })
       .then(({ result, error }) => {
         if (result) {
+           let FilteredArray = employeeTypes.filter((data) => data._id !== Id);
+          let ReorderArray = FilteredArray.map((data) => data._id);
+          HandleReorder(ReorderArray);
+          
           HandleCloseDelete();
           setId("");
           GetEmployeeTypes();
@@ -282,18 +288,39 @@ const EmployeeTypes = () => {
         setIsLoading(false);
       });
   };
+  const HandleReorder = (reOrder) => {
+    console.log(reOrder, "this reorder");
+    let url = API_URLS.reorderEmployeeType;
+
+    httpClient({
+      method: "put",
+      url,
+      data: { employeeTypes: reOrder },
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          GetEmployeeTypes();
+        } else {
+          ////toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
   useEffect(() => {
     GetEmployeeTypes();
   }, [searchValue]);
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    // const reorderedData = Array.from(result.employeeTypes); 
-    // const [movedItem] = reorderedData.splice(result.source.index, 1);
-    // reorderedData.splice(result.destination.index, 0, movedItem);
-    // console.log("drag is working ");
-    // setResult(reorderedData);
-    // HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+    const reorderedData = Array.from(employeeTypes);
+    const [movedItem] = reorderedData.splice(result.source.index, 1);
+    reorderedData.splice(result.destination.index, 0, movedItem);
+    console.log("drag is working ");
+    setEmployeeType(reorderedData);
+    HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };
 
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -510,7 +537,7 @@ const EmployeeTypes = () => {
                         </TableCell>
                       </TableRow>
                     )}
-                    {result?.employeeTypes?.map((data, index) => (
+                    {employeeTypes?.map((data, index) => (
                       <Draggable
                         key={data._id}
                         draggableId={data._id}

@@ -459,7 +459,7 @@ const Employee = () => {
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
-                    {(data.role === "EMPLOYEE" ? "USER" : data.role) || " - "}
+                    {(data.role === ROLES.EMPLOYEE ? "USER" : data.role === ROLES.HR ? " HR"  : data.role) || " - "}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <IconContainer>

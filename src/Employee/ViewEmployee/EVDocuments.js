@@ -328,9 +328,13 @@ const EVDocuments = () => {
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
-                {isAccount ? " " : <ButtonBlue onClick={() => handleOpen()}>
-                  New Document
-                </ButtonBlue>}
+                {isAccount || userType === ROLES.EMPLOYEE ? (
+                  " "
+                ) : (
+                  <ButtonBlue onClick={() => handleOpen()}>
+                    New Document
+                  </ButtonBlue>
+                )}
               </FlexSpaceBetween>
               {result?.documents?.length === 0 ? (
                 <NoDocumentfound message="No documents to show" />
@@ -352,8 +356,8 @@ const EVDocuments = () => {
                             getFileType(data?.file) === "pdf"
                               ? "/images/icons/FilePdf.svg"
                               : getFileType(data?.file) === "doc"
-                                ? "/images/icons/FileText.svg"
-                                : "/images/icons/File3.svg"
+                              ? "/images/icons/FileText.svg"
+                              : "/images/icons/File3.svg"
                           }
                         />
                         <ViewPara>{data.file?.originalName}</ViewPara>
@@ -368,13 +372,19 @@ const EVDocuments = () => {
                           <IconsEmployee src="/images/icons/Download.svg" />
                         </Link>
 
-                        <IconsEmployee
-                          onClick={() => {
-                            setId(data._id);
-                            HandleOpenDelete();
-                          }}
-                          src="/images/icons/Trash-2.svg"
-                        />
+                        {userType === ROLES.MANAGER ||
+                        userType === ROLES.EMPLOYEE ||
+                        isAccount ? (
+                          " "
+                        ) : (
+                          <IconsEmployee
+                            onClick={() => {
+                              setId(data._id);
+                              HandleOpenDelete();
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
                       </IconContainer>
                     </FlexSpaceBetween>
                   ))}

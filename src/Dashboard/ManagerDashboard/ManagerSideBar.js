@@ -1,4 +1,5 @@
-import React,{useState,useEffect} from 'react'
+import React, { useState, useEffect } from "react";
+import httpClient from "../../api/httpClient";
 import {
   SidebarTitle,
   SideBarListTitle,
@@ -11,66 +12,99 @@ import {
   SideBarListLogo,
   SideBarList,
 } from "../OADashboard/SideBarStyles";
+import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const ManagerSideBar = () => {
-    const location = useLocation();
+  const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
-  
-     const SideBarData = [
-       {
-         Title: "Dashboard",
-         src: "/svg/Dashboard.svg",
-         to: "/manager-management/dashboard",
-       },
+  const [userType, setUserType] = useState("");
 
-      //  {
-      //    Title: "Employee",
-      //    src: "/svg/Employee.svg",
-      //    to: "/manager-management/employee-list",
-      //    active: "employee-details",
-      //  },
+  const SideBarData = [
+    {
+      Title: "Dashboard",
+      src: "/svg/Dashboard.svg",
+      to: "/manager-management/dashboard",
+    },
 
-       {
-         Title: "Leaves",
-         src: "/svg/managerleaves.svg",
-         to: "/manager-management/leaves",
-       },
-      //  {
-      //    Title: "Events",
-      //    src: "/svg/fire.svg",
-      //    //  to: "/organization-admin/leaves",
-      //  },
-      //  {
-      //    Title: "Accounts",
-      //    src: "/svg/person.svg",
-      //    //  to: "/organization-admin/leaves",
-      //  },
-      //  {
-      //    Title: "Helpdesk",
-      //    src: "/svg/alert-circle.svg",
-      //    //  to: "/organization-admin/leaves",
-      //  },
-     ];
-      const style = {
-        textDecoration: "none",
-        color: "#279AF1",
-    };
-     useEffect(() => {
-       let org = localStorage.getItem("org");
-       if (org) {
-         let parsedUser = JSON.parse(org);
-         setOrgData(parsedUser);
-       }
-        let user = localStorage.getItem("user");
-        if (user) {
-          let parsedUser = JSON.parse(user);
-          setUserData(parsedUser);
+    //  {
+    //    Title: "Employee",
+    //    src: "/svg/Employee.svg",
+    //    to: "/manager-management/employee-list",
+    //    active: "employee-details",
+    //  },
+
+    {
+      Title: "Leaves",
+      src: "/svg/managerleaves.svg",
+      to: "/manager-management/leaves",
+    },
+    //  {
+    //    Title: "Events",
+    //    src: "/svg/fire.svg",
+    //    //  to: "/organization-admin/leaves",
+    //  },
+    //  {
+    //    Title: "Accounts",
+    //    src: "/svg/person.svg",
+    //    //  to: "/organization-admin/leaves",
+    //  },
+    //  {
+    //    Title: "Helpdesk",
+    //    src: "/svg/alert-circle.svg",
+    //    //  to: "/organization-admin/leaves",
+    //  },
+  ];
+  const style = {
+    textDecoration: "none",
+    color: "#279AF1",
+  };
+  const [headerData, setHeaderData] = useState([]);
+
+  const GetHeadersData = (id) => {
+    // setIsLoading(true);
+
+    let url = `/employee/header-info/${id}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
         }
-     }, []);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
+
+  useEffect(() => {
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+    }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUserData(parsedUser);
+      GetHeadersData(parsedUser._id);
+    }
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+    }
+  }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-  
+
   return (
     <>
       {" "}
@@ -79,12 +113,19 @@ const ManagerSideBar = () => {
       <SideBarLogoContainer>
         <SideBarLogo
           src={
-            orgData?.logo ? API_URL + orgData?.logo?.path : "/images/User.jpg"
+            headerData?.personalInfo?.photo
+              ? API_URL + headerData?.personalInfo?.photo?.path
+              : "/images/User.jpg"
           }
         />
         <SideBarLogodiv>
-          <SideBarLogoHead>{orgData?.name || "Tom Holland"}</SideBarLogoHead>
-          <SideBarLogoPara>Design Manager</SideBarLogoPara>
+          <SideBarLogoHead>
+            {(headerData?.personalInfo?.firstName ? headerData?.personalInfo
+              ?.firstName : " -") + (headerData?.personalInfo?.lastName ? headerData?.personalInfo?.lastName : " -")}
+          </SideBarLogoHead>
+          <SideBarLogoPara>
+            {headerData?.position?.department?.name || "-"}
+          </SideBarLogoPara>
         </SideBarLogodiv>
       </SideBarLogoContainer>
       <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
@@ -144,7 +185,7 @@ const ManagerSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* <Link
+         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/employee-list"
         >
@@ -178,7 +219,7 @@ const ManagerSideBar = () => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> */}
+        </Link> 
         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/leaves"
@@ -234,10 +275,9 @@ const ManagerSideBar = () => {
               Leaves
             </SideBarListTitle>
           </SideBarListContainer>
-
         </Link>
-
-        {/* <Link
+{/* 
+         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/events"
         >
@@ -292,7 +332,7 @@ const ManagerSideBar = () => {
               Events
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           style={{ textDecoration: "none" }}
           to={`/manager-management/account/personal-info/${userData?._id}`}
@@ -383,12 +423,10 @@ const ManagerSideBar = () => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> */}
-
-
+        </Link> 
       </SideBarList>
     </>
   );
-}
+};
 
-export default ManagerSideBar
+export default ManagerSideBar;
