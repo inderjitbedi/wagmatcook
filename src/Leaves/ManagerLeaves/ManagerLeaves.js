@@ -112,6 +112,7 @@ const ManagerLeaves = () => {
   const [userType, setUserType] = useState("");
   const Data = [1, 2, 3, 4, 5, 6, 7, 8];
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setOptionLoading] = useState(false);
   const [result, setResult] = useState([]);
 
   const [searchValue, setSearchValue] = useState("");
@@ -138,7 +139,7 @@ const ManagerLeaves = () => {
   const [reportList, setReportList] = useState([]);
   const [openAuto, setOpenAuto] = React.useState(false);
   const [options, setOptions] = React.useState([]);
-  const loading = openAuto && options.length === 0;
+  // const loading = openAuto && options.length === 0;
   const {
     register,
     control,
@@ -250,31 +251,31 @@ const ManagerLeaves = () => {
       }, duration);
     });
   }
-  React.useEffect(() => {
-    let active = true;
+  // React.useEffect(() => {
+  //   let active = true;
 
-    if (!loading) {
-      return undefined;
-    }
+  //   if (!loading) {
+  //     return undefined;
+  //   }
 
-    (async () => {
-      await GetActiveUser(); // For demo purposes.
+  //   (async () => {
+  //     await GetActiveUser(); // For demo purposes.
 
-      if (active) {
-        setOptions([...userList]);
-      }
-    })();
+  //     if (active) {
+  //       setOptions([...userList]);
+  //     }
+  //   })();
 
-    return () => {
-      active = false;
-    };
-  }, [loading]);
+  //   return () => {
+  //     active = false;
+  //   };
+  // }, [loading]);
 
-  React.useEffect(() => {
-    if (!openAuto) {
-      setOptions([]);
-    }
-  }, [openAuto]);
+  // React.useEffect(() => {
+  //   if (!openAuto) {
+  //     setOptions([]);
+  //   }
+  // }, [openAuto]);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [userList, setUserList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
@@ -303,7 +304,7 @@ const ManagerLeaves = () => {
   };
 
   const GetActiveUser = () => {
-    //  setIsLoading(true);
+    setOptionLoading(true);
     let url = API_URLS.getActiveUser;
     httpClient({
       method: "get",
@@ -311,20 +312,25 @@ const ManagerLeaves = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setUserList(result.employees);
+          setOptions(result.employees);
         } else {
           //toast.warn("something went wrong ");
         }
+        setOptionLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         //  toast.error("Error creating department. Please try again.");
-        //  setIsLoading(false);
+        setOptionLoading(false);
       })
       .finally(() => {
-        //  setIsLoading(false);
+        setOptionLoading(false);
       });
   };
+
+  useEffect(() => {
+    // getLeavesAllocations()
+  }, [selectedEmployee]);
   useEffect(() => {
     GetLeavesHistory();
     GetReportList();
@@ -574,9 +580,10 @@ const ManagerLeaves = () => {
                       setOpenAuto(false);
                     }}
                     isOptionEqualToValue={(option, value) =>
-                      option._id === value
+                      option._id === value._id
                     }
                     getOptionLabel={(option) => {
+                      console.log(option);
                       if (
                         option &&
                         option.personalInfo &&
@@ -586,13 +593,12 @@ const ManagerLeaves = () => {
                         return `${option.personalInfo.firstName} ${option.personalInfo.lastName}`;
                       }
                       // Handle the case where required properties are missing or undefined
-                      return "Unknown";
+                      return "Select";
                     }}
-                    getOptionValue={(option) => option._id}
+                    // getOptionValue={(option) => option._id}
                     value={selectedEmployee}
                     onChange={(event, newValue) => {
-                      setSelectedEmployee(newValue._id);
-                      console.log(newValue);
+                      setSelectedEmployee(newValue);
                     }}
                     options={options}
                     loading={loading}
