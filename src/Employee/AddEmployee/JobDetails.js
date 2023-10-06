@@ -851,7 +851,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             htmlFor={`positions.${index}.isBebEligible`}
                             style={{ marginBottom: "0px", cursor: "pointer" }}
                           >
-                            Is BEB Eligible? <InputSpan>*</InputSpan>
+                            Is BEB Eligible? 
                           </InputLabel>
                         </AlignFlex>
                       </FlexColumnForm>
@@ -866,7 +866,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             htmlFor={`positions.${index}.isPrimary`}
                             style={{ marginBottom: "0px", cursor: "pointer" }}
                           >
-                            Is Primary <InputSpan>*</InputSpan>
+                            Is Primary 
                           </InputLabel>
                         </AlignFlex>
                         <ErrorMessage

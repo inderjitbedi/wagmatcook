@@ -1072,7 +1072,7 @@ const EmployeeJobDetails = () => {
                                         }}
                                       >
                                         Is BEB Eligible?{" "}
-                                        <InputSpan>*</InputSpan>
+                                      
                                       </InputLabel>
                                     </AlignFlex>
                                   </FlexColumnForm>
@@ -1090,7 +1090,7 @@ const EmployeeJobDetails = () => {
                                           cursor: "pointer",
                                         }}
                                       >
-                                        Is Primary <InputSpan>*</InputSpan>
+                                        Is Primary 
                                       </InputLabel>
                                     </AlignFlex>
                                   </FlexColumnForm>
