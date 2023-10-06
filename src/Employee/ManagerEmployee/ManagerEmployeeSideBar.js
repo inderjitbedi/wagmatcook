@@ -53,7 +53,7 @@ const ManagerEmployeeSideBar = (props) => {
            "/manager-management/employee-details/benefits/" + props.employeeId,
        },
        {
-         Title: "Leave Allocation",
+         Title: "Leave Allocations",
          to:
            "/manager-management/employee-details/leave-alloacation/" +
            props.employeeId,

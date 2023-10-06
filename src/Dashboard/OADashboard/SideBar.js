@@ -683,7 +683,7 @@ const SideBar = () => {
             // }
             >
               {" "}
-              Account
+             My Account
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

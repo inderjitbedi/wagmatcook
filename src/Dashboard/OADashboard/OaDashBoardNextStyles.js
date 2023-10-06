@@ -153,6 +153,8 @@ export const CardEmployeespan = styled.span`
 export const CardEmployeeImg = styled.img`
   width: 40px;
   height: 40px;
+object-fit: cover;
+
   border-radius: 50%;
 `;
 

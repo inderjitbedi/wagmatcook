@@ -37,7 +37,7 @@ const EmployeeSidebar = () => {
       src: "/images/icons/EmployeeEvents.svg",
     },
     {
-      Title: "Accounts",
+      Title: "My Account",
       src: "/svg/person.svg",
     },
     {

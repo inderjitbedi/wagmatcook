@@ -139,8 +139,8 @@ const SAUserList = () => {
               <SearchInput
                 type="text"
                 placeholder="Search..."
-              // value={searchValue}
-              // onChange={(e) => setSearchValue(e.target.value)}
+                // value={searchValue}
+                // onChange={(e) => setSearchValue(e.target.value)}
               ></SearchInput>
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
@@ -154,8 +154,6 @@ const SAUserList = () => {
             ))}
           </DepartmentFilterdiv>
           {/* <AddNewButton onClick={HandleOpen}>Add New</AddNewButton> */}
-
-
         </DepartmentFilterContainer>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -165,7 +163,6 @@ const SAUserList = () => {
                   background: "#FBFBFB",
                 }}
               >
-
                 <TableCell sx={CellHeadStyles} align="left">
                   Name
                 </TableCell>

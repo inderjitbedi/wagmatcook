@@ -75,6 +75,7 @@ const EVDocuments = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    setFile(null)
   };
   const [Id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -124,7 +125,7 @@ const EVDocuments = () => {
         .then(({ result, error }) => {
           if (result) {
             handleClose();
-            setFile("");
+            setFile(null);
             toast.success(result.message);
             GetDocuments();
           } else {
@@ -331,9 +332,7 @@ const EVDocuments = () => {
                 {isAccount || userType === ROLES.EMPLOYEE ? (
                   " "
                 ) : (
-                  <ButtonBlue onClick={() => handleOpen()}>
-                    New Document
-                  </ButtonBlue>
+                  <ButtonBlue onClick={() => handleOpen()}>Add New</ButtonBlue>
                 )}
               </FlexSpaceBetween>
               {result?.documents?.length === 0 ? (
@@ -454,7 +453,7 @@ const EVDocuments = () => {
           ) : (
             <>
               <ModalContainer>
-                <ModalHeading>Upload a file</ModalHeading>
+                <ModalHeading>Add Document</ModalHeading>
                 <ModalIcon
                   onClick={handleClose}
                   src="/images/icons/Alert-Circle.svg"
@@ -466,13 +465,13 @@ const EVDocuments = () => {
                 <ModalFormContainer>
                   <FlexContaierForm>
                     <FlexColumnForm>
-                      <InputLabel
+                      {/* <InputLabel
                         style={{
                           color: "#8F9BB3",
                         }}
                       >
                         File upload description
-                      </InputLabel>
+                      </InputLabel> */}
                       <input
                         style={{ width: "50%" }}
                         type="file"
@@ -511,7 +510,7 @@ const EVDocuments = () => {
                                   <span style={{ color: "#279AF1" }}>
                                     Browse file
                                   </span>
-                                  from your computer
+                                  &nbsp;from your computer
                                 </UploadImageLight>
                               </>
                             )}

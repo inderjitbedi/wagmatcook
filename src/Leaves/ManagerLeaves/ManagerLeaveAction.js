@@ -9,6 +9,7 @@ import { useForm, Controller } from "react-hook-form";
 import API_URLS from "../../constants/apiUrls";
 import moment from "moment";
 import ROLES from "../../constants/roles";
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 
 import {
   DashHeader,
@@ -53,7 +54,11 @@ const ManagerLeaveAction = () => {
   const [userType, setUserType] = useState("");
 
   const { employeeid, requestid } = useParams();
+  const [searchValue, setSearchValue] = useState("");
 
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = (action) => {
     if (action === "Approve") {
@@ -206,85 +211,11 @@ const ManagerLeaveAction = () => {
         </div>
       ) : (
         <>
-          <DashHeader>
-            <FlexContaier>
-              <BackButton onClick={() => navigate(-1)}>
-                <img src="/images/icons/ArrowLeft.svg" />
-                Back
-              </BackButton>
-              <DashHeaderTitle>Leave Request</DashHeaderTitle>
-            </FlexContaier>
+          <CommenDashHeader
+            onSearch={HandleSearchCahnge}
+            text="Leave Request"
+          />
 
-            <DashHeaderSearch>
-              <SearchBox>
-                <SearchInput type="text" placeholder="Search..."></SearchInput>
-                <SearchIcon src="/images/icons/searchIcon.svg" />
-              </SearchBox>
-              <DashNotification src="/images/icons/Notifications.svg" />
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                  gap: "5px",
-                }}
-                onClick={(event) => handleClickMenu(event)}
-              >
-                {" "}
-                <DashNotification src="/images/icons/Logout.svg" />
-                <img
-                  src="/images/icons/arrowdown.svg"
-                  style={{
-                    width: "5px",
-                    height: "9px",
-                    transform: anchorEl ? "rotate(180deg)" : undefined,
-                  }}
-                />
-              </div>
-            </DashHeaderSearch>
-          </DashHeader>
-          <Menu
-            sx={{ margin: "0px" }}
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={openMenu}
-            onClose={handleCloseMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            <MenuItem
-              style={{
-                color: "#222B45",
-                fontFamily: "Inter",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: 600,
-                lineHeight: "20px",
-              }}
-            >
-              Settings
-            </MenuItem>
-            <MenuItem
-              onClick={HandleLogout}
-              style={{
-                color: "#EA4335",
-                fontFamily: "Inter",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: 600,
-                lineHeight: "20px",
-              }}
-            >
-              Logout
-            </MenuItem>
-          </Menu>
           <Main>
             <MainSub>
               <LeaveActionHeader>
@@ -302,11 +233,12 @@ const ManagerLeaveAction = () => {
                     <FlexColumn>
                       <Headingleave>
                         {leaveDetails?.employee?.personalInfo?.firstName +
+                          " " +
                           (leaveDetails?.employee?.personalInfo.lastName
                             ? leaveDetails?.employee?.personalInfo.lastName
                             : " ")}
                       </Headingleave>
-                      <HeadingGrey>Design Department</HeadingGrey>
+                      <HeadingGrey>{leaveDetails?.employee?.email}</HeadingGrey>
                     </FlexColumn>
                     {leaveDetails?.status === "PENDING" ? (
                       <PendingStyle>{leaveDetails?.status}</PendingStyle>
@@ -338,8 +270,8 @@ const ManagerLeaveAction = () => {
                   </FormContainer>
                   <FormContainer>
                     <ColumnFlexDiv>
-                      <Titlelight> {leaveDetails?.leaveType?.name} </Titlelight>
-                      <Titledark>sick</Titledark>
+                      <Titlelight>Leave Type </Titlelight>
+                      <Titledark>{leaveDetails?.leaveType?.name} </Titledark>
                     </ColumnFlexDiv>
                     <ColumnFlexDiv>
                       <Titlelight>Hours</Titlelight>
@@ -353,7 +285,7 @@ const ManagerLeaveAction = () => {
                     </ColumnFlexDiv>
                   </FormContainer>
 
-                  <HeadingDetail>Approval Details</HeadingDetail>
+                  {/* <HeadingDetail>Approval Details</HeadingDetail> */}
 
                   <FormContainer style={{ marginBottom: "15px" }}>
                     <ColumnFlexDiv>

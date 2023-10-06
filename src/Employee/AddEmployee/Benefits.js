@@ -5,7 +5,7 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import SuccessfullModal from "./SuccessfullModal";
-
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   HeaderEmployee,
   BackButton,
@@ -28,6 +28,7 @@ import {
   ButtonGrey,
   Select,
   Option,
+  TextArea,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 const Benefits = ({ isEdit, setIsEdit }) => {
@@ -216,23 +217,19 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           console.error("Error:", error);
           toast.error("Error in fetching Personal info. Please try again.");
         });
-    };
+  };
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   return (
     <>
       {!isEdit && (
-        <HeaderEmployee>
-          <FlexContaier>
-            <BackButton onClick={() => Navigate(-1)}>
-              {" "}
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-              Back
-            </BackButton>
-            <HeaderTitle>
-              {isEdit ? "Update  Employee  Benefits " : "Add New Employee"}
-            </HeaderTitle>
-          </FlexContaier>
-          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-        </HeaderEmployee>
+        <CommenDashHeader
+          onSearch={HandleSearchCahnge}
+          text={"Add New Employee"}
+        />
       )}
       {isLoading ? (
         <div
@@ -296,121 +293,124 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 {/* first name and last name  */}
-                <FlexContaierForm>
+                <FlexContaierForm >
                   <FlexColumnForm>
-                    <InputLabel>
-                      Benefit Name <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Controller
-                      name="benefit"
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Select
-                          value={value}
-                          onChange={(e) => {
-                            const targetId = e.target.value;
-                            setValue("benefit", e.target.value);
-                            const findBenefit = benefits.find(
-                              (benefit) => benefit._id === targetId
-                            );
-                            if (findBenefit) {
-                              const description = findBenefit.description;
-                              setValue("description", description);
-                            } else {
-                              // setValue("description", "");
-                            }
-                          }}
-                        >
-                          <Option value="" disabled>
-                            Select
-                          </Option>
-                          {benefits?.map((data) => (
-                            <Option value={data._id}>{data.name}</Option>
-                          ))}
-                        </Select>
-                      )}
-                    />
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Benefit Name <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Controller
+                        name="benefit"
+                        control={control}
+                        rules={{
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        }}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                          <Select
+                            value={value}
+                            onChange={(e) => {
+                              const targetId = e.target.value;
+                              setValue("benefit", e.target.value);
+                              const findBenefit = benefits.find(
+                                (benefit) => benefit._id === targetId
+                              );
+                              if (findBenefit) {
+                                const description = findBenefit.description;
+                                setValue("description", description);
+                              } else {
+                                // setValue("description", "");
+                              }
+                            }}
+                          >
+                            <Option value="" disabled>
+                              Select
+                            </Option>
+                            {benefits?.map((data) => (
+                              <Option value={data._id}>{data.name}</Option>
+                            ))}
+                          </Select>
+                        )}
+                      />
 
-                    {<Errors>{errors.benefit?.message}</Errors>}
+                      {<Errors>{errors.benefit?.message}</Errors>}
+                    </FlexColumnForm>
+                    <FlexContaierForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Start Date <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register("startDate", {
+                            required: {
+                              value: true,
+                              message: " Required",
+                            },
+                            onChange: (e) => {
+                              const endDate = getValues("endDate");
+                              const startDate = new Date(e.target.value);
+                              if (startDate >= new Date(endDate) && endDate) {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message:
+                                    "End date must not be earlier than start date",
+                                });
+                              } else {
+                                setError("endDate", {
+                                  type: "custom",
+                                  message: "",
+                                });
+                              }
+                            },
+                          })}
+                        />
+                        {<Errors>{errors.startDate?.message}</Errors>}
+                      </FlexColumnForm>
+                      <FlexColumnForm>
+                        <InputLabel>End Date</InputLabel>
+                        <Input
+                          type="date"
+                          {...register("endDate", {
+                            onChange: (fieldValue) => {
+                              const startDateValue = getValues("startDate");
+
+                              const endDateValue = getValues("endDate");
+
+                              if (endDateValue && startDateValue) {
+                                const endDate = new Date(endDateValue);
+                                const startDate = new Date(startDateValue);
+                                if (startDate > endDate) {
+                                  return setError("endDate", {
+                                    type: "custom",
+                                    message:
+                                      "End date must not be earlier than start date",
+                                  });
+                                } else {
+                                  return clearErrors("endDate");
+                                }
+                              }
+                            },
+                          })}
+                        />
+                        {<Errors>{errors.endDate?.message}</Errors>}
+                      </FlexColumnForm>
+                    </FlexContaierForm>
                   </FlexColumnForm>
+
                   <FlexColumnForm>
                     <InputLabel>
                       Description <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
+                      <TextArea
+                        style={{height:"140px"}}
                       type="text"
                       readOnly
                       {...register("description", {})}
                     />
                     {<Errors>{errors.description?.message}</Errors>}
-                  </FlexColumnForm>
-                </FlexContaierForm>
-
-                <FlexContaierForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Start Date <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="date"
-                      {...register("startDate", {
-                        required: {
-                          value: true,
-                          message: " Required",
-                        },
-                        onChange: (e) => {
-                          const endDate = getValues("endDate");
-                          const startDate = new Date(e.target.value);
-                          if (startDate >= new Date(endDate) && endDate) {
-                            setError("endDate", {
-                              type: "custom",
-                              message:
-                                "End date must not be earlier than start date",
-                            });
-                          } else {
-                            setError("endDate", {
-                              type: "custom",
-                              message: "",
-                            });
-                          }
-                        },
-                      })}
-                    />
-                    {<Errors>{errors.startDate?.message}</Errors>}
-                  </FlexColumnForm>
-                  <FlexColumnForm>
-                    <InputLabel>End Date</InputLabel>
-                    <Input
-                      type="date"
-                      {...register("endDate", {
-                        onChange: (fieldValue) => {
-                          const startDateValue = getValues("startDate");
-
-                          const endDateValue = getValues("endDate");
-
-                          if (endDateValue && startDateValue) {
-                            const endDate = new Date(endDateValue);
-                            const startDate = new Date(startDateValue);
-                            if (startDate > endDate) {
-                              return setError("endDate", {
-                                type: "custom",
-                                message:
-                                  "End date must not be earlier than start date",
-                              });
-                            } else {
-                              return clearErrors("endDate");
-                            }
-                          }
-                        },
-                      })}
-                    />
-                    {<Errors>{errors.endDate?.message}</Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
 

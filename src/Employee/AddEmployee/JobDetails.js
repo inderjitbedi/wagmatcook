@@ -6,6 +6,7 @@ import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   HeaderEmployee,
   BackButton,
@@ -34,6 +35,7 @@ import {
   TrashDiv,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
+import { FlexColContainer } from "../../Dashboard/ManagerDashboard/ManagerStyles";
 
 const JobDetails = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
@@ -301,23 +303,18 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   return (
     <>
       {!isEdit && (
-        <HeaderEmployee>
-          <FlexContaier>
-            <BackButton onClick={() => Navigate(-1)}>
-              {" "}
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-              Back
-            </BackButton>
-            <HeaderTitle>
-              {" "}
-              {isEdit ? "Update Employee Job Details " : "Add New Employee "}
-            </HeaderTitle>
-          </FlexContaier>
-          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-        </HeaderEmployee>
+        <CommenDashHeader
+          onSearch={HandleSearchCahnge}
+          text={"Add New Employee"}
+        />
       )}
       {isLoading ? (
         <div
@@ -616,60 +613,59 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                       </FlexColumnForm>
                     </FlexContaierForm>
                   </FlexContaierForm>
-
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm>
-                      <InputLabel>Salary Scale From</InputLabel>
-                      <Input
-                        type="text"
-                        {...register(`positions.${index}.salaryScaleFrom`, {
-                          pattern: {
-                            value: /^[+]?\d+(\.\d+)?$/,
-                            message: "Please enter valid salary",
-                          },
-                        })}
-                      />
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`positions.${index}.salaryScaleFrom`}
-                      />
-                    </FlexColumnForm>
-                    <FlexColumnForm style={{ alignItems: "flex-start" }}>
-                      <InputLabel>Salary Scale To</InputLabel>
-                      <Input
-                        type="text"
-                        {...register(`positions.${index}.salaryScaleTo`, {
-                          pattern: {
-                            value: /^[+]?\d+(\.\d+)?$/,
-                            message: "Please enter valid salary",
-                          },
-                          validate: (fieldValue) => {
-                            const salaryFrom = parseFloat(
-                              getValues(`positions.${index}.salaryScaleFrom`)
-                            );
-                            const salaryTo = parseFloat(fieldValue);
-                            if (salaryFrom && salaryTo) {
-                              if (!isNaN(salaryFrom) && !isNaN(salaryTo)) {
-                                return (
-                                  salaryTo >= salaryFrom ||
-                                  "Salary to must be greater than or equal to Salary From"
-                                );
+                  <FlexContaierForm>
+                    <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                      <FlexColumnForm>
+                        <InputLabel>Salary Scale From</InputLabel>
+                        <Input
+                          type="text"
+                          {...register(`positions.${index}.salaryScaleFrom`, {
+                            pattern: {
+                              value: /^[+]?\d+(\.\d+)?$/,
+                              message: "Please enter valid salary",
+                            },
+                          })}
+                        />
+                        <ErrorMessage
+                          as={<Errors />}
+                          errors={errors}
+                          name={`positions.${index}.salaryScaleFrom`}
+                        />
+                      </FlexColumnForm>
+                      <FlexColumnForm style={{ alignItems: "flex-start" }}>
+                        <InputLabel>Salary Scale To</InputLabel>
+                        <Input
+                          type="text"
+                          {...register(`positions.${index}.salaryScaleTo`, {
+                            pattern: {
+                              value: /^[+]?\d+(\.\d+)?$/,
+                              message: "Please enter valid salary",
+                            },
+                            validate: (fieldValue) => {
+                              const salaryFrom = parseFloat(
+                                getValues(`positions.${index}.salaryScaleFrom`)
+                              );
+                              const salaryTo = parseFloat(fieldValue);
+                              if (salaryFrom && salaryTo) {
+                                if (!isNaN(salaryFrom) && !isNaN(salaryTo)) {
+                                  return (
+                                    salaryTo >= salaryFrom ||
+                                    "Salary to must be greater than or equal to Salary From"
+                                  );
+                                }
                               }
-                            }
 
-                            return true;
-                          },
-                        })}
-                      />
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`positions.${index}.salaryScaleTo`}
-                      />
-                    </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                              return true;
+                            },
+                          })}
+                        />
+                        <ErrorMessage
+                          as={<Errors />}
+                          errors={errors}
+                          name={`positions.${index}.salaryScaleTo`}
+                        />
+                      </FlexColumnForm>
+                    </FlexContaierForm>
                     <FlexColumnForm>
                       <InputLabel>
                         Actual Salary amounts <InputSpan>*</InputSpan>{" "}
@@ -686,7 +682,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             message: "Please enter valid salary",
                           },
 
-                          onChange: () => {
+                          validate: () => {
                             const salaryFrom = parseFloat(
                               getValues(`positions.${index}.salaryScaleFrom`)
                             );
@@ -698,27 +694,27 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             );
 
                             if (isNaN(salaryFrom) && isNaN(salaryTo)) {
-                              // No salary range specified, clear any errors
                               clearErrors(`positions.${index}.salary`);
                             } else if (!isNaN(salaryFrom) && isNaN(salaryTo)) {
-                              // Only Salary From is specified
                               if (actualSalary < salaryFrom) {
-                                setError(`positions.${index}.salary`, {
-                                  type: "custom",
-                                  message:
-                                    "Actual salary must be greater than or equal to Salary From",
-                                });
+                                // setError(`positions.${index}.salary`, {
+                                //   type: "custom",
+                                //   message:
+                                //     "Actual salary must be greater than or equal to Salary From",
+                                // });
+                                return "Actual salary must be greater than or equal to Salary From";
                               } else {
                                 clearErrors(`positions.${index}.salary`);
                               }
                             } else if (isNaN(salaryFrom) && !isNaN(salaryTo)) {
                               // Only Salary To is specified
                               if (actualSalary > salaryTo) {
-                                setError(`positions.${index}.salary`, {
-                                  type: "custom",
-                                  message:
-                                    "Actual salary must be smaller than or equal to Salary To",
-                                });
+                                // setError(`positions.${index}.salary`, {
+                                //   type: "custom",
+                                //   message:
+                                //     "Actual salary must be smaller than or equal to Salary To",
+                                // });
+                                return "Actual salary must be smaller than or equal to Salary To";
                               } else {
                                 clearErrors(`positions.${index}.salary`);
                               }
@@ -728,11 +724,12 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                                 actualSalary < salaryFrom ||
                                 actualSalary > salaryTo
                               ) {
-                                setError(`positions.${index}.salary`, {
-                                  type: "custom",
-                                  message:
-                                    "Actual Salary must be between Salary From and Salary To",
-                                });
+                                // setError(`positions.${index}.salary`, {
+                                //   type: "custom",
+                                //   message:
+                                //     "Actual Salary must be between Salary From and Salary To",
+                                // });
+                                return "Actual Salary must be between Salary From and Salary To";
                               } else {
                                 clearErrors(`positions.${index}.salary`);
                               }
@@ -746,10 +743,12 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         name={`positions.${index}.salary`}
                       />
                     </FlexColumnForm>
+                  </FlexContaierForm>
+
+                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
-                        Salary rate per
-                        <InputSpan>*</InputSpan>
+                        Salary rate per <InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
                         name={`positions.${index}.ratePer`}
@@ -777,8 +776,6 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         name={`positions.${index}.ratePer`}
                       />
                     </FlexColumnForm>
-                  </FlexContaierForm>
-                  <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
                         Hours per week <InputSpan>*</InputSpan>
@@ -809,10 +806,11 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         name={`positions.${index}.hoursPerWeek`}
                       />
                     </FlexColumnForm>
-                    <FlexColumnForm >
+                  </FlexContaierForm>
+                  <FlexContaierForm style={{ alignItems: "center" }}>
+                    <FlexColumnForm>
                       <InputLabel>
-                        Jurisdiction
-                        <InputSpan>*</InputSpan>
+                        Jurisdiction &nbsp;<InputSpan>*</InputSpan>
                       </InputLabel>
                       <Controller
                         name={`positions.${index}.jurisdiction`}
@@ -837,52 +835,49 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         name={`positions.${index}.jurisdiction`}
                       />
                     </FlexColumnForm>
+
+                    <FlexContaierForm style={{ marginTop: "25px" }}>
+                      <FlexColumnForm>
+                        <AlignFlex>
+                          <input
+                            type="checkbox"
+                            {...register(
+                              `positions.${index}.isBebEligible`,
+                              {}
+                            )}
+                            id={`positions.${index}.isBebEligible`}
+                          />
+                          <InputLabel
+                            htmlFor={`positions.${index}.isBebEligible`}
+                            style={{ marginBottom: "0px", cursor: "pointer" }}
+                          >
+                            Is BEB Eligible? <InputSpan>*</InputSpan>
+                          </InputLabel>
+                        </AlignFlex>
+                      </FlexColumnForm>
+                      <FlexColumnForm>
+                        <AlignFlex>
+                          <input
+                            type="checkbox"
+                            {...register(`positions.${index}.isPrimary`, {})}
+                            id={`positions.${index}.isPrimary`}
+                          />
+                          <InputLabel
+                            htmlFor={`positions.${index}.isPrimary`}
+                            style={{ marginBottom: "0px", cursor: "pointer" }}
+                          >
+                            Is Primary <InputSpan>*</InputSpan>
+                          </InputLabel>
+                        </AlignFlex>
+                        <ErrorMessage
+                          as={<Errors />}
+                          errors={errors}
+                          name={`positions.${index}.isPrimary`}
+                        />
+                      </FlexColumnForm>
+                    </FlexContaierForm>
                   </FlexContaierForm>
 
-                  <FlexContaierForm
-                    style={{
-                      width: "50%",
-                      gap: "46px",
-                      marginTop: "16px",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <FlexColumnForm>
-                      <AlignFlex>
-                        <input
-                          type="checkbox"
-                          {...register(`positions.${index}.isBebEligible`, {})}
-                          id={`positions.${index}.isBebEligible`}
-                        />
-                        <InputLabel
-                          htmlFor={`positions.${index}.isBebEligible`}
-                          style={{ marginBottom: "0px", cursor: "pointer" }}
-                        >
-                          Is BEB Eligible? <InputSpan>*</InputSpan>
-                        </InputLabel>
-                      </AlignFlex>
-                    </FlexColumnForm>
-                    <FlexColumnForm>
-                      <AlignFlex>
-                        <input
-                          type="checkbox"
-                          {...register(`positions.${index}.isPrimary`, {})}
-                          id={`positions.${index}.isPrimary`}
-                        />
-                        <InputLabel
-                          htmlFor={`positions.${index}.isPrimary`}
-                          style={{ marginBottom: "0px", cursor: "pointer" }}
-                        >
-                          Is Primary <InputSpan>*</InputSpan>
-                        </InputLabel>
-                      </AlignFlex>
-                      <ErrorMessage
-                        as={<Errors />}
-                        errors={errors}
-                        name={`positions.${index}.isPrimary`}
-                      />
-                    </FlexColumnForm>
-                  </FlexContaierForm>
                   {getValues("positions").length > 1 && (
                     <TrashDiv onClick={() => remove(index)}>
                       <DeleteIcon src="/images/icons/trash-empty.svg" /> Remove
@@ -893,7 +888,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
               <FlexContaier style={{ marginTop: "16px" }}>
                 <BluePara onClick={() => append(initialPosition)}>
                   {" "}
-                  Add New Position
+                  Add New
                 </BluePara>
               </FlexContaier>
 

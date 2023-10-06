@@ -44,7 +44,7 @@ const ManagerAccountSidebar = (props) => {
        },
 
        {
-         Title: "Benefits",
+         Title: "Benefit",
          to:
            "/manager-management/account/benefits/" + props.employeeId,
        },

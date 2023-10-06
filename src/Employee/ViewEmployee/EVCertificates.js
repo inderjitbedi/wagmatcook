@@ -482,7 +482,7 @@ const EVCertificates = () => {
                       <ModalContainer>
                         <ModalHeading>
                           {" "}
-                          {update ? " Update Certificate" : "New Certificate"}
+                          {update ? " Update Certificate" : "Add Certificate"}
                         </ModalHeading>
                         <ModalIcon
                           onClick={handleClose}
@@ -585,7 +585,7 @@ const EVCertificates = () => {
                           </FlexContaierForm>
                           <FlexContaierForm>
                             <FlexColumnForm>
-                              <InputLabel>Exipiry</InputLabel>
+                              <InputLabel>Expiry</InputLabel>
                               <Input
                                 type="date"
                                 {...register("expiryDate", {
@@ -674,7 +674,7 @@ const EVCertificates = () => {
                           {errors.file && (
                             <Errors> {errors.file?.message} </Errors>
                           )}
-                          <ButtonBlue type="submit">
+                          <ButtonBlue type="submit" disabled={isUploading}>
                             {update ? " Update" : "Submit"}
                           </ButtonBlue>
                         </ModalFormContainer>

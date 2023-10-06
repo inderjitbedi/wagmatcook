@@ -20,6 +20,7 @@ import moment from "moment";
 import ROLES from "../../constants/roles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   DashHeader,
   DashHeaderSearch,
@@ -242,7 +243,7 @@ const EVLeaveHistory = () => {
   const [formData, setFormData] = useState([]);
   const [reportList, setReportList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
-
+  const [leaveBalance, setLeaveBalance] = useState([]);
   const {
     register,
     control,
@@ -390,6 +391,31 @@ const EVLeaveHistory = () => {
         setIsLoading(false);
       });
   };
+  const GetLeaveAlloactionBalance = () => {
+    // setIsLoading(true);
+    // GetLeavesType();
+    const trimid = employeeid.trim();
+    let url = API_URLS.userLeaveBalance;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setLeaveBalance(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        // setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
@@ -452,6 +478,7 @@ const EVLeaveHistory = () => {
     GetReportList();
     GetLeaveAlloaction();
     GetLeaveHistory();
+    GetLeaveAlloactionBalance();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -470,6 +497,12 @@ const EVLeaveHistory = () => {
     background: "#fff",
     borderRadius: "8px 8px 0px 0px",
   };
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -493,9 +526,7 @@ const EVLeaveHistory = () => {
       ) : (
         <MainBodyContainer>
           {userType === ROLES.EMPLOYEE && (
-              <FlexSpaceBetween style={{ alignItems: "center" }}>
-              <CommenHeader employeeid={employeeid} />
-            </FlexSpaceBetween>
+            <CommenDashHeader onSearch={HandleSearchCahnge} text="Leaves" />
           )}
           {userType === ROLES.EMPLOYEE ? (
             ""
@@ -537,12 +568,12 @@ const EVLeaveHistory = () => {
           )}
 
           <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
-            Leaves History
+            Leave History
             {isAccount ? (
               ""
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-                New Request
+                Add New
               </ButtonBlue>
             )}
           </LeaveDiv>
@@ -574,7 +605,7 @@ const EVLeaveHistory = () => {
                     sx={{ ...CellStyle, maxWidth: "100px" }}
                     align="left"
                   >
-                    from
+                    From
                   </TableCell>
                   <TableCell
                     sx={{ ...CellStyle, maxWidth: "100px" }}
@@ -629,6 +660,7 @@ const EVLeaveHistory = () => {
                       {(data.responder?.personalInfo?.firstName
                         ? data.responder?.personalInfo?.firstName
                         : " - ") +
+                        " " +
                         (data.responder?.personalInfo?.lastName
                           ? data.responder?.personalInfo?.lastName
                           : " ")}
@@ -701,7 +733,7 @@ const EVLeaveHistory = () => {
                 <>
                   <ModalContainer>
                     <ModalHeading>
-                      {!update ? "Applying for Leaves" : "View Leaves"}
+                      {!update ? "Applying for Leave" : "View Leave"}
                     </ModalHeading>
                     <ModalIcon
                       onClick={handleClose}
@@ -721,7 +753,7 @@ const EVLeaveHistory = () => {
                       <FlexContaierForm style={{ alignItems: "flex-start" }}>
                         <FlexColumnForm>
                           <InputLabel>
-                            From <InputSpan>*</InputSpan>{" "}
+                            From {update ? " " : <InputSpan>*</InputSpan>}{" "}
                           </InputLabel>
                           <Input
                             readOnly={update}
@@ -753,7 +785,7 @@ const EVLeaveHistory = () => {
                         </FlexColumnForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            To <InputSpan>*</InputSpan>
+                            To {update ? " " : <InputSpan>*</InputSpan>}
                           </InputLabel>
                           <Input
                             readOnly={update}
@@ -790,7 +822,7 @@ const EVLeaveHistory = () => {
                       <FlexContaierForm style={{ alignItems: "flex-start" }}>
                         <FlexColumnForm>
                           <InputLabel>
-                            Leave Type <InputSpan>*</InputSpan>{" "}
+                            Leave Type {update ? " " : <InputSpan>*</InputSpan>}{" "}
                           </InputLabel>
 
                           <Controller
@@ -817,7 +849,7 @@ const EVLeaveHistory = () => {
                         </FlexColumnForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Hours <InputSpan>*</InputSpan>
+                            Hours {update ? " " : <InputSpan>*</InputSpan>}
                           </InputLabel>
                           <Input
                             type="text"
@@ -847,6 +879,7 @@ const EVLeaveHistory = () => {
                         <FlexColumnForm>
                           <InputLabel>Description</InputLabel>
                           <TextArea
+                            style={update ? { marginBottom: "16px" } : {}}
                             type="text"
                             readOnly={update}
                             {...register("requesterComment", {
@@ -866,25 +899,29 @@ const EVLeaveHistory = () => {
                               },
                             })}
                           />
-                          <InputPara>
-                            {" "}
-                            {
-                              <Errors>
-                                {errors.requesterComment?.message}
-                              </Errors>
-                            }{" "}
-                            <span style={{ justifySelf: "flex-end" }}>
-                              {" "}
-                              {detailsLength > -1 ? detailsLength : 0}{" "}
-                              characters left
-                            </span>
-                          </InputPara>
+                          {update ? (
+                            " "
+                          ) : (
+                            <InputPara>
+                              {
+                                <Errors>
+                                  {errors.requesterComment?.message}
+                                </Errors>
+                              }{" "}
+                              <span style={{ justifySelf: "flex-end" }}>
+                                {" "}
+                                {detailsLength > -1 ? detailsLength : 0}{" "}
+                                characters left
+                              </span>
+                            </InputPara>
+                          )}
                         </FlexColumnForm>
                       </FlexContaierForm>
                       <FlexContaierForm>
                         <FlexColumnForm>
                           <InputLabel>
-                            Send Leave Request to <InputSpan>*</InputSpan>
+                            Send Leave Request to{" "}
+                            {update ? " " : <InputSpan>*</InputSpan>}
                           </InputLabel>
                           <Controller
                             name="responder"

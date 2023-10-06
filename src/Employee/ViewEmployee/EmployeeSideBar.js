@@ -44,11 +44,11 @@ const EmployeeSideBar = (props) => {
     },
 
     {
-      Title: "Benefits",
+      Title: "Benefit",
       to: "/organization-admin/employee/details/benefits/" + props.employeeId,
     },
     {
-      Title: "Leave Allocation",
+      Title: "Leave Allocations",
       to:
         "/organization-admin/employee/details/leave-alloacation/" +
         props.employeeId,

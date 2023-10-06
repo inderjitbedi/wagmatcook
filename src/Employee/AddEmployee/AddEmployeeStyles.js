@@ -16,6 +16,20 @@ export const SideBarLogoContainer = styled.div`
   align-items: center;
   width: 100%;
 `;
+export const TextArea = styled.textarea`
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  resize: none;
+  height: 105px;
+  padding: 1em;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+`;
 export const SideBarLogo = styled.img`
   height: 56px;
   width: 56px;
@@ -177,6 +191,8 @@ export const PersonImg = styled.img`
   /* fill: #f8f8f8;
   background-color: #7b7b7b; */
   border-radius: 50%;
+object-fit: cover;
+
 `;
 export const LightPara = styled.p`
   color: #8b8b8b;

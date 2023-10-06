@@ -41,7 +41,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
   const [openSettings, setOpenSettings] = React.useState(false);
   const HandleOpenSettings = () => {
-    setOpenSettings(true)
+    setOpenSettings(true);
     GetOrgProfile();
   };
   const HandleCloseSettings = () => setOpenSettings(false);
@@ -219,29 +219,29 @@ const CommenDashHeader = ({ onSearch, text }) => {
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
-   const GetOrgProfile = () => {
-     setIsProfile(true);
-     let url = API_URLS.getOrgProfile;
-     httpClient({
-       method: "get",
-       url,
-     })
-       .then(({ result, error }) => {
-         if (result) {
-           setOrgProfile(result);
-         } else {
-           //toast.warn("something went wrong ");
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error creating department. Please try again.");
-         setIsProfile(false);
-       })
-       .finally(() => {
-         setIsProfile(false);
-       });
-   };
+  const GetOrgProfile = () => {
+    setIsProfile(true);
+    let url = API_URLS.getOrgProfile;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setOrgProfile(result.details);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsProfile(false);
+      })
+      .finally(() => {
+        setIsProfile(false);
+      });
+  };
 
   useEffect(() => {
     // GetNotificationList()
@@ -274,7 +274,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
     <>
       <DashHeader>
         <FlexContaier>
-          {location.pathname.indexOf("details") > -1 && (
+          {(location.pathname.indexOf("details") > -1 ||
+            location.pathname.indexOf("leaves-request") > -1 ||
+            location.pathname.indexOf("personal-info") > -1 ||
+            location.pathname.indexOf("employee/benefits") > -1) && (
             <BackButton onClick={() => Navigate(-1)}>
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -284,7 +287,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
         </FlexContaier>
 
         <DashHeaderSearch>
-          {location.pathname.indexOf("details") > -1 ? (
+          {location.pathname.indexOf("details") > -1 ||
+          location.pathname.indexOf("leaves-request") > -1 ||
+          location.pathname.indexOf("personal-info") > -1 ||
+          location.pathname.indexOf("employee/benefits") > -1 ? (
             " "
           ) : (
             <SearchBox>
@@ -303,7 +309,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
             size="small"
           >
             <div
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", paddingTop: "4px" }}
               onClick={(event) => {
                 handleClickMenuNotification(event);
                 GetNotificationList();
@@ -476,6 +482,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
         openSettings={openSettings}
         HandleCloseSettings={HandleCloseSettings}
         isProfile={isProfile}
+        orgProfile={orgProfile}
       />
     </>
   );

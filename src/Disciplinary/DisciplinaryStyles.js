@@ -221,4 +221,6 @@ export const TabelImg = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
+object-fit: cover;
+
 `;

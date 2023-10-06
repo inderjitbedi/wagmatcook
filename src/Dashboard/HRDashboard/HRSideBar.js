@@ -313,7 +313,7 @@ const HRSideBar = () => {
               }
             >
               {" "}
-              Accounts
+            My Account
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

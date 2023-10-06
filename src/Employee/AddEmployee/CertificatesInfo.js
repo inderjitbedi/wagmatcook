@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
 import SuccessfullModal from "./SuccessfullModal";
-
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   HeaderEmployee,
   BackButton,
@@ -297,21 +297,18 @@ const CertificatesInfo = () => {
         toast.error("Error in fetching Personal info. Please try again.");
       });
   };
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   return (
     <>
-      <HeaderEmployee>
-        <FlexContaier>
-          <BackButton onClick={() => Navigate(-1)}>
-            {" "}
-            <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-            Back
-          </BackButton>
-          <HeaderTitle>
-            {edit ? "Update  Employee Certificates " : "Add New Employee"}
-          </HeaderTitle>
-        </FlexContaier>
-        <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-      </HeaderEmployee>
+      <CommenDashHeader
+        onSearch={HandleSearchCahnge}
+        text={"Add New Employee"}
+      />
+
       {isLoading ? (
         <div
           style={{

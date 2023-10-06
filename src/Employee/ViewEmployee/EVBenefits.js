@@ -131,7 +131,7 @@ const EVBenefits = () => {
               <BasicInfoContainer>
                 <BasicInfoDiv>
                   <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                    <BasicHeading>Employee Benefits</BasicHeading>
+                    <BasicHeading>Employee Benefit</BasicHeading>
                   </FlexSpaceBetween>
                   <BasicDetailsDiv>
                     <FlexSpaceBetween>
@@ -182,10 +182,10 @@ const EVBenefits = () => {
                         </ViewPara>
                       </FlexColumn>
                       <FlexColumn>
-                        <TitlePara>Employee Contribution rate (%)*</TitlePara>
+                        <TitlePara>Employee Contribution rate (%)</TitlePara>
                         <ViewPara>
                           {result.benefit?.contributionRate
-                            ? "$" + result.benefit?.contributionRate
+                            ? result.benefit?.contributionRate
                             : " - "}{" "}
                         </ViewPara>
                       </FlexColumn>

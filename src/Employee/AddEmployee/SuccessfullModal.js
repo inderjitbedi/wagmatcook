@@ -62,6 +62,7 @@ const ModalThanksHeading = styled.p`
    font-weight: 600;
    line-height: normal;
    border: none;
+   cursor: pointer;
  `;
 
 const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
@@ -81,7 +82,7 @@ const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
           />
           <ModalThanksImg src="/images/success.jpg" />
           <ModalThanksHeading>Employee Added Successfully</ModalThanksHeading>
-          <ButtonBlue onClick={() =>  Navigate(`/organization-admin/employee/list`)}>Thanks</ButtonBlue>
+          <ButtonBlue onClick={() =>  Navigate(`/organization-admin/employee/list`)}>Close</ButtonBlue>
         </ModalThanks>
       </Box>
     </Modal>

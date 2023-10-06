@@ -136,7 +136,7 @@ const EmployeePersonal = () => {
                   <BasicDetailsDiv>
                     <FlexSpaceBetween>
                       <FlexColumn>
-                        <TitlePara>Name</TitlePara>
+                        <TitlePara>First Name</TitlePara>
                         <ViewPara>
                           {result?.personalInfo?.firstName || " - "}
                         </ViewPara>
@@ -206,7 +206,7 @@ const EmployeePersonal = () => {
                     </FlexSpaceBetween>
                     <FlexSpaceBetween>
                       <FlexColumn>
-                        <TitlePara>Emergency Contact </TitlePara>
+                        <TitlePara>Emergency Contact Name</TitlePara>
                         <ViewPara>
                           {result?.personalInfo?.emergencyContact || " - "}
                         </ViewPara>
@@ -244,7 +244,7 @@ const EmployeePersonal = () => {
                     </BasicHeading>
                     <FlexSpaceBetween>
                       <FlexColumn>
-                        <TitlePara>Employee </TitlePara>
+                        <TitlePara>Employee ID </TitlePara>
                         <ViewPara>
                           {result.personalInfo?.employeeId || " - "}
                         </ViewPara>

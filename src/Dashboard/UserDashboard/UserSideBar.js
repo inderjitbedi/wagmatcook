@@ -47,12 +47,13 @@ const UserSideBar = () => {
     if (org) {
       let parsedUser = JSON.parse(org);
       setOrgData(parsedUser);
-      GetHeadersData(parsedUser._id);
     }
     let user = localStorage.getItem("user");
     if (user) {
       let parsedUser = JSON.parse(user);
       setUserData(parsedUser);
+      GetHeadersData(parsedUser._id);
+
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;

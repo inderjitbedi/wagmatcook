@@ -418,11 +418,21 @@ const Employee = () => {
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <TabelDiv
-                      onClick={() =>
-                        Navigate(
-                          `/organization-admin/employee/details/personal-info/${data._id}`
-                        )
-                      }
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(
+                            `/manager-management/employee-details/personal-info/${data._id}`
+                          );
+                        } else if (userType === ROLES.HR) {
+                          Navigate(
+                            `/hr-management/employee-details/personal-info/${data._id}`
+                          );
+                        } else {
+                          Navigate(
+                            `/organization-admin/employee/details/personal-info/${data._id}`
+                          );
+                        }
+                      }}
                       style={{ cursor: "pointer" }}
                     >
                       <TabelImg
@@ -459,7 +469,11 @@ const Employee = () => {
                     {/* </Moment> */}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
-                    {(data.role === ROLES.EMPLOYEE ? "USER" : data.role === ROLES.HR ? " HR"  : data.role) || " - "}
+                    {(data.role === ROLES.EMPLOYEE
+                      ? "USER"
+                      : data.role === ROLES.HR
+                      ? " HR"
+                      : data.role) || " - "}
                   </TableCell>
                   <TableCell align="left" sx={Celllstyle2}>
                     <IconContainer>

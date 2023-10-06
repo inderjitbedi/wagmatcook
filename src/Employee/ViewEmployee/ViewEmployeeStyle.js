@@ -128,6 +128,8 @@ export const TabelImg = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
+object-fit: cover;
+
 `;
 export const TabelDiv = styled.div`
   display: flex;
@@ -171,6 +173,8 @@ export const BackButton = styled.button`
 export const IconsEmployee = styled.img`
   display: inline-block;
   cursor: pointer;
+object-fit: cover;
+
 `;
 export const FlexContaier = styled.div`
   display: flex;
@@ -221,6 +225,7 @@ export const PersonalImg = styled.img`
   border-radius: 94px;
   border: 2px solid #fff;
   object-fit: cover;
+  
 `;
 export const FlexColumn = styled.div`
   display: flex;

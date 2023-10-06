@@ -76,7 +76,7 @@ const ManagerDashBoard = () => {
               </CardList>
             ))}
           </CardBody>
-          <CardBody>
+          {/* <CardBody>
             <CardHeading>Leave Adjustments</CardHeading>
             <CardList>
               <FlexContainer>
@@ -86,7 +86,7 @@ const ManagerDashBoard = () => {
                 </CardSubGrey>
               </FlexContainer>
             </CardList>
-          </CardBody>
+          </CardBody> */}
         </FlexColContainer>
         <FlexColContainer>
           <CardBody>

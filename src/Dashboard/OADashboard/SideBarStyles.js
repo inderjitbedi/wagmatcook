@@ -21,7 +21,7 @@ export const SideBarLogo = styled.img`
   height: 56px;
   width: 56px;
   border-radius: 50%;
-  /* object-fit: cover; */
+  object-fit: cover;
 `;
 export const SideBarLogodiv = styled.div`
   display: flex;

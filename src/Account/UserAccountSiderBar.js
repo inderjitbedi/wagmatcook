@@ -42,11 +42,11 @@ const UserAccountSiderBar = (props) => {
          },
 
          {
-           Title: "Benefits",
+           Title: "Benefit",
            to: "/user-management/account/benefits/" + props.employeeId,
          },
         //  {
-        //    Title: "Leave Allocation",
+        //    Title: "Leave Allocations",
         //    to: "/user-management/account/leave-alloacation/" + props.employeeId,
         //  },
         //  {

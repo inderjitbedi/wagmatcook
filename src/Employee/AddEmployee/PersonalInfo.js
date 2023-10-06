@@ -8,7 +8,7 @@ import { RotatingLines } from "react-loader-spinner";
 import InputMask from "react-input-mask";
 import ROLES from "../../constants/roles";
 import { ErrorMessage } from "@hookform/error-message";
-
+import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import {
   HeaderEmployee,
   BackButton,
@@ -40,7 +40,7 @@ import {
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 
-const PersonalInfo = ({isEdit,setIsEdit}) => {
+const PersonalInfo = ({ isEdit, setIsEdit }) => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
@@ -101,7 +101,8 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
     formState: { errors },
     setValue,
     reset,
-
+    setError,
+    clearErrors,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -178,10 +179,8 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
           if (isEdit) {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
-            setIsEdit(false)
+            setIsEdit(false);
             toast.success(result.message);
-          
-
           } else {
             Navigate(`/organization-admin/employee/job-details/${employeeid}`);
           }
@@ -233,26 +232,26 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
     boxSizing: "border-box",
     outline: "none", // Removed outline color
   };
-   const [headerData, setHeaderData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
 
-   const GetHeadersData = () => {
-     // setIsLoading(true);
-     const trimid = employeeid.trim();
-     let url = `/employee/header-info/${trimid}`;
-     httpClient({
-       method: "get",
-       url,
-     })
-       .then(({ result, error }) => {
-         if (result) {
-           setHeaderData(result);
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error in fetching Personal info. Please try again.");
-       });
-   };
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   const Province = [
     "Alberta",
     "British Columbia",
@@ -268,25 +267,18 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
     "Nunavut",
     "Yukon",
   ];
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   return (
     <>
       {!isEdit && (
-        <HeaderEmployee>
-          <FlexContaier>
-            <BackButton onClick={() => Navigate(-1)}>
-              {" "}
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-              Back
-            </BackButton>
-            <HeaderTitle>
-              {" "}
-              {isEdit
-                ? "Update  Employee  Personal Info "
-                : "Add New Employee "}
-            </HeaderTitle>
-          </FlexContaier>
-          <IconsEmployee src="/images/icons/Notifications.svg"></IconsEmployee>
-        </HeaderEmployee>
+        <CommenDashHeader
+          onSearch={HandleSearchCahnge}
+          text={"Add New Employee"}
+        />
       )}
 
       {isLoading ? (
@@ -507,6 +499,13 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                               numericPhoneNumber,
                               10
                             );
+                            const Length = numericValue.toString().length;
+                            if (Length !== 10) {
+                              setError("homePhone", {
+                                type: "custom",
+                                message: "Phone number must be 10 digits long",
+                              });
+                            } else clearErrors("homePhone");
                             setValue("homePhone", numericValue);
                           }}
                         />
@@ -533,6 +532,13 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                               numericPhoneNumber,
                               10
                             );
+                            const Length = numericValue.toString().length;
+                            if (Length !== 10) {
+                              setError("mobile", {
+                                type: "custom",
+                                message: "Phone number must be 10 digits long",
+                              });
+                            } else clearErrors("mobile");
                             setValue("mobile", numericValue);
                           }}
                         />
@@ -579,7 +585,7 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
-                      Emergency Contact <InputSpan>*</InputSpan>
+                      Emergency Contact Name <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -617,6 +623,13 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                               numericPhoneNumber,
                               10
                             );
+                            const Length = numericValue.toString().length;
+                            if (Length !== 10) {
+                              setError("emergencyContactNumber", {
+                                type: "custom",
+                                message: "Phone number must be 10 digits long",
+                              });
+                            } else clearErrors("emergencyContactNumber");
                             setValue("emergencyContactNumber", numericValue);
                           }}
                           id="phone"
@@ -634,7 +647,7 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                     }
                   </FlexColumnForm>
                 </FlexContaierForm>
-              
+
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <AlignFlex>
@@ -723,12 +736,19 @@ const PersonalInfo = ({isEdit,setIsEdit}) => {
                           style={{ ...inputStyles }}
                           mask="999-999-999"
                           onChange={(e) => {
-                            field.onChange(e);
+                            const value = e.target.value;
+                            const numericPhoneNumber = value.replace(/-/g, "");
                             const numericValue = parseInt(
-                              e.target.value.replace(/\D/g, ""),
+                              numericPhoneNumber,
                               10
                             );
-
+                            const Length = numericValue.toString().length;
+                            if (Length !== 9) {
+                              setError("sin", {
+                                type: "custom",
+                                message: "Sin must be 9 digits long",
+                              });
+                            } else clearErrors("sin");
                             setValue("sin", numericValue);
                           }}
                         />

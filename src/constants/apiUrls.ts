@@ -101,7 +101,9 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   getActiveUser: `employee/active-list`,
   // org profile settings api 
   getOrgProfile: `/organization/details`,
-  updateOrgProfile:`/organization/update`,
+  updateOrgProfile: `/organization/update`,
+  // user accout api
+  userLeaveBalance: `/employee/leave-balance`
 };
 
 export default API_URLS;

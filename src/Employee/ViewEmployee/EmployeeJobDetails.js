@@ -578,7 +578,9 @@ const EmployeeJobDetails = () => {
                               />
                             </ModalContainer>
                             <ModalFormContainer>
-                              <FlexContaierForm>
+                              <FlexContaierForm
+                                style={{ alignItems: "flex-start" }}
+                              >
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Employee Type <InputSpan>*</InputSpan>
@@ -643,7 +645,9 @@ const EmployeeJobDetails = () => {
                                   {<Errors> {errors.role?.message}</Errors>}
                                 </FlexColumnForm>
                               </FlexContaierForm>
-                              <FlexContaierForm>
+                              <FlexContaierForm
+                                style={{ alignItems: "flex-start" }}
+                              >
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Department <InputSpan>*</InputSpan>
@@ -695,7 +699,7 @@ const EmployeeJobDetails = () => {
                               <FlexContaierForm
                                 style={{ alignItems: "flex-start" }}
                               >
-                                <FlexColumnForm style={{ width: "50%" }}>
+                                <FlexColumnForm>
                                   <InputLabel>
                                     Reports to <InputSpan>*</InputSpan>
                                   </InputLabel>
@@ -811,65 +815,69 @@ const EmployeeJobDetails = () => {
                                   </FlexColumnForm>
                                 </FlexContaierForm>
                               </FlexContaierForm>
-                              <FlexContaierForm>
-                                <FlexColumnForm>
-                                  <InputLabel>Salary Scale From</InputLabel>
-                                  <Input
-                                    type="text"
-                                    {...register(`salaryScaleFrom`, {
-                                      pattern: {
-                                        value: /^[+]?\d+(\.\d+)?$/,
-                                        message: "Please enter valid salary",
-                                      },
-                                    })}
-                                  />
-                                  {
-                                    <Errors>
-                                      {errors.salaryScaleFrom?.message}
-                                    </Errors>
-                                  }
-                                </FlexColumnForm>
-                                <FlexColumnForm
+                              <FlexContaierForm
+                                style={{ alignItems: "flex-start" }}
+                              >
+                                <FlexContaierForm
                                   style={{ alignItems: "flex-start" }}
                                 >
-                                  <InputLabel>Salary Scale To</InputLabel>
-                                  <Input
-                                    type="text"
-                                    {...register(`salaryScaleTo`, {
-                                      pattern: {
-                                        value: /^[+]?\d+(\.\d+)?$/,
-                                        message: "Please enter valid salary",
-                                      },
-                                      validate: (fieldValue) => {
-                                        const salaryFrom = parseFloat(
-                                          getValues(`salaryScaleFrom`)
-                                        );
-                                        const salaryTo = parseFloat(fieldValue);
-                                        if (salaryFrom && salaryTo) {
-                                          if (
-                                            !isNaN(salaryFrom) &&
-                                            !isNaN(salaryTo)
-                                          ) {
-                                            return (
-                                              salaryTo >= salaryFrom ||
-                                              "Salary to must be greater than or equal to Salary From"
-                                            );
+                                  <FlexColumnForm>
+                                    <InputLabel>Salary Scale From</InputLabel>
+                                    <Input
+                                      type="text"
+                                      {...register(`salaryScaleFrom`, {
+                                        pattern: {
+                                          value: /^[+]?\d+(\.\d+)?$/,
+                                          message: "Please enter valid salary",
+                                        },
+                                      })}
+                                    />
+                                    {
+                                      <Errors>
+                                        {errors.salaryScaleFrom?.message}
+                                      </Errors>
+                                    }
+                                  </FlexColumnForm>
+                                  <FlexColumnForm
+                                    style={{ alignItems: "flex-start" }}
+                                  >
+                                    <InputLabel>Salary Scale To</InputLabel>
+                                    <Input
+                                      type="text"
+                                      {...register(`salaryScaleTo`, {
+                                        pattern: {
+                                          value: /^[+]?\d+(\.\d+)?$/,
+                                          message: "Please enter valid salary",
+                                        },
+                                        validate: (fieldValue) => {
+                                          const salaryFrom = parseFloat(
+                                            getValues(`salaryScaleFrom`)
+                                          );
+                                          const salaryTo =
+                                            parseFloat(fieldValue);
+                                          if (salaryFrom && salaryTo) {
+                                            if (
+                                              !isNaN(salaryFrom) &&
+                                              !isNaN(salaryTo)
+                                            ) {
+                                              return (
+                                                salaryTo >= salaryFrom ||
+                                                "Salary to must be greater than or equal to Salary From"
+                                              );
+                                            }
                                           }
-                                        }
 
-                                        return true;
-                                      },
-                                    })}
-                                  />
-                                  {
-                                    <Errors>
-                                      {errors.salaryScaleTo?.message}
-                                    </Errors>
-                                  }
-                                </FlexColumnForm>
-                              </FlexContaierForm>
-
-                              <FlexContaierForm>
+                                          return true;
+                                        },
+                                      })}
+                                    />
+                                    {
+                                      <Errors>
+                                        {errors.salaryScaleTo?.message}
+                                      </Errors>
+                                    }
+                                  </FlexColumnForm>
+                                </FlexContaierForm>
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Actual Salary amounts{" "}
@@ -888,7 +896,7 @@ const EmployeeJobDetails = () => {
                                         message: "Please enter valid salary",
                                       },
 
-                                      onChange: () => {
+                                      validate: () => {
                                         const salaryFrom = parseFloat(
                                           getValues(`salaryScaleFrom`)
                                         );
@@ -911,11 +919,12 @@ const EmployeeJobDetails = () => {
                                         ) {
                                           // Only Salary From is specified
                                           if (actualSalary < salaryFrom) {
-                                            setError(`salary`, {
-                                              type: "custom",
-                                              message:
-                                                "Actual salary must be greater than or equal to Salary From",
-                                            });
+                                            // setError(`salary`, {
+                                            //   type: "custom",
+                                            //   message:
+                                            //     "Actual salary must be greater than or equal to Salary From",
+                                            // });
+                                            return "Actual salary must be greater than or equal to Salary From";
                                           } else {
                                             clearErrors(`salary`);
                                           }
@@ -925,11 +934,12 @@ const EmployeeJobDetails = () => {
                                         ) {
                                           // Only Salary To is specified
                                           if (actualSalary > salaryTo) {
-                                            setError(`salary`, {
-                                              type: "custom",
-                                              message:
-                                                "Actual salary must be smaller than or equal to Salary To",
-                                            });
+                                            // setError(`salary`, {
+                                            //   type: "custom",
+                                            //   message:
+                                            //     "Actual salary must be smaller than or equal to Salary To",
+                                            // });
+                                            return "Actual salary must be smaller than or equal to Salary To";
                                           } else {
                                             clearErrors(`salary`);
                                           }
@@ -939,11 +949,12 @@ const EmployeeJobDetails = () => {
                                             actualSalary < salaryFrom ||
                                             actualSalary > salaryTo
                                           ) {
-                                            setError(`salary`, {
-                                              type: "custom",
-                                              message:
-                                                "Actual Salary must be between Salary From and Salary To",
-                                            });
+                                            // setError(`salary`, {
+                                            //   type: "custom",
+                                            //   message:
+                                            //     "Actual Salary must be between Salary From and Salary To",
+                                            // });
+                                            return "Actual Salary must be between Salary From and Salary To";
                                           } else {
                                             clearErrors(`salary`);
                                           }
@@ -953,9 +964,12 @@ const EmployeeJobDetails = () => {
                                   />
                                   {<Errors>{errors.salary?.message}</Errors>}
                                 </FlexColumnForm>
+                              </FlexContaierForm>
+
+                              <FlexContaierForm>
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Salary rate per
+                                    Salary rate per&nbsp;
                                     <InputSpan>*</InputSpan>
                                   </InputLabel>
                                   <Controller
@@ -980,10 +994,6 @@ const EmployeeJobDetails = () => {
                                   />
                                   {<Errors>{errors.ratePer?.message}</Errors>}
                                 </FlexColumnForm>
-                              </FlexContaierForm>
-                              <FlexContaierForm
-                                style={{ alignItems: "flex-start" }}
-                              >
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Hours per week <InputSpan>*</InputSpan>
@@ -1014,9 +1024,13 @@ const EmployeeJobDetails = () => {
                                     </Errors>
                                   }
                                 </FlexColumnForm>
+                              </FlexContaierForm>
+                              <FlexContaierForm
+                                style={{ alignItems: "center" }}
+                              >
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Jurisdiction
+                                    Jurisdiction&nbsp;
                                     <InputSpan>*</InputSpan>
                                   </InputLabel>
                                   <Controller
@@ -1042,52 +1056,47 @@ const EmployeeJobDetails = () => {
                                     {errors.jurisdiction?.message}
                                   </Errors>
                                 </FlexColumnForm>
+                                <FlexContaierForm>
+                                  <FlexColumnForm>
+                                    <AlignFlex>
+                                      <input
+                                        type="checkbox"
+                                        {...register(`isBebEligible`, {})}
+                                        id={`isBebEligible`}
+                                      />
+                                      <InputLabel
+                                        htmlFor={`isBebEligible`}
+                                        style={{
+                                          marginBottom: "0px",
+                                          cursor: "pointer",
+                                        }}
+                                      >
+                                        Is BEB Eligible?{" "}
+                                        <InputSpan>*</InputSpan>
+                                      </InputLabel>
+                                    </AlignFlex>
+                                  </FlexColumnForm>
+                                  <FlexColumnForm>
+                                    <AlignFlex>
+                                      <input
+                                        type="checkbox"
+                                        {...register(`isPrimary`, {})}
+                                        id={`isPrimary`}
+                                      />
+                                      <InputLabel
+                                        htmlFor={`isPrimary`}
+                                        style={{
+                                          marginBottom: "0px",
+                                          cursor: "pointer",
+                                        }}
+                                      >
+                                        Is Primary <InputSpan>*</InputSpan>
+                                      </InputLabel>
+                                    </AlignFlex>
+                                  </FlexColumnForm>
+                                </FlexContaierForm>
                               </FlexContaierForm>
-                              <FlexContaierForm
-                                style={{
-                                  width: "50%",
-                                  gap: "46px",
-                                  marginTop: "16px",
-                                  alignItems: "flex-start",
-                                }}
-                              >
-                                <FlexColumnForm>
-                                  <AlignFlex>
-                                    <input
-                                      type="checkbox"
-                                      {...register(`isBebEligible`, {})}
-                                      id={`isBebEligible`}
-                                    />
-                                    <InputLabel
-                                      htmlFor={`isBebEligible`}
-                                      style={{
-                                        marginBottom: "0px",
-                                        cursor: "pointer",
-                                      }}
-                                    >
-                                      Is BEB Eligible? <InputSpan>*</InputSpan>
-                                    </InputLabel>
-                                  </AlignFlex>
-                                </FlexColumnForm>
-                                <FlexColumnForm>
-                                  <AlignFlex>
-                                    <input
-                                      type="checkbox"
-                                      {...register(`isPrimary`, {})}
-                                      id={`isPrimary`}
-                                    />
-                                    <InputLabel
-                                      htmlFor={`isPrimary`}
-                                      style={{
-                                        marginBottom: "0px",
-                                        cursor: "pointer",
-                                      }}
-                                    >
-                                      Is Primary <InputSpan>*</InputSpan>
-                                    </InputLabel>
-                                  </AlignFlex>
-                                </FlexColumnForm>
-                              </FlexContaierForm>
+
                               {/* <FlexContaierForm style={{ marginTop: "25px" }}>
                           <FlexColumnForm>
                             <AlignFlex>

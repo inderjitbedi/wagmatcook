@@ -46,7 +46,7 @@ const ManagerSideBar = () => {
     //    //  to: "/organization-admin/leaves",
     //  },
     //  {
-    //    Title: "Accounts",
+    //    Title: "My Account",
     //    src: "/svg/person.svg",
     //    //  to: "/organization-admin/leaves",
     //  },
@@ -368,7 +368,7 @@ const ManagerSideBar = () => {
               }
             >
               {" "}
-              Accounts
+            My Account
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

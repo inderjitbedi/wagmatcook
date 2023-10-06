@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { useForm } from "react-hook-form";
 import httpClient from "../api/httpClient";
 import { toast } from "react-toastify";
+import API_URLS from "../constants/apiUrls";
 
 const style = {
   position: "absolute",
@@ -56,8 +57,9 @@ const UploadDiv = styled.div`
   justify-content: center;
 `;
 const UploadLabel = styled.label`
+  position: relative;
   width: 152px;
-  height:152px;
+  height: 152px;
   border-radius: 50%;
   border: 0.8px dashed #d2d3d3;
   display: flex;
@@ -65,6 +67,7 @@ const UploadLabel = styled.label`
   justify-content: center;
   flex-direction: column;
   gap: 4px;
+  cursor: pointer;
 `;
 const UploadImg = styled.img`
   width: 40px;
@@ -72,7 +75,9 @@ const UploadImg = styled.img`
 `;
 const UploadText = styled.p`
   margin: 0px;
-  color: #8f9bb3;
+  /* color: #8f9bb3;
+   */
+  color: black;
   font-family: Inter;
   font-size: 8px;
   font-style: normal;
@@ -141,8 +146,23 @@ const ButtonBlue = styled.button`
   border: none;
   margin-top: 25px;
 `;
+const ProfileImage = styled.img`
+  width: 152px;
+  height: 152px;
+  border-radius: 50%;
+  position: absolute;
+  opacity: 0.5;
+  object-fit: cover;
+`;
 
-const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
+const SettingsModal = ({
+  openSettings,
+  HandleCloseSettings,
+  isProfile,
+  orgProfile,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFile, setIsFile] = useState(false);
   const {
     register,
     control,
@@ -155,12 +175,11 @@ const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
     setError,
   } = useForm({
     mode: "all",
-    defaultValues: {
-      file: null,
-    },
+    defaultValues: {},
   });
+  const [orgFile, setOrgFile] = useState(null);
   const [file, setFile] = useState(null);
-
+  const [orgData, setOrgData] = useState([]);
   const onSubmit = (data) => {
     //console.log("form submmited", data);
     function isEmptyObject(obj) {
@@ -180,56 +199,88 @@ const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
         data.file = null;
       }
 
-      // AddNewProformance(data);
+      HandleUpdateOrgProfile(data);
     }
-    const getFileType = (file) => {
-      const fileExtension = file.name.split(".").pop().toLowerCase();
-
-      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-        return "image";
-      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-        return "video";
-      } else if (fileExtension === "pdf") {
-        return "pdf";
-      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-        return "xlsx";
-      } else if (fileExtension === "doc" || fileExtension === "docx") {
-        return "doc";
-      } else {
-        return "unknown";
-      }
-    };
-    const handleFileChange = async (e) => {
-      const file = e.target.files[0];
-      setFile(file);
-      if (file) {
-        handleUpload(file);
-      }
-    };
-    const handleUpload = (file) => {
-      if (file) {
-        const binary = new FormData();
-        binary.append("file", file);
-
-        httpClient({
-          method: "post",
-          url: "/organization/file/upload/image",
-          data: binary, // Use 'data' to send the FormData
-          headers: {
-            "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
-          },
-        })
-          .then((data) => {
-            if (data?.result) {
-              setFile(data?.result?.file);
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
-    };
   };
+
+  const handleUpload = (file) => {
+    if (file) {
+      setIsFile(true);
+      const binary = new FormData();
+      binary.append("file", file);
+
+      httpClient({
+        method: "post",
+        url: "/organization/file/upload/image",
+        data: binary, // Use 'data' to send the FormData
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+        },
+      })
+        .then((data) => {
+          if (data?.result) {
+            setFile(data?.result?.file);
+            setOrgFile(data?.result?.file);
+          }
+          setIsFile(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setIsFile(false);
+        });
+    }
+  };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    // setFile(file);
+    if (file) {
+      handleUpload(file);
+    }
+  };
+  const HandleUpdateOrgProfile = (data) => {
+    // e.preventDefault();
+    let dataCopy = data;
+
+    let url = API_URLS.updateOrgProfile;
+
+    setIsLoading(true);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          orgData.name = data.name;
+          orgData.size = data.size;
+          orgData.logo = orgFile;
+          localStorage.setItem("org", JSON.stringify(orgData));
+          HandleCloseSettings();
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Submiting Job Details. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    setValue("name", orgProfile?.name);
+    setValue("size", orgProfile?.size);
+    setFile("file", orgProfile?.logo?._id);
+    const orgDataString = localStorage.getItem("org");
+    const orgData = JSON.parse(orgDataString);
+    setOrgData(orgData);
+  }, [orgProfile]);
+  console.log("this our file ", file);
+  let API_URL = process.env.REACT_APP_API_URL;
+
   return (
     <Modal
       open={openSettings}
@@ -244,7 +295,7 @@ const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
       <Box sx={style}>
         <>
           {" "}
-          {isProfile ? (
+          {isProfile || isLoading ? (
             <div
               style={{
                 display: "flex",
@@ -278,14 +329,36 @@ const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
                   <input
                     style={{ width: "50%" }}
                     type="file"
-                    // onChange={handleFileChange}
                     id="upload"
+                    onChange={handleFileChange}
                     className="custom"
                   />
 
                   <UploadLabel htmlFor="upload">
-                    <UploadImg src="/svg/Camera.svg" />
-                    <UploadText>Upload Photo</UploadText>
+                    {isFile ? (
+                      <ThreeDots
+                        height="8"
+                        width="80"
+                        radius="9"
+                        color="#279AF1"
+                        ariaLabel="three-dots-loading"
+                        visible={true}
+                      />
+                    ) : (
+                      <>
+                        <ProfileImage
+                          src={
+                            orgFile
+                              ? API_URL + orgFile.path
+                              : orgProfile?.logo
+                              ? API_URL + orgProfile.logo.path
+                              : "/images/User.jpg"
+                          }
+                        />
+                        <UploadImg src="/svg/Camera.svg" />
+                        <UploadText>Upload Photo</UploadText>
+                      </>
+                    )}
                   </UploadLabel>
                 </UploadDiv>
                 <FlexColumnForm>
@@ -326,7 +399,9 @@ const SettingsModal = ({ openSettings, HandleCloseSettings, isProfile }) => {
                   {errors.size && <Errors>{errors.size?.message}</Errors>}
                 </FlexColumnForm>
 
-                <ButtonBlue type="submit">Submit</ButtonBlue>
+                <ButtonBlue type="submit" disabled={isFile}>
+                  Submit
+                </ButtonBlue>
               </form>
             </ModalContainer>
           )}

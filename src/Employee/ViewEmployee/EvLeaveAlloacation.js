@@ -334,12 +334,12 @@ const EvLeaveAlloacation = () => {
             <CommenHeader employeeid={employeeid} />
           </FlexSpaceBetween>
           <LeaveDiv>
-            Leaves Alloaction
+            Leave Alloactions
             {userType === ROLES.EMPLOYEE ? (
               " "
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-                New Alloaction
+                Add New
               </ButtonBlue>
             )}
           </LeaveDiv>
@@ -377,7 +377,7 @@ const EvLeaveAlloacation = () => {
                 {result?.allocations?.length === 0 && (
                   <TableRow sx={{ height: "200px" }}>
                     <TableCell align="center" colSpan={4}>
-                      No leave allocation found
+                      No leave allocations found
                     </TableCell>
                   </TableRow>
                 )}
@@ -465,7 +465,7 @@ const EvLeaveAlloacation = () => {
                   <ModalContainer>
                     <ModalHeading>
                       {!update
-                        ? "Leave Alloaction"
+                        ? " Add Leave Alloaction"
                         : "Update Leaves Alloaction"}
                     </ModalHeading>
                     <ModalIcon

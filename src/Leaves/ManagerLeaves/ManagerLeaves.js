@@ -348,7 +348,7 @@ const ManagerLeaves = () => {
 
   return (
     <div>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leaves" />
       <HeaderDiv>
         <HeaderTitle>All Leaves</HeaderTitle>
         <DashHeaderSearch>
@@ -362,7 +362,7 @@ const ManagerLeaves = () => {
             <SearchIcon src="/images/icons/searchIcon.svg" />
           </SearchBox> */}
         </DashHeaderSearch>
-        <ButtonBlue onClick={() => handleOpen()}>New Request</ButtonBlue>
+        <ButtonBlue onClick={() => handleOpen()}>Add New</ButtonBlue>
       </HeaderDiv>
       {isLoading ? (
         <div
@@ -599,7 +599,7 @@ const ManagerLeaves = () => {
                     value={selectedEmployee}
                     onChange={(event, newValue) => {
                       setSelectedEmployee(newValue);
-                      setSearchValue("employee",newValue._id)
+                      setSearchValue("employee", newValue._id);
                     }}
                     options={options}
                     loading={loading}

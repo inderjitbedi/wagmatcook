@@ -14,6 +14,7 @@ import {
   FlexColumnForm,
   InputLabel,
   Errors,
+  InputSpan
 } from "./AddEmployeeStyles";
 import { toast } from "react-toastify";
 
@@ -163,7 +164,9 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
               <ModalFormContainer>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>First Name</InputLabel>
+                    <InputLabel>
+                      First Name <InputSpan>*</InputSpan>
+                    </InputLabel>
                     <Input
                       type="text"
                       {...register("firstName", {
@@ -178,7 +181,9 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                     )}
                   </FlexColumnForm>
                   <FlexColumnForm>
-                    <InputLabel>Last Name</InputLabel>
+                    <InputLabel>
+                      Last Name <InputSpan>*</InputSpan>
+                    </InputLabel>
                     <Input
                       type="text"
                       {...register("lastName", {
@@ -195,7 +200,9 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 </FlexContaierForm>
                 <FlexContaierForm>
                   <FlexColumnForm>
-                    <InputLabel>Email Address</InputLabel>
+                    <InputLabel>
+                      Email Address <InputSpan>*</InputSpan>
+                    </InputLabel>
                     <Input
                       type="email"
                       {...register("email", {

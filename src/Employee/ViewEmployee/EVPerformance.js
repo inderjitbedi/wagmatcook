@@ -521,12 +521,12 @@ const EVPerformance = () => {
           <BasicInfoContainer>
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                <BasicHeading>Reviews</BasicHeading>
+                <BasicHeading>Performance Reviews</BasicHeading>
                 {userType === ROLES.EMPLOYEE || isAccount ? (
                   " "
                 ) : (
                   <AddNewButton onClick={HandleOpenAddNewAction}>
-                    Add New Review
+                    Add New
                   </AddNewButton>
                 )}
               </FlexSpaceBetween>
@@ -561,7 +561,7 @@ const EVPerformance = () => {
                       <ModalContainer style={{ paddingTop: "8px" }}>
                         <ModalHeading>
                           {" "}
-                          {!update ? "Add Review" : "Update Review"}{" "}
+                          {!update ? "Add Performance Review" : "Update Performance Review"}{" "}
                         </ModalHeading>
                         <ModalIcon
                           onClick={handleClose}
@@ -625,7 +625,7 @@ const EVPerformance = () => {
                                 handleTagClick={handleTagClick}
                                 inputFieldPosition="bottom"
                                 autocomplete
-                                placeholder="Add More"
+                                placeholder={tags.length ? "Add More " : "Add"}
                                 // editable
                               />
 
@@ -696,7 +696,7 @@ const EVPerformance = () => {
                                         return setError("nextReviewDate", {
                                           type: "custom",
                                           message:
-                                            "End date must not be earlier than start date",
+                                            "Next Review must not be earlier than  Date",
                                         });
                                       } else {
                                         return clearErrors("nextReviewDate");
@@ -839,7 +839,7 @@ const EVPerformance = () => {
                             >
                               {data?.personalInfo
                                 ?.map((obj) => obj.firstName)
-                                .join(", ")}
+                                .join(" , ")}
                             </ViewPara>
                             <TimelinePara
                               style={{
@@ -1017,7 +1017,7 @@ const EVPerformance = () => {
       </Modal>
       <DeleteModal
         openDelete={openDelete}
-        message="Are you sure you want to delete this proformance review?"
+        message="Are you sure you want to delete this performance review?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}
