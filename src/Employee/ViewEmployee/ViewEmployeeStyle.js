@@ -231,19 +231,22 @@ export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 50%;
+  /* width: 50%; */
 `;
 export const SectionCard = styled.div`
+position: relative;
   display: flex;
   gap: 16px;
   margin-bottom: 16px;
   width: 100%;
   justify-content: space-between;
+  flex-wrap: wrap;
 `;
 export const SectionCardContainer = styled.div`
   border-radius: 8px;
-  flex: 1 1 250px;
-  background-color:#fff;
+  flex: 0 1 20%;
+  /* max-width: 350px; */
+  background-color: #fff;
   padding: 16px 20px 10px 20px;
   display: flex;
   justify-content: space-between;
@@ -258,16 +261,32 @@ export const Sectionlighttitle = styled.h1`
   line-height: 24px; /* 171.429% */
   margin:0;
 `;
-export const Sectionsmalltitle = styled.h1`
+export const ShowMore = styled.p`
   color: #8f9bb3;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 0px 0px 8px 0px;
+  cursor: pointer;
+  /* padding: 0.75em 1.25em;
+  border: 1px solid black;
+  border-radius: 16px; */
+  /* position: fixed;
+  bottom: 2px;
+  right: 0px; */
+`;
+export const Sectionsmalltitle = styled.p`
+ color: #222b45;
   text-align: right;
   font-family: Inter;
-  font-size: 10px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 18px;
   margin: 0;
-  align-self: flex-end;
+  align-self: flex-start;
 `;
 export const Sectiondarktitle = styled.p`
   color: #222b45;

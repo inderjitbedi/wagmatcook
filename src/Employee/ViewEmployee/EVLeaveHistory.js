@@ -68,6 +68,7 @@ import {
   Sectionlighttitle,
   Sectiondarktitle,
   Sectionsmalltitle,
+  ShowMore,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -259,6 +260,14 @@ const EVLeaveHistory = () => {
   const [reportList, setReportList] = useState([]);
   const [leaveType, setLeaveType] = useState([]);
   const [leaveBalance, setLeaveBalance] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+
+  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
+
+  const handleShowMoreClick = () => {
+
+    setShowAll(!showAll);
+  };
   const {
     register,
     control,
@@ -417,7 +426,7 @@ const EVLeaveHistory = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setLeaveBalance(result);
+          setLeaveBalance(result.leaves);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -493,13 +502,13 @@ const EVLeaveHistory = () => {
     GetReportList();
     GetLeaveAlloaction();
     GetLeaveHistory();
-    GetLeaveAlloactionBalance();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+      GetLeaveAlloactionBalance();
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
@@ -551,35 +560,31 @@ const EVLeaveHistory = () => {
             </FlexSpaceBetween>
           )}
           {userType === ROLES.EMPLOYEE && (
-            <SectionCard>
-              <SectionCardContainer>
-                <FlexColumn>
-                  <Sectionlighttitle>Earned Leave</Sectionlighttitle>
-                  <Sectiondarktitle>0</Sectiondarktitle>
-                </FlexColumn>
-                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
-              </SectionCardContainer>
-              <SectionCardContainer>
-                <FlexColumn>
-                  <Sectionlighttitle>Casual-Sick Leave</Sectionlighttitle>
-                  <Sectiondarktitle>0</Sectiondarktitle>
-                </FlexColumn>
-                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
-              </SectionCardContainer>
-              <SectionCardContainer>
-                <FlexColumn>
-                  <Sectionlighttitle>Restricted Holiday</Sectionlighttitle>
-                  <Sectiondarktitle>0</Sectiondarktitle>
-                </FlexColumn>
-                <Sectionsmalltitle>1 of 11 Consumed</Sectionsmalltitle>
-              </SectionCardContainer>
-              <SectionCardContainer>
-                <FlexColumn>
-                  <Sectionlighttitle>Loss of Pay</Sectionlighttitle>
-                  <Sectiondarktitle>0</Sectiondarktitle>
-                </FlexColumn>
-              </SectionCardContainer>
-            </SectionCard>
+            <>
+              <SectionCard>
+                {limitedData?.map((data) => (
+                  <SectionCardContainer>
+                    <FlexColumn>
+                      <Sectionlighttitle>
+                        {" "}
+                        {data?.leaveTypeObj?.name || "- "}{" "}
+                      </Sectionlighttitle>
+                      <Sectionsmalltitle>
+                        {data?.consumed || " 0"} of{" "}
+                        {data?.totalAllocation || "-"} Consumed
+                      </Sectionsmalltitle>
+                    </FlexColumn>
+                  </SectionCardContainer>
+                ))}
+              </SectionCard>
+              <div style={{display:"flex",justifyContent:"flex-end"}}>
+                {leaveBalance?.length > 4 && (
+                  <ShowMore onClick={handleShowMoreClick}>
+                    {showAll ? "Show Less" : "Show More "}
+                  </ShowMore>
+                )}
+              </div>
+            </>
           )}
 
           <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
@@ -695,8 +700,10 @@ const EVLeaveHistory = () => {
                       <span
                         style={
                           data.status === "PENDING"
-                            ? PendingStyle : (data.status === "APPROVED" ?
-                              ApprovedStyles : RejectedStyles)
+                            ? PendingStyle
+                            : data.status === "APPROVED"
+                            ? ApprovedStyles
+                            : RejectedStyles
                         }
                       >
                         {" "}
@@ -965,8 +972,10 @@ const EVLeaveHistory = () => {
                         <span
                           style={
                             isSatus === "PENDING"
-                              ? PendingStyle : (isSatus === "APPROVED" ?
-                                ApprovedStyles : RejectedStyles)
+                              ? PendingStyle
+                              : isSatus === "APPROVED"
+                              ? ApprovedStyles
+                              : RejectedStyles
                             // isSatus === "PENDING"
                             //   ? PendingStyle
                             //   : ApprovedStyles
