@@ -63,7 +63,7 @@ const leaveController = {
         try {
             const user = await User.findOne({ _id: req.params.id }).populate('personalInfo')
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
 

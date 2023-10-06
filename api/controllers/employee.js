@@ -341,7 +341,7 @@ const employeeController = {
         try {
             let user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             user = await User.findOneAndUpdate({ _id: req.params.id }, { isDeleted: true })
@@ -359,7 +359,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let emailExists = await User.findOne({ email: req.body.workEmail, _id: { $ne: req.params.id } })
@@ -392,7 +392,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).populate('photo employee')
@@ -526,7 +526,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             // req.body.details.reportsTo = req.user._id
             // req.body.details.employee = req.params.id
@@ -580,7 +580,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             // const details = await EmployeeJobDetails.findOne({ employee: req.params.id }).populate('department employee employeeType')
@@ -603,7 +603,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             if (req.body.isPrimary) {
                 await EmployeePositionHistory.updateMany({ employee: req.params.id }, { isPrimary: false });
@@ -637,7 +637,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const benefit = await EmployeeBenefits.findOneAndUpdate({ employee: req.params.id }, req.body, { new: true, upsert: true })
@@ -656,7 +656,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const benefit = await EmployeeBenefits.findOne({ employee: req.params.id }).populate('employee benefit')
@@ -676,7 +676,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             let certificate = req.body;
             if (certificate.file) {
@@ -703,7 +703,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let { certificates } = req.body
@@ -745,7 +745,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             let certificate = req.body;
             if (certificate.file) {
@@ -774,7 +774,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             const certificates = await EmployeeCertificates.find({ employee: req.params.id, isDeleted: false }).populate('file employee').sort({ completionDate: -1 })
 
@@ -795,7 +795,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const certificate = await EmployeeCertificates.findOneAndUpdate({ _id: req.params.certificateid }, { isDeleted: true });
@@ -816,7 +816,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             console.log('first', req.params.id)
             const reviews = await EmployeeReviews.aggregate([
@@ -894,7 +894,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let file = await File.findOne({ _id: req.body.file });
@@ -926,7 +926,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let file = await File.findOne({ _id: req.body.file });
@@ -954,7 +954,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const review = await EmployeeReviews.findOneAndUpdate({ _id: req.params.reviewid }, { isDeleted: true });
@@ -974,7 +974,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             const disciplinaries = await EmployeeDisciplinaries.find({ employee: req.params.id, isDeleted: false }).populate('file employee disciplinary')
 
@@ -993,7 +993,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let file = await File.findOne({ _id: req.body.file });
@@ -1018,7 +1018,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let file = await File.findOne({ _id: req.body.file });
@@ -1043,7 +1043,7 @@ const employeeController = {
 
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const disciplinary = await EmployeeDisciplinaries.findOneAndUpdate({ _id: req.params.disciplinaryid }, { isDeleted: true });
@@ -1104,7 +1104,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const document = new EmployeeDocuments({ ...req.body, employee: req.params.id });
@@ -1123,7 +1123,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let document = await EmployeeDocuments.findOneAndUpdate({ _id: req.params.documentid }, { isDeleted: true }, { new: true });
@@ -1140,7 +1140,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const documents = await EmployeeDocuments.find({ employee: req.params.id, isDeleted: false }).populate('file')
@@ -1158,7 +1158,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const personalInfo = await EmployeePersonalInfo.findOne({ employee: req.params.id }).select('firstName lastName')
@@ -1193,7 +1193,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const allocation = new EmployeeLeaveAllocation({ ...req.body, employee: req.params.id });
@@ -1212,7 +1212,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let allocation = await EmployeeLeaveAllocation.findOneAndUpdate({ _id: req.params.allocationid }, { isDeleted: true }, { new: true });
@@ -1229,7 +1229,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             let allocation = await EmployeeLeaveAllocation.findOneAndUpdate({ _id: req.params.allocationid }, { ...req.body }, { new: true });
@@ -1246,7 +1246,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const allocations = await EmployeeLeaveAllocation.find({ employee: req.params.id, isDeleted: false }).populate({ path: 'leaveType', select: 'name' })
@@ -1263,10 +1263,8 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
-
-
             const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false })
                 .populate({
                     path: 'responder',
@@ -1292,7 +1290,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id })
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
             const request = await EmployeeLeaveHistory.findOne({ employee: req.params.id, _id: req.params.requestid, isDeleted: false })
@@ -1329,7 +1327,7 @@ const employeeController = {
         try {
             const user = await User.findOne({ _id: req.params.id }).populate('personalInfo')
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
             let { leaveType, hours: requestedHours } = req.body
             let allocation = await EmployeeLeaveAllocation.findOne({ leaveType, employee: req.params.id, isDeleted: false }).populate('leaveType')
@@ -1367,6 +1365,29 @@ const employeeController = {
         }
     },
 
+
+    async getLeaveBalance(req, res) {
+        try {
+            let leaves = await EmployeeLeaveAllocation.aggregate([
+                { $match: { employee: req.user._id, isDeleted: false } },
+                { "$lookup": { "from": "leavetypes", localField: "leaveType", foreignField: "_id", as: "leaveTypeObj" } },
+                { $unwind: '$leaveTypeObj' },
+                { "$lookup": { "from": "employeeleavehistories", localField: "leaveType", foreignField: "leaveType", as: "history" } },
+                { $match: { "history.status": { $ne: leaveStatus.REJECTED } } },
+                { $addFields: { consumed: { $sum: "$history.hours" } } },
+                { $project: { consumed: 1, totalAllocation: 1, leaveType: 1, leaveTypeObj: 1 } },
+                { $sort: { "leaveTypeObj.order": 1 } }
+            ])
+
+            res.status(200).json({
+                leaves,
+                message: 'Employee leave balance fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
 
 }
 
