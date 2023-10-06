@@ -286,8 +286,8 @@ const EmployeeJobDetails = () => {
                 <CommenHeader employeeid={employeeid} />
 
                 {userType === ROLES.MANAGER ||
-                userType === ROLES.EMPLOYEE ||
-                isAccount ? (
+                  userType === ROLES.EMPLOYEE ||
+                  isAccount ? (
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton
@@ -313,8 +313,8 @@ const EmployeeJobDetails = () => {
                   <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                     <BasicHeading>Employment Details</BasicHeading>
                     {userType === ROLES.MANAGER ||
-                    userType === ROLES.EMPLOYEE ||
-                    isAccount ? (
+                      userType === ROLES.EMPLOYEE ||
+                      isAccount ? (
                       " "
                     ) : userType === ROLES.HR ? (
                       <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
@@ -516,15 +516,15 @@ const EmployeeJobDetails = () => {
                               From:{" "}
                               {data.startDate
                                 ? moment(data.startDate).format(
-                                    "DD / MM / YYYY"
-                                  )
+                                  "DD/MM/YYYY"
+                                )
                                 : " - "}
                               <span style={{ marginLeft: "14px" }}>
                                 {" "}
                                 To:
                                 {data.endDate
                                   ? moment(data.endDate).format("DD/MM/YYYY")
-                                  : " - "}
+                                  : " Present "}
                               </span>{" "}
                             </TitlePara>
                           </TimelineDiv>
@@ -719,11 +719,11 @@ const EmployeeJobDetails = () => {
                                           <Option value={user?.userData?._id}>
                                             {user.personalInfo?.length
                                               ? user.personalInfo[0].firstName +
-                                                " " +
-                                                (user?.personalInfo[0]?.lastName
-                                                  ? user?.personalInfo[0]
-                                                      ?.lastName
-                                                  : " ")
+                                              " " +
+                                              (user?.personalInfo[0]?.lastName
+                                                ? user?.personalInfo[0]
+                                                  ?.lastName
+                                                : " ")
                                               : user.userData.name}
                                           </Option>
                                         ))}
@@ -1117,10 +1117,10 @@ const EmployeeJobDetails = () => {
                               <ButtonBlue
                                 type="submit"
                                 style={{ marginTop: "25px" }}
-                                // disabled={!isDirty}
-                                // onClick={() => {
-                                //   handleSubmit(onSubmit);
-                                // }}
+                              // disabled={!isDirty}
+                              // onClick={() => {
+                              //   handleSubmit(onSubmit);
+                              // }}
                               >
                                 Submit
                               </ButtonBlue>

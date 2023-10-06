@@ -63,7 +63,7 @@ const leaveController = {
         try {
             const user = await User.findOne({ _id: req.params.id }).populate('personalInfo')
             if (!user) {
-                return res.status(400).json({ message: 'Employee doesn\'t exists' });
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
 
 
@@ -76,7 +76,10 @@ const leaveController = {
 
             let burnedHours = 0;
             let requestedHours = 0;
-            let leaves = await EmployeeLeaveHistory.find({ leaveType: leaveType, employee: req.params.id, isDeleted: false }).select('hours');
+            let leaves = await EmployeeLeaveHistory.find({
+                leaveType: leaveType, employee: req.params.id, isDeleted: false,
+                status: { $ne: leaveStatus.REJECTED }
+            }).select('hours');
             for (const leave of leaves) {
                 if (leave._id === req.params.requestid) {
                     requestedHours = leave.hours

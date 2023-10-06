@@ -219,14 +219,14 @@ const EmployeePersonal = () => {
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
-                    <FlexSpaceBetween>
+                    {/* <FlexSpaceBetween>
                       <FlexColumn style={{ width: "50%" }}>
                         <TitlePara>Jurisdiction</TitlePara>
                         <ViewPara>
                           {result?.personalInfo?.jurisdiction || " - "}
                         </ViewPara>
                       </FlexColumn>
-                    </FlexSpaceBetween>
+                    </FlexSpaceBetween> */}
                     <FlexSpaceBetween>
                       <FlexColumn>
                         <TitlePara>Is Active </TitlePara>
@@ -254,8 +254,8 @@ const EmployeePersonal = () => {
                         <ViewPara>
                           {result.personalInfo?.dob
                             ? moment(result.personalInfo?.dob).format(
-                                "DD/MM/YYYY"
-                              )
+                              "DD/MM/YYYY"
+                            )
                             : " - "}
                         </ViewPara>
                       </FlexColumn>
