@@ -69,20 +69,28 @@ const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
   const Navigate = useNavigate()
   return (
     <Modal
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
+      }}
       open={openThanks}
-      onClose={HandleCloseThanks}
+      // onClose={HandleCloseThanks}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
         <ModalThanks>
           <ModalIconDelete
-            // onClick={HandleCloseDelete}
+            onClick={HandleCloseThanks}
             src="/images/icons/Alert-Circle.svg"
           />
           <ModalThanksImg src="/images/success.jpg" />
           <ModalThanksHeading>Employee Added Successfully</ModalThanksHeading>
-          <ButtonBlue onClick={() =>  Navigate(`/organization-admin/employee/list`)}>Close</ButtonBlue>
+          <ButtonBlue
+            onClick={() => Navigate(`/organization-admin/employee/list`)}
+          >
+            Close
+          </ButtonBlue>
         </ModalThanks>
       </Box>
     </Modal>

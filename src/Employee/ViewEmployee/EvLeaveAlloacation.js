@@ -132,52 +132,63 @@ const EvLeaveAlloacation = () => {
     }
   };
   const GetLeavesType = () => {
-    setIsLoading(true);
-    let url = API_URLS.getEmployeeLeaveList.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setLeaveType(result.leaveTypes);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getEmployeeLeaveList.replace(
+        ":employeeid",
+        employeeid
+      );
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setLeaveType(result.leaveTypes);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   const GetLeaveAllocation = () => {
-    setIsLoading(true);
-    GetLeavesType();
-    const trimid = employeeid.trim();
-    let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // GetLeavesType();
+      const trimid = employeeid.trim();
+      let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -278,8 +289,10 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-    GetLeavesType();
-    GetLeaveAllocation();
+    
+    Promise.all([GetLeavesType(), GetLeaveAllocation()])
+  
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -413,8 +426,8 @@ const EvLeaveAlloacation = () => {
                           />
                         )} */}
                         {userType === ROLES.EMPLOYEE ||
-                          userType === ROLES.MANAGER ||
-                          isAccount ? (
+                        userType === ROLES.MANAGER ||
+                        isAccount ? (
                           " "
                         ) : (
                           <Icons
@@ -436,7 +449,11 @@ const EvLeaveAlloacation = () => {
           {/* modal applying leaves  */}
           <Modal
             open={open}
-            onClose={handleClose}
+            // onClose={handleClose}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >

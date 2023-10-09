@@ -458,7 +458,11 @@ const OALeaves = () => {
         </AddNewButton>
         <Modal
           open={open}
-          onClose={HandleClose}
+          // onClose={HandleClose}
+          sx={{
+            backgroundColor: "rgb(27, 27, 27, 0.75)",
+            backdropFilter: "blur(8px)",
+          }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
@@ -607,7 +611,11 @@ const OALeaves = () => {
 
         <Modal
           open={openThanks}
-          onClose={HandleCloseThanks}
+          // onClose={HandleCloseThanks}
+          sx={{
+            backgroundColor: "rgb(27, 27, 27, 0.75)",
+            backdropFilter: "blur(8px)",
+          }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

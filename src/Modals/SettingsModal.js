@@ -284,11 +284,15 @@ const SettingsModal = ({
   return (
     <Modal
       open={openSettings}
-      onClose={() => {
-        HandleCloseSettings();
-        reset({});
-        clearErrors();
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
       }}
+      // onClose={() => {
+      //   HandleCloseSettings();
+      //   reset({});
+      //   clearErrors();
+      // }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

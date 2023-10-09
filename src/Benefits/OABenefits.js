@@ -324,7 +324,7 @@ const OABenefits = () => {
     reorderedData.splice(result.destination.index, 0, movedItem);
     console.log("drag is working ");
     setBenefits(reorderedData);
-    HandleReorder(reorderedData.map((item) => item._id)); 
+    HandleReorder(reorderedData.map((item) => item._id));
   };
 
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -355,12 +355,16 @@ const OABenefits = () => {
         </AddNewButton>
         <Modal
           open={open}
-          onClose={() => {
-            HandleClose();
-            clearErrors();
-            reset({});
-            setUpdate(false);
+          sx={{
+            backgroundColor: "rgb(27, 27, 27, 0.75)",
+            backdropFilter: "blur(8px)",
           }}
+          // onClose={() => {
+          //   HandleClose();
+          //   clearErrors();
+          //   reset({});
+          //   setUpdate(false);
+          // }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

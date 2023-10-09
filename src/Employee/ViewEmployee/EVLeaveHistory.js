@@ -219,19 +219,6 @@ const RejectedStyles = {
 };
 
 const EVLeaveHistory = () => {
-  const [anchorEl, setAnchorEl] = useState(false);
-  const openMenu = Boolean(anchorEl);
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
@@ -265,7 +252,6 @@ const EVLeaveHistory = () => {
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
 
   const handleShowMoreClick = () => {
-
     setShowAll(!showAll);
   };
   const {
@@ -324,48 +310,55 @@ const EVLeaveHistory = () => {
   };
 
   const GetReportList = () => {
-    setIsLoading(true);
-    let url = API_URLS.getReporttoList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          const extractedDataArray = result?.users?.map((user) => {
-            if (user.personalInfo.length > 0) {
-              const {
-                _id: personalInfoId,
-                firstName,
-                lastName,
-              } = user.personalInfo[0];
-              return {
-                _id: user.user,
-                personalInfoId,
-                name: `${firstName} ${lastName ? lastName : ""}`,
-              };
-            } else {
-              const { _id: userDataId, name } = user.userData;
-              return { _id: user.user, userDataId, name };
-            }
-          });
-          const filteredArray = extractedDataArray.filter(
-            (obj) => obj._id !== employeeid
-          );
-          setReportList(filteredArray);
-          console.log("ideal data :", extractedDataArray);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getReporttoList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            const FilterforAdmin = result?.users?.filter(
+              (item) => item.userData.role !== "ORGANIZATION_ADMIN"
+            );
+            const extractedDataArray = FilterforAdmin?.map((user) => {
+              if (user.personalInfo.length > 0) {
+                const {
+                  _id: personalInfoId,
+                  firstName,
+                  lastName,
+                } = user.personalInfo[0];
+                return {
+                  _id: user.user,
+                  personalInfoId,
+                  name: `${firstName} ${lastName ? lastName : ""}`,
+                };
+              } else {
+                const { _id: userDataId, name } = user.userData;
+                return { _id: user.user, userDataId, name };
+              }
+            });
+            const filteredArray = extractedDataArray.filter(
+              (obj) => obj._id !== employeeid
+            );
+            setReportList(filteredArray);
+            console.log("ideal data :", extractedDataArray);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   // const GetLeavesType = () => {
   //   setIsLoading(true);
@@ -391,29 +384,33 @@ const EVLeaveHistory = () => {
   //     });
   // };
   const GetLeaveAlloaction = () => {
-    setIsLoading(true);
-    // GetLeavesType();
-    const trimid = employeeid.trim();
-    let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setLeaveType(result.allocations);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // GetLeavesType();
+      const trimid = employeeid.trim();
+      let url = API_URLS.EmployeeAllocation.replace(":employeeid", employeeid);
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setLeaveType(result.allocations);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   const GetLeaveAlloactionBalance = () => {
     // setIsLoading(true);
@@ -475,33 +472,36 @@ const EVLeaveHistory = () => {
       });
   };
   const GetLeaveHistory = () => {
-    setIsLoading(true);
-    // const trimid = employeeid?.trim();
-    let url = API_URLS.getLeaveHistory.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // const trimid = employeeid?.trim();
+      let url = API_URLS.getLeaveHistory.replace(":employeeid", employeeid);
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   useEffect(() => {
-    GetReportList();
-    GetLeaveAlloaction();
-    GetLeaveHistory();
+    Promise.all([GetReportList(), GetLeaveAlloaction(), GetLeaveHistory()]);
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -577,7 +577,7 @@ const EVLeaveHistory = () => {
                   </SectionCardContainer>
                 ))}
               </SectionCard>
-              <div style={{display:"flex",justifyContent:"flex-end"}}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 {leaveBalance?.length > 4 && (
                   <ShowMore onClick={handleShowMoreClick}>
                     {showAll ? "Show Less" : "Show More "}
@@ -727,7 +727,11 @@ const EVLeaveHistory = () => {
           {/* modal applying leaves  */}
           <Modal
             open={open}
-            onClose={handleClose}
+            // onClose={handleClose}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -817,7 +821,7 @@ const EVLeaveHistory = () => {
                                 value: true,
                                 message: " Required",
                               },
-                              onChange: (fieldValue) => {
+                              validate: (fieldValue) => {
                                 const startDateValue = getValues("from");
 
                                 const endDateValue = getValues("to");
@@ -826,11 +830,12 @@ const EVLeaveHistory = () => {
                                   const endDate = new Date(endDateValue);
                                   const startDate = new Date(startDateValue);
                                   if (startDate > endDate) {
-                                    return setError("to", {
-                                      type: "custom",
-                                      message:
-                                        "End date must not be earlier than start date",
-                                    });
+                                    return "End date must not be earlier than start date";
+                                    // return setError("to", {
+                                    //   type: "custom",
+                                    //   message:
+                                    //     "End date must not be earlier than start date",
+                                    // });
                                   } else {
                                     return clearErrors("to");
                                   }
@@ -994,7 +999,11 @@ const EVLeaveHistory = () => {
           {/* thanks modal for leaves */}
           <Modal
             open={openThanks}
-            onClose={handleCloseThanks}
+            // onClose={handleCloseThanks}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -1008,7 +1017,7 @@ const EVLeaveHistory = () => {
                 <ModalThanksHeading>
                   Your leave request sent successfully.
                 </ModalThanksHeading>
-                <ButtonBlue>Thanks</ButtonBlue>
+                <ButtonBlue onClick={handleCloseThanks}>Thanks</ButtonBlue>
               </ModalThanks>
             </Box>
           </Modal>

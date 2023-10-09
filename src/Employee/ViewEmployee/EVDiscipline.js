@@ -448,7 +448,11 @@ const EVDiscipline = () => {
               {/* modal add disciplinary */}
               <Modal
                 open={open}
-                onClose={handleClose}
+                // onClose={handleClose}
+                sx={{
+                  backgroundColor: "rgb(27, 27, 27, 0.75)",
+                  backdropFilter: "blur(8px)",
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
@@ -581,7 +585,7 @@ const EVDiscipline = () => {
                                   //   message: " Required",
                                   // },
 
-                                  onChange: (fieldValue) => {
+                                validate: (fieldValue) => {
                                     const startDateValue =
                                       getValues("issueDate");
 
@@ -594,11 +598,12 @@ const EVDiscipline = () => {
                                         startDateValue
                                       );
                                       if (startDate > endDate) {
-                                        return setError("expiryDate", {
-                                          type: "custom",
-                                          message:
-                                            "End date must not be earlier than start date",
-                                        });
+                                        return "End date must not be earlier than start date";
+                                        // return setError("expiryDate", {
+                                        //   type: "custom",
+                                        //   message:
+                                        //     "End date must not be earlier than start date",
+                                        // });
                                       } else {
                                         return clearErrors("expiryDate");
                                       }
@@ -773,7 +778,7 @@ const EVDiscipline = () => {
                                   {data.file?.originalName?.length <= 38
                                     ? data.file?.originalName
                                     : data.file?.originalName.substring(0, 38) +
-                                    "..." || " - "}
+                                        "..." || " - "}
                                 </File>
                               )}
                             </Link>
@@ -795,7 +800,7 @@ const EVDiscipline = () => {
                               ) : (
                                 <Icons
                                   onClick={() => {
-                                    HandleUpdateAction(data)
+                                    HandleUpdateAction(data);
                                     // setId(data._id)
                                   }}
                                   src="/images/icons/Pendown.svg"
@@ -803,7 +808,8 @@ const EVDiscipline = () => {
                               )}
 
                               {userType === ROLES.EMPLOYEE ||
-                                userType === ROLES.MANAGER || isAccount ? (
+                              userType === ROLES.MANAGER ||
+                              isAccount ? (
                                 ""
                               ) : (
                                 <Icons

@@ -292,34 +292,43 @@ const ManagerLeaveAction = () => {
                       <Titledark style={{ fontWeight: "600" }}>
                         Comment
                       </Titledark>
-                      <TextArea
-                        type="text"
-                        name="responderComment"
-                        onChange={HandleChange}
-                      />
-                      <InputPara>
-                        {" "}
-                        {<Errors>{commentError}</Errors>}{" "}
-                        <span style={{ justifySelf: "flex-end" }}>
-                          {" "}
-                          {detailsLength > -1 ? detailsLength : 0} characters
-                          left
-                        </span>
-                      </InputPara>
+
+                      {leaveDetails.status === "PENDING" ? (
+                        <>
+                          <TextArea
+                            type="text"
+                            name="responderComment"
+                            onChange={HandleChange}
+                          />
+                          <InputPara>
+                            {" "}
+                            {<Errors>{commentError}</Errors>}{" "}
+                            <span style={{ justifySelf: "flex-end" }}>
+                              {" "}
+                              {detailsLength > -1 ? detailsLength : 0}{" "}
+                              characters left
+                            </span>
+                          </InputPara>
+                        </>
+                      ) : (
+                        <Titledark>{leaveDetails?.responderComment || "No Comments "}</Titledark>
+                      )}
                     </ColumnFlexDiv>
                   </FormContainer>
-                  <FormContainer>
-                    <AddNewButton onClick={() => HandleSubmitLeave(true)}>
-                      {" "}
-                      Approve
-                    </AddNewButton>
-                    <AddNewButton
-                      style={{ background: "#EA4335" }}
-                      onClick={() => HandleSubmitLeave(false)}
-                    >
-                      Reject
-                    </AddNewButton>
-                  </FormContainer>
+                  {leaveDetails.status === "PENDING" && (
+                    <FormContainer>
+                      <AddNewButton onClick={() => HandleSubmitLeave(true)}>
+                        {" "}
+                        Approve
+                      </AddNewButton>
+                      <AddNewButton
+                        style={{ background: "#EA4335" }}
+                        onClick={() => HandleSubmitLeave(false)}
+                      >
+                        Reject
+                      </AddNewButton>
+                    </FormContainer>
+                  )}
                   <FormContainer>
                     <Greypara>
                       Total Leave Balance:{" "}

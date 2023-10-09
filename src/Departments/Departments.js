@@ -427,7 +427,11 @@ const Departments = () => {
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
-            onClose={HandleClose}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
+            // onClose={HandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -517,7 +521,11 @@ const Departments = () => {
           </Modal>
           <Modal
             open={openThanks}
-            onClose={HandleCloseThanks}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
+            // onClose={HandleCloseThanks}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -646,7 +654,11 @@ const Departments = () => {
       {/* modal to edit  */}
       <Modal
         open={openEdit}
-        onClose={HandleCloseEdit}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
+        // onClose={HandleCloseEdit}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

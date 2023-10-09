@@ -62,7 +62,11 @@ const OADAashModal = ({ isOpen, closeModal }) => {
   return (
     <Modal
       open={isOpen}
-      onClose={closeModal}
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
+      }}
+      // onClose={closeModal}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

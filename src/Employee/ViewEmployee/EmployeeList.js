@@ -255,11 +255,15 @@ const Employee = () => {
       </DepartmentFilterContainer>
       <Modal
         open={openWelcome}
-        onClose={() => {
-          HandleCloseWelcome();
-          clearErrors();
-          reset();
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
         }}
+        // onClose={() => {
+        //   HandleCloseWelcome();
+        //   clearErrors();
+        //   reset();
+        // }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

@@ -117,96 +117,113 @@ const EmployeeJobDetails = () => {
     console.log("form submmited", data);
   };
   const GetEmployeesJobDetails = () => {
-    setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = API_URLS.getEmployeeJobDetails.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-          console.log(result, "we are getting the persnal information ");
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = API_URLS.getEmployeeJobDetails.replace(
+        ":employeeid",
+        employeeid
+      );
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            console.log(result, "we are getting the persnal information ");
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   const GetDepartments = () => {
-    setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
 
-    let url = API_URLS.getDepartmentsList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setDepartmentData(result.departments);
-          // console.log(result.departments, "result.departments ");
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      let url = API_URLS.getDepartmentsList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error getting department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setDepartmentData(result.departments);
+            // console.log(result.departments, "result.departments ");
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+            setIsLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error getting department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
   };
   const GetEmployeeTypes = () => {
-    setIsLoading(true);
-    let url = API_URLS.getEmployeeTypeList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setEmployeeTypes(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getEmployeeTypeList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setEmployeeTypes(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   const GetReportsToList = () => {
-    let url = API_URLS.getReporttoList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          const filteredArray = result.users.filter(
-            (obj) => obj.userData._id !== employeeid
-          );
-          setReportsToList(filteredArray);
-        }
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getReporttoList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Fetching Job Details. Please try again.");
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            const filteredArray = result.users.filter(
+              (obj) => obj.userData._id !== employeeid
+            );
+            setReportsToList(filteredArray);
+            resolve(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          reject(error);
+          toast.error("Error Fetching Job Details. Please try again.");
+        });
+    });
   };
   const AddNewPosition = (data) => {
     setIsLoading(true);
@@ -240,10 +257,15 @@ const EmployeeJobDetails = () => {
       });
   };
   useEffect(() => {
-    GetEmployeesJobDetails();
-    GetDepartments();
-    GetReportsToList();
-    GetEmployeeTypes();
+    Promise.all([
+      GetEmployeesJobDetails(),
+      GetDepartments(),
+      GetReportsToList(),
+      GetEmployeeTypes(),
+
+    ])
+     
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -286,8 +308,8 @@ const EmployeeJobDetails = () => {
                 <CommenHeader employeeid={employeeid} />
 
                 {userType === ROLES.MANAGER ||
-                  userType === ROLES.EMPLOYEE ||
-                  isAccount ? (
+                userType === ROLES.EMPLOYEE ||
+                isAccount ? (
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton
@@ -313,8 +335,8 @@ const EmployeeJobDetails = () => {
                   <FlexSpaceBetween style={{ marginBottom: "10px" }}>
                     <BasicHeading>Employment Details</BasicHeading>
                     {userType === ROLES.MANAGER ||
-                      userType === ROLES.EMPLOYEE ||
-                      isAccount ? (
+                    userType === ROLES.EMPLOYEE ||
+                    isAccount ? (
                       " "
                     ) : userType === ROLES.HR ? (
                       <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
@@ -515,9 +537,7 @@ const EmployeeJobDetails = () => {
                             <TitlePara>
                               From:{" "}
                               {data.startDate
-                                ? moment(data.startDate).format(
-                                  "DD/MM/YYYY"
-                                )
+                                ? moment(data.startDate).format("DD/MM/YYYY")
                                 : " - "}
                               <span style={{ marginLeft: "14px" }}>
                                 {" "}
@@ -536,11 +556,15 @@ const EmployeeJobDetails = () => {
 
                     <Modal
                       open={open}
-                      onClose={() => {
-                        handleClose();
-                        reset();
-                        clearErrors();
+                      sx={{
+                        backgroundColor: "rgb(27, 27, 27, 0.75)",
+                        backdropFilter: "blur(8px)",
                       }}
+                      // onClose={() => {
+                      //   handleClose();
+                      //   reset();
+                      //   clearErrors();
+                      // }}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
@@ -719,11 +743,11 @@ const EmployeeJobDetails = () => {
                                           <Option value={user?.userData?._id}>
                                             {user.personalInfo?.length
                                               ? user.personalInfo[0].firstName +
-                                              " " +
-                                              (user?.personalInfo[0]?.lastName
-                                                ? user?.personalInfo[0]
-                                                  ?.lastName
-                                                : " ")
+                                                " " +
+                                                (user?.personalInfo[0]?.lastName
+                                                  ? user?.personalInfo[0]
+                                                      ?.lastName
+                                                  : " ")
                                               : user.userData.name}
                                           </Option>
                                         ))}
@@ -784,7 +808,7 @@ const EmployeeJobDetails = () => {
                                         //   value: true,
                                         //   message: "Required",
                                         // },
-                                        onChange: (fieldValue) => {
+                                        validate: (fieldValue) => {
                                           const startDateValue =
                                             getValues("startDate");
 
@@ -799,11 +823,12 @@ const EmployeeJobDetails = () => {
                                               startDateValue
                                             );
                                             if (startDate > endDate) {
-                                              return setError("endDate", {
-                                                type: "custom",
-                                                message:
-                                                  "End date must not be earlier than start date",
-                                              });
+                                              return "End date must not be earlier than start date";
+                                              // return setError("endDate", {
+                                              //   type: "custom",
+                                              //   message:
+                                              //     "End date must not be earlier than start date",
+                                              // });
                                             } else {
                                               return clearErrors("endDate");
                                             }
@@ -829,6 +854,39 @@ const EmployeeJobDetails = () => {
                                         pattern: {
                                           value: /^[+]?\d+(\.\d+)?$/,
                                           message: "Please enter valid salary",
+                                        },
+                                        onChange: (e) => {
+                                          const salaryFrom = parseFloat(
+                                            getValues(` salaryScaleFrom`)
+                                          );
+                                          const salaryTo = parseFloat(
+                                            getValues(` salaryScaleTo`)
+                                          );
+                                          const actualSalary = parseFloat(
+                                            getValues(` salary`)
+                                          );
+                                          if (salaryFrom && salaryTo) {
+                                            if (salaryFrom > salaryTo) {
+                                              setError(` salaryScaleTo`, {
+                                                type: "custom",
+                                                message:
+                                                  "Salary to must be greater than  Salary From",
+                                              });
+                                            } else {
+                                              clearErrors(` salaryScaleTo`);
+                                            }
+                                          }
+                                          if (salaryFrom && actualSalary) {
+                                            if (salaryFrom > actualSalary) {
+                                              setError(` salary`, {
+                                                type: "custom",
+                                                message:
+                                                  "Salary must be greater than or equal to Salary From",
+                                              });
+                                            } else {
+                                              clearErrors(` salary`);
+                                            }
+                                          }
                                         },
                                       })}
                                     />
@@ -1072,7 +1130,6 @@ const EmployeeJobDetails = () => {
                                         }}
                                       >
                                         Is BEB Eligible?{" "}
-                                      
                                       </InputLabel>
                                     </AlignFlex>
                                   </FlexColumnForm>
@@ -1090,7 +1147,7 @@ const EmployeeJobDetails = () => {
                                           cursor: "pointer",
                                         }}
                                       >
-                                        Is Primary 
+                                        Is Primary
                                       </InputLabel>
                                     </AlignFlex>
                                   </FlexColumnForm>
@@ -1117,10 +1174,10 @@ const EmployeeJobDetails = () => {
                               <ButtonBlue
                                 type="submit"
                                 style={{ marginTop: "25px" }}
-                              // disabled={!isDirty}
-                              // onClick={() => {
-                              //   handleSubmit(onSubmit);
-                              // }}
+                                // disabled={!isDirty}
+                                // onClick={() => {
+                                //   handleSubmit(onSubmit);
+                                // }}
                               >
                                 Submit
                               </ButtonBlue>

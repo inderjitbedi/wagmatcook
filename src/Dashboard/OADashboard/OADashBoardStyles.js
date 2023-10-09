@@ -289,3 +289,17 @@ export const NotificationOption = styled.option`
   font-weight: 500;
   line-height: 20px;
 `;
+export const LoadMore = styled.div`
+  color: #a5acb8;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  margin: 0px;
+  padding: 0.75em 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+`;

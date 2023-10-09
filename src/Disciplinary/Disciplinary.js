@@ -122,7 +122,7 @@ const Disciplinary = () => {
   const [result, setResult] = useState([]);
   const [descriptionLength, setdescriptionLength] = useState(500);
   const [searchValue, setSearchValue] = useState("");
- 
+
   const [disciplinaryData, setDisciplinaryData] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -214,9 +214,7 @@ const Disciplinary = () => {
       });
   };
   useEffect(() => {
- 
     GetDisciplinary();
-   
   }, [searchValue]);
 
   //create new enter in table
@@ -425,9 +423,9 @@ const Disciplinary = () => {
       });
   };
 
-   const HandleSearchCahnge = (data) => {
-     setSearchValue(data);
-   };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -487,7 +485,11 @@ const Disciplinary = () => {
           <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
           <Modal
             open={open}
-            onClose={HandleClose}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(8px)",
+            }}
+            // onClose={HandleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -608,7 +610,11 @@ const Disciplinary = () => {
                       background: "#FBFBFB",
                     }}
                   >
-                    <TableCell sx={CellHeadStyles} align="left" style={{width:"100px"}}>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "100px" }}
+                    >
                       Order No.
                     </TableCell>
                     <TableCell
@@ -730,7 +736,11 @@ const Disciplinary = () => {
       {/* modal fo editing  */}
       <Modal
         open={openEdit}
-        onClose={HandleCloseEdit}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
+        // onClose={HandleCloseEdit}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -762,6 +772,7 @@ const Disciplinary = () => {
                   onClick={() => {
                     HandleCloseEdit();
                     setErrors("");
+                    setFormData("");
                   }}
                   src="/images/icons/Alert-Circle.svg"
                 />

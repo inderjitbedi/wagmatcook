@@ -24,6 +24,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import LeaveActionModal from "./LeaveActionModal";
 
 import {
   DashHeader,
@@ -132,14 +133,29 @@ const ManagerLeaves = () => {
     reset({});
     setOpen(false);
     setDetailsLength(500);
+    setOptions([]);
   };
   const [openThanks, setOpenThanks] = useState(false);
   const handleOpenThanks = () => setOpenThanks(true);
   const handleCloseThanks = () => setOpenThanks(false);
   const [reportList, setReportList] = useState([]);
-  const [openAuto, setOpenAuto] = React.useState(false);
+  const [openAuto, setOpenAuto] = useState(false);
+
   const [options, setOptions] = React.useState([]);
-  // const loading = openAuto && options.length === 0;
+  const [leaveType, setLeaveType] = useState([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleCloseDelete = () => setOpenDelete(false);
+  const [modalProps, setModalProps] = useState({});
+  const HandleOpenDelete = (action, message) => {
+    if (action === "Reject") {
+      setModalProps({
+        src: "/svg/Calendar Mark.svg",
+        message: message,
+        buttonValue: "Ok",
+      });
+    }
+    setOpenDelete(true);
+  };
   const {
     register,
     control,
@@ -149,6 +165,7 @@ const ManagerLeaves = () => {
     reset,
     setError,
     clearErrors,
+    setValue,
   } = useForm({
     mode: "all",
     defaultValues: {
@@ -166,14 +183,19 @@ const ManagerLeaves = () => {
       }
       return true;
     }
+
     if (isEmptyObject(errors)) {
       HandleSubmit(data);
     }
+    console.log("this our data :", data);
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
-    let url = API_URLS.submitEmployeeLeaveHistory.replace(":employeeid");
+    let url = API_URLS.submitEmployeeLeaveHistory.replace(
+      ":employeeid",
+      data.employee
+    );
 
     let dataCopy = data;
     httpClient({
@@ -185,15 +207,15 @@ const ManagerLeaves = () => {
         if (result) {
           handleClose();
           reset();
-          //  GetLeaveHistory();
+          GetLeavesHistory();
           toast.success(result.message);
         } else {
-          //toast.warn("something went wrong ");
+          HandleOpenDelete("Reject", error.message);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error feteching benefits. Please try again.");
+        // toast.error("Error feteching benefits. Please try again.");
         handleClose();
         setIsLoading(false);
       })
@@ -202,105 +224,106 @@ const ManagerLeaves = () => {
       });
   };
   const GetReportList = () => {
-    setIsLoading(true);
-    let url = API_URLS.getReporttoList;
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getReporttoList;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            const FilterforAdmin = result?.users?.filter(
+              (item) => item.userData.role !== "ORGANIZATION_ADMIN"
+            );
+            const extractedDataArray = FilterforAdmin?.map((user) => {
+              if (user.personalInfo.length > 0) {
+                const {
+                  _id: personalInfoId,
+                  firstName,
+                  lastName,
+                } = user.personalInfo[0];
+                return {
+                  _id: user.user,
+                  personalInfoId,
+                  name: `${firstName} ${lastName ? lastName : ""}`,
+                };
+              } else {
+                const { _id: userDataId, name } = user.userData;
+                return { _id: user.user, userDataId, name };
+              }
+            });
+
+            setReportList(extractedDataArray);
+            console.log("ideal data :", extractedDataArray);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  const GetLeaveAlloaction = (id) => {
+    setOptionLoading(true);
+
+    let url = API_URLS.EmployeeAllocation.replace(":employeeid", id);
     httpClient({
       method: "get",
       url,
     })
       .then(({ result, error }) => {
         if (result) {
-          const extractedDataArray = result?.users?.map((user) => {
-            if (user.personalInfo.length > 0) {
-              const {
-                _id: personalInfoId,
-                firstName,
-                lastName,
-              } = user.personalInfo[0];
-              return {
-                _id: user.user,
-                personalInfoId,
-                name: `${firstName} ${lastName ? lastName : ""}`,
-              };
-            } else {
-              const { _id: userDataId, name } = user.userData;
-              return { _id: user.user, userDataId, name };
-            }
-          });
-
-          setReportList(extractedDataArray);
-          console.log("ideal data :", extractedDataArray);
+          setLeaveType(result.allocations);
         } else {
           //toast.warn("something went wrong ");
         }
+        setOptionLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
+        toast.error("Error Adding Benefits. Please try again.");
+        setOptionLoading(false);
       })
       .finally(() => {
-        setIsLoading(false);
+        setOptionLoading(false);
       });
   };
-  // auto complete
-  function sleep(duration) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, duration);
-    });
-  }
-  // React.useEffect(() => {
-  //   let active = true;
 
-  //   if (!loading) {
-  //     return undefined;
-  //   }
-
-  //   (async () => {
-  //     await GetActiveUser(); // For demo purposes.
-
-  //     if (active) {
-  //       setOptions([...userList]);
-  //     }
-  //   })();
-
-  //   return () => {
-  //     active = false;
-  //   };
-  // }, [loading]);
-
-  // React.useEffect(() => {
-  //   if (!openAuto) {
-  //     setOptions([]);
-  //   }
-  // }, [openAuto]);
-  const [selectedEmployee, setSelectedEmployee] = useState("");
-  const [userList, setUserList] = useState([]);
-  const [leaveType, setLeaveType] = useState([]);
   const GetLeavesHistory = () => {
-    setIsLoading(true);
-    let url = API_URLS.getLeaves;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getLeaves;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        //  toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          //  toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
 
   const GetActiveUser = () => {
@@ -329,12 +352,7 @@ const ManagerLeaves = () => {
   };
 
   useEffect(() => {
-    // getLeavesAllocations()
-  }, [selectedEmployee]);
-  useEffect(() => {
-    GetLeavesHistory();
-    GetReportList();
-    GetActiveUser();
+    Promise.all([GetLeavesHistory(), GetReportList()]);
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -344,6 +362,20 @@ const ManagerLeaves = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, [searchValue]);
+
+  useEffect(() => {
+    // if (!openAuto) {
+    //   setOptions([]);
+    // }
+    let employeeid = getValues("employee")?.toString();
+    if (openAuto) {
+      GetActiveUser();
+    }
+    if (employeeid) {
+      GetLeaveAlloaction(employeeid);
+    }
+  }, [openAuto]);
+
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (
@@ -525,7 +557,11 @@ const ManagerLeaves = () => {
       {/* modal applying leaves  */}
       <Modal
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -553,7 +589,7 @@ const ManagerLeaves = () => {
             <>
               <ModalContainer>
                 <ModalHeading>
-                  {!update ? "Applying for Leaves" : "View Leaves"}
+                  {!update ? "Applying for Leave" : "View Leaves"}
                 </ModalHeading>
                 <ModalIcon
                   onClick={handleClose}
@@ -563,61 +599,66 @@ const ManagerLeaves = () => {
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalFormContainer>
-                  <Autocomplete
-                    {...register("employee", {
+                  <Controller
+                    name="employee"
+                    control={control}
+                    rules={{
                       required: {
                         value: true,
-                        message: " Required",
+                        message: "Required",
                       },
-                    })}
-                    id="asynchronous-demo"
-                    sx={{ width: "100%" }}
-                    open={openAuto}
-                    onOpen={() => {
-                      setOpenAuto(true);
                     }}
-                    onClose={() => {
-                      setOpenAuto(false);
-                    }}
-                    isOptionEqualToValue={(option, value) =>
-                      option._id === value._id
-                    }
-                    getOptionLabel={(option) => {
-                      console.log(option);
-                      if (
-                        option &&
-                        option.personalInfo &&
-                        option.personalInfo.firstName &&
-                        option.personalInfo.lastName
-                      ) {
-                        return `${option.personalInfo.firstName} ${option.personalInfo.lastName}`;
-                      }
-                      // Handle the case where required properties are missing or undefined
-                      return "Select";
-                    }}
-                    // getOptionValue={(option) => option._id}
-                    value={selectedEmployee}
-                    onChange={(event, newValue) => {
-                      setSelectedEmployee(newValue);
-                      setSearchValue("employee", newValue._id);
-                    }}
-                    options={options}
-                    loading={loading}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Employee"
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <React.Fragment>
-                              {loading ? (
-                                <CircularProgress color="inherit" size={20} />
-                              ) : null}
-                              {params.InputProps.endAdornment}
-                            </React.Fragment>
-                          ),
+                    render={({ field: { onChange, value, ref } }) => (
+                      <Autocomplete
+                        value={
+                          value
+                            ? options.find((option) => {
+                                return value === option.user;
+                              }) ?? null
+                            : null
+                        }
+                        onChange={(event, newValue) => {
+                          onChange(newValue ? newValue.user : null);
                         }}
+                        id="asynchronous-demo"
+                        sx={{ width: " 100% " }}
+                        open={openAuto}
+                        onOpen={() => {
+                          setOpenAuto(true);
+                        }}
+                        onClose={() => {
+                          setOpenAuto(false);
+                        }}
+                        isOptionEqualToValue={(option, value) =>
+                          option.user === value.user
+                        }
+                        getOptionLabel={(option) =>
+                          option.personalInfo &&
+                          `${option.personalInfo?.firstName} ${option.personalInfo?.lastName}`
+                        }
+                        options={options}
+                        loading={loading}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            inputRef={ref}
+                            label="Select Employee"
+                            InputProps={{
+                              ...params.InputProps,
+                              endAdornment: (
+                                <React.Fragment>
+                                  {loading ? (
+                                    <CircularProgress
+                                      color="inherit"
+                                      size={20}
+                                    />
+                                  ) : null}
+                                  {params.InputProps.endAdornment}
+                                </React.Fragment>
+                              ),
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />
@@ -669,7 +710,7 @@ const ManagerLeaves = () => {
                             value: true,
                             message: " Required",
                           },
-                          onChange: (fieldValue) => {
+                          validate: (fieldValue) => {
                             const startDateValue = getValues("from");
 
                             const endDateValue = getValues("to");
@@ -678,11 +719,12 @@ const ManagerLeaves = () => {
                               const endDate = new Date(endDateValue);
                               const startDate = new Date(startDateValue);
                               if (startDate > endDate) {
-                                return setError("to", {
-                                  type: "custom",
-                                  message:
-                                    "End date must not be earlier than start date",
-                                });
+                                return "End date must not be earlier than start date";
+                                // return setError("to", {
+                                //   type: "custom",
+                                //   message:
+                                //     "End date must not be earlier than start date",
+                                // });
                               } else {
                                 return clearErrors("to");
                               }
@@ -709,13 +751,19 @@ const ManagerLeaves = () => {
                           },
                         }}
                         render={({ field }) => (
-                          <Select {...field} disabled={update}>
+                          <Select {...field} disabled={!getValues("employee")}>
                             <Option>Select</Option>
-                            {leaveType?.map((data) => (
-                              <Option value={data.leaveType?._id}>
-                                {data.leaveType?.name}
-                              </Option>
-                            ))}
+                            {loading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : (
+                              <>
+                                {leaveType?.map((data) => (
+                                  <Option value={data.leaveType?._id}>
+                                    {data.leaveType?.name}
+                                  </Option>
+                                ))}
+                              </>
+                            )}
                           </Select>
                         )}
                       />
@@ -820,7 +868,11 @@ const ManagerLeaves = () => {
       {/* thanks modal for leaves */}
       <Modal
         open={openThanks}
-        onClose={handleCloseThanks}
+        // onClose={handleCloseThanks}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -834,11 +886,16 @@ const ManagerLeaves = () => {
             <ModalThanksHeading>
               Your leave request sent successfully.
             </ModalThanksHeading>
-            <ButtonBlue>Thanks</ButtonBlue>
+            <ButtonBlue onClick={handleCloseThanks}>Thanks</ButtonBlue>
           </ModalThanks>
         </Box>
       </Modal>
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
+      <LeaveActionModal
+        {...modalProps}
+        openDelete={openDelete}
+        HandleCloseDelete={HandleCloseDelete}
+      />
     </div>
   );
 };

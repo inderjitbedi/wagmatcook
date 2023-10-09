@@ -10,6 +10,7 @@ import API_URLS from "../constants/apiUrls";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import ROLES from "../constants/roles";
 import moment from "moment";
+
 import {
   DashHeader,
   DashHeaderTitle,
@@ -33,6 +34,7 @@ import {
   BackButton,
   FlexContaier,
   IconsEmployee,
+  LoadMore,
 } from "./OADashboard/OADashBoardStyles";
 
 const CommenDashHeader = ({ onSearch, text }) => {
@@ -53,6 +55,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
     console.log("working menu for notification");
+     setShowAll(false);
   };
   const handleCloseMenuNotification = () => {
     setAnchorElNotification(null);
@@ -67,6 +70,15 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const [delayedSearchValue, setDelayedSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(false);
   const [orgProfile, setOrgProfile] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+
+  const limitedData = showAll
+    ? notificationList
+    : notificationList?.slice(0, 5);
+
+  const handleShowMoreClick = () => {
+    setShowAll(true);
+  };
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,7 +117,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setNotificationList(result);
+          setNotificationList(result.notifications);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -169,9 +181,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
   };
   const HandleMarkRead = () => {
     setIsLoading(true);
-    const notificationIds = notificationList?.notifications?.map(
-      (notification) => notification._id
-    );
+    const notificationIds = notificationList
+      ?.filter((notification) => !notification.isRead)
+      .map((notification) => notification._id);
+
     let dataCopy = { notificationIds: notificationIds };
 
     let url = API_URLS.markReadNotification;
@@ -453,7 +466,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
                   <NotificationIcon src="/svg/outline.svg" />
                 </FlexNotificationContainer>
               </NotificationsHeader>
-              {notificationList.notifications?.map((data) => (
+              {limitedData?.map((data) => (
                 <>
                   <NotificationList>
                     <NotificationUserImg
@@ -474,6 +487,19 @@ const CommenDashHeader = ({ onSearch, text }) => {
                   </NotificationList>
                 </>
               ))}
+              {notificationList.length > 5 && !showAll ? (
+                <LoadMore>
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={handleShowMoreClick}
+                  >
+                    {" "}
+                    Loadmore{" "}
+                  </span>
+                </LoadMore>
+              ) : (
+                ""
+              )}
             </>
           )}
         </NotificationsContainer>

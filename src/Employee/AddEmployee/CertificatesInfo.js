@@ -498,14 +498,15 @@ const CertificatesInfo = () => {
                               const endDate = new Date(endDateValue);
                               const startDate = new Date(startDateValue);
                               if (startDate > endDate) {
-                                return setError(
-                                  `certificates.${index}.expiryDate`,
-                                  {
-                                    type: "custom",
-                                    message:
-                                      "End date must not be earlier than start date   ",
-                                  }
-                                );
+                                return "Expiry date must not be earlier than Completion date ";
+                                // return setError(
+                                //   `certificates.${index}.expiryDate`,
+                                //   {
+                                //     type: "custom",
+                                //     message:
+                                //       "End date must not be earlier than start date   ",
+                                //   }
+                                // );
                               }
                             } else {
                               return clearErrors(

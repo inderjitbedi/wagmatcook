@@ -374,7 +374,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
                         <Input
                           type="date"
                           {...register("endDate", {
-                            onChange: (fieldValue) => {
+                            validate: (fieldValue) => {
                               const startDateValue = getValues("startDate");
 
                               const endDateValue = getValues("endDate");
@@ -383,11 +383,12 @@ const Benefits = ({ isEdit, setIsEdit }) => {
                                 const endDate = new Date(endDateValue);
                                 const startDate = new Date(startDateValue);
                                 if (startDate > endDate) {
-                                  return setError("endDate", {
-                                    type: "custom",
-                                    message:
-                                      "End date must not be earlier than start date",
-                                  });
+                                  return "End date must not be earlier than start date"
+                                  // return setError("endDate", {
+                                  //   type: "custom",
+                                  //   message:
+                                  //     "End date must not be earlier than start date",
+                                  // });
                                 } else {
                                   return clearErrors("endDate");
                                 }

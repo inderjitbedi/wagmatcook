@@ -86,81 +86,93 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
   });
 
   const GetReportsToList = () => {
-    let url = API_URLS.getReporttoList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          const filteredArray = result.users.filter(
-            (obj) => obj.userData._id !== employeeid
-          );
-          setReportsToList(filteredArray);
-        }
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getReporttoList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Fetching Job Details. Please try again.");
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            const filteredArray = result.users.filter(
+              (obj) => obj.userData._id !== employeeid
+            );
+            setReportsToList(filteredArray);
+            resolve(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Fetching Job Details. Please try again.");
+          reject(error);
+        });
+    });
   };
   const GetEmployeesJobDetails = () => {
-    setIsLoading(true);
-    const trimid = employeeid.trim();
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      const trimid = employeeid.trim();
 
-    let url = API_URLS.getEmployeeJobDetails.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          // console.log(result, "this what result Looks like ");
-          setResult(result);
-
-          if (result.positions) {
-            result.positions.forEach((data) => {
-              if (data.startDate) {
-                data.startDate = new Date(data.startDate)
-                  .toISOString()
-                  .split("T")[0];
-              }
-              if (data.endDate) {
-                data.endDate = new Date(data.endDate)
-                  .toISOString()
-                  .split("T")[0];
-              }
-              data.department = data.department._id;
-              data.employeeType = data.employeeType._id;
-            });
-          }
-
-          reset(result);
-          setValue("isActive", result.isActive);
-
-          if (!result.positions?.length) {
-            append(initialPosition);
-          }
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      let url = API_URLS.getEmployeeJobDetails.replace(
+        ":employeeid",
+        employeeid
+      );
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        // toast.error("Error Fetching Job Details. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            // console.log(result, "this what result Looks like ");
+            setResult(result);
+            resolve(result);
+            if (result.positions) {
+              result.positions.forEach((data) => {
+                if (data.startDate) {
+                  data.startDate = new Date(data.startDate)
+                    .toISOString()
+                    .split("T")[0];
+                }
+                if (data.endDate) {
+                  data.endDate = new Date(data.endDate)
+                    .toISOString()
+                    .split("T")[0];
+                }
+                data.department = data.department._id;
+                data.employeeType = data.employeeType._id;
+              });
+            }
+
+            reset(result);
+            setValue("isActive", result.isActive);
+
+            if (!result.positions?.length) {
+              append(initialPosition);
+            }
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          // toast.error("Error Fetching Job Details. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
 
   useEffect(() => {
-    GetDepartments();
-    GetHeadersData();
-    GetEmployeeTypes();
-    GetReportsToList();
-    GetEmployeesJobDetails();
+    Promise.all([
+      GetDepartments(),
+      GetEmployeeTypes(),
+      GetHeadersData(),
+      GetReportsToList(),
+      GetEmployeesJobDetails(),
+    ]);
   }, []);
 
   const HandleSubmitJobDetails = (data) => {
@@ -205,52 +217,57 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
       });
   };
   const GetDepartments = () => {
-    //  setIsLoading(true);
+    setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getDepartmentsList;
 
-    let url = API_URLS.getDepartmentsList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setDepartmentData(result.departments);
-          // console.log(result.departments, "result.departments ");
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error getting department. Please try again.");
-        //  setIsLoading(false);
-      })
-      .finally(() => {
-        //  setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setDepartmentData(result.departments);
+            resolve(result.departments);
+          } else {
+            //toast.warn("something went wrong ");
+            setIsLoading(false);
+
+            reject("No data received from GetDepartments API");
+          }
+        })
+        .catch((error) => {
+          toast.error("Error getting department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
   };
   const GetEmployeeTypes = () => {
-    setIsLoading(true);
-    let url = API_URLS.getEmployeeTypeList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setEmployeeTypes(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getEmployeeTypeList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setEmployeeTypes(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+            reject("No data received from GetEmployeeTypes API");
+            setIsLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
   };
   const onSubmit = (data) => {
     console.log("this is form data:", data);
@@ -286,22 +303,27 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
   const [headerData, setHeaderData] = useState([]);
 
   const GetHeadersData = () => {
-    // setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = `/employee/header-info/${trimid}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = `/employee/header-info/${trimid}`;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setHeaderData(result);
+            resolve(result);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error in fetching Personal info. Please try again.");
+          reject(error);
+          setIsLoading(false);
+        });
+    });
   };
   const [searchValue, setSearchValue] = useState("");
 
@@ -575,7 +597,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                           {...register(`positions.${index}.endDate`, {
                             valueAsDate: true,
 
-                            onChange: (fieldValue) => {
+                            validate: (fieldValue) => {
                               const startDateValue = getValues(
                                 `positions.${index}.startDate`
                               );
@@ -588,14 +610,15 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                                 const startDate = new Date(startDateValue);
 
                                 if (startDate > endDate) {
-                                  return setError(
-                                    `positions.${index}.endDate`,
-                                    {
-                                      type: "custom",
-                                      message:
-                                        "End date must not be earlier than start date",
-                                    }
-                                  );
+                                  return "End date must not be earlier than start date";
+                                  // setError(
+                                  //   `positions.${index}.endDate`,
+                                  //   {
+                                  //     type: "custom",
+                                  //     message:
+                                  //       "End date must not be earlier than start date",
+                                  //   }
+                                  // );
                                 } else {
                                   return clearErrors(
                                     `positions.${index}.endDate`
@@ -623,6 +646,41 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             pattern: {
                               value: /^[+]?\d+(\.\d+)?$/,
                               message: "Please enter valid salary",
+                            },
+                            onChange: (e) => {
+                              const salaryFrom = parseFloat(
+                                getValues(`positions.${index}.salaryScaleFrom`)
+                              );
+                              const salaryTo = parseFloat(
+                                getValues(`positions.${index}.salaryScaleTo`)
+                              );
+                              const actualSalary = parseFloat(
+                                getValues(`positions.${index}.salary`)
+                              );
+                              if (salaryFrom && salaryTo) {
+                                if (salaryFrom > salaryTo) {
+                                  setError(`positions.${index}.salaryScaleTo`, {
+                                    type: "custom",
+                                    message:
+                                      "Salary to must be greater than  Salary From",
+                                  });
+                                } else {
+                                  clearErrors(
+                                    `positions.${index}.salaryScaleTo`
+                                  );
+                                }
+                              }
+                              if (salaryFrom && actualSalary) {
+                                if (salaryFrom > actualSalary) {
+                                  setError(`positions.${index}.salary`, {
+                                    type: "custom",
+                                    message:
+                                      "Salary must be greater than or equal to Salary From",
+                                  });
+                                } else {
+                                  clearErrors(`positions.${index}.salary`);
+                                }
+                              }
                             },
                           })}
                         />
@@ -656,6 +714,44 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                               }
 
                               return true;
+                            },
+                            onChange: (e) => {
+                              const salaryFrom = parseFloat(
+                                getValues(`positions.${index}.salaryScaleFrom`)
+                              );
+                              const salaryTo = parseFloat(
+                                getValues(`positions.${index}.salaryScaleTo`)
+                              );
+                              const actualSalary = parseFloat(
+                                getValues(`positions.${index}.salary`)
+                              );
+                              if (salaryFrom && salaryTo) {
+                                if (salaryFrom > salaryTo) {
+                                  setError(
+                                    `positions.${index}.salaryScaleFrom`,
+                                    {
+                                      type: "custom",
+                                      message:
+                                        "Salary From must be smaller than  Salary To",
+                                    }
+                                  );
+                                } else {
+                                  clearErrors(
+                                    `positions.${index}.salaryScaleFrom`
+                                  );
+                                }
+                              }
+                              if (salaryTo && actualSalary) {
+                                if (salaryTo < actualSalary) {
+                                  setError(`positions.${index}.salary`, {
+                                    type: "custom",
+                                    message:
+                                      "Salary must be smaller than or equal to Salary To",
+                                  });
+                                } else {
+                                  clearErrors(`positions.${index}.salary`);
+                                }
+                              }
                             },
                           })}
                         />
@@ -851,7 +947,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             htmlFor={`positions.${index}.isBebEligible`}
                             style={{ marginBottom: "0px", cursor: "pointer" }}
                           >
-                            Is BEB Eligible? 
+                            Is BEB Eligible?
                           </InputLabel>
                         </AlignFlex>
                       </FlexColumnForm>
@@ -866,7 +962,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             htmlFor={`positions.${index}.isPrimary`}
                             style={{ marginBottom: "0px", cursor: "pointer" }}
                           >
-                            Is Primary 
+                            Is Primary
                           </InputLabel>
                         </AlignFlex>
                         <ErrorMessage

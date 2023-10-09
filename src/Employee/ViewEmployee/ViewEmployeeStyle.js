@@ -231,7 +231,7 @@ export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  /* width: 50%; */
+  width: 50%;
 `;
 export const SectionCard = styled.div`
 position: relative;

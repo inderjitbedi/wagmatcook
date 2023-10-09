@@ -68,6 +68,10 @@ const DeleteModal = ({
   return (
     <Modal
       open={openDelete}
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
+      }}
       onClose={HandleCloseDelete}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -99,9 +103,7 @@ const DeleteModal = ({
               src="/images/icons/Alert-Circle.svg"
             />
             <ModalThanksImg src="/images/Danger Circle.jpg" />
-            <ModalThanksHeading>
-              {message}
-            </ModalThanksHeading>
+            <ModalThanksHeading>{message}</ModalThanksHeading>
             <DeleteButton
               onClick={() => {
                 // HandleCloseDelete();
@@ -115,7 +117,6 @@ const DeleteModal = ({
             </DeleteButton>
           </ModalThanks>
         )}
-
       </Box>
     </Modal>
   );

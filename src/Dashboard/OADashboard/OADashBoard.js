@@ -83,12 +83,11 @@ import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
 const OADashBoard = () => {
   let API_URL = process.env.REACT_APP_API_URL;
-const [openSettings, setOpenSettings] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   const HandleOpenSettings = () => {
-    setOpenSettings(true)
-    
+    setOpenSettings(true);
   };
-const HandleCloseSettings = () => setOpenSettings(false);
+  const HandleCloseSettings = () => setOpenSettings(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orgData, setOrgData] = useState();
@@ -173,105 +172,121 @@ const HandleCloseSettings = () => setOpenSettings(false);
   };
 
   const GetDisciplinary = () => {
-    //  setIsLoading(true);
-    let url = `/disciplinary/list?limit=3`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setDisciplinaryData(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      //  setIsLoading(true);
+      let url = `/disciplinary/list?limit=3`;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        //  setIsLoading(false);
-      })
-      .finally(() => {
-        //  setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setDisciplinaryData(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          //  setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          //  setIsLoading(false);
+        });
+    });
   };
   const GetEmployees = () => {
-    //  setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      //  setIsLoading(true);
 
-    let url = `dashboard/employee/list?limit=3`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setEmployeeData(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      let url = `dashboard/employee/list?limit=3`;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating Employee. Please try again.");
-        // setIsLoading(false);
-      })
-      .finally(() => {
-        // setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setEmployeeData(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating Employee. Please try again.");
+          // setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          // setIsLoading(false);
+        });
+    });
   };
   const GetDepartments = () => {
-    // setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      // setIsLoading(true);
 
-    let url = `/department/list?limit=3`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          // setResult(result);
-          setDepartmentData(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      let url = `/department/list?limit=3`;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        // setIsLoading(false);
-      })
-      .finally(() => {
-        // setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            // setResult(result);
+            setDepartmentData(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          // setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          // setIsLoading(false);
+        });
+    });
   };
   const GetLeavesType = () => {
-    setIsLoading(true);
-    let url = `/leave-type/list?limit=3`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setLeavesData(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = `/leave-type/list?limit=3`;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setLeavesData(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
- const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
- const HandleSearchCahnge = (data) => {
-   setSearchValue(data);
- };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   useEffect(() => {
     let user = localStorage.getItem("user");
     if (user) {
@@ -283,11 +298,15 @@ const HandleCloseSettings = () => setOpenSettings(false);
       let parsedUser = JSON.parse(org);
       setOrgData(parsedUser);
     }
+
     setIsLoading(true);
-    GetDisciplinary();
-    GetEmployees();
-    GetDepartments();
-    GetLeavesType();
+
+    Promise.all([
+      GetDisciplinary(),
+      GetEmployees(),
+      GetDepartments(),
+      GetLeavesType(),
+    ]);
   }, []);
   return (
     <>
@@ -313,7 +332,7 @@ const HandleCloseSettings = () => setOpenSettings(false);
       ) : (
         <>
           <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-            <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+          <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
 
           <Menu
             sx={{ margin: "0px" }}
@@ -365,7 +384,7 @@ const HandleCloseSettings = () => setOpenSettings(false);
                 <div>
                   <SectionCardTitle>Total Employee</SectionCardTitle>
                   <SectionCardNumber>
-                    {employeeData.totalEmployees}{" "}
+                    {employeeData.totalEmployees || 0 }{" "}
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/LeavesBig.svg" />
@@ -374,7 +393,7 @@ const HandleCloseSettings = () => setOpenSettings(false);
                 <div>
                   <SectionCardTitle>Total Disciplinaries</SectionCardTitle>
                   <SectionCardNumber>
-                    {disciplinaryData.totalDisciplinaries}{" "}
+                    {disciplinaryData.totalDisciplinaries || 0}{" "}
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/Calendar.svg" />

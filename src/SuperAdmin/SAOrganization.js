@@ -334,7 +334,11 @@ const SAOrganization = () => {
             <AddNewButton onClick={HandleOpen}>Add New</AddNewButton>
             <Modal
               open={open}
-              onClose={HandleClose}
+              // onClose={HandleClose}
+              sx={{
+                backgroundColor: "rgb(27, 27, 27, 0.75)",
+                backdropFilter: "blur(8px)",
+              }}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >

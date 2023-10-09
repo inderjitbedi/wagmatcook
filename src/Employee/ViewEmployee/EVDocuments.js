@@ -426,7 +426,11 @@ const EVDocuments = () => {
       )}
       <Modal
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

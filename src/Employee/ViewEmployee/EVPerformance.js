@@ -265,32 +265,36 @@ const EVPerformance = () => {
     }
   };
   const GetEmployeesProformance = () => {
-    setIsLoading(true);
-    const trimid = employeeid.trim();
-    let url = API_URLS.EmployeePerformance.replace(":employeeid", employeeid);
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      const trimid = employeeid.trim();
+      let url = API_URLS.EmployeePerformance.replace(":employeeid", employeeid);
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error creating department. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   useEffect(() => {
-    GetEmployeesProformance();
-    GetSuggestionsList();
+    Promise.all([GetEmployeesProformance(), GetSuggestionsList()]);
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -446,41 +450,45 @@ const EVPerformance = () => {
   };
   const [suggestions, setSuggestions] = useState([]);
   const GetSuggestionsList = () => {
-    setIsLoading(true);
-    let url = API_URLS.suggestionList;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setSuggestionsData(result);
-          //console.log("suggestions are:", result);
-
-          const suggestions = result?.users?.map((data) => ({
-            id: data?.userData._id,
-            text: data?.personalInfo?.length
-              ? data?.personalInfo[0].firstName +
-                " " +
-                (data?.personalInfo[0].lastName
-                  ? data?.personalInfo[0].lastName
-                  : " ")
-              : data?.userData.name,
-          }));
-
-          setSuggestions(suggestions);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.suggestionList;
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error in Fetching . Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            setSuggestionsData(result);
+            //console.log("suggestions are:", result);
+
+            const suggestions = result?.users?.map((data) => ({
+              id: data?.userData._id,
+              text: data?.personalInfo?.length
+                ? data?.personalInfo[0].firstName +
+                  " " +
+                  (data?.personalInfo[0].lastName
+                    ? data?.personalInfo[0].lastName
+                    : " ")
+                : data?.userData.name,
+            }));
+
+            setSuggestions(suggestions);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error in Fetching . Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
   };
   //console.log(suggestions, "this is map  data for suggestions");
 
@@ -533,7 +541,11 @@ const EVPerformance = () => {
               {/* modal t add new review  */}
               <Modal
                 open={open}
-                onClose={handleClose}
+                // onClose={handleClose}
+                sx={{
+                  backgroundColor: "rgb(27, 27, 27, 0.75)",
+                  backdropFilter: "blur(8px)",
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
@@ -561,7 +573,9 @@ const EVPerformance = () => {
                       <ModalContainer style={{ paddingTop: "8px" }}>
                         <ModalHeading>
                           {" "}
-                          {!update ? "Add Performance Review" : "Update Performance Review"}{" "}
+                          {!update
+                            ? "Add Performance Review"
+                            : "Update Performance Review"}{" "}
                         </ModalHeading>
                         <ModalIcon
                           onClick={handleClose}
@@ -680,7 +694,7 @@ const EVPerformance = () => {
                                   //   message: "Required",
                                   // },
 
-                                  onChange: (fieldValue) => {
+                                  validate: (fieldValue) => {
                                     const startDateValue =
                                       getValues("reviewDate");
 
@@ -693,11 +707,12 @@ const EVPerformance = () => {
                                         startDateValue
                                       );
                                       if (startDate > endDate) {
-                                        return setError("nextReviewDate", {
-                                          type: "custom",
-                                          message:
-                                            "Next Review must not be earlier than  Date",
-                                        });
+                                        return "Next Review must not be earlier than  Date";
+                                        // return setError("nextReviewDate", {
+                                        //   type: "custom",
+                                        //   message:
+                                        //     "Next Review must not be earlier than  Date",
+                                        // });
                                       } else {
                                         return clearErrors("nextReviewDate");
                                       }
@@ -929,7 +944,11 @@ const EVPerformance = () => {
       {/* add follow uo modal is here */}
       <Modal
         open={openFollow}
-        onClose={handleCloseFollow}
+        // onClose={handleCloseFollow}
+        sx={{
+          backgroundColor: "rgb(27, 27, 27, 0.75)",
+          backdropFilter: "blur(8px)",
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

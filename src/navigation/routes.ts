@@ -50,6 +50,7 @@ import HREmployeeLayout from "../Employee/HREmployee/HREmployeeLayout";
 import HRAccountLayout from "../Account/HRAccountLayout";
 import UserLayout from "../Dashboard/UserDashboard/UserLayout";
 import UserAccountLayout from "../Account/UserAccountLayout";
+import Task from "../Task/Task";
 const Routes: any = [
   {
     component: signup,
@@ -136,6 +137,15 @@ const Routes: any = [
         component: Departments,
         path: "departments",
         title: "Departments",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+
+      {
+        component: Task,
+        path: "tasks",
+        title: "tasks",
         to: "/",
         type: "private",
         index: true,

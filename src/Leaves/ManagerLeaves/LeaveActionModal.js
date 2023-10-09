@@ -98,7 +98,11 @@ const LeaveActionModal = ({
   return (
     <Modal
       open={openDelete}
-      onClose={HandleCloseDelete}
+      // onClose={HandleCloseDelete}
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
+      }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >

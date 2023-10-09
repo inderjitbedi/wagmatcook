@@ -351,12 +351,16 @@ const EmployeeTypes = () => {
         </AddNewButton>
         <Modal
           open={open}
-          onClose={() => {
-            HandleClose();
-            clearErrors();
-            reset({});
-            setUpdate(false);
+          sx={{
+            backgroundColor: "rgb(27, 27, 27, 0.75)",
+            backdropFilter: "blur(8px)",
           }}
+          // onClose={() => {
+          //   HandleClose();
+          //   clearErrors();
+          //   reset({});
+          //   setUpdate(false);
+          // }}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >

@@ -453,7 +453,11 @@ const EVCertificates = () => {
               {/* add new modal  */}
               <Modal
                 open={open}
-                onClose={handleClose}
+                // onClose={handleClose}
+                sx={{
+                  backgroundColor: "rgb(27, 27, 27, 0.75)",
+                  backdropFilter: "blur(8px)",
+                }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
@@ -593,7 +597,7 @@ const EVCertificates = () => {
                                   //   value: true,
                                   //   message: " Required",
                                   // },
-                                  onChange: (fieldValue) => {
+                                  validate: (fieldValue) => {
                                     const startDateValue =
                                       getValues("completionDate");
 
@@ -606,11 +610,12 @@ const EVCertificates = () => {
                                         startDateValue
                                       );
                                       if (startDate > endDate) {
-                                        return setError("expiryDate", {
-                                          type: "custom",
-                                          message:
-                                            "End date must not be earlier than start date",
-                                        });
+                                        return "Expiry date must not be earlier than Completion date";
+                                        // return setError("expiryDate", {
+                                        //   type: "custom",
+                                        //   message:
+                                        //     "End date must not be earlier than start date",
+                                        // });
                                       } else {
                                         return clearErrors("expiryDate");
                                       }

@@ -119,11 +119,15 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
   return (
     <Modal
       open={openEmployee}
-      onClose={() => {
-        HandleCloseEmployee();
-        clearErrors();
-        reset();
+      sx={{
+        backgroundColor: "rgb(27, 27, 27, 0.75)",
+        backdropFilter: "blur(8px)",
       }}
+      // onClose={() => {
+      //   HandleCloseEmployee();
+      //   clearErrors();
+      //   reset();
+      // }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
