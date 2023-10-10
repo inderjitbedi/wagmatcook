@@ -75,12 +75,44 @@ const EVDocuments = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setFile(null)
+    setFile(null);
   };
   const [Id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  // drag state
+  const [dragActive, setDragActive] = React.useState(false);
+const inputRef = useRef(null);
+   const handleDrag =  (e) =>  {
+     e.preventDefault();
+     e.stopPropagation();
+     if (e.type === "dragenter" || e.type === "dragover") {
+       setDragActive(true);
+     } else if (e.type === "dragleave") {
+       setDragActive(false);
+     }
+  };
+  const handleDrop = async (e) =>  {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      let file = e.dataTransfer.files[0];
+         if (!file) {
+      setErrors({ fileError: "Required" });
+      return;
+    }
+    let type = await getFileType(e.dataTransfer.files[0]);
+    if (type != "unknown") {
+      handleUpload(file, type);
+      setFile(file);
+      setErrors({ fileError: "" });
+    } else {
+      toast.error("Unsuported file type.");
+    }
+    }
+  };
 
   const GetDocuments = () => {
     setIsLoading(true);
@@ -171,33 +203,9 @@ const EVDocuments = () => {
         setIsDeleting(false);
       });
   };
-  const drop = useRef(null);
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const files = e.dataTransfer.files;
-
-    handleFileChange({ target: { files } });
-  };
 
   useEffect(() => {
     GetDocuments();
-
-    const el = document.getElementById("filedrop");
-    if (el) {
-      drop.current.addEventListener("dragover", handleDragOver);
-      drop.current.addEventListener("drop", handleDrop);
-
-      return () => {
-        drop.current.removeEventListener("dragover", handleDragOver);
-        drop.current.removeEventListener("drop", handleDrop);
-      };
-    }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -209,6 +217,7 @@ const EVDocuments = () => {
       setIsAccount(true);
     }
   }, []);
+
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
     file: "",
@@ -464,7 +473,10 @@ const EVDocuments = () => {
                 />
               </ModalContainer>
               <form
-              // onSubmit={handleSubmit()}
+                // onSubmit={handleSubmit()}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
               >
                 <ModalFormContainer>
                   <FlexContaierForm>
@@ -482,12 +494,13 @@ const EVDocuments = () => {
                         onChange={handleFileChange}
                         id="upload"
                         className="custom"
+                        ref={inputRef}
                       />
 
                       <UploadImageContainer
                         id="filedrop"
                         htmlFor="upload"
-                        ref={drop}
+                        onDrop={handleDrop}
                       >
                         {isUploading ? (
                           <ThreeDots

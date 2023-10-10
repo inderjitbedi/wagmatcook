@@ -11,18 +11,8 @@ import { useNavigate } from "react-router";
 import ReactPaginate from "react-paginate";
 import API_URLS from "../constants/apiUrls";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import Pagination from "@mui/material/Pagination";
 
-import {
-  DashHeader,
-  DashHeaderTitle,
-  SearchBox,
-  SearchInput,
-  DashHeaderSearch,
-  SearchIcon,
-  Pagination,
-  PaginationButton,
-} from "../Dashboard/OADashboard/OADashBoardStyles";
-// import SideBar from "../Dashboard/OADashboard/SideBar";
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
@@ -51,10 +41,13 @@ import {
   ModalThanksImg,
   ModalThanksHeading,
   Errors,
-  LoadMore,
   InputPara,
 } from "./DepartmentsStyles";
-import { InputLabel, InputSpan } from "../Disciplinary/DisciplinaryStyles";
+import {
+  InputLabel,
+  InputSpan,
+  PaginationDiv,
+} from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
   position: "absolute",
@@ -126,16 +119,18 @@ const Departments = () => {
   ];
   // const TempData = [1, 2, 3, 4, 5];
   const [searchValue, setSearchValue] = useState("");
-  
 
- const HandleSearchCahnge = (data) => {
-   setSearchValue(data);
- };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const [departmentData, setDepartmentData] = useState([]);
   const [Id, setId] = useState("");
 
   const [page, setPage] = useState(1);
- 
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -149,11 +144,6 @@ const Departments = () => {
     description: "",
   });
 
-  // const HandleLoadMore = () => {
-  //   const nextPage = result.currentPage + 1;
-
-  //   setPage(nextPage);
-  // };
   const HandleChange = (e) => {
     const { value, name } = e.target;
 
@@ -208,7 +198,7 @@ const Departments = () => {
     setIsLoading(true);
 
     let url = API_URLS.getDpartments
-      .replace("page", page)
+      .replace("Page", page)
       .replace("searchValue", searchValue);
 
     httpClient({
@@ -233,11 +223,8 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-   
     GetDepartments();
-  
-  }, [page]);
-
+  }, [page,searchValue]);
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -262,7 +249,6 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-
     }
     if (
       formData.name &&
@@ -320,7 +306,6 @@ const Departments = () => {
       } else {
         setErrors("");
       }
-
     }
     if (
       upDateData.description &&
@@ -351,7 +336,6 @@ const Departments = () => {
             setUpDateData("");
             setErrors("");
             toast.success(result.message); //Departments Updated Successfully");
-
           } else {
             //toast.warn("something went wrong ");
           }
@@ -404,15 +388,7 @@ const Departments = () => {
 
     HandleOpenEdit();
   };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
 
-  const handlePageClick = (selectedPage) => {
-    setPage(selectedPage.selected);
-  };
   return (
     <div style={{ height: "100%" }}>
       <>
@@ -613,40 +589,15 @@ const Departments = () => {
             </DepartmentCardContainer>
 
             {result?.totalPages > 1 && (
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  justifyContent: "flex-end",
-                }}
-              >
-                {/* <LoadMore onClick={HandleLoadMore}>Load More</LoadMore> */}
-                <Pagination>
-                  <PaginationButton onClick={() => setPage(1)}>
-                    First
-                  </PaginationButton>
-                  {Array.from({ length: result?.totalPages }, (_, index) => (
-                    <PaginationButton
-                      style={{
-                        color:
-                          result?.currentPage === index + 1
-                            ? "#279AF1"
-                            : "#222b45",
-                        background:
-                          result?.currentPage === index + 1
-                            ? "#fff"
-                            : "#e9e9ee",
-                      }}
-                      onClick={() => setPage(index + 1)}
-                    >
-                      {index + 1}
-                    </PaginationButton>
-                  ))}
-                  <PaginationButton onClick={() => setPage(result?.totalPages)}>
-                    Last
-                  </PaginationButton>
-                </Pagination>
-              </div>
+              <PaginationDiv>
+                <Pagination
+                  count={result?.totalPages}
+                  variant="outlined"
+                  shape="rounded"
+                  page={page}
+                  onChange={HandleChangePage}
+                />
+              </PaginationDiv>
             )}
           </>
         )}

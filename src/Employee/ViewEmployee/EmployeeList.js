@@ -21,6 +21,8 @@ import ROLES from "../../constants/roles";
 import moment from "moment";
 import { useForm, Controller } from "react-hook-form";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import API_URLS from "../../constants/apiUrls";
+import Pagination from "@mui/material/Pagination";
 
 import {
   DashHeader,
@@ -54,6 +56,7 @@ import {
   ModalIcon,
   ModalFormContainer,
 } from "./ViewEmployeeStyle";
+import { PaginationDiv } from "../../Disciplinary/DisciplinaryStyles";
 const style = {
   position: "absolute",
   top: "50%",
@@ -91,12 +94,10 @@ const Employee = () => {
   const [userType, setUserType] = useState("");
 
   const [searchValue, setSearchValue] = useState("");
- 
 
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  
 
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -105,7 +106,10 @@ const Employee = () => {
   const [openEmployee, setOpenEmployee] = useState(false);
   const HandleOpenEmployee = () => setOpenEmployee(true);
   const HandleCloseEmployee = () => setOpenEmployee(false);
-
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [openWelcome, setOpenWelcome] = useState(false);
   const HandleOpenWelcome = () => setOpenWelcome(true);
   const HandleCloseWelcome = () => {
@@ -130,7 +134,7 @@ const Employee = () => {
   const GetEmployees = () => {
     setIsLoading(true);
 
-    let url = `employee/list?page=1&limit=10`;
+    let url = API_URLS.getEmployeeList.replace("Page", page);
     httpClient({
       method: "get",
       url,
@@ -162,7 +166,7 @@ const Employee = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, []);
+  }, [page]);
   console.log("user type", userType);
   const HandleSubmitData = (data) => {
     return data;
@@ -208,7 +212,7 @@ const Employee = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = `/employee/delete/${Id}`;
+    let url = API_URLS.deleteEmployeeList.replace("Id",Id);
     httpClient({
       method: "put",
       url,
@@ -366,122 +370,72 @@ const Employee = () => {
           />
         </div>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
-                }}
-              >
-                <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
-                  Sr.No
-                </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "188" }} align="left">
-                  Name
-                </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">
-                  Employee&nbsp;Id
-                </TableCell>
-                <TableCell
-                  sx={{ ...CellStyle, maxWidth: "114px" }}
-                  align="left"
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    background: "#FBFBFB",
+                  }}
                 >
-                  Phone
-                </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "88px" }} align="left">
-                  Join&nbsp;Date
-                </TableCell>
-                <TableCell
-                  sx={{ ...CellStyle, maxWidth: "105px" }}
-                  align="left"
-                >
-                  Role
-                </TableCell>
-                <TableCell sx={{ ...CellStyle }} align="left">
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {result.employees?.length == 0 && (
-                <TableRow sx={{ height: "200px" }}>
-                  <TableCell align="center" colSpan={7}>
-                    No employee found
+                  <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
+                    Sr.No
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "188" }}
+                    align="left"
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "84px" }}
+                    align="left"
+                  >
+                    Employee&nbsp;Id
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "114px" }}
+                    align="left"
+                  >
+                    Phone
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "88px" }}
+                    align="left"
+                  >
+                    Join&nbsp;Date
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "105px" }}
+                    align="left"
+                  >
+                    Role
+                  </TableCell>
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Actions
                   </TableCell>
                 </TableRow>
-              )}
-              {result.employees?.map((data, index) => (
-                <TableRow
-                  key={data.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  style={{ background: "#fff" }}
-                >
-                  <TableCell align="center" sx={Celllstyle2}>
-                    {index + 1}
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    <TabelDiv
-                      onClick={() => {
-                        if (userType === ROLES.MANAGER) {
-                          Navigate(
-                            `/manager-management/employee-details/personal-info/${data._id}`
-                          );
-                        } else if (userType === ROLES.HR) {
-                          Navigate(
-                            `/hr-management/employee-details/personal-info/${data._id}`
-                          );
-                        } else {
-                          Navigate(
-                            `/organization-admin/employee/details/personal-info/${data._id}`
-                          );
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <TabelImg
-                        src={
-                          data.photoInfo && data.photoInfo.length
-                            ? API_URL + data.photoInfo[0]?.path
-                            : API_URL
-                        }
-                      />
-                      <TabelParaContainer>
-                        <TabelDarkPara>
-                          {data.personalInfo[0]?.firstName}{" "}
-                          {data.personalInfo[0]?.lastName}
-                        </TabelDarkPara>
-                        <TabelLightPara style={{ textTransform: "none" }}>
-                          {data.email || " - "}
-                        </TabelLightPara>
-                      </TabelParaContainer>
-                    </TabelDiv>
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    {data.personalInfo[0].employeeId || " - "}
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    {data.personalInfo[0].homePhone || " - "}
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                    {data.positions[0]?.startDate
-                      ? moment(data.positions[0]?.startDate).format(
-                          "DD/MM/YYYY"
-                        )
-                      : " - "}
-                    {/* </Moment> */}
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    {(data.role === ROLES.EMPLOYEE
-                      ? "USER"
-                      : data.role === ROLES.HR
-                      ? " HR"
-                      : data.role) || " - "}
-                  </TableCell>
-                  <TableCell align="left" sx={Celllstyle2}>
-                    <IconContainer>
-                      <Icons
+              </TableHead>
+              <TableBody>
+                {result.employees?.length == 0 && (
+                  <TableRow sx={{ height: "200px" }}>
+                    <TableCell align="center" colSpan={7}>
+                      No employee found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {result.employees?.map((data, index) => (
+                  <TableRow
+                    key={data.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    style={{ background: "#fff" }}
+                  >
+                    <TableCell align="center" sx={Celllstyle2}>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      <TabelDiv
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
                             Navigate(
@@ -497,38 +451,110 @@ const Employee = () => {
                             );
                           }
                         }}
-                        src="/images/icons/eye.svg"
-                      />
-                      {userType === ROLES.MANAGER ? (
-                        ""
-                      ) : (
+                        style={{ cursor: "pointer" }}
+                      >
+                        <TabelImg
+                          src={
+                            data.photoInfo && data.photoInfo.length
+                              ? API_URL + data.photoInfo[0]?.path
+                              : API_URL
+                          }
+                        />
+                        <TabelParaContainer>
+                          <TabelDarkPara>
+                            {data.personalInfo[0]?.firstName}{" "}
+                            {data.personalInfo[0]?.lastName}
+                          </TabelDarkPara>
+                          <TabelLightPara style={{ textTransform: "none" }}>
+                            {data.email || " - "}
+                          </TabelLightPara>
+                        </TabelParaContainer>
+                      </TabelDiv>
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {data.personalInfo[0].employeeId || " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {data.personalInfo[0].homePhone || " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {/* <Moment format="YYYY/MM/DD"> */}{" "}
+                      {data.positions[0]?.startDate
+                        ? moment(data.positions[0]?.startDate).format(
+                            "DD/MM/YYYY"
+                          )
+                        : " - "}
+                      {/* </Moment> */}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {(data.role === ROLES.EMPLOYEE
+                        ? "USER"
+                        : data.role === ROLES.HR
+                        ? " HR"
+                        : data.role) || " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      <IconContainer>
                         <Icons
                           onClick={() => {
-                            Navigate(
-                              `/organization-admin/employee/personal-info/${data._id}`
-                            );
+                            if (userType === ROLES.MANAGER) {
+                              Navigate(
+                                `/manager-management/employee-details/personal-info/${data._id}`
+                              );
+                            } else if (userType === ROLES.HR) {
+                              Navigate(
+                                `/hr-management/employee-details/personal-info/${data._id}`
+                              );
+                            } else {
+                              Navigate(
+                                `/organization-admin/employee/details/personal-info/${data._id}`
+                              );
+                            }
                           }}
-                          src="/images/icons/Pendown.svg"
+                          src="/images/icons/eye.svg"
                         />
-                      )}
-                      {userType === ROLES.MANAGER ? (
-                        ""
-                      ) : (
-                        <Icons
-                          onClick={() => {
-                            setId(data._id);
-                            HandleOpenDelete();
-                          }}
-                          src="/images/icons/Trash-2.svg"
-                        />
-                      )}
-                    </IconContainer>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                        {userType === ROLES.MANAGER ? (
+                          ""
+                        ) : (
+                          <Icons
+                            onClick={() => {
+                              Navigate(
+                                `/organization-admin/employee/personal-info/${data._id}`
+                              );
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
+                        {userType === ROLES.MANAGER ? (
+                          ""
+                        ) : (
+                          <Icons
+                            onClick={() => {
+                              setId(data._id);
+                              HandleOpenDelete();
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
+                      </IconContainer>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
+        </>
       )}
       <DeleteModal
         openDelete={openDelete}

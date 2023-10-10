@@ -140,7 +140,7 @@ const ManagerLeaves = () => {
   const handleCloseThanks = () => setOpenThanks(false);
   const [reportList, setReportList] = useState([]);
   const [openAuto, setOpenAuto] = useState(false);
-
+  const [user, setUser] = useState();
   const [options, setOptions] = React.useState([]);
   const [leaveType, setLeaveType] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
@@ -254,9 +254,11 @@ const ManagerLeaves = () => {
                 return { _id: user.user, userDataId, name };
               }
             });
-
-            setReportList(extractedDataArray);
-            console.log("ideal data :", extractedDataArray);
+            const filteredArray = extractedDataArray.filter(
+              (obj) => obj._id !== user._id
+            );
+            setReportList(filteredArray);
+            console.log("ideal data :", filteredArray);
           } else {
             //toast.warn("something went wrong ");
           }
@@ -360,6 +362,12 @@ const ManagerLeaves = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    }
+
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
     }
   }, [searchValue]);
 

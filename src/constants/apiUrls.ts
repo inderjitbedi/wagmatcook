@@ -12,24 +12,24 @@ const API_URLS = {
   uploadDocuments: `/employee/file/upload/:type`,
   uploadImage: `/organization/file/upload/image`,
   // Oa Benefits routes
-  getOaBenefits: `/benefit/list?page=1&limit=10&searchKey=searchValue`,
+  getOaBenefits: `/benefit/list?page=Page&limit=10&searchKey=searchValue`,
   createBenefits: `/benefit/create`,
   deleteBenefits: `/benefit/delete/:id`,
   updateBenefits: `/benefit/update/:id`,
   reorderBenefits:`/benefit/reorder`,
   //Oa Departmnets
-  getDpartments: `/department/list?page=page&limit=10&searchKey=searchValue`,
+  getDpartments: `/department/list?page=Page&limit=10&searchKey=searchValue`,
   createDepartments: `/department/create`,
   updateDepartments: `/department/update/:id`,
   deleteDepartments: `/department/delete/:id`,
   // Oa disciplinary
-  getDisciplinary: `/disciplinary/list?page=page&limit=10&searchKey=searchValue`,
+  getDisciplinary: `/disciplinary/list?page=Page&limit=10&searchKey=searchValue`,
   createDisciplinary:`/disciplinary/create/`,
   updateDisciplinary: `/disciplinary/update/:id`,
   deleteDisciplinary: `/disciplinary/delete/:id`,
   reorderDisciplinary: `/disciplinary/reorder`,
   // Leave Type oa route
-  getLeaveType: `/leave-type/list?page=page&limit=10&searchKey=searchValue`,
+  getLeaveType: `/leave-type/list?page=Page&limit=10&searchKey=searchValue`,
   createLeaveType:`/leave-type/create`,
   updateLeaveType:`/leave-type/update/:id`,
   deleteLeaveType:`/leave-type/delete/:id`,
@@ -55,7 +55,7 @@ const API_URLS = {
   getEmployeePersonalInfo:`/employee/personal-info/:employeeid`,
   submitEmployeePersonalInfo:`/employee/personal-info/:employeeid`,
   // employee types
-  getEmployeeTypes: `/employee-type/list?page=1&limit=10&searchKey=searchValue`,
+  getEmployeeTypes: `/employee-type/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeTypes: `/employee-type/delete/:id`,
   createEmployeeTypes: `/employee-type/create`,
   updateEmployeeTypes: `/employee-type/update/:id`,
@@ -103,7 +103,10 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   getOrgProfile: `/organization/details`,
   updateOrgProfile: `/organization/update`,
   // user accout api
-  userLeaveBalance: `/employee/leave-balance`
+  userLeaveBalance: `/employee/leave-balance`,
+  // employee list api 
+  getEmployeeList: `employee/list?page=Page&limit=10`,
+deleteEmployeeList:`/employee/delete/Id`,
 };
 
 export default API_URLS;

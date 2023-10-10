@@ -17,15 +17,7 @@ import { useNavigate } from "react-router";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
-import {
-  DashHeader,
-  DashHeaderTitle,
-  DashHeaderSearch,
-  SearchBox,
-  SearchInput,
-  SearchIcon,
-  DashNotification,
-} from "../Dashboard/OADashboard/OADashBoardStyles";
+import Pagination from "@mui/material/Pagination";
 
 import {
   AddNewButton,
@@ -48,6 +40,7 @@ import {
   Option,
   Errors,
   LoadMore,
+  PaginationDiv,
 } from "./DisciplinaryStyles";
 import API_URLS from "../constants/apiUrls";
 
@@ -118,6 +111,9 @@ const Disciplinary = () => {
   const HandleCloseDelete = () => setOpenDelete(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [Id, setId] = useState("");
   const [result, setResult] = useState([]);
   const [descriptionLength, setdescriptionLength] = useState(500);
@@ -183,7 +179,7 @@ const Disciplinary = () => {
   const GetDisciplinary = () => {
     setIsLoading(true);
     let url = API_URLS.getDisciplinary
-      .replace("page", page)
+      .replace("Page", page)
       .replace("searchValue", searchValue);
     httpClient({
       method: "get",
@@ -192,14 +188,8 @@ const Disciplinary = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          if (page === 1) {
-            setDisciplinaryData(result.disciplinaries);
-          } else {
-            setDisciplinaryData((prevState) => {
-              return [...prevState, ...result.disciplinaries];
-            });
-          }
-          // setDisciplinaryData(result.disciplinaries);
+
+          setDisciplinaryData(result.disciplinaries);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -215,7 +205,7 @@ const Disciplinary = () => {
   };
   useEffect(() => {
     GetDisciplinary();
-  }, [searchValue]);
+  }, [searchValue, page]);
 
   //create new enter in table
   const HandleSubmit = (e) => {
@@ -601,137 +591,143 @@ const Disciplinary = () => {
             />
           </div>
         ) : (
-          <DragDropContext onDragEnd={onDragEnd}>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow
-                    sx={{
-                      background: "#FBFBFB",
-                    }}
-                  >
-                    <TableCell
-                      sx={CellHeadStyles}
-                      align="left"
-                      style={{ width: "100px" }}
+          <>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow
+                      sx={{
+                        background: "#FBFBFB",
+                      }}
                     >
-                      Order No.
-                    </TableCell>
-                    <TableCell
-                      sx={CellHeadStyles}
-                      align="left"
-                      style={{ width: "150px" }}
-                    >
-                      Name
-                    </TableCell>
-                    <TableCell sx={CellHeadStyles} align="left">
-                      Description
-                    </TableCell>
-                    {/* <TableCell sx={CellHeadStyles} align="left">
+                      <TableCell
+                        sx={CellHeadStyles}
+                        align="left"
+                        style={{ width: "100px" }}
+                      >
+                        Order No.
+                      </TableCell>
+                      <TableCell
+                        sx={CellHeadStyles}
+                        align="left"
+                        style={{ width: "150px" }}
+                      >
+                        Name
+                      </TableCell>
+                      <TableCell sx={CellHeadStyles} align="left">
+                        Description
+                      </TableCell>
+                      {/* <TableCell sx={CellHeadStyles} align="left">
                       Requires BCR
                     </TableCell> */}
-                    <TableCell sx={CellHeadStyles} align="left">
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
+                      <TableCell sx={CellHeadStyles} align="left">
+                        Action
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
 
-                <Droppable droppableId="table">
-                  {(provided, snapshot) => (
-                    <TableBody
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      style={getListStyle(snapshot.isDraggingOver)}
-                    >
-                      {disciplinaryData?.length == 0 && (
-                        <TableRow sx={{ height: "200px" }}>
-                          <TableCell align="center" colSpan={5}>
-                            No disciplinary types found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                      {disciplinaryData?.map((data, index) => (
-                        <Draggable
-                          key={data._id}
-                          draggableId={data._id}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <TableRow
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={getItemStyle(
-                                snapshot.isDragging,
-                                provided.draggableProps.style
-                              )}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                                background: "#fff",
-                              }}
-                            >
-                              <TableCell sx={CellStyle2} align="left">
-                                <MenuIconDiv>
-                                  <MenuIcon
-                                    {...provided.dragHandleProps}
-                                    src="/images/icons/Menu Dots.svg "
-                                    style={{ cursor: "grab" }}
-                                  />
-                                  {data.order}
-                                </MenuIconDiv>
-                              </TableCell>
-                              <TableCell sx={CellStyle} align="left">
-                                {" "}
-                                {data.name}{" "}
-                              </TableCell>
-                              <TableCell sx={CellStyle2} align="left">
-                                {" "}
-                                {data.description}{" "}
-                              </TableCell>
-                              {/* <TableCell sx={CellStyle} align="left">
+                  <Droppable droppableId="table">
+                    {(provided, snapshot) => (
+                      <TableBody
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
+                      >
+                        {disciplinaryData?.length == 0 && (
+                          <TableRow sx={{ height: "200px" }}>
+                            <TableCell align="center" colSpan={5}>
+                              No disciplinary types found
+                            </TableCell>
+                          </TableRow>
+                        )}
+                        {disciplinaryData?.map((data, index) => (
+                          <Draggable
+                            key={data._id}
+                            draggableId={data._id}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <TableRow
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                  background: "#fff",
+                                }}
+                              >
+                                <TableCell sx={CellStyle2} align="left">
+                                  <MenuIconDiv>
+                                    <MenuIcon
+                                      {...provided.dragHandleProps}
+                                      src="/images/icons/Menu Dots.svg "
+                                      style={{ cursor: "grab" }}
+                                    />
+                                    {data.order}
+                                  </MenuIconDiv>
+                                </TableCell>
+                                <TableCell sx={CellStyle} align="left">
+                                  {" "}
+                                  {data.name}{" "}
+                                </TableCell>
+                                <TableCell sx={CellStyle2} align="left">
+                                  {" "}
+                                  {data.description}{" "}
+                                </TableCell>
+                                {/* <TableCell sx={CellStyle} align="left">
                                 {" "}
                                 {data.requiredBcr === false ? "No" : "Yes"}{" "}
                               </TableCell> */}
-                              <TableCell sx={CellStyle2} align="left">
-                                {" "}
-                                <ActionIconDiv>
-                                  <ActionIcons
-                                    onClick={() => {
-                                      setId(data._id);
-                                      PopulateUpdateForm(data);
-                                    }}
-                                    src="/images/icons/Pendown.svg"
-                                  />
-                                  <ActionIcons
-                                    onClick={() => {
-                                      HandleOpenDelete();
-                                      setId(data._id);
-                                    }}
-                                    src="/images/icons/Trash-2.svg"
-                                  />
-                                </ActionIconDiv>
-                              </TableCell>
-                              {provided.placeholder}
-                            </TableRow>
-                          )}
-                        </Draggable>
-                      ))}
-                    </TableBody>
-                  )}
-                </Droppable>
-              </Table>
-            </TableContainer>
-          </DragDropContext>
+                                <TableCell sx={CellStyle2} align="left">
+                                  {" "}
+                                  <ActionIconDiv>
+                                    <ActionIcons
+                                      onClick={() => {
+                                        setId(data._id);
+                                        PopulateUpdateForm(data);
+                                      }}
+                                      src="/images/icons/Pendown.svg"
+                                    />
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleOpenDelete();
+                                        setId(data._id);
+                                      }}
+                                      src="/images/icons/Trash-2.svg"
+                                    />
+                                  </ActionIconDiv>
+                                </TableCell>
+                                {provided.placeholder}
+                              </TableRow>
+                            )}
+                          </Draggable>
+                        ))}
+                      </TableBody>
+                    )}
+                  </Droppable>
+                </Table>
+              </TableContainer>
+            </DragDropContext>
+            {result?.totalPages > 1 && (
+              <PaginationDiv>
+                <Pagination
+                  count={result?.totalPages}
+                  variant="outlined"
+                  shape="rounded"
+                  page={page}
+                  onChange={HandleChangePage}
+                />
+              </PaginationDiv>
+            )}
+          </>
         )}
-        {result.totalPages > result.currentPage && (
-          <div
-            style={{ display: "flex", width: "100%", justifyContent: "center" }}
-          >
-            <LoadMore onClick={HandleLoadMore}>Load More</LoadMore>
-          </div>
-        )}{" "}
       </>
       {/* modal fo editing  */}
       <Modal

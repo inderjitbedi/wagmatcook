@@ -55,11 +55,11 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
     console.log("working menu for notification");
-     setShowAll(false);
+    setShowAll(false);
   };
   const handleCloseMenuNotification = () => {
     setAnchorElNotification(null);
-    HandleMarkRead();
+    // HandleMarkRead();
   };
   const [user, setUser] = useState();
   const [orgData, setOrgData] = useState();
@@ -290,7 +290,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
           {(location.pathname.indexOf("details") > -1 ||
             location.pathname.indexOf("leaves-request") > -1 ||
             location.pathname.indexOf("personal-info") > -1 ||
-            location.pathname.indexOf("employee/benefits") > -1) && (
+            location.pathname.indexOf("employee/benefits") > -1 ||
+            location.pathname.indexOf("tasks-view") > -1) && (
             <BackButton onClick={() => Navigate(-1)}>
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -303,7 +304,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
           {location.pathname.indexOf("details") > -1 ||
           location.pathname.indexOf("leaves-request") > -1 ||
           location.pathname.indexOf("personal-info") > -1 ||
-          location.pathname.indexOf("employee/benefits") > -1 ? (
+          location.pathname.indexOf("employee/benefits") > -1 ||
+          location.pathname.indexOf("tasks-view") > -1 ? (
             " "
           ) : (
             <SearchBox>
@@ -326,6 +328,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
               onClick={(event) => {
                 handleClickMenuNotification(event);
                 GetNotificationList();
+                HandleMarkRead();
               }}
             >
               <DashNotification src="/images/icons/Notifications.svg" />

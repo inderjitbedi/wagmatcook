@@ -224,3 +224,9 @@ export const TabelImg = styled.img`
 object-fit: cover;
 
 `;
+export const PaginationDiv = styled.div`
+display: flex;
+justify-content: flex-end;
+width: 100%;
+margin: 16px 0px ;
+`;

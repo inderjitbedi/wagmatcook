@@ -335,6 +335,15 @@ export const BasicInfoContainer = styled.div`
 export const BasicInfoDiv = styled.div`
   width: 71%;
 `;
+export const BackGroundWhite = styled.div`
+  width: 100%;
+  background: #fff;
+  border-radius: 8px 8px 0px 0px;
+  border: 1px solid #eff4fa;
+  padding: 10px 20px;
+  box-sizing: border-box;
+`;
+
 export const FlexSpaceBetween = styled.div`
   width: 100%;
   display: flex;
@@ -385,8 +394,9 @@ export const TitlePara = styled.p`
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
-  line-height: 0px;
+  line-height: 16px;
   text-transform: capitalize;
+  margin: 0;
 `;
 export const ViewPara = styled.p`
   color: #222b45;
@@ -396,6 +406,7 @@ export const ViewPara = styled.p`
   font-weight: 500;
   line-height: 18px;
   text-transform: capitalize;
+  margin: 0;
 `;
 export const TimelineDiv = styled.div`
   border-radius: 8px;
@@ -714,5 +725,17 @@ export const UploadImageLight = styled.div`
   line-height: 12px;
 `;
 
-
+export const CommentDiv = styled.div`
+width: 100%;
+display: flex;
+gap: 20px;
+align-items: center;
+margin-bottom: 24px;
+`;
+export const UserImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
 

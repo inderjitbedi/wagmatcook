@@ -5,7 +5,20 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../api/httpClient";
 import API_URLS from "../constants/apiUrls";
 import Box from "@mui/material/Box";
+import { useNavigate, useLocation } from "react-router";
+
 import Modal from "@mui/material/Modal";
+import DeleteModal from "../Modals/DeleteModal";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -41,12 +54,39 @@ const style = {
   padding: "20px 0px",
   borderRadius: "8px",
 };
+const CellHeadStyles = {
+  color: "#8F9BB3",
+  fontFamily: "Inter",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "16px",
+};
+
+const CellStyle = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "15px",
+};
+const CellStyle2 = {
+  color: "#222B45",
+  fontSize: "14px",
+  fontStyle: "normal",
+  fontWeight: 400,
+  lineHeight: "15px",
+};
 
 const Task = () => {
+    const Navigate = useNavigate();
+    const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
@@ -92,7 +132,12 @@ const Task = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset({ name: data.name, description: data.description });
+    reset({
+      title: data.title,
+      description: data.description,
+      assignedto: data.assignedto,
+      dueDate: data.dueDate,
+    });
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -116,7 +161,64 @@ const Task = () => {
       name: "option3",
     },
   ];
+  const TaskData = [
+    {
+      order: 1,
+      title: "Mobile Responsive",
+      assignedto: "Lalit Kumar",
+      dueDate: "10/09/2023",
+      description:
+        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
+    },
+    {
+      order: 2,
+      title: "Mobile Responsive",
+      assignedto: "Lalit Kumar",
+      dueDate: "10/09/2023",
+      description:
+        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
+    },
+    {
+      order: 3,
+      title: "Mobile Responsive",
+      assignedto: "Lalit Kumar",
+      dueDate: "10/09/2023",
+      description:
+        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
+    },
+    {
+      order: 4,
+      title: "Mobile Responsive",
+      assignedto: "Lalit Kumar",
+      dueDate: "10/09/2023",
+      description:
+        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
+    },
+  ];
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
+    // const reorderedData = Array.from(benefits);
+    // const [movedItem] = reorderedData.splice(result.source.index, 1);
+    // reorderedData.splice(result.destination.index, 0, movedItem);
+    // console.log("drag is working ");
+    // setBenefits(reorderedData);
+    // HandleReorder(reorderedData.map((item) => item._id));
+  };
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 10px 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
@@ -187,7 +289,7 @@ const Task = () => {
                     </InputLabel>
                     <Input
                       type="text"
-                      {...register("taskTitle", {
+                      {...register("title", {
                         required: {
                           value: true,
                           message: "Required",
@@ -292,6 +394,180 @@ const Task = () => {
           </Box>
         </Modal>
       </DisciplinaryDiv>
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    background: "#FBFBFB",
+                  }}
+                >
+                  <TableCell
+                    sx={CellHeadStyles}
+                    align="left"
+                    style={{ width: "20px" }}
+                  >
+                    Order&nbsp;No.
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "150px" }}
+                    align="left"
+                  >
+                    Task Title
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "100px" }}
+                    align="left"
+                  >
+                    Assigned To
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "90px" }}
+                    align="left"
+                  >
+                    Due Date
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "300px" }}
+                    align="left"
+                  >
+                    Description
+                  </TableCell>
+
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "100px" }}
+                    align="left"
+                  >
+                    Action
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <Droppable droppableId="table">
+                {(provided, snapshot) => (
+                  <TableBody
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDraggingOver)}
+                  >
+                    {!TaskData?.length && (
+                      <TableRow sx={{ height: "200px" }}>
+                        <TableCell align="center" colSpan={3}>
+                          No benefits found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {TaskData?.map((data, index) => (
+                      <Draggable
+                        key={data._id}
+                        draggableId={data._id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <TableRow
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: 0,
+                              },
+                              background: "#fff",
+                            }}
+                            key={data._id}
+                          >
+                            <TableCell sx={CellStyle2} align="left">
+                              <MenuIconDiv>
+                                <MenuIcon
+                                  {...provided.dragHandleProps}
+                                  src="/images/icons/Menu Dots.svg "
+                                  style={{ cursor: "grab" }}
+                                />
+                                {data.order}
+                              </MenuIconDiv>
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {data.title}
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {data.assignedto}
+                            </TableCell>
+                            <TableCell sx={CellStyle} align="left">
+                              {data.dueDate}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {data.description}
+                            </TableCell>
+                            <TableCell sx={CellStyle2} align="left">
+                              {" "}
+                              <ActionIconDiv>
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleUpdateAction(data);
+                                  }}
+                                  src="/images/icons/Pendown.svg"
+                                />
+                                <ActionIcons
+                                  onClick={() => {
+                                    Navigate("/organization-admin/tasks-view");
+                                  }}
+                                  src="/images/icons/eye.svg"
+                                />
+                                <ActionIcons
+                                  onClick={() => {
+                                    HandleOpenDelete();
+                                    setId(data._id);
+                                  }}
+                                  src="/images/icons/Trash-2.svg"
+                                />
+                              </ActionIconDiv>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </Draggable>
+                    ))}
+                  </TableBody>
+                )}
+              </Droppable>
+            </Table>
+          </TableContainer>
+        </DragDropContext>
+      )}
+      <DeleteModal
+        openDelete={openDelete}
+        HandleCloseDelete={HandleCloseDelete}
+        // HandleDelete={HandleDelete}
+        message="Are you sure you want to delete this task?"
+        isLoading={isLoading}
+      />
     </>
   );
 };

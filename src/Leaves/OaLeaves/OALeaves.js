@@ -18,45 +18,24 @@ import Paper from "@mui/material/Paper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useForm, Controller } from "react-hook-form";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
-import {
-  DashHeader,
-  DashHeaderTitle,
-  SearchBox,
-  SearchInput,
-  DashHeaderSearch,
-  SearchIcon,
-  Pagination,
-  PaginationButton,
-} from "../../Dashboard/OADashboard/OADashBoardStyles";
+import Pagination from "@mui/material/Pagination";
+
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
   DepartmentIconImg,
   DepartmentFilterContainer,
   AddNewButton,
-  DepartmentFilterdiv,
-  DepartmentFilterButton,
-  DepartmentCardContainer,
-  DepartmentCardDiv,
-  DepartmentCardImg,
-  DepartmentCardPara,
-  DepartmentCardParaLit,
-  DepartmentCardButtoncolor,
-  DepartmentCardButtongrey,
-  DepartmentButtonContainer,
   ModalUpperDiv,
   ModalHeading,
   ModalIcon,
   ModalUpperMid,
-  ModalBottom,
-  CancelButton,
   Input,
   TextArea,
   ModalThanks,
   ModalThanksImg,
   ModalThanksHeading,
   Errors,
-  LoadMore,
   InputPara,
 } from "../../Departments/DepartmentsStyles";
 import {
@@ -70,6 +49,7 @@ import {
   ActionIcons,
   HeaderDiv,
   HeaderTitle,
+  PaginationDiv,
 } from "../../Disciplinary/DisciplinaryStyles";
 import API_URLS from "../../constants/apiUrls";
 const style = {
@@ -155,7 +135,10 @@ const OALeaves = () => {
   const [update, setUpdate] = useState(false);
 
   const [leavesData, setLeavesData] = useState([]);
-
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [result, setResult] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -173,12 +156,11 @@ const OALeaves = () => {
   };
   const FilterData = ["All", "Vacation", "Sick", "Time in Lieu", "Other"];
   const [searchValue, setSearchValue] = useState("");
-  
- 
+
   const [Id, setId] = useState("");
-   const HandleSearchCahnge = (data) => {
-     setSearchValue(data);
-   };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const HandleLogout = () => {
     localStorage.clear();
     handleCloseMenu();
@@ -245,7 +227,9 @@ const OALeaves = () => {
   };
   const GetLeavesType = () => {
     setIsLoading(true);
-    let url = API_URLS.getLeaveType.replace("searchValue", searchValue);
+    let url = API_URLS.getLeaveType
+      .replace("searchValue", searchValue)
+      .replace("Page", page);
     httpClient({
       method: "get",
       url,
@@ -400,7 +384,7 @@ const OALeaves = () => {
   };
   useEffect(() => {
     GetLeavesType();
-  }, [searchValue]);
+  }, [searchValue, page]);
   return (
     <div>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
@@ -639,17 +623,6 @@ const OALeaves = () => {
       </DepartmentFilterContainer>
       <HeaderDiv>
         <HeaderTitle>Leaves List</HeaderTitle>
-        <DashHeaderSearch>
-          {/* <SearchBox>
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              // value={searchValue}
-              // onChange={(e) => HandleSearchCahnge(e)}
-            ></SearchInput>
-            <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox> */}
-        </DashHeaderSearch>
       </HeaderDiv>
       {isLoading ? (
         <div
@@ -670,163 +643,178 @@ const OALeaves = () => {
           />
         </div>
       ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "20px" }}
+        <>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      background: "#FBFBFB",
+                    }}
                   >
-                    Order&nbsp;No.
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "140px" }}
-                  >
-                    Name
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "320px" }}
-                  >
-                    Description
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "90px" }}
-                  >
-                    Max&nbsp;Carry&nbsp;Over
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "30px" }}
-                  >
-                    Status
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="center"
-                    style={{ width: "30px" }}
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "20px" }}
+                    >
+                      Order&nbsp;No.
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "140px" }}
+                    >
+                      Name
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "320px" }}
+                    >
+                      Description
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "90px" }}
+                    >
+                      Max&nbsp;Carry&nbsp;Over
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "30px" }}
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="center"
+                      style={{ width: "30px" }}
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
 
-              <Droppable droppableId="table">
-                {(provided, snapshot) => (
-                  <TableBody
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
-                  >
-                    {leaves?.length === 0 && (
-                      <TableRow sx={{ height: "200px" }}>
-                        <TableCell align="center" colSpan={6}>
-                          No leaves found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {leaves?.map((data, index) => (
-                      <Draggable
-                        key={data._id}
-                        draggableId={data._id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <TableRow
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                            sx={{
-                              "&:last-child td, &:last-child th": {
-                                border: 0,
-                              },
-                              background: "#fff",
-                            }}
-                          >
-                            <TableCell sx={CellStyle2} align="left">
-                              <MenuIconDiv>
-                                <MenuIcon
-                                  {...provided.dragHandleProps}
-                                  src="/images/icons/Menu Dots.svg "
-                                  style={{ cursor: "grab" }}
-                                />
-                                {data.order}
-                              </MenuIconDiv>
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {" "}
-                              {data.name}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              {data.description}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {" "}
-                              {data.maxCarryOver}{" "}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              <span
-                                style={
-                                  data.isActive ? ApprovedStyles : PendingStyle
-                                }
-                              >
-                                {data.isActive ? "Active" : "Inactive"}
-                              </span>{" "}
-                            </TableCell>
-                            <TableCell
-                              sx={CellStyle2}
-                              align="center"
-                              //   style={{ maxWidth: "10px" }}
+                <Droppable droppableId="table">
+                  {(provided, snapshot) => (
+                    <TableBody
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {leaves?.length === 0 && (
+                        <TableRow sx={{ height: "200px" }}>
+                          <TableCell align="center" colSpan={6}>
+                            No leaves found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {leaves?.map((data, index) => (
+                        <Draggable
+                          key={data._id}
+                          draggableId={data._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <TableRow
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                background: "#fff",
+                              }}
                             >
-                              {" "}
-                              <ActionIconDiv
-                                style={{ justifyContent: "center" }}
+                              <TableCell sx={CellStyle2} align="left">
+                                <MenuIconDiv>
+                                  <MenuIcon
+                                    {...provided.dragHandleProps}
+                                    src="/images/icons/Menu Dots.svg "
+                                    style={{ cursor: "grab" }}
+                                  />
+                                  {data.order}
+                                </MenuIconDiv>
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {" "}
+                                {data.name}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                {data.description}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {" "}
+                                {data.maxCarryOver}{" "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                <span
+                                  style={
+                                    data.isActive
+                                      ? ApprovedStyles
+                                      : PendingStyle
+                                  }
+                                >
+                                  {data.isActive ? "Active" : "Inactive"}
+                                </span>{" "}
+                              </TableCell>
+                              <TableCell
+                                sx={CellStyle2}
+                                align="center"
+                                //   style={{ maxWidth: "10px" }}
                               >
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleUpdateAction(data);
-                                  }}
-                                  src="/images/icons/Pendown.svg"
-                                />
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleOpenDelete();
-                                    setId(data._id);
-                                  }}
-                                  src="/images/icons/Trash-2.svg"
-                                />
-                              </ActionIconDiv>
-                            </TableCell>
-                            {provided.placeholder}
-                          </TableRow>
-                        )}
-                      </Draggable>
-                    ))}
-                  </TableBody>
-                )}
-              </Droppable>
-            </Table>
-          </TableContainer>
-        </DragDropContext>
+                                {" "}
+                                <ActionIconDiv
+                                  style={{ justifyContent: "center" }}
+                                >
+                                  <ActionIcons
+                                    onClick={() => {
+                                      HandleUpdateAction(data);
+                                    }}
+                                    src="/images/icons/Pendown.svg"
+                                  />
+                                  <ActionIcons
+                                    onClick={() => {
+                                      HandleOpenDelete();
+                                      setId(data._id);
+                                    }}
+                                    src="/images/icons/Trash-2.svg"
+                                  />
+                                </ActionIconDiv>
+                              </TableCell>
+                              {provided.placeholder}
+                            </TableRow>
+                          )}
+                        </Draggable>
+                      ))}
+                    </TableBody>
+                  )}
+                </Droppable>
+              </Table>
+            </TableContainer>
+          </DragDropContext>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
+        </>
       )}
       <DeleteModal
         openDelete={openDelete}

@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   display: flex;
-  /* align-items: center; */
+
   justify-content: center;
 }
 .template-container {
@@ -10,7 +10,7 @@
 .header {
   padding: 36px 50px 0px 50px;
   background: #093fe1;
-  /* height: 552px; */
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@
 .header-reset {
   padding: 36px 50px 48px 50px;
   background: #093fe1;
-  /* height: 552px; */
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,7 +38,7 @@
 .otp {
   color: #222b45;
   font-family: Inter;
-  font-size: 64px;
+  font-size: 30px;
   font-style: normal;
   font-weight: 500;
   line-height: 60px;
@@ -106,13 +106,6 @@
   font-weight: 700;
   line-height: 48px; /* 150% */
   letter-spacing: -0.64px;
-  text-align: center;
-  font-family: Inter;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 48px; /* 150% */
-  letter-spacing: -0.64px;
   width: 80%;
 }
 .icon-leave {
@@ -125,17 +118,10 @@
   justify-content: center;
 }
 .main {
-  /* height: 500px; */
   padding: 40px 50px 0px 50px;
   display: flex;
-  /* align-items: center; */
-  /* justify-content: center; */
-  flex-direction: column;
 }
-.border {
-  padding-bottom: 60px;
-  border-bottom: 1px solid #eaeaea;
-}
+
 .border-reset {
   padding-bottom: 50px;
   border-bottom: 1px solid #eaeaea;
@@ -178,14 +164,7 @@
   line-height: 32px;
   margin: 0;
 }
-.main-para {
-  color: #222b45;
-  font-family: Inter;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 28px;
-}
+
 .grid {
   width: 100%;
   display: grid;
@@ -201,8 +180,6 @@
   grid-column-gap: 16px;
 }
 .icon {
-  grid-row: 1 / span 2;
-  transform: translateY(-8px);
   width: 49px;
   height: 49px;
   background-color: #eef2ff;
@@ -298,7 +275,6 @@
   .header {
     padding: 10px 10px 0px 10px;
 
-
     gap: 15px;
   }
   .leave-header {
@@ -308,7 +284,6 @@
     gap: 15px;
   }
   .header-reset {
-    /* padding: 20px 20px 20px 20px; */
     padding: 10px;
 
     gap: 25px;
@@ -319,14 +294,14 @@
     padding: 10px 10px 0px 10px;
   }
   .header-heading {
-  color: #fff;
-  text-align: center;
-  font-family: Inter;
-  font-size: 22px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 38px; /* 150% */
- 
-  width: 100%;
-}
+    color: #fff;
+    text-align: center;
+    font-family: Inter;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 38px; /* 150% */
+
+    width: 100%;
+  }
 }

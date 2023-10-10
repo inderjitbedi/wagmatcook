@@ -51,6 +51,7 @@ import HRAccountLayout from "../Account/HRAccountLayout";
 import UserLayout from "../Dashboard/UserDashboard/UserLayout";
 import UserAccountLayout from "../Account/UserAccountLayout";
 import Task from "../Task/Task";
+import TaskView from "../Task/TaskView";
 const Routes: any = [
   {
     component: signup,
@@ -150,6 +151,15 @@ const Routes: any = [
         type: "private",
         index: true,
       },
+       {
+        component: TaskView,
+        path: "tasks-view",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+
       {
         component: Disciplinary,
         path: "disciplinary",

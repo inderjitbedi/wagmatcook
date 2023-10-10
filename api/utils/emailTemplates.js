@@ -443,7 +443,7 @@ const emailTemplates = {
             margin: 0;
         }
 
-        .main-para {
+        
             color: #222b45;
             font-family: Inter;
             font-size: 16px;
@@ -617,27 +617,72 @@ const emailTemplates = {
 
 <body>
 
-    <div class="container">
-        <div class="template-container">
-        <div class="header">
-        <p class="header-logo">Wagmatcook</p>
-        <div class="header-heading">
+    <div style=" width: 100%;
+  display: flex;
+  
+  justify-content: center;">
+        <div style="  width: 700px;">
+        <div style=" padding: 36px 50px 0px 50px;
+  background: #093fe1;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;">
+        <p style=" color: #fff;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.48px;
+  width: 100%;">Wagmatcook</p>
+        <div style=" color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px; /* 150% */
+  letter-spacing: -0.64px;
+  width: 80%; ">
             Welcome to Wagmatcook! We're thrilled to have you join us.
         </div>
 
         <image style="height: 180px;" src="https://hrapi.chantsit.com/public/welcome.png">
     </div>
-    <div class="main">
+    <divstyle=" padding: 40px 50px 0px 50px;
+  display: flex;">
         <div class="border">
 
 
-        <h1 class="main-heading">Hi Jason Porter!</h1>
-        <p class="main-para ">
+        <h1 style="  width: 100%;
+  color: #222b45;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  margin: 0;">Hi Jason Porter!</h1>
+        <p style="
+  color: #222b45;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;">
             Welcome to Wagmatcook! It provide you access of leaves, events, and
             other compensation-related information right from your desk. Your
             user ID is 0215.
         </p>
-        <p class="main-para">Here's what's in store for you:</p>
+        <p style="
+  color: #222b45;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;">Here's what's in store for you:</p>
         <div class="grid">
             <div class="card">
                 <div class="icon">
@@ -1046,7 +1091,7 @@ const footer = ` <div class="footer">
 //             margin: 0;
 //         }
 
-//         .main-para {
+//         
 //             color: #222b45;
 //             font-family: Inter;
 //             font-size: 16px;
@@ -1220,8 +1265,11 @@ const footer = ` <div class="footer">
 
 // <body>
 
-//     <div class="container">
-//         <div class="template-container">
+//     <div style=" width: 100%;
+  display: flex;
+  
+  justify-content: center;">
+//         <div style="  width: 700px;">
 //             ${body}
 //             ${footer}
 //         </div>

@@ -20,15 +20,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import API_URLS from "../constants/apiUrls";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
-import {
-  DashHeader,
-  DashHeaderTitle,
-  DashHeaderSearch,
-  SearchBox,
-  SearchInput,
-  SearchIcon,
-  DashNotification,
-} from "../Dashboard/OADashboard/OADashBoardStyles";
+import Pagination from "@mui/material/Pagination";
+
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -50,6 +43,7 @@ import {
   Option,
   Errors,
   LoadMore,
+  PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 const OABenefits = () => {
   const Navigate = useNavigate();
@@ -57,7 +51,10 @@ const OABenefits = () => {
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
-
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   // add new modal
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -143,7 +140,9 @@ const OABenefits = () => {
   };
   const GetBenefits = () => {
     setIsLoading(true);
-    let url = API_URLS.getOaBenefits.replace("searchValue", searchValue);
+    let url = API_URLS.getOaBenefits
+      .replace("searchValue", searchValue)
+      .replace("Page", page);
     httpClient({
       method: "get",
       url,
@@ -168,7 +167,7 @@ const OABenefits = () => {
 
   useEffect(() => {
     GetBenefits();
-  }, [searchValue]);
+  }, [searchValue,page]);
 
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -495,128 +494,142 @@ const OABenefits = () => {
           />
         </div>
       ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "20px" }}
+        <>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      background: "#FBFBFB",
+                    }}
                   >
-                    Order&nbsp;No.
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "300px" }}
-                    align="left"
-                  >
-                    Benefit Name
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "500px" }}
-                    align="left"
-                  >
-                    Description
-                  </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "20px" }}
+                    >
+                      Order&nbsp;No.
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "300px" }}
+                      align="left"
+                    >
+                      Benefit Name
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "500px" }}
+                      align="left"
+                    >
+                      Description
+                    </TableCell>
 
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "100px" }}
-                    align="left"
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <Droppable droppableId="table">
-                {(provided, snapshot) => (
-                  <TableBody
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
-                  >
-                    {!result.benefits?.length && (
-                      <TableRow sx={{ height: "200px" }}>
-                        <TableCell align="center" colSpan={3}>
-                          No benefits found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {benefits?.map((data, index) => (
-                      <Draggable
-                        key={data._id}
-                        draggableId={data._id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <TableRow
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                            sx={{
-                              "&:last-child td, &:last-child th": {
-                                border: 0,
-                              },
-                              background: "#fff",
-                            }}
-                            key={data._id}
-                          >
-                            <TableCell sx={CellStyle2} align="left">
-                              <MenuIconDiv>
-                                <MenuIcon
-                                  {...provided.dragHandleProps}
-                                  src="/images/icons/Menu Dots.svg "
-                                  style={{ cursor: "grab" }}
-                                />
-                                {data.order}
-                              </MenuIconDiv>
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {data.name}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {data.description}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              <ActionIconDiv>
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleUpdateAction(data);
-                                  }}
-                                  src="/images/icons/Pendown.svg"
-                                />
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleOpenDelete();
-                                    setId(data._id);
-                                  }}
-                                  src="/images/icons/Trash-2.svg"
-                                />
-                              </ActionIconDiv>
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </Draggable>
-                    ))}
-                  </TableBody>
-                )}
-              </Droppable>
-            </Table>
-          </TableContainer>
-        </DragDropContext>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "100px" }}
+                      align="left"
+                    >
+                      Action
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <Droppable droppableId="table">
+                  {(provided, snapshot) => (
+                    <TableBody
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {!result.benefits?.length && (
+                        <TableRow sx={{ height: "200px" }}>
+                          <TableCell align="center" colSpan={3}>
+                            No benefits found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {benefits?.map((data, index) => (
+                        <Draggable
+                          key={data._id}
+                          draggableId={data._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <TableRow
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                background: "#fff",
+                              }}
+                              key={data._id}
+                            >
+                              <TableCell sx={CellStyle2} align="left">
+                                <MenuIconDiv>
+                                  <MenuIcon
+                                    {...provided.dragHandleProps}
+                                    src="/images/icons/Menu Dots.svg "
+                                    style={{ cursor: "grab" }}
+                                  />
+                                  {data.order}
+                                </MenuIconDiv>
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {data.name}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data.description}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                <ActionIconDiv>
+                                  <ActionIcons
+                                    onClick={() => {
+                                      HandleUpdateAction(data);
+                                    }}
+                                    src="/images/icons/Pendown.svg"
+                                  />
+                                  <ActionIcons
+                                    onClick={() => {
+                                      HandleOpenDelete();
+                                      setId(data._id);
+                                    }}
+                                    src="/images/icons/Trash-2.svg"
+                                  />
+                                </ActionIconDiv>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </Draggable>
+                      ))}
+                    </TableBody>
+                  )}
+                </Droppable>
+              </Table>
+            </TableContainer>
+            </DragDropContext>
+            {result?.totalPages > 1 && (
+              <PaginationDiv>
+                <Pagination
+                  count={result?.totalPages}
+                  variant="outlined"
+                  shape="rounded"
+                  page={page}
+                  onChange={HandleChangePage}
+                />
+              </PaginationDiv>
+            )}
+        </>
       )}
+
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}

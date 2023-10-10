@@ -329,7 +329,7 @@ const ManagerLeaveAction = () => {
                       </AddNewButton>
                     </FormContainer>
                   )}
-                  <FormContainer>
+                  {/* <FormContainer>
                     <Greypara>
                       Total Leave Balance:{" "}
                       <span style={{ color: "#222B45" }}>
@@ -337,7 +337,7 @@ const ManagerLeaveAction = () => {
                         {leaveDetails?.leaveType?.maxCarryOver || " - "}
                       </span>
                     </Greypara>
-                  </FormContainer>
+                  </FormContainer> */}
                 </FlexContainer>
               </LeaveActionHeader>
             </MainSub>
