@@ -57,10 +57,10 @@ const ManagerAccountLayout = () => {
           <BodyHeading>Employee Details</BodyHeading>
         </BodyHeader> */}
         <BodyContainer>
-          <SideBarContainer style={{ paddingTop: "35px" }}>
+          <SideBarContainer style={{ paddingTop: "3.5rem" }}>
             <ManagerAccountSidebar employeeId={employeeid} />
           </SideBarContainer>
-          <div style={{ width: "80%", paddingTop: "35px" }}>
+          <div style={{ width: "80%", paddingTop: "3.5rem" }}>
             <Outlet />
           </div>
         </BodyContainer>

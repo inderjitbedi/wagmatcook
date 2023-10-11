@@ -10,7 +10,12 @@ import API_URLS from "../constants/apiUrls";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import ROLES from "../constants/roles";
 import moment from "moment";
-
+import { HiOutlineMenu } from "react-icons/hi";
+import styled from "styled-components";
+import SideBar from "./OADashboard/SideBar";
+import UserSideBar from "./UserDashboard/UserSideBar";
+import ManagerSideBar from "./ManagerDashboard/ManagerSideBar";
+import HRSideBar from "./HRDashboard/HRSideBar";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -108,6 +113,78 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
     return () => clearTimeout(searchTimer);
   }, [searchValue]);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const ToggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const SidebarWrapper = styled.div`
+    width: 25rem;
+    background-color: #ffffff;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s;
+
+    /* @media (max-width: 768px) {
+      width: 0;
+    } */
+  `;
+  const SidebarContainer = () => {
+    if (userType === ROLES.HR) {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <HRSideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    } else if (userType === ROLES.MANAGER) {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <ManagerSideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    } else if (userType === ROLES.EMPLOYEE) {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <UserSideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    } else {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <SideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    }
+  };
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const GetNotificationList = () => {
     setIsLoading(true);
     let url = API_URLS.getNotificationList;
@@ -282,11 +359,18 @@ const CommenDashHeader = ({ onSearch, text }) => {
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-
+  console.log("in common header ", screenWidth, typeof screenWidth);
   return (
     <>
+      {isSidebarOpen && <SidebarContainer />}
       <DashHeader>
         <FlexContaier>
+          {screenWidth < 1200 && (
+            <HiOutlineMenu
+              onClick={ToggleSidebar}
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
+            />
+          )}
           {(location.pathname.indexOf("details") > -1 ||
             location.pathname.indexOf("leaves-request") > -1 ||
             location.pathname.indexOf("personal-info") > -1 ||
@@ -365,7 +449,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
         </DashHeaderSearch>
       </DashHeader>
       <Menu
-        sx={{ margin: "0px" }}
+        sx={{ margin: "0rem" }}
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={anchorEl}
@@ -385,10 +469,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
             style={{
               color: "#222B45",
               fontFamily: "Inter",
-              fontSize: "14px",
+              fontSize: "1.4rem",
               fontStyle: "normal",
               fontWeight: 600,
-              lineHeight: "20px",
+              lineHeight: "2rem",
             }}
             onClick={HandleOpenSettings}
           >
@@ -399,10 +483,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
           style={{
             color: "#222B45",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Settings
@@ -412,10 +496,10 @@ const CommenDashHeader = ({ onSearch, text }) => {
           style={{
             color: "#EA4335",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Logout
@@ -434,7 +518,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
               style={{
                 display: "flex",
                 width: "100%",
-                height: "300px",
+                height: "30rem",
                 justifyContent: "center",
                 alignItems: "center",
               }}

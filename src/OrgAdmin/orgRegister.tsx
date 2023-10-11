@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 
-// TODO remove, this demo shouldn't need to reset the theme.
+// TODO pxove, this demo shouldn't need to reset the theme.
 
 export default function RegisterOrganization() {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -43,7 +43,7 @@ export default function RegisterOrganization() {
     handleUpload(file);
   };
 
-  const removeFile = (e: any) => {
+  const pxoveFile = (e: any) => {
     setErrors({ ...errors, fileError: "" });
     setFile(null);
     setFormData({ ...formData, file: null });
@@ -214,11 +214,11 @@ export default function RegisterOrganization() {
 
                     <button
                       type="button"
-                      aria-label="Remove button"
-                      className="mx-1 mt-2 remove-button"
-                      onClick={removeFile}
+                      aria-label="pxove button"
+                      className="mx-1 mt-2 pxove-button"
+                      onClick={pxoveFile}
                     >
-                      Remove
+                      pxove
                     </button>
                     {/* <span className='gray-text'>'png', 'jpg', 'jpeg', 'gif', 'tiff'*png *jpeg up to 10MB at least 400px by 400px</span> */}
                   </div>

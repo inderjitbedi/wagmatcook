@@ -64,32 +64,32 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
   textTransform: "capitalize",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const EmployeeTypes = () => {
   const Navigate = useNavigate();
@@ -334,7 +334,7 @@ const EmployeeTypes = () => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    margin: "0 10px 0 0 ",
+    margin: "0 1rem 0 0 ",
     background: isDragging ? "#279AF1" : "#fff",
 
     // styles we need to apply on draggables
@@ -378,7 +378,7 @@ const EmployeeTypes = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "300px",
+                  height: "3rem",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -457,7 +457,7 @@ const EmployeeTypes = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Submit
                       </AddNewButton>
@@ -465,7 +465,7 @@ const EmployeeTypes = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Update
                       </AddNewButton>
@@ -509,27 +509,27 @@ const EmployeeTypes = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "20px" }}
+                      style={{ width: "8rem" }}
                     >
                       Order&nbsp;No.
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "300px" }}
+                      style={{ minWidth: "15rem" }}
                       align="left"
                     >
                       Employee Type
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "500px" }}
+                      style={{ minWidth: "35rem" }}
                       align="left"
                     >
                       {/* Description */}
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "100px" }}
+                      style={{ minWidth: "10rem" }}
                       align="left"
                     >
                       Action
@@ -544,7 +544,7 @@ const EmployeeTypes = () => {
                       style={getListStyle(snapshot.isDraggingOver)}
                     >
                       {!result.employeeTypes?.length && (
-                        <TableRow sx={{ height: "200px" }}>
+                        <TableRow sx={{ height: "20rem" }}>
                           <TableCell align="center" colSpan={3}>
                             No Employee Types Found
                           </TableCell>
@@ -638,7 +638,7 @@ const EmployeeTypes = () => {
         isLoading={isLoading}
       />
       <Menu
-        sx={{ margin: "0px" }}
+        sx={{ margin: "0rem" }}
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={anchorEl}
@@ -657,10 +657,10 @@ const EmployeeTypes = () => {
           style={{
             color: "#222B45",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Settings
@@ -670,10 +670,10 @@ const EmployeeTypes = () => {
           style={{
             color: "#EA4335",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Logout

@@ -18,7 +18,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -51,36 +50,36 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 
 const Task = () => {
-    const Navigate = useNavigate();
-    const location = useLocation();
+  const Navigate = useNavigate();
+  const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -209,7 +208,7 @@ const Task = () => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    margin: "0 10px 0 0 ",
+    margin: "0 1rem 0 0 ",
     background: isDragging ? "#279AF1" : "#fff",
 
     // styles we need to apply on draggables
@@ -252,7 +251,7 @@ const Task = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "380px",
+                  height: "38rem",
                   justifyContent: "center",
                   alignItems: "center",
                   zIndex: 999,
@@ -374,7 +373,7 @@ const Task = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Submit
                       </AddNewButton>
@@ -382,7 +381,7 @@ const Task = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Update
                       </AddNewButton>
@@ -425,34 +424,34 @@ const Task = () => {
                   <TableCell
                     sx={CellHeadStyles}
                     align="left"
-                    style={{ width: "20px" }}
+                    style={{ width: "2rem" }}
                   >
                     Order&nbsp;No.
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "150px" }}
+                    style={{ minWidth: "15rem" }}
                     align="left"
                   >
                     Task Title
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "100px" }}
+                    style={{ minWidth: "10rem" }}
                     align="left"
                   >
                     Assigned To
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "90px" }}
+                    style={{ minWidth: "9rem" }}
                     align="left"
                   >
                     Due Date
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "300px" }}
+                    style={{ minWidth: "35rem" }}
                     align="left"
                   >
                     Description
@@ -460,7 +459,7 @@ const Task = () => {
 
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "100px" }}
+                    style={{ minWidth: "10rem" }}
                     align="left"
                   >
                     Action
@@ -475,7 +474,7 @@ const Task = () => {
                     style={getListStyle(snapshot.isDraggingOver)}
                   >
                     {!TaskData?.length && (
-                      <TableRow sx={{ height: "200px" }}>
+                      <TableRow sx={{ height: "20rem" }}>
                         <TableCell align="center" colSpan={3}>
                           No benefits found
                         </TableCell>

@@ -10,11 +10,12 @@ import {
   SideBarLogodiv,
   SideBarListLogo,
   SideBarList,
+  IconDelete,
 } from "../OADashboard/SideBarStyles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 
-const HRSideBar = () => {
+const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
@@ -37,29 +38,35 @@ const HRSideBar = () => {
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-    const [headerData, setHeaderData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
 
-    const GetHeadersData = (id) => {
-      // setIsLoading(true);
+  const GetHeadersData = (id) => {
+    // setIsLoading(true);
 
-      let url = `/employee/header-info/${id}`;
-      httpClient({
-        method: "get",
-        url,
+    let url = `/employee/header-info/${id}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setHeaderData(result);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          // toast.error("Error in fetching Personal info. Please try again.");
-        });
-    };
+      .catch((error) => {
+        console.error("Error:", error);
+        // toast.error("Error in fetching Personal info. Please try again.");
+      });
+  };
   return (
-    <>
+    <div style={{ position: "relative" }}>
       {" "}
+      {screenWidth < 1200 && (
+        <IconDelete
+          onClick={ToggleSidebar}
+          src="/images/icons/Alert-Circle.svg"
+        />
+      )}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
@@ -229,7 +236,7 @@ const HRSideBar = () => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-         {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
+        {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -371,7 +378,7 @@ const HRSideBar = () => {
           </SideBarListContainer>
         </Link>  */}
       </SideBarList>
-    </>
+    </div>
   );
 };
 

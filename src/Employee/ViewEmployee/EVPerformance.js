@@ -71,9 +71,9 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
-  height: "597px",
+  height: "59.7rem",
   overflowY: "scroll",
 };
 const EVPerformance = () => {
@@ -528,7 +528,7 @@ const EVPerformance = () => {
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Performance Reviews</BasicHeading>
                 {userType === ROLES.EMPLOYEE || isAccount ? (
                   " "
@@ -555,7 +555,7 @@ const EVPerformance = () => {
                       style={{
                         display: "flex",
                         width: "100%",
-                        height: "520px",
+                        height: "52rem",
                         justifyContent: "center",
                         alignItems: "center",
                       }}
@@ -745,9 +745,9 @@ const EVPerformance = () => {
                           <div
                             style={{
                               display: "flex",
-                              gap: "16px",
+                              gap: "1.6rem",
                               alignItems: "center",
-                              marginBottom: "20px",
+                              marginBottom: "20rem",
                             }}
                           >
                             <EditButton
@@ -802,8 +802,8 @@ const EVPerformance = () => {
                     layout={"1-column-left"}
                     lineColor={"#EFF4FA"}
                     style={{
-                      padding: "0px",
-                      margin: "0px",
+                      padding: "0rem",
+                      margin: "0rem",
                       maxWidth: "100%",
                     }}
                   >
@@ -816,23 +816,23 @@ const EVPerformance = () => {
                           border: "none",
                         }}
                         iconStyle={{
-                          width: "18px",
-                          height: "18px",
+                          width: "1.8rem",
+                          height: "1.8rem",
                           background: "#fff",
                           border: "1.5px solid #8F9BB3",
                           borderRadius: "50%",
                           boxShadow: "none",
                           outine: "none",
-                          marginLeft: "10px",
+                          marginLeft: "1rem",
                         }}
                         intersectionObserverProps={{
-                          margin: "0px 0px 0px 0px",
+                          margin: "0rem 0rem 0rem 0rem",
                         }}
-                        style={{ margin: "0px" }}
+                        style={{ margin: "0rem" }}
                       >
-                        <TimelineDiv style={{ padding: "16px" }}>
-                          <FlexColumn style={{ width: "100%", gap: "0px" }}>
-                            <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                        <TimelineDiv style={{ padding: "1.6rem" }}>
+                          <FlexColumn style={{ width: "100%", gap: "0rem" }}>
+                            <FlexSpaceBetween style={{ marginBottom: "0rem" }}>
                               <TitlePara>Completed By</TitlePara>
                               <TitlePara>
                                 Date of Review:{" "}
@@ -845,10 +845,10 @@ const EVPerformance = () => {
                               style={{
                                 color: "#222B45",
                                 fontFamily: "Inter",
-                                fontSize: "14px",
+                                fontSize: "1.4px",
                                 fontStyle: "normal",
                                 fontWeight: 700,
-                                lineHeight: "18px",
+                                lineHeight: "1.8rem",
                                 margin: 0,
                               }}
                             >
@@ -860,7 +860,7 @@ const EVPerformance = () => {
                               style={{
                                 width: "90%",
                                 overflowX: "hidden",
-                                marginBottom: "16px",
+                                marginBottom: "1.6rem",
                               }}
                             >
                               {data.details || " - "}

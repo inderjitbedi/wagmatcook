@@ -11,11 +11,13 @@ import {
   SideBarLogodiv,
   SideBarListLogo,
   SideBarList,
+   IconDelete,
 } from "../OADashboard/SideBarStyles";
 import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const ManagerSideBar = () => {
+const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
+  
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
@@ -106,8 +108,13 @@ const ManagerSideBar = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (
-    <>
-      {" "}
+    <div style={{ position: "relative" }}>
+      {screenWidth < 1200 && (
+        <IconDelete
+          onClick={ToggleSidebar}
+          src="/images/icons/Alert-Circle.svg"
+        />
+      )}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
@@ -429,7 +436,7 @@ const ManagerSideBar = () => {
           </SideBarListContainer>
         </Link>  */}
       </SideBarList>
-    </>
+    </div>
   );
 };
 

@@ -65,9 +65,9 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
-  height: "520px",
+  height: "52rem",
   overflowY: "scroll",
 };
 const EVDiscipline = () => {
@@ -427,7 +427,7 @@ const EVDiscipline = () => {
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <CommenHeader employeeid={employeeid} />
 
-            {/* <EditButton style={{ marginRight: "54px" }}>
+            {/* <EditButton style={{ marginRight: "5.4rem" }}>
               <ButtonIcon src="/images/icons/Pen 2.svg" />
               Edit
             </EditButton> */}
@@ -435,7 +435,7 @@ const EVDiscipline = () => {
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Disciplinary Details</BasicHeading>
                 {userType === ROLES.EMPLOYEE || isAccount ? (
                   ""
@@ -462,7 +462,7 @@ const EVDiscipline = () => {
                       style={{
                         display: "flex",
                         width: "100%",
-                        height: "520px",
+                        height: "52rem",
                         justifyContent: "center",
                         alignItems: "center",
                         zIndex: 999,
@@ -585,7 +585,7 @@ const EVDiscipline = () => {
                                   //   message: " Required",
                                   // },
 
-                                validate: (fieldValue) => {
+                                  validate: (fieldValue) => {
                                     const startDateValue =
                                       getValues("issueDate");
 
@@ -672,9 +672,9 @@ const EVDiscipline = () => {
                           <div
                             style={{
                               display: "flex",
-                              gap: "16px",
+                              gap: "1.6rem",
                               alignItems: "center",
-                              marginBottom: "20px",
+                              marginBottom: "2rem",
                             }}
                           >
                             <EditButton
@@ -726,10 +726,10 @@ const EVDiscipline = () => {
                   <>
                     {result?.disciplinaries?.map((data) => (
                       <TimelineDiv
-                        style={{ padding: "16px", marginBottom: "8px" }}
+                        style={{ padding: "1.6rem", marginBottom: "8px" }}
                       >
                         <FlexColumn style={{ width: "100%" }}>
-                          <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                          <FlexSpaceBetween style={{ marginBottom: "0rem" }}>
                             <TitlePara>Disciplinary Type</TitlePara>
                             {/* <TitlePara>BCR OPtional</TitlePara> */}
                             <TitlePara>
@@ -739,7 +739,7 @@ const EVDiscipline = () => {
                                 : " - "}
                             </TitlePara>
                           </FlexSpaceBetween>
-                          <FlexSpaceBetween style={{ marginBottom: "0px" }}>
+                          <FlexSpaceBetween style={{ marginBottom: "0rem" }}>
                             <ViewPara
                               style={{
                                 fontWeight: 700,

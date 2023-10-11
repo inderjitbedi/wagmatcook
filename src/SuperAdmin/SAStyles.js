@@ -3,51 +3,51 @@ import styled from "styled-components";
 
 export const SidebarTitle = styled.p`
   color: #222222;
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
-  line-height: 24px;
-  margin-bottom: 35px;
-  padding: 0px 32px;
+  line-height: 2.4rem;
+  margin-bottom: 3.5rem;
+  padding: 0rem 3.2rem;
 
 `;
 export const SideBarLogoContainer = styled.div`
-  padding: 16px 32px;
+  padding: 1.6rem 3.2rem;
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
   width: 100%;
 `;
 export const SideBarLogo = styled.img`
-  height: 56px;
-  width: 56px;
+  height: 5.6rem;
+  width: 5.6rem;
 `;
 export const SideBarLogodiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap:10px; */
+  /* gap:1rem; */
 `;
 export const SideBarLogoHead = styled.p`
   color: #222222;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 0px;
+  line-height: 0rem;
 `;
 
 export const SideBarLogoPara = styled.p`
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 400;
-  line-height: 0px;
+  line-height: 0rem;
   color: #686868;
 `;
 export const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px;
-  gap: 20px;
+  padding: 3.2rem;
+  gap: 2rem;
 `;
 export const SideBarListContainer = styled.div`
   display: flex;
-  gap: 11px;
+  gap: 1.1rem;
   align-items: center;
   cursor: pointer;
   transition: all 0.5s ease-out;
@@ -63,16 +63,16 @@ export const SideBarListContainer = styled.div`
 
 `;
 export const SideBarListLogo = styled.img`
-  height: 18px;
-  width: 18px;
+  height: 10.8rem;
+  width: 10.8rem;
   fill: #5c5c5c;
   cursor: pointer;
 `;
 export const SideBarListTitle = styled.p`
   color: #5c5c5c;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0px;
+  line-height: 0rem;
   cursor: pointer;
 `;
 
@@ -85,41 +85,41 @@ export const Dashboard = styled.div`
 export const DashNav = styled.div`
   width: 18%;
   background-color: #ffffff;
-  /* padding: 32px; */
+  /* padding: 3.2rem; */
 `;
 
 export const DashMain = styled.div`
   width: 82%;
-  padding: 0px 30px 0px 20px;
+  padding: 0rem 3rem 0rem 2rem;
   background: #f3f3f5;
 `;
 export const DashHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-bottom: 40px;
+  padding-bottom: 4rem;
 `;
 export const DashHeaderTitle = styled.p`
   color: #222b45;
   font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 2rem;
+  line-height: 2.4rem;
 `;
 export const DashHeaderSearch = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 2.4rem;
 `;
 export const DashNotification = styled.img``;
 export const SearchBox = styled.div`
   border-radius: 1px;
   background-color: #ffffff;
-  padding: 9px 12px;
+  padding: 9px 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 export const SearchInput = styled.input`
-  border: 0px;
+  border: 0rem;
   /* padding:0.5em; */
   background-color: transparent;
   &:focus {
@@ -130,8 +130,8 @@ export const SearchIcon = styled.img``;
 
 export const DashHeading = styled.h1`
   color: #222b45;
-  font-size: 22px;
-  line-height: 24px;
+  font-size: 2.2rem;
+  line-height: 2.4rem;
   font-weight: 400;
 `;
 export const DepartmentFilterContainer = styled.div`
@@ -139,52 +139,52 @@ export const DepartmentFilterContainer = styled.div`
   align-items: center;
   /* justify-content: flex-end; */
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 1.5rem;
 `;
 export const AddNewButton = styled.button`
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background-color: #279af1;
   color: #ffffff;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 1.3rem;
+  line-height: 1.6rem;
   font-weight: 600;
   padding: 1em 2em;
   border: none;
   cursor: pointer;
-  margin-top:25px;
+  margin-top:2.5rem;
 `;
 export const MenuIcon = styled.img`
   display: inline-block;
-  width: 22px;
-  height: 23px;
+  width: 2.2rem;
+  height: 2.3rem;
   cursor: pointer;
 `;
 export const MenuIconDiv = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.8rem;
 `;
 export const ActionIcons = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   display: inline-block;
   cursor: pointer;
 `;
 export const ActionIconDiv = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 2rem;
 `;
 export const DepartmentFilterdiv = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 2.4rem;
   height: fit-content;
 `;
 export const DepartmentFilterButton = styled.div`
   border: none;
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   color: #8f9bb3;
   transition: all 0.5s ease-out;
   cursor: pointer;
@@ -196,33 +196,33 @@ export const DepartmentFilterButton = styled.div`
 export const DisciplinaryDiv = styled.div`
   display: flex;
   background: #fff;
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 0.8rem 0.8rem 0rem 0rem;
   border: 1px solid #eff4fa;
   align-items: center;
   justify-content: space-between;
 
-  padding: 10px 20px;
+  padding: 1rem 2rem;
 `;
 export const DisciplinaryHeading = styled.p`
   color: #222b45;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 export const ModalIcon = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
 `;
 export const ModalHeading = styled.p`
-  font-size: 17px;
+  font-size: 1.7rem;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 export const ModalUpperDiv = styled.div`
-  padding: 0px 16px 10px 35px;
+  padding: 0rem 1.6rem 1rem 3.5rem;
   border-bottom: 1px solid #eff4fa;
   display: flex;
   align-items: center;
@@ -230,31 +230,31 @@ export const ModalUpperDiv = styled.div`
 `;
 export const ModalUpperMid = styled.div`
   /* border-bottom: 1px solid #eff4fa; */
-  padding: 16px 35px 16px 35px;
+  padding: 1.6rem 3.5rem 1.6rem 3.5rem;
   box-sizing: border-box;
 `;
 export const Input = styled.input`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   padding: 1em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
 `;
 export const TextArea = styled.textarea`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   resize: none;
-  height: 105px;
+  height: 10.5rem;
   padding: 1em;
   color: #222b45;
   background: #fff;
@@ -262,11 +262,11 @@ export const TextArea = styled.textarea`
 `;
 export const InputLabel = styled.label`
   color: #222b45;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   display: block;
 `;
 export const InputSpan = styled.span`
@@ -275,18 +275,18 @@ export const InputSpan = styled.span`
 `;
 export const InputPara = styled.p`
   color: #737992;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 0px; /* 171.429% */
+  line-height: 0rem; /* 171.429% */
   display: flex;
   justify-content: flex-end;
 `;
 export const Errors = styled.p`
   display: block;
   color: red;
-  font-size: 10px;
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 0px;
+  line-height: 0rem;
   margin-top: 2px;
 `;

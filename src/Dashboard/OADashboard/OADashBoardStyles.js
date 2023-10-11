@@ -8,14 +8,14 @@ export const Dashboard = styled.div`
 `;
 
 export const DashNav = styled.div`
-  width: 18%;
+  width: 20%;
   background-color: #ffffff;
-  /* padding: 32px; */
+  /* padding: 3.2rem; */
 `;
 
 export const DashMain = styled.div`
-  width: 82%;
-  padding: 0px 30px 80px 20px;
+  width: 80%;
+  padding: 0rem 3rem 8rem 2rem;
   background: #f3f3f5;
   height: max-content;
   min-height: 100vh;
@@ -24,32 +24,32 @@ export const DashMain = styled.div`
 export const DashHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-bottom: 40px;
+  padding-bottom: 4rem;
 `;
 export const DashHeaderTitle = styled.p`
   color: #222b45;
   font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 2rem;
+  line-height: 2.4rem;
 `;
 export const DashHeaderSearch = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 2.4rem;
 `;
 export const FlexContaier = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1.6rem;
 `;
 export const BackButton = styled.button`
-  border-radius: 88px;
+  border-radius: 80.8rem;
   border: 1px solid #8f9bb3;
   padding: 0.5em 0.75em;
-  font-size: 13px;
+  font-size: 1.3rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   color: #222b45;
   display: flex;
   gap: 4px;
@@ -62,21 +62,21 @@ export const IconsEmployee = styled.img`
   cursor: pointer;
 `;
 export const DashNotification = styled.img`
-width: 24px;
-height: 24px;
-border-radius: 50%;
-object-fit: cover;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 export const SearchBox = styled.div`
   border-radius: 1px;
   background-color: #ffffff;
-  padding: 9px 12px;
+  padding: 0.9rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 export const SearchInput = styled.input`
-  border: 0px;
+  border: 0rem;
   /* padding:0.5em; */
   background-color: transparent;
   &:focus {
@@ -87,34 +87,34 @@ export const SearchIcon = styled.img``;
 
 export const DashHeading = styled.h1`
   color: #222b45;
-  font-size: 22px;
-  line-height: 24px;
+  font-size: 2.2rem;
+  line-height: 2.4rem;
   font-weight: 400;
 `;
 export const BannerSection = styled.div`
   display: flex;
   width: 100%;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  border-radius: 0.8rem;
+  margin-bottom: 1.5rem;
 `;
 export const BannerHeading = styled.div`
   width: 50%;
   background-color: #ffffff;
-  padding-left: 25px;
+  padding-left: 2.5rem;
 `;
 export const BannerTitle = styled.p`
   color: #222b45;
-  font-size: 24px;
+  font-size: 2.4rem;
   font-weight: 700;
-  line-height: 36px;
+  line-height: 3.6rem;
   width: 60%;
 `;
 export const BannerButton = styled.button`
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background-color: #279af1;
   color: #ffffff;
-  font-size: 16px;
-  line-height: 19.35px;
+  font-size: 1.6rem;
+  line-height: 1.93rem;
   font-weight: 700;
   padding: 1em 2em;
   border: none;
@@ -126,79 +126,83 @@ export const BannerImage = styled.img`
 export const DashCardContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 24px;
+  gap: 2.4rem;
   flex-wrap: wrap;
-  margin-bottom: 40px;
+  margin-bottom: 4rem;
   /* justify-content: space-between; */
+
   align-items: baseline;
+  @media only screen and (max-width: 900px) {
+  align-items: none;
 `;
 export const DashCard = styled.div`
-  padding: 16px 25px;
+  padding: 1.6rem 2.5rem;
   background-color: #ffffff;
   flex: 1 0 40%;
-  border-radius: 8px;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  border-radius: 0.8rem;
+  box-shadow: rgba(0, 0, 0, 0.19) 0rem 1rem 2rem,
+    rgba(0, 0, 0, 0.23) 0rem 6px 6px;
   /* max-width: 48%; */
 `;
 export const DashCardTitle = styled.p`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 36px;
+  line-height: 3.6rem;
 `;
 export const DashCardTitle2 = styled.p`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 0px;
+  line-height: 0rem;
 `;
 export const DashCardsub = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: 2rem;
 `;
 export const DashCardButon = styled.button`
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background-color: #279af1;
   color: #ffffff;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 1.3rem;
+  line-height: 1.6rem;
   font-weight: 600;
   padding: 1em 2em;
   border: none;
 `;
 export const DashCardPara = styled.p`
   color: #8f939c;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 400;
-  line-height: 20px;
-  margin-bottom: 17px;
+  line-height: 2rem;
+  margin-bottom: 1.7rem;
 `;
 export const DashCardIcons = styled.img``;
 export const DashCardPri = styled.div``;
 export const Pagination = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
 `;
 export const PaginationButton = styled.button`
   color: #222b45;
   text-align: center;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding: 10px 19.5px;
+  padding: 1rem 19.5px;
   border-radius: 6px;
   background: #e9e9ee;
   border: none;
   cursor: pointer;
 `;
 export const NotificationsContainer = styled.div`
-  width: 444px;
+  width: 44.4rem;
   box-sizing: border-box;
-  max-height: 311px;
+  max-height: 31.1rem;
   border-bottom: 1px solid #e3e3e3;
   background: #fff;
   overflow-y: scroll;
@@ -206,7 +210,7 @@ export const NotificationsContainer = styled.div`
 export const NotificationsHeader = styled.div`
   width: 100%;
   border-bottom: 1px solid #e3e3e3;
-  padding: 20px 16px 12px 16px;
+  padding: 2rem 1.6rem 1.2rem 1.6rem;
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -214,27 +218,27 @@ export const NotificationsHeader = styled.div`
 `;
 export const FlexNotificationContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
 `;
 export const NotificationHeading = styled.h1`
   color: #222b45;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px;
-  margin: 0px;
+  line-height: 2rem;
+  margin: 0rem;
 `;
 export const NotificationIcon = styled.img`
-  width: 16px;
-  height: 16px;
+  width: 1.6rem;
+  height: 1.6rem;
 `;
 export const NotificationList = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 1.6rem;
   align-items: flex-start;
-  padding: 8px 16px;
+  padding: 0.8rem 1.6rem;
   border-bottom: 1px solid #e3e3e3;
   width: 100%;
   box-sizing: border-box;
@@ -243,63 +247,62 @@ export const NotificationList = styled.div`
   }
 `;
 export const NotificationUserImg = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 3.2rem;
+  height: 3.2rem;
   border-radius: 50%;
 `;
 export const NotificationListText = styled.p`
   color: #222b45;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px;
-  margin: 0px;
+  line-height: 2rem;
+  margin: 0rem;
 `;
 export const NotificationListTextLight = styled.p`
   color: #a5acb8;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px;
-  margin: 0px;
+  line-height: 2rem;
+  margin: 0rem;
 `;
 export const NotificationFlexCol = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   flex-direction: column;
 `;
 export const NotificationSelect = styled.select`
-  color:  #9ea0aa;
- border: none;
- background: transparent;
- outline: none;
+  color: #9ea0aa;
+  border: none;
+  background: transparent;
+  outline: none;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px;
+  line-height: 2rem;
 `;
 export const NotificationOption = styled.option`
   color: #9ea0aa;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px;
+  line-height: 2rem;
 `;
 export const LoadMore = styled.div`
   color: #a5acb8;
   font-family: Inter;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 22px;
-  margin: 0px;
-  padding: 0.75em 0px;
+  line-height: 2.2rem;
+  margin: 0rem;
+  padding: 0.75em 0rem;
   display: flex;
   align-items: center;
   justify-content: center;
-
 `;

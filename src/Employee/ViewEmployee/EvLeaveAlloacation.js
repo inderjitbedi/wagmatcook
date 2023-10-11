@@ -51,19 +51,19 @@ import CommenHeader from "./CommenHeader";
 
 const CellStyle = {
   color: "#8F9BB3",
-  padding: "16px 8px",
+  padding: "1.6rem 8px",
   fontSize: "14px",
   fontStyle: "normal",
   fontWeight: "600",
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 const Celllstyle2 = {
   color: "#222B45",
-  padding: "16px 8px",
-  fontSize: "14px",
+  padding: "1.6rem 8px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: "400",
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const style = {
   position: "absolute",
@@ -74,7 +74,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const EvLeaveAlloacation = () => {
@@ -289,9 +289,7 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-    
-    Promise.all([GetLeavesType(), GetLeaveAllocation()])
-  
+    Promise.all([GetLeavesType(), GetLeaveAllocation()]);
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -365,17 +363,17 @@ const EvLeaveAlloacation = () => {
                     background: "#FBFBFB",
                   }}
                 >
-                  <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
+                  <TableCell sx={{ ...CellStyle, maxWidth: "2.5rem" }}>
                     Sr.No
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "128" }}
+                    sx={{ ...CellStyle, maxWidth: "12.8rem" }}
                     align="left"
                   >
                     Leave&nbsp;Type
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "184px" }}
+                    sx={{ ...CellStyle, maxWidth: "18.4rem" }}
                     align="left"
                   >
                     Total&nbsp;Allocation (Hrs)
@@ -388,7 +386,7 @@ const EvLeaveAlloacation = () => {
               </TableHead>
               <TableBody>
                 {result?.allocations?.length === 0 && (
-                  <TableRow sx={{ height: "200px" }}>
+                  <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" colSpan={4}>
                       No leave allocations found
                     </TableCell>
@@ -463,7 +461,7 @@ const EvLeaveAlloacation = () => {
                   style={{
                     display: "flex",
                     width: "100%",
-                    height: "380px",
+                    height: "38rem",
                     justifyContent: "center",
                     alignItems: "center",
                     zIndex: 999,

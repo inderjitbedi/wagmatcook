@@ -62,7 +62,7 @@ const TaskView = () => {
           <CommentDiv>
             <UserImg src="/images/Oval Copy.jpg" />
 
-            <Input style={{ margin: "0px" }} type="text" />
+            <Input style={{ margin: "0rem" }} type="text" />
             <AddNewButton>Send</AddNewButton>
           </CommentDiv>
           <CommentDiv>

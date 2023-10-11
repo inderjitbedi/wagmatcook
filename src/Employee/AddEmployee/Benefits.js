@@ -95,7 +95,6 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             //   `/organization-admin/employee/certificates-info/${employeeid}`
             // );
             HandleOpenThanks();
-
           }
 
           setFormData(result);
@@ -198,25 +197,25 @@ const Benefits = ({ isEdit, setIsEdit }) => {
     GetBenefits();
     // GetEmployeesBenefits();
   }, []);
-    const [headerData, setHeaderData] = useState([]);
+  const [headerData, setHeaderData] = useState([]);
 
-    const GetHeadersData = () => {
-      // setIsLoading(true);
-      const trimid = employeeid.trim();
-      let url = `/employee/header-info/${trimid}`;
-      httpClient({
-        method: "get",
-        url,
+  const GetHeadersData = () => {
+    // setIsLoading(true);
+    const trimid = employeeid.trim();
+    let url = `/employee/header-info/${trimid}`;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setHeaderData(result);
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            setHeaderData(result);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error in fetching Personal info. Please try again.");
-        });
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error in fetching Personal info. Please try again.");
+      });
   };
   const [searchValue, setSearchValue] = useState("");
 
@@ -287,13 +286,13 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             </BodyHeader>
           )}
           <BodyMain>
-            <BodyMainHeading style={{ marginBottom: "25px" }}>
+            <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
               Benefits
             </BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 {/* first name and last name  */}
-                <FlexContaierForm >
+                <FlexContaierForm>
                   <FlexColumnForm>
                     <FlexColumnForm>
                       <InputLabel>
@@ -383,7 +382,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
                                 const endDate = new Date(endDateValue);
                                 const startDate = new Date(startDateValue);
                                 if (startDate > endDate) {
-                                  return "End date must not be earlier than start date"
+                                  return "End date must not be earlier than start date";
                                   // return setError("endDate", {
                                   //   type: "custom",
                                   //   message:
@@ -405,8 +404,8 @@ const Benefits = ({ isEdit, setIsEdit }) => {
                     <InputLabel>
                       Description <InputSpan>*</InputSpan>
                     </InputLabel>
-                      <TextArea
-                        style={{height:"140px"}}
+                    <TextArea
+                      style={{ height: "14rem" }}
                       type="text"
                       readOnly
                       {...register("description", {})}
@@ -472,7 +471,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
                 </FlexContaierForm>
               </FormContainer>
 
-              <FlexContaier style={{ marginTop: "25px" }}>
+              <FlexContaier style={{ marginTop: "2.5rem" }}>
                 {!isEdit && (
                   <ButtonGrey
                     onClick={() => {

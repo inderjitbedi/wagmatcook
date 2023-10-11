@@ -13,7 +13,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const ModalThanks = styled.div`
@@ -21,29 +21,29 @@ const ModalThanks = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 0px;
+  padding: 4rem 0rem;
   position: relative;
 `;
 const ModalThanksImg = styled.img`
   display: block;
-  width: 106px;
-  height: 106px;
+  width: 10.6rem;
+  height: 10.6rem;
 `;
 const ModalIconDelete = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
   position: absolute;
-  right: 10px;
-  top: 0px;
+  right: 1rem;
+  top: 0rem;
 `;
 const ModalThanksHeading = styled.p`
   color: #222b45;
-  font-size: 18px;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 22px;
+  line-height: 2.2rem;
   width: 70%;
   text-align: center;
 `;
@@ -51,8 +51,8 @@ const DeleteButton = styled.button`
   border-radius: 8px;
   background: #ea4335;
   color: #ffffff;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 1.3rem;
+  line-height: 1.6rem;
   font-weight: 600;
   padding: 1em 2em;
   border: none;
@@ -63,7 +63,7 @@ const DeleteModal = ({
   HandleCloseDelete,
   HandleDelete,
   isLoading,
-  message
+  message,
 }) => {
   return (
     <Modal
@@ -82,7 +82,7 @@ const DeleteModal = ({
             style={{
               display: "flex",
               width: "100%",
-              height: "380px",
+              height: "38rem",
               justifyContent: "center",
               alignItems: "center",
               zIndex: 999,

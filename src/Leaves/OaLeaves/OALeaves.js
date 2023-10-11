@@ -61,13 +61,13 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "0px 0px",
+  padding: "0rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "16px",
@@ -75,20 +75,20 @@ const CellHeadStyles = {
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "15px",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
   lineHeight: "15px",
 };
 const PendingStyle = {
-  borderRadius: "100px",
+  borderRadius: "1rem",
   background: "#FFF1DD",
   display: "inline-flex",
   padding: "2px 12px",
@@ -96,13 +96,13 @@ const PendingStyle = {
   color: "#E88B00",
   textAlign: "center",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "24px",
 };
 const ApprovedStyles = {
-  borderRadius: "100px",
+  borderRadius: "1rem",
   background: "#C8FFC7",
   display: "inline-flex",
   padding: "2px 12px",
@@ -110,7 +110,7 @@ const ApprovedStyles = {
   color: "var(--green-90, #0D7D0B)",
   textAlign: "center",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "24px",
@@ -181,7 +181,7 @@ const OALeaves = () => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    margin: "0 10px 0 0 ",
+    margin: "0 1rem 0 0 ",
     background: isDragging ? "#279AF1" : "#fff",
 
     // styles we need to apply on draggables
@@ -390,7 +390,7 @@ const OALeaves = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
 
       <Menu
-        sx={{ margin: "0px" }}
+        sx={{ margin: "0rem" }}
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={anchorEl}
@@ -409,10 +409,10 @@ const OALeaves = () => {
           style={{
             color: "#222B45",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Settings
@@ -422,16 +422,16 @@ const OALeaves = () => {
           style={{
             color: "#EA4335",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Logout
         </MenuItem>
       </Menu>
-      <DepartmentFilterContainer style={{ marginBottom: "20px" }}>
+      <DepartmentFilterContainer style={{ marginBottom: "2rem" }}>
         {/* <DepartmentFilterdiv>
             {FilterData.map((data) => (
               <DepartmentFilterButton>{data}</DepartmentFilterButton>
@@ -456,7 +456,7 @@ const OALeaves = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "380px",
+                  height: "38rem",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -471,7 +471,7 @@ const OALeaves = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalUpperDiv style={{ padding: " 10px 16px 10px 35px" }}>
+                <ModalUpperDiv style={{ padding: " 1rem 16px 1rem 35px" }}>
                   <ModalHeading>
                     {!update ? "Add New Leave" : "Update Leave Type"}
                   </ModalHeading>
@@ -551,9 +551,9 @@ const OALeaves = () => {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "10px",
+                      gap: "1rem",
                       marginBottom: "25px",
-                      marginTop: "10px",
+                      marginTop: "1rem",
                     }}
                   >
                     <input
@@ -564,7 +564,7 @@ const OALeaves = () => {
                     />
                     <InputLabel
                       htmlFor="isEligible"
-                      style={{ marginBottom: "0px" }}
+                      style={{ marginBottom: "0rem" }}
                     >
                       Is Active
                     </InputLabel>
@@ -574,7 +574,7 @@ const OALeaves = () => {
                     <AddNewButton
                       type="submit"
                       disabled={isLoading}
-                      style={{ marginTop: "10px" }}
+                      style={{ marginTop: "1rem" }}
                     >
                       Add New
                     </AddNewButton>
@@ -582,7 +582,7 @@ const OALeaves = () => {
                     <AddNewButton
                       type="submit"
                       disabled={isLoading}
-                      style={{ marginTop: "10px" }}
+                      style={{ marginTop: "1rem" }}
                     >
                       Update
                     </AddNewButton>
@@ -656,42 +656,42 @@ const OALeaves = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "20px" }}
+                      style={{ minwidth: "8rem" }}
                     >
                       Order&nbsp;No.
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "140px" }}
+                      style={{ width: "15rem" }}
                     >
                       Name
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "320px" }}
+                      style={{ minwidth: "35rem" }}
                     >
                       Description
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "90px" }}
+                      style={{ width: "9rem" }}
                     >
                       Max&nbsp;Carry&nbsp;Over
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "30px" }}
+                      style={{ width: "3rem" }}
                     >
                       Status
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       align="center"
-                      style={{ width: "30px" }}
+                      style={{ width: "3rem" }}
                     >
                       Action
                     </TableCell>
@@ -706,7 +706,7 @@ const OALeaves = () => {
                       style={getListStyle(snapshot.isDraggingOver)}
                     >
                       {leaves?.length === 0 && (
-                        <TableRow sx={{ height: "200px" }}>
+                        <TableRow sx={{ height: "20rem" }}>
                           <TableCell align="center" colSpan={6}>
                             No leaves found
                           </TableCell>
@@ -771,7 +771,7 @@ const OALeaves = () => {
                               <TableCell
                                 sx={CellStyle2}
                                 align="center"
-                                //   style={{ maxWidth: "10px" }}
+                                //   style={{ maxWidth: "1rem" }}
                               >
                                 {" "}
                                 <ActionIconDiv

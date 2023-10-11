@@ -80,32 +80,32 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
 
   borderRadius: "8px",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const ManagerLeaves = () => {
   const Navigate = useNavigate();
@@ -435,14 +435,14 @@ const ManagerLeaves = () => {
                 <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
                   Sr.No
                 </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "188" }} align="left">
+                <TableCell sx={{ ...CellStyle, maxWidth: "188px" }} align="left">
                   Name
                 </TableCell>
                 <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">
                   Department
                 </TableCell>
                 <TableCell
-                  sx={{ ...CellStyle, maxWidth: "114px" }}
+                  sx={{ ...CellStyle, maxWidth: "11.4rem" }}
                   align="left"
                 >
                   From
@@ -469,7 +469,7 @@ const ManagerLeaves = () => {
             </TableHead>
             <TableBody>
               {result?.leaves?.length == 0 && (
-                <TableRow sx={{ height: "200px" }}>
+                <TableRow sx={{ height: "20rem" }}>
                   <TableCell align="center" colSpan={7}>
                     No Leaves found
                   </TableCell>
@@ -523,15 +523,15 @@ const ManagerLeaves = () => {
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
                     {data.status === "PENDING" ? (
-                      <PendingStyle style={{ padding: "4px 0px" }}>
+                      <PendingStyle style={{ padding: "4px 0rem" }}>
                         {data.status}
                       </PendingStyle>
                     ) : data.status === "APPROVED" ? (
-                      <ApproveStyle style={{ padding: "4px 0px" }}>
+                      <ApproveStyle style={{ padding: "4px 0rem" }}>
                         {data.status}
                       </ApproveStyle>
                     ) : data.status === "REJECTED" ? (
-                      <RejectedStyle style={{ padding: "4px 0px" }}>
+                      <RejectedStyle style={{ padding: "4px 0rem" }}>
                         {data.status}
                       </RejectedStyle>
                     ) : (
@@ -579,7 +579,7 @@ const ManagerLeaves = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                height: "380px",
+                height: "38rem",
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 999,

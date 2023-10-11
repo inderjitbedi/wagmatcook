@@ -66,7 +66,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellStyle = {
@@ -212,7 +212,7 @@ const Employee = () => {
   };
   const HandleDelete = () => {
     setIsLoading(true);
-    let url = API_URLS.deleteEmployeeList.replace("Id",Id);
+    let url = API_URLS.deleteEmployeeList.replace("Id", Id);
     httpClient({
       method: "put",
       url,
@@ -251,7 +251,7 @@ const Employee = () => {
         {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE ? (
           " "
         ) : (
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
             <AddNewButton>Send Welcome</AddNewButton>{" "}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
           </div>
@@ -277,7 +277,7 @@ const Employee = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                height: "380px",
+                height: "38rem",
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 999,
@@ -419,7 +419,7 @@ const Employee = () => {
               </TableHead>
               <TableBody>
                 {result.employees?.length == 0 && (
-                  <TableRow sx={{ height: "200px" }}>
+                  <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" colSpan={7}>
                       No employee found
                     </TableCell>
@@ -434,7 +434,7 @@ const Employee = () => {
                     <TableCell align="center" sx={Celllstyle2}>
                       {index + 1}
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
+                    <TableCell align="left" sx={Celllstyle2} style={{minWidth:"150px"}}>
                       <TabelDiv
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {

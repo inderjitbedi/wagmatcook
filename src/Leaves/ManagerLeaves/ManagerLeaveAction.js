@@ -195,7 +195,7 @@ const ManagerLeaveAction = () => {
           style={{
             display: "flex",
             width: "100%",
-            height: "380px",
+            height: "38rem",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 999,
@@ -311,7 +311,9 @@ const ManagerLeaveAction = () => {
                           </InputPara>
                         </>
                       ) : (
-                        <Titledark>{leaveDetails?.responderComment || "No Comments "}</Titledark>
+                        <Titledark>
+                          {leaveDetails?.responderComment || "No Comments "}
+                        </Titledark>
                       )}
                     </ColumnFlexDiv>
                   </FormContainer>

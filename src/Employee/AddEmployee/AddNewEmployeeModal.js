@@ -14,7 +14,7 @@ import {
   FlexColumnForm,
   InputLabel,
   Errors,
-  InputSpan
+  InputSpan,
 } from "./AddEmployeeStyles";
 import { toast } from "react-toastify";
 
@@ -27,11 +27,11 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
-  borderRadius: "8px",
+  padding: "2rem 0rem",
+  borderRadius: "0.8rem",
 };
 const ModalContainer = styled.div`
-  padding: 0px 12px 15px 29px;
+  padding: 0rem 1.2rem 1.5rem 2.9rem;
   border-bottom: 1px solid #f3f3f5;
   display: flex;
   align-items: center;
@@ -41,19 +41,19 @@ const ModalContainer = styled.div`
 const ModalHeading = styled.h1`
   color: #222b45;
   font-family: Inter;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 const ModalIcon = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   display: inline-block;
   cursor: pointer;
 `;
 const ModalFormContainer = styled.div`
-  padding: 20px 29px 15px 29px;
+  padding: 2rem 2.9rem 1.5rem 2.9rem;
   width: 100%;
   box-sizing: border-box;
 `;
@@ -137,7 +137,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
             style={{
               display: "flex",
               width: "100%",
-              height: "300px",
+              height: "30rem",
               justifyContent: "center",
               alignItems: "center",
               zIndex: 999,
@@ -266,7 +266,7 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
                 {errors.confirmpassword && <Errors> {errors.confirmpassword?.message} </Errors>}
               </FlexColumnForm>
             </FlexContaierForm> */}
-                <ButtonBlue style={{ marginTop: "25px" }} type="submit">
+                <ButtonBlue style={{ marginTop: "2.5rem" }} type="submit">
                   Submit
                 </ButtonBlue>
               </ModalFormContainer>

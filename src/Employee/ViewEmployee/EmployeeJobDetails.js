@@ -63,9 +63,9 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
-  height: "500px",
+  height: "50rem",
   overflowY: "scroll",
 };
 
@@ -262,9 +262,7 @@ const EmployeeJobDetails = () => {
       GetDepartments(),
       GetReportsToList(),
       GetEmployeeTypes(),
-
-    ])
-     
+    ]);
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -313,7 +311,7 @@ const EmployeeJobDetails = () => {
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton
-                    style={{ marginRight: "54px" }}
+                    style={{ marginRight: "5.4rem" }}
                     onClick={() => setIsEdit(true)}
                   >
                     <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -321,7 +319,7 @@ const EmployeeJobDetails = () => {
                   </EditButton>
                 ) : (
                   <EditButton
-                    style={{ marginRight: "54px" }}
+                    style={{ marginRight: "5.4rem" }}
                     onClick={() => setIsEdit(true)}
                   >
                     <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -332,7 +330,7 @@ const EmployeeJobDetails = () => {
 
               <BasicInfoContainer>
                 <BasicInfoDiv>
-                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                  <FlexSpaceBetween style={{ marginBottom: "10rem" }}>
                     <BasicHeading>Employment Details</BasicHeading>
                     {userType === ROLES.MANAGER ||
                     userType === ROLES.EMPLOYEE ||
@@ -499,8 +497,8 @@ const EmployeeJobDetails = () => {
                       layout={"1-column-left"}
                       lineColor={"#EFF4FA"}
                       style={{
-                        padding: "0px",
-                        margin: "0px",
+                        padding: "0rem",
+                        margin: "0rem",
                         maxWidth: "100%",
                       }}
                     >
@@ -513,19 +511,19 @@ const EmployeeJobDetails = () => {
                             border: "none",
                           }}
                           iconStyle={{
-                            width: "18px",
-                            height: "18px",
+                            width: "1.8rem",
+                            height: "1.8rem",
                             background: "#fff",
                             border: "1.5px solid #8F9BB3",
                             borderRadius: "50%",
                             boxShadow: "none",
                             outine: "none",
-                            marginLeft: "10px",
+                            marginLeft: "10rem",
                           }}
                           intersectionObserverProps={{
-                            margin: "0px 0px 0px 0px",
+                            margin: "0rem 0rem 0rem 0rem",
                           }}
-                          style={{ margin: "0px" }}
+                          style={{ margin: "0rem" }}
                         >
                           <TimelineDiv>
                             <FlexColumn style={{ gap: "4px" }}>
@@ -574,7 +572,7 @@ const EmployeeJobDetails = () => {
                             style={{
                               display: "flex",
                               width: "100%",
-                              height: "500px",
+                              height: "50rem",
                               justifyContent: "center",
                               alignItems: "center",
                               zIndex: 999,
@@ -1125,7 +1123,7 @@ const EmployeeJobDetails = () => {
                                       <InputLabel
                                         htmlFor={`isBebEligible`}
                                         style={{
-                                          marginBottom: "0px",
+                                          marginBottom: "0rem",
                                           cursor: "pointer",
                                         }}
                                       >
@@ -1143,7 +1141,7 @@ const EmployeeJobDetails = () => {
                                       <InputLabel
                                         htmlFor={`isPrimary`}
                                         style={{
-                                          marginBottom: "0px",
+                                          marginBottom: "0rem",
                                           cursor: "pointer",
                                         }}
                                       >
@@ -1154,7 +1152,7 @@ const EmployeeJobDetails = () => {
                                 </FlexContaierForm>
                               </FlexContaierForm>
 
-                              {/* <FlexContaierForm style={{ marginTop: "25px" }}>
+                              {/* <FlexContaierForm style={{ marginTop: "2.5rem" }}>
                           <FlexColumnForm>
                             <AlignFlex>
                               <input
@@ -1164,7 +1162,7 @@ const EmployeeJobDetails = () => {
                               />
                               <InputLabel
                                 htmlFor="isActive"
-                                style={{ marginBottom: "0px" }}
+                                style={{ marginBottom: "0rem" }}
                               >
                                 Is Active <InputSpan>*</InputSpan>
                               </InputLabel>
@@ -1173,7 +1171,7 @@ const EmployeeJobDetails = () => {
                         </FlexContaierForm> */}
                               <ButtonBlue
                                 type="submit"
-                                style={{ marginTop: "25px" }}
+                                style={{ marginTop: "2.5rem" }}
                                 // disabled={!isDirty}
                                 // onClick={() => {
                                 //   handleSubmit(onSubmit);

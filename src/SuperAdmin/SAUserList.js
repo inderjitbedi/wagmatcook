@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import SASideBar from './SideBar/SASideBar'
+import React, { useState } from "react";
+import SASideBar from "./SideBar/SASideBar";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Table from "@mui/material/Table";
@@ -34,30 +34,28 @@ import {
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const SAUserList = () => {
-  const FilterData = [
-    "Org Admins", "Managers", "HUMAN_RESOURCE", "Employees"
-  ];
+  const FilterData = ["Org Admins", "Managers", "HUMAN_RESOURCE", "Employees"];
   const disciplinaryData = [
     {
       _id: "64f015b3f1b4113adc352819",
@@ -124,7 +122,7 @@ const SAUserList = () => {
       order: 1,
     },
   ];
-  //name org department status 
+  //name org department status
   // change the button login - otp otp - login
   return (
     <Dashboard>
@@ -224,12 +222,12 @@ const SAUserList = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+        {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10rem" }}>
           Load More
         </AddNewButton> */}
       </DashMain>
     </Dashboard>
   );
-}
+};
 
-export default SAUserList
+export default SAUserList;

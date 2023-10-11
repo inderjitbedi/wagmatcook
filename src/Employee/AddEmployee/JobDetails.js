@@ -385,7 +385,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
           )}
 
           <BodyMain>
-            <BodyMainHeading style={{ marginBottom: "25px" }}>
+            <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
               Job Details
             </BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -932,7 +932,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                       />
                     </FlexColumnForm>
 
-                    <FlexContaierForm style={{ marginTop: "25px" }}>
+                    <FlexContaierForm style={{ marginTop: "2.5rem" }}>
                       <FlexColumnForm>
                         <AlignFlex>
                           <input
@@ -945,7 +945,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                           />
                           <InputLabel
                             htmlFor={`positions.${index}.isBebEligible`}
-                            style={{ marginBottom: "0px", cursor: "pointer" }}
+                            style={{ marginBottom: "0rem", cursor: "pointer" }}
                           >
                             Is BEB Eligible?
                           </InputLabel>
@@ -960,7 +960,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                           />
                           <InputLabel
                             htmlFor={`positions.${index}.isPrimary`}
-                            style={{ marginBottom: "0px", cursor: "pointer" }}
+                            style={{ marginBottom: "0rem", cursor: "pointer" }}
                           >
                             Is Primary
                           </InputLabel>
@@ -981,7 +981,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                   )}
                 </FormContainer>
               ))}
-              <FlexContaier style={{ marginTop: "16px" }}>
+              <FlexContaier style={{ marginTop: "1.6rem" }}>
                 <BluePara onClick={() => append(initialPosition)}>
                   {" "}
                   Add New
@@ -998,7 +998,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                     />
                     <InputLabel
                       htmlFor="isActive"
-                      style={{ marginBottom: "0px" }}
+                      style={{ marginBottom: "0rem" }}
                     >
                       Is Active <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -1006,7 +1006,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                 </FlexColumnForm>
               </FlexContaierForm> */}
 
-              <FlexContaier style={{ marginTop: "25px" }}>
+              <FlexContaier style={{ marginTop: "2.5rem" }}>
                 {!isEdit && (
                   <ButtonGrey onClick={() => Navigate(-1)}>Back</ButtonGrey>
                 )}

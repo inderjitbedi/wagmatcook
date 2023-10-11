@@ -59,31 +59,31 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 
 const CellStyle = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const CellStyle2 = {
   color: "#222B45",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "15px",
+  lineHeight: "1.5rem",
 };
 const SAOrganization = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -251,7 +251,7 @@ const SAOrganization = () => {
           style={{
             display: "flex",
             width: "100%",
-            height: "380px",
+            height: "38rem",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 999,
@@ -288,7 +288,7 @@ const SAOrganization = () => {
             </DashHeaderSearch>
           </DashHeader>
           <Menu
-            sx={{ margin: "0px" }}
+            sx={{ margin: "0rem" }}
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
             anchorEl={anchorEl}
@@ -307,10 +307,10 @@ const SAOrganization = () => {
               style={{
                 color: "#222B45",
                 fontFamily: "Inter",
-                fontSize: "14px",
+                fontSize: "1.4rem",
                 fontStyle: "normal",
                 fontWeight: 600,
-                lineHeight: "20px",
+                lineHeight: "2rem",
               }}
             >
               Settings
@@ -320,10 +320,10 @@ const SAOrganization = () => {
               style={{
                 color: "#EA4335",
                 fontFamily: "Inter",
-                fontSize: "14px",
+                fontSize: "1.4rem",
                 fontStyle: "normal",
                 fontWeight: 600,
-                lineHeight: "20px",
+                lineHeight: "2rem",
               }}
             >
               Logout
@@ -348,7 +348,7 @@ const SAOrganization = () => {
                     style={{
                       display: "flex",
                       width: "100%",
-                      height: "380px",
+                      height: "38rem",
                       justifyContent: "center",
                       alignItems: "center",
                       zIndex: 999,
@@ -422,25 +422,25 @@ const SAOrganization = () => {
                   }}
                 >
                   <TableCell
-                    sx={{ ...CellHeadStyles, minWidth: "250px" }}
+                    sx={{ ...CellHeadStyles, minWidth: "25rem" }}
                     align="left"
                   >
                     Name
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellHeadStyles, minWidth: "180px" }}
+                    sx={{ ...CellHeadStyles, minWidth: "18rem" }}
                     align="left"
                   >
                     Email
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                    sx={{ ...CellHeadStyles, minWidth: "15rem" }}
                     align="left"
                   >
                     Has Signed Up?
                   </TableCell>
                   {/* <TableCell
-                sx={{ ...CellHeadStyles, minWidth: "150px" }}
+                sx={{ ...CellHeadStyles, minWidth: "150rem" }}
                 align="left"
               >
                 Action
@@ -495,7 +495,7 @@ const SAOrganization = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10px" }}>
+          {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10rem" }}>
           Load More
         </AddNewButton> */}
         </>

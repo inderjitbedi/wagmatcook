@@ -81,7 +81,7 @@ import {
 } from "./OaDashBoardNextStyles.js";
 import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
-const OADashBoard = () => {
+const OADashBoard = ({ screenWidth }) => {
   let API_URL = process.env.REACT_APP_API_URL;
   const [openSettings, setOpenSettings] = useState(false);
   const HandleOpenSettings = () => {
@@ -333,50 +333,6 @@ const OADashBoard = () => {
         <>
           <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
           <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
-
-          <Menu
-            sx={{ margin: "0px" }}
-            id="demo-positioned-menu"
-            aria-labelledby="demo-positioned-button"
-            anchorEl={anchorEl}
-            open={openMenu}
-            onClose={handleCloseMenu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            <MenuItem
-              style={{
-                color: "#222B45",
-                fontFamily: "Inter",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: 600,
-                lineHeight: "20px",
-              }}
-              onClick={HandleOpenSettings}
-            >
-              Settings
-            </MenuItem>
-            <MenuItem
-              onClick={HandleLogout}
-              style={{
-                color: "#EA4335",
-                fontFamily: "Inter",
-                fontSize: "14px",
-                fontStyle: "normal",
-                fontWeight: 600,
-                lineHeight: "20px",
-              }}
-            >
-              Logout
-            </MenuItem>
-          </Menu>
           <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
           {orgData ? (
             <SectionCard>
@@ -384,7 +340,7 @@ const OADashBoard = () => {
                 <div>
                   <SectionCardTitle>Total Employee</SectionCardTitle>
                   <SectionCardNumber>
-                    {employeeData.totalEmployees || 0 }{" "}
+                    {employeeData.totalEmployees || 0}{" "}
                   </SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/LeavesBig.svg" />
@@ -614,7 +570,7 @@ const OADashBoard = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "50px",
+                        gap: "5rem",
                       }}
                     >
                       <CardLeavesPara>

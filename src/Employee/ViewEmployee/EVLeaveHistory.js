@@ -74,16 +74,16 @@ import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
 const CellStyle = {
   color: "#8F9BB3",
-  padding: "16px 8px",
-  fontSize: "14px",
+  padding: "1.6rem 0.8rem",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: "600",
-  lineHeight: "16px",
+  lineHeight: "1.6rem",
 };
 const Celllstyle2 = {
   color: "#222B45",
-  padding: "16px 8px",
-  fontSize: "14px",
+  padding: "1.6rem 0.8rem",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: "400",
   lineHeight: "15px",
@@ -97,8 +97,8 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "20px 0px",
-  borderRadius: "8px",
+  padding: "2rem 0rem",
+  borderRadius: "0.8rem",
 };
 const rows = [
   {
@@ -175,47 +175,47 @@ const rows = [
   },
 ];
 const PendingStyle = {
-  borderRadius: "100px",
+  borderRadius: "10rem",
   background: "#FFF1DD",
   display: "inline-flex",
-  padding: "2px 12px",
+  padding: "2px 1.2rem",
   alignItems: "center",
   color: "#E88B00",
   textAlign: "center",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "24px",
+  lineHeight: "2.4rem",
 };
 const ApprovedStyles = {
-  borderRadius: "100px",
+  borderRadius: "10rem",
   background: "var(--green-20, #C8FFC7)",
   display: "inline-flex",
-  padding: "2px 12px",
+  padding: "2px 1.2rem",
   alignItems: "center",
   color: "var(--green-90, #0D7D0B)",
   textAlign: "center",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "24px",
+  lineHeight: "2.4rem",
 };
 
 const RejectedStyles = {
-  borderRadius: "100px",
+  borderRadius: "10rem",
   background: "#FFE6E3",
   display: "inline-flex",
-  padding: "2px 12px",
+  padding: "2px 1.2rem",
   alignItems: "center",
   color: "#EA4335",
   textAlign: "center",
   fontFamily: "Inter",
-  fontSize: "14px",
+  fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "24px",
+  lineHeight: "2.4rem",
 };
 
 const EVLeaveHistory = () => {
@@ -517,9 +517,9 @@ const EVLeaveHistory = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   console.log("this is account:", isAccount, userType);
   const userstyle = {
-    padding: "16px 20px",
+    padding: "1.6rem 2.0rem",
     background: "#fff",
-    borderRadius: "8px 8px 0px 0px",
+    borderRadius: "0.8rem 0.8rem 0rem 0rem",
   };
   const [searchValue, setSearchValue] = useState("");
 
@@ -606,35 +606,35 @@ const EVLeaveHistory = () => {
                     background: "#FBFBFB",
                   }}
                 >
-                  <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
+                  <TableCell sx={{ ...CellStyle, maxWidth: "2.5rem" }}>
                     Sr.No
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "128" }}
+                    sx={{ ...CellStyle, maxWidth: "12.8rem" }}
                     align="left"
                   >
                     Leave&nbsp;Type
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "184px" }}
+                    sx={{ ...CellStyle, maxWidth: "18.4rem" }}
                     align="left"
                   >
                     Applied&nbsp;to
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "100px" }}
+                    sx={{ ...CellStyle, maxWidth: "10rem" }}
                     align="left"
                   >
                     From
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "100px" }}
+                    sx={{ ...CellStyle, maxWidth: "10rem" }}
                     align="left"
                   >
                     To
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "40px" }}
+                    sx={{ ...CellStyle, maxWidth: "40rem" }}
                     align="left"
                   >
                     Hours
@@ -649,7 +649,7 @@ const EVLeaveHistory = () => {
               </TableHead>
               <TableBody>
                 {result.history?.length == 0 && (
-                  <TableRow sx={{ height: "200px" }}>
+                  <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" colSpan={8}>
                       No Leave History Found
                     </TableCell>
@@ -730,7 +730,7 @@ const EVLeaveHistory = () => {
             // onClose={handleClose}
             sx={{
               backgroundColor: "rgb(27, 27, 27, 0.75)",
-              backdropFilter: "blur(8px)",
+              backdropFilter: "blur(0.8rem)",
             }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
@@ -741,7 +741,7 @@ const EVLeaveHistory = () => {
                   style={{
                     display: "flex",
                     width: "100%",
-                    height: "380px",
+                    height: "38rem",
                     justifyContent: "center",
                     alignItems: "center",
                     zIndex: 999,
@@ -769,7 +769,7 @@ const EVLeaveHistory = () => {
 
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <ModalFormContainer>
-                      {/* <SearchBox style={{ marginBottom: "16px" }}>
+                      {/* <SearchBox style={{ marginBottom: "1.6rem" }}>
                     <SearchIcon src="/images/icons/searchIcon.svg" />
                     <SearchInput
                       type="text"
@@ -906,7 +906,7 @@ const EVLeaveHistory = () => {
                         <FlexColumnForm>
                           <InputLabel>Description</InputLabel>
                           <TextArea
-                            style={update ? { marginBottom: "16px" } : {}}
+                            style={update ? { marginBottom: "1.6rem" } : {}}
                             type="text"
                             readOnly={update}
                             {...register("requesterComment", {
@@ -1002,7 +1002,7 @@ const EVLeaveHistory = () => {
             // onClose={handleCloseThanks}
             sx={{
               backgroundColor: "rgb(27, 27, 27, 0.75)",
-              backdropFilter: "blur(8px)",
+              backdropFilter: "blur(0.8rem)",
             }}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"

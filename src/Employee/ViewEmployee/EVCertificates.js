@@ -59,7 +59,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 
@@ -393,7 +393,7 @@ const EVCertificates = () => {
               ""
             ) : userType === ROLES.MANAGER ? (
               <EditButton
-                style={{ marginRight: "54px" }}
+                style={{ marginRight: "5.4rem" }}
                 onClick={() =>
                   Navigate(
                     `/manager-management/certificates-info/${employeeid}/${true}?`
@@ -405,7 +405,7 @@ const EVCertificates = () => {
               </EditButton>
             ) : userType === ROLES.HR ? (
               <EditButton
-                style={{ marginRight: "54px" }}
+                style={{ marginRight: "5.4rem" }}
                 onClick={() =>
                   Navigate(
                     `/hr-management/certificates-info/${employeeid}/${true}?`
@@ -417,7 +417,7 @@ const EVCertificates = () => {
               </EditButton>
             ) : (
               <EditButton
-                style={{ marginRight: "54px" }}
+                style={{ marginRight: "5.4rem" }}
                 onClick={() =>
                   Navigate(
                     `/organization-admin/employee/certificates-info/${employeeid}/${true}?`
@@ -432,7 +432,7 @@ const EVCertificates = () => {
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Employee Certifications</BasicHeading>
                 {userType === ROLES.EMPLOYEE || isAccount ? (
                   ""
@@ -467,7 +467,7 @@ const EVCertificates = () => {
                       style={{
                         display: "flex",
                         width: "100%",
-                        height: "380px",
+                        height: "38rem",
                         justifyContent: "center",
                         alignItems: "center",
                         zIndex: 999,
@@ -644,9 +644,9 @@ const EVCertificates = () => {
                           <div
                             style={{
                               display: "flex",
-                              gap: "16px",
+                              gap: "1.6rem",
                               alignItems: "center",
-                              marginBottom: "20px",
+                              marginBottom: "2rem",
                             }}
                           >
                             <EditButton
@@ -697,15 +697,15 @@ const EVCertificates = () => {
                   <>
                     {result?.certificates?.map((data) => (
                       <CertificateContainer>
-                        <CertificateTitle style={{ marginBottom: "16px" }}>
+                        <CertificateTitle style={{ marginBottom: "1.6rem" }}>
                           {data.title || " - "}
                         </CertificateTitle>
-                        <FlexSpaceBetween style={{ marginBottom: "10px" }}>
-                          <FlexColumn style={{ gap: "0px" }}>
+                        <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
+                          <FlexColumn style={{ gap: "0rem" }}>
                             <TitlePara>Provider</TitlePara>
                             <ViewPara>{data.provider || " - "}</ViewPara>
                           </FlexColumn>
-                          <FlexColumn style={{ gap: "0px" }}>
+                          <FlexColumn style={{ gap: "0rem" }}>
                             <TitlePara>Completion Date</TitlePara>
                             <ViewPara>
                               {data.completionDate
@@ -715,7 +715,7 @@ const EVCertificates = () => {
                                 : " - "}
                             </ViewPara>
                           </FlexColumn>
-                          <FlexColumn style={{ gap: "0px" }}>
+                          <FlexColumn style={{ gap: "0rem" }}>
                             <TitlePara>Expriry </TitlePara>
                             <ViewPara>
                               {data.expiryDate

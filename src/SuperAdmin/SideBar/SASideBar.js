@@ -44,7 +44,7 @@ const SASideBar = () => {
           width: "80%",
           borderBottom: "1px solid #EDEDED",
           display: "inline-block",
-          margin: "0 28px",
+          margin: "0 2.8rem",
         }}
       ></span>
       <SideBarList>

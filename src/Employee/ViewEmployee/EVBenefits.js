@@ -73,9 +73,9 @@ const EVBenefits = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-     if (location.pathname.indexOf("account") > -1) {
-       setIsAccount(true);
-     }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
   }, [isEdit]);
 
   return (
@@ -107,11 +107,13 @@ const EVBenefits = () => {
               <FlexSpaceBetween style={{ alignItems: "center" }}>
                 <CommenHeader employeeid={employeeid} />
 
-                {userType === ROLES.MANAGER || userType === ROLES.EMPLOYEE || isAccount ? (
+                {userType === ROLES.MANAGER ||
+                userType === ROLES.EMPLOYEE ||
+                isAccount ? (
                   " "
                 ) : userType === ROLES.HR ? (
                   <EditButton
-                    style={{ marginRight: "54px" }}
+                    style={{ marginRight: "5.4rem" }}
                     onClick={() => setIsEdit(true)}
                   >
                     <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -120,7 +122,7 @@ const EVBenefits = () => {
                 ) : (
                   <EditButton
                     onClick={() => setIsEdit(true)}
-                    style={{ marginRight: "54px" }}
+                    style={{ marginRight: "5.4rem" }}
                   >
                     <ButtonIcon src="/images/icons/Pen 2.svg" />
                     Edit
@@ -130,7 +132,7 @@ const EVBenefits = () => {
 
               <BasicInfoContainer>
                 <BasicInfoDiv>
-                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                  <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Employee Benefit</BasicHeading>
                   </FlexSpaceBetween>
                   <BasicDetailsDiv>

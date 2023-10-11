@@ -179,7 +179,7 @@ const OADashBoardNext = ({ user, orgData }) => {
             </DashHeaderSearch>
           </DashHeader>
           <Menu
-            sx={{ margin: "0px" }}
+            sx={{ margin: "0rem" }}
             id="demo-positioned-menu"
             aria-labelledby="demo-positioned-button"
             anchorEl={anchorEl}
@@ -196,16 +196,20 @@ const OADashBoardNext = ({ user, orgData }) => {
           >
             <MenuItem onClick={HandleLogout}>Logout</MenuItem>
           </Menu>
-            <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
-            
+          <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
+
           <SectionCard>
             <SectionCardContainer>
               <SectionCardTitle>Total Employee</SectionCardTitle>
-              <SectionCardNumber>{employeeData.totalEmployees} </SectionCardNumber>
+              <SectionCardNumber>
+                {employeeData.totalEmployees}{" "}
+              </SectionCardNumber>
             </SectionCardContainer>
             <SectionCardContainer2>
               <SectionCardTitle>Total Disciplinaries</SectionCardTitle>
-              <SectionCardNumber>{disciplinaryData.totalDisciplinaries} </SectionCardNumber>
+              <SectionCardNumber>
+                {disciplinaryData.totalDisciplinaries}{" "}
+              </SectionCardNumber>
             </SectionCardContainer2>
             <SectionCardContainer3>
               {" "}
@@ -217,8 +221,8 @@ const OADashBoardNext = ({ user, orgData }) => {
               <SectionCardTitle>Total Employee</SectionCardTitle>
               <SectionCardNumber>0</SectionCardNumber>
             </SectionCardContainer4>
-            </SectionCard>
-            
+          </SectionCard>
+
           <MainCardContainer>
             {/* Department card */}
             <MainCard>

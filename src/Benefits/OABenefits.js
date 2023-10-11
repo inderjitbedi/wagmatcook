@@ -167,7 +167,7 @@ const OABenefits = () => {
 
   useEffect(() => {
     GetBenefits();
-  }, [searchValue,page]);
+  }, [searchValue, page]);
 
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -274,31 +274,31 @@ const OABenefits = () => {
     bgcolor: "background.paper",
     border: "none",
     boxShadow: 45,
-    padding: "20px 0px",
-    borderRadius: "8px",
+    padding: "2rem 0rem",
+    borderRadius: "0.8rem",
   };
   const CellHeadStyles = {
     color: "#8F9BB3",
     fontFamily: "Inter",
-    fontSize: "14px",
+    fontSize: "1.4rem",
     fontStyle: "normal",
     fontWeight: 600,
-    lineHeight: "16px",
+    lineHeight: "1.6rem",
   };
 
   const CellStyle = {
     color: "#222B45",
-    fontSize: "14px",
+    fontSize: "1.4rem",
     fontStyle: "normal",
     fontWeight: 600,
-    lineHeight: "15px",
+    lineHeight: "1.5rem",
   };
   const CellStyle2 = {
     color: "#222B45",
-    fontSize: "14px",
+    fontSize: "1.4rem",
     fontStyle: "normal",
     fontWeight: 400,
-    lineHeight: "15px",
+    lineHeight: "1.5rem",
   };
 
   const HandleUpdateAction = (data) => {
@@ -329,7 +329,7 @@ const OABenefits = () => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    margin: "0 10px 0 0 ",
+    margin: "0 1rem 0 0 ",
     background: isDragging ? "#279AF1" : "#fff",
 
     // styles we need to apply on draggables
@@ -356,7 +356,7 @@ const OABenefits = () => {
           open={open}
           sx={{
             backgroundColor: "rgb(27, 27, 27, 0.75)",
-            backdropFilter: "blur(8px)",
+            backdropFilter: "blur(0.8rem)",
           }}
           // onClose={() => {
           //   HandleClose();
@@ -373,7 +373,7 @@ const OABenefits = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "380px",
+                  height: "38rem",
                   justifyContent: "center",
                   alignItems: "center",
                   zIndex: 999,
@@ -455,7 +455,7 @@ const OABenefits = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Submit
                       </AddNewButton>
@@ -463,7 +463,7 @@ const OABenefits = () => {
                       <AddNewButton
                         type="submit"
                         disabled={isLoading}
-                        style={{ marginTop: "25px" }}
+                        style={{ marginTop: "2.5rem" }}
                       >
                         Update
                       </AddNewButton>
@@ -507,20 +507,20 @@ const OABenefits = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ width: "20px" }}
+                      style={{ width: "2rem" }}
                     >
                       Order&nbsp;No.
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "300px" }}
+                      style={{ minWidth: "20rem" }}
                       align="left"
                     >
                       Benefit Name
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "500px" }}
+                      style={{ minWidth: "45rem" }}
                       align="left"
                     >
                       Description
@@ -528,7 +528,7 @@ const OABenefits = () => {
 
                     <TableCell
                       sx={CellHeadStyles}
-                      style={{ minWidth: "100px" }}
+                      style={{ minWidth: "10rem" }}
                       align="left"
                     >
                       Action
@@ -543,7 +543,7 @@ const OABenefits = () => {
                       style={getListStyle(snapshot.isDraggingOver)}
                     >
                       {!result.benefits?.length && (
-                        <TableRow sx={{ height: "200px" }}>
+                        <TableRow sx={{ height: "20rem" }}>
                           <TableCell align="center" colSpan={3}>
                             No benefits found
                           </TableCell>
@@ -615,18 +615,18 @@ const OABenefits = () => {
                 </Droppable>
               </Table>
             </TableContainer>
-            </DragDropContext>
-            {result?.totalPages > 1 && (
-              <PaginationDiv>
-                <Pagination
-                  count={result?.totalPages}
-                  variant="outlined"
-                  shape="rounded"
-                  page={page}
-                  onChange={HandleChangePage}
-                />
-              </PaginationDiv>
-            )}
+          </DragDropContext>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
         </>
       )}
 
@@ -638,7 +638,7 @@ const OABenefits = () => {
         isLoading={isLoading}
       />
       <Menu
-        sx={{ margin: "0px" }}
+        sx={{ margin: "0rem" }}
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         anchorEl={anchorEl}
@@ -657,10 +657,10 @@ const OABenefits = () => {
           style={{
             color: "#222B45",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Settings
@@ -670,10 +670,10 @@ const OABenefits = () => {
           style={{
             color: "#EA4335",
             fontFamily: "Inter",
-            fontSize: "14px",
+            fontSize: "1.4rem",
             fontStyle: "normal",
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "2rem",
           }}
         >
           Logout

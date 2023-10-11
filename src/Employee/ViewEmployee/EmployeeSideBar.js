@@ -5,12 +5,12 @@ import styled from "styled-components";
 const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0px 24px;
-  gap: 12px;
+  padding: 0rem 2.4rem;
+  gap: 1.2rem;
 `;
 const SideBarListContainer = styled.div`
   display: flex;
-  gap: 11px;
+  gap: 1.1rem;
   align-items: center;
   cursor: pointer;
   &:hover img path {
@@ -23,10 +23,11 @@ const SideBarListContainer = styled.div`
 
 const SideBarListTitle = styled.p`
   color: #5c5c5c;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0px;
+  line-height: 1.6rem;
   cursor: pointer;
+  margin: 0rem;
 `;
 const EmployeeSideBar = (props) => {
   const location = useLocation();

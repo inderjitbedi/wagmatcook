@@ -83,7 +83,7 @@ const SharedSignin = () => {
           style={{
             display: "flex",
             width: "100%",
-            height: "380px",
+            height: "38rem",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 999,

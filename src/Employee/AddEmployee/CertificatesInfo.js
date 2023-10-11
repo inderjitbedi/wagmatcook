@@ -377,7 +377,7 @@ const CertificatesInfo = () => {
           )}
 
           <BodyMain>
-            <BodyMainHeading style={{ marginBottom: "25px" }}>
+            <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
               Certificates Info
             </BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -546,13 +546,16 @@ const CertificatesInfo = () => {
                       <div
                         style={{
                           display: "flex",
-                          gap: "16px",
+                          gap: "1.6rem",
                           alignItems: "center",
-                          marginBottom: "20px",
+                          marginBottom: "2rem",
                         }}
                       >
                         <UploadLabel
-                          style={{ marginBottom: "10px", width: "max-content" }}
+                          style={{
+                            marginBottom: "1rem",
+                            width: "max-content",
+                          }}
                           htmlFor={`file${index}`}
                         >
                           {isUploading[index] ? (

@@ -4,43 +4,51 @@ import styled from "styled-components";
 
 export const SidebarTitle = styled.p`
   color: #222222;
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
-  line-height: 24px;
-  margin-bottom: 35px;
-  padding: 0px 32px;
+  line-height: 2.4rem;
+  margin-bottom: 3.5rem;
+  padding: 0rem 3.2rem;
+`;
+export const IconDelete = styled.img`
+  display: inline-block;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 0rem;
 `;
 export const SideBarLogoContainer = styled.div`
-  padding: 16px 32px;
+  padding: 1.6rem 3.2rem;
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
   width: 100%;
 `;
 export const SideBarLogo = styled.img`
-  height: 56px;
-  width: 56px;
+  height: 5.6rem;
+  width: 5.6rem;
   border-radius: 50%;
   object-fit: cover;
 `;
 export const SideBarLogodiv = styled.div`
   display: flex;
   flex-direction: column;
-  gap:5px;
+  gap: 5px;
 `;
 export const SideBarLogoHead = styled.p`
   color: #222222;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 22px;
+  line-height: 2.2rem;
   margin: 0;
-
 `;
 
 export const SideBarLogoPara = styled.p`
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   color: #686868;
   width: 100%;
   margin: 0;
@@ -48,13 +56,13 @@ export const SideBarLogoPara = styled.p`
 export const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px;
-  gap: 20px;
+  padding: 3.2rem;
+  gap: 2rem;
 `;
 
 export const SideBarListContainer = styled.div`
   display: flex;
-  gap: 11px;
+  gap: 1.1rem;
   align-items: center;
   cursor: pointer;
   &:hover img path {
@@ -65,30 +73,29 @@ export const SideBarListContainer = styled.div`
   }
 `;
 export const SideBarListLogo = styled.img`
-  height: 18px;
-  width: 18px;
+  height: 10.8rem;
+  width: 10.8rem;
   fill: #5c5c5c;
   cursor: pointer;
 `;
 export const SideBarListTitle = styled.p`
   color: #5c5c5c;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0px;
+  line-height: 1.6rem;
   cursor: pointer;
- 
 `;
 export const SidebarArrow = styled.img``;
 export const FlexContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 25px;
+  gap: 2.5rem;
   align-items: center;
-  margin-bottom: -30px;
+  margin-bottom: -3rem;
 `;
 export const DropDownContainer = styled.div`
   width: 100%;
-  padding: 0px 10px;
+  padding: 0rem 1rem;
   /* background-color: #8f9bb3; */
-  margin-top: -15px;
+  margin-top: -1.5rem;
 `;

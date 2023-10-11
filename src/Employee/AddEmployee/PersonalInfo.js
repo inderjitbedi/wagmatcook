@@ -219,18 +219,19 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
     console.log("form submmited", data);
   };
   const inputStyles = {
-    fontSize: "13px",
+    fontSize: "1.3rem",
     fontWeight: 400,
-    lineHeight: "16px",
+    lineHeight: "1.6rem",
     width: "100%",
     border: "1px solid #dcdcdc",
     borderRadius: "8px",
     padding: "1em",
-    marginBottom: "10px",
+    marginBottom: "1rem",
     color: "#222b45",
     background: "#fff",
     boxSizing: "border-box",
     outline: "none", // Removed outline color
+
   };
   const [headerData, setHeaderData] = useState([]);
 
@@ -660,7 +661,7 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
                       <InputLabel
                         htmlFor={`isBebEligible`}
                         style={{
-                          marginBottom: "0px",
+                          marginBottom: "0rem",
                           cursor: "pointer",
                         }}
                       >
@@ -670,7 +671,7 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
                   </FlexColumnForm>
                 </FlexContaierForm>
               </FormContainer>
-              <BodyMainHeading style={{ marginBottom: "25px" }}>
+              <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
                 Personal Information
               </BodyMainHeading>
               <FormContainer>

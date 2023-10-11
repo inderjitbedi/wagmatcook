@@ -4,19 +4,19 @@ import styled from "styled-components";
 export const DisciplinaryDiv = styled.div`
   display: flex;
   background: #fff;
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 0.8rem 0.8rem 0rem 0rem;
   border: 1px solid #eff4fa;
   align-items: center;
   justify-content: space-between;
 
-  padding: 10px 20px;
+  padding: 1rem 2rem;
 `;
 export const AddNewButton = styled.button`
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background-color: #279af1;
   color: #ffffff;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 1.3rem;
+  line-height: 1.6rem;
   font-weight: 600;
   padding: 1em 2em;
   border: none;
@@ -26,110 +26,109 @@ export const HeaderDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 8px 8px 0px 0px;
+  border-radius: 0.8rem 0.8rem 0rem 0rem;
   border-bottom: 1px solid #eff4fa;
   background: #fff;
-  padding: 10px 20px;
+  padding: 1rem 2rem;
 `;
 export const HeaderTitle = styled.h1`
   color: #222b45;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
   text-transform: capitalize;
 `;
 export const LoadMore = styled.button`
-background: none;
-border: none;
-  margin-top: 35px;
+  background: none;
+  border: none;
+  margin-top: 3.5rem;
   color: #222b45;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 16px;
+  line-height: 1.6rem;
   &:hover {
     color: #279af1;
     text-decoration: underline #279af1;
   }
-  transition: all .5 ease-in-out;
+  transition: all 0.5 ease-in-out;
   cursor: pointer;
 `;
 export const DisciplinaryHeading = styled.p`
   color: #222b45;
-  font-size: 17px;
+  font-size: 1.7rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 export const MenuIcon = styled.img`
   display: inline-block;
-  width: 22px;
-  height: 23px;
+  width: 2.2rem;
+  height: 2.2rem;
   cursor: pointer;
 `;
 export const MenuIconDiv = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.8rem;
 `;
 export const ActionIcons = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   display: inline-block;
   cursor: pointer;
 `;
 export const ActionIconDiv = styled.div`
-
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 2rem;
 `;
 export const ModalUpperDiv = styled.div`
-  padding: 0px 16px 10px 35px;
+  padding: 0rem 1.6rem 1rem 3.5rem;
   border-bottom: 1px solid #eff4fa;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 export const ModalHeading = styled.p`
-  font-size: 17px;
+  font-size: 1.7rem;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 export const ModalIcon = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
 `;
 export const ModalUpperMid = styled.div`
   /* border-bottom: 1px solid #eff4fa; */
-  padding: 16px 35px 16px 35px;
+  padding: 1.6rem 3.5rem 1.6rem 3.5rem;
   box-sizing: border-box;
 `;
 export const Input = styled.input`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   padding: 1em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
 `;
 export const TextArea = styled.textarea`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   resize: none;
-  height: 105px;
+  height: 10.5rem;
   padding: 1em;
   color: #222b45;
   background: #fff;
@@ -137,11 +136,11 @@ export const TextArea = styled.textarea`
 `;
 export const InputLabel = styled.label`
   color: #222b45;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   display: block;
 `;
 export const InputSpan = styled.span`
@@ -150,24 +149,24 @@ export const InputSpan = styled.span`
 `;
 export const InputPara = styled.p`
   color: #737992;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 0px; /* 171.429% */
+  line-height: 0rem; /* 171.429% */
   display: flex;
   justify-content: space-between;
 `;
 export const Select = styled.select`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 2.4rem;
   width: 100%;
 
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  /* padding: 8px 11px; */
+  border-radius: 0.8rem;
+  /* padding: 0.8rem 1.1rem; */
   padding: 0.72em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
@@ -175,58 +174,57 @@ export const Select = styled.select`
   -webkit-appearance: none;
   -moz-appearance: none;
   background: url("/images/icons/arrowdown.svg") no-repeat right center;
-  background-size: 12px 10px;
+  background-size: 1.2rem 1rem;
   background-position: calc(100% - 15px) center;
 `;
 export const Option = styled.option`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
-  padding: 8px 11px;
+  line-height: 2.4rem; /* 150% */
+  padding: 0.8rem 1.1rem;
 `;
 export const Errors = styled.p`
   display: block;
   color: red;
-  font-size: 10px;
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 0px;
+  line-height: 0rem;
   margin-top: 2px;
 `;
 export const TabelDarkPara = styled.p`
   color: #222b45;
   /* font-family: Inter; */
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 10px;
+  line-height: 1rem;
   text-transform: capitalize;
 `;
 export const TabelLightPara = styled.p`
   color: #8f9bb3;
   /* font-family: Open Sans; */
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 0px;
+  line-height: 0rem;
   text-transform: capitalize;
 `;
 export const TabelDiv = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
 `;
 export const TabelImg = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
-object-fit: cover;
-
+  object-fit: cover;
 `;
 export const PaginationDiv = styled.div`
-display: flex;
-justify-content: flex-end;
-width: 100%;
-margin: 16px 0px ;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 1.6rem 0rem;
 `;

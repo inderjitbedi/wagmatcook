@@ -17,51 +17,51 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
-  borderRadius: "8px",
+  padding: "2rem 0rem",
+  borderRadius: "0.8rem",
 };
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   /* align-items: center;
   justify-content: center; */
-  padding: 4px 20px;
+  padding: 4px 2rem;
   position: relative;
   width: 100%;
   box-sizing: border-box;
 `;
 const ModalIconDelete = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
   position: absolute;
-  right: 10px;
-  top: 0px;
+  right: 1rem;
+  top: 0rem;
 `;
 const ModalHeading = styled.h1`
   color: #222b45;
   /* Body/Body/Bold/M\ */
   font-family: Inter;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  letter-spacing: -0.16px;
+  letter-spacing: -0.1.6rem;
 `;
 const UploadDiv = styled.div`
   width: 100%;
-  padding: 30px 0px 10px 0px;
+  padding: 3rem 0rem 1rem 0rem;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 const UploadLabel = styled.label`
   position: relative;
-  width: 152px;
-  height: 152px;
+  width: 15.2rem;
+  height: 15.2rem;
   border-radius: 50%;
-  border: 0.8px dashed #d2d3d3;
+  border: 2px dashed #d2d3d3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,16 +70,16 @@ const UploadLabel = styled.label`
   cursor: pointer;
 `;
 const UploadImg = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
 `;
 const UploadText = styled.p`
-  margin: 0px;
+  margin: 0rem;
   /* color: #8f9bb3;
    */
   color: black;
   font-family: Inter;
-  font-size: 8px;
+  font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
@@ -92,24 +92,24 @@ const FlexColumnForm = styled.div`
 `;
 export const InputLabel = styled.label`
   color: #222b45;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   display: block;
   /* text-transform: capitalize; */
 `;
 export const Input = styled.input`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   padding: 1em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
@@ -119,9 +119,9 @@ export const Input = styled.input`
 const Errors = styled.p`
   display: block;
   color: red;
-  font-size: 10px;
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 12px;
+  line-height: 1.2rem;
   margin-top: 2px;
 `;
 export const InputSpan = styled.span`
@@ -132,23 +132,23 @@ const ButtonBlue = styled.button`
   border-radius: 6px;
   background: #279af1;
   display: inline-flex;
-  padding: 11px 14px 12px 14px;
+  padding: 1.1rem 1.4rem 1.2rem 1.4rem;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
   color: #fff;
   text-align: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   border: none;
-  margin-top: 25px;
+  margin-top: 2.5rem;
 `;
 const ProfileImage = styled.img`
-  width: 152px;
-  height: 152px;
+  width: 15.2rem;
+  height: 15.2rem;
   border-radius: 50%;
   position: absolute;
   opacity: 0.5;
@@ -286,7 +286,7 @@ const SettingsModal = ({
       open={openSettings}
       sx={{
         backgroundColor: "rgb(27, 27, 27, 0.75)",
-        backdropFilter: "blur(8px)",
+        backdropFilter: "blur(0.8rem)",
       }}
       // onClose={() => {
       //   HandleCloseSettings();
@@ -304,7 +304,7 @@ const SettingsModal = ({
               style={{
                 display: "flex",
                 width: "100%",
-                height: "300px",
+                height: "30rem",
                 justifyContent: "center",
                 alignItems: "center",
               }}

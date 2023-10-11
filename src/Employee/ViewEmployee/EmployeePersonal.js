@@ -112,7 +112,7 @@ const EmployeePersonal = () => {
 
               <BasicInfoContainer>
                 <BasicInfoDiv>
-                  <FlexSpaceBetween style={{ marginBottom: "10px" }}>
+                  <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Basic Information</BasicHeading>
                     {isAccount || userType === ROLES.EMPLOYEE ? (
                       ""
@@ -239,7 +239,7 @@ const EmployeePersonal = () => {
                         )}
                       </FlexColumn>
                     </FlexSpaceBetween>
-                    <BasicHeading style={{ marginTop: "53px" }}>
+                    <BasicHeading style={{ marginTop: "5.3rem" }}>
                       Basic Information
                     </BasicHeading>
                     <FlexSpaceBetween>
@@ -254,8 +254,8 @@ const EmployeePersonal = () => {
                         <ViewPara>
                           {result.personalInfo?.dob
                             ? moment(result.personalInfo?.dob).format(
-                              "DD/MM/YYYY"
-                            )
+                                "DD/MM/YYYY"
+                              )
                             : " - "}
                         </ViewPara>
                       </FlexColumn>

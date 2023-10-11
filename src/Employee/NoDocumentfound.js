@@ -9,17 +9,17 @@ const Container = styled.div`
   justify-content: center;
   height: 50vh;
   background-color: #fff;
-  gap: 16px;
+  gap: 1.6rem;
   color: #c2c2c2;
   font-family: Inter;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 const Img = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 14rem;
+  height: 14rem;
 
 `;
 

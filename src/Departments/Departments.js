@@ -58,7 +58,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 
@@ -224,7 +224,7 @@ const Departments = () => {
   };
   useEffect(() => {
     GetDepartments();
-  }, [page,searchValue]);
+  }, [page, searchValue]);
 
   const HandleSubmit = (e) => {
     e.preventDefault();
@@ -417,7 +417,7 @@ const Departments = () => {
                   style={{
                     display: "flex",
                     width: "100%",
-                    height: "441px",
+                    height: "44.1rem",
                     justifyContent: "center",
                     alignItems: "center",
                     zIndex: 999,
@@ -549,9 +549,9 @@ const Departments = () => {
                 <div
                   style={{
                     width: "100%",
-                    height: "500px",
+                    height: "50rem",
                     textAlign: "center",
-                    margin: "100px auto",
+                    margin: "10rem auto",
                   }}
                 >
                   No departments found
@@ -619,7 +619,7 @@ const Departments = () => {
               style={{
                 display: "flex",
                 width: "100%",
-                height: "380px",
+                height: "38rem",
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 999,

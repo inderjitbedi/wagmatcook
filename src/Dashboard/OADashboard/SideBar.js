@@ -13,10 +13,12 @@ import {
   FlexContainer,
   SidebarArrow,
   DropDownContainer,
+  IconDelete,
 } from "./SideBarStyles";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const SideBar = () => {
+const SideBar = ({ ToggleSidebar, screenWidth }) => {
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   useEffect(() => {
@@ -119,8 +121,13 @@ const SideBar = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (
-    <>
-      {" "}
+    <div style={{ position: "relative" }}>
+      {screenWidth < 1200 && (
+        <IconDelete
+          onClick={ToggleSidebar}
+          src="/images/icons/Alert-Circle.svg"
+        />
+      )}{" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
@@ -249,7 +256,7 @@ const SideBar = () => {
               viewBox="0 0 9 5"
               fill="none"
               style={{
-                width: "10px",
+                width: "1rem",
                 height: "14px",
                 transform: isOpen ? "rotate(180deg)" : undefined,
               }}
@@ -263,7 +270,7 @@ const SideBar = () => {
             </svg> */}
         </FlexContainer>
 
-        <SideBarList style={{ padding: "20px" }}>
+        <SideBarList style={{ padding: "2rem" }}>
           <Link
             onMouseEnter={() => handleMouseEnter("departments")}
             onMouseLeave={() => handleMouseLeave("departments")}
@@ -788,7 +795,7 @@ const SideBar = () => {
           </SideBarListContainer>
         </Link> */}
       </SideBarList>
-    </>
+    </div>
   );
 };
 

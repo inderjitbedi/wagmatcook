@@ -2,67 +2,67 @@ import styled from "styled-components";
 // sidebar Styles
 export const SidebarTitle = styled.p`
   color: #222222;
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
-  line-height: 24px;
-  margin-bottom: 35px;
-  padding: 0px 32px;
-  padding-top: 20px;
+  line-height: 2.4rem;
+  margin-bottom: 3.5rem;
+  padding: 0rem 3.2rem;
+  padding-top: 2rem;
 `;
 export const SideBarLogoContainer = styled.div`
-  padding: 16px 32px;
+  padding: 1.6rem 3.2rem;
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
   width: 100%;
 `;
 export const TextArea = styled.textarea`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   resize: none;
-  height: 105px;
+  height: 10.5rem;
   padding: 1em;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
 `;
 export const SideBarLogo = styled.img`
-  height: 56px;
-  width: 56px;
+  height: 5.6rem;
+  width: 5.6rem;
 `;
 export const SideBarLogodiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap:10px; */
+  /* gap:1rem; */
 `;
 export const SideBarLogoHead = styled.p`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 0px;
-  letter-spacing: -0.32px;
+  line-height: 0rem;
+  letter-spacing: -0.3.2rem;
 `;
 
 export const SideBarLogoPara = styled.p`
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 00;
-  line-height: 0px;
+  line-height: 0rem;
   color: #8f9bb3;
-  letter-spacing: -0.24px;
+  letter-spacing: -0.2.4rem;
 `;
 export const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 32px;
-  gap: 20px;
+  padding: 3.2rem;
+  gap: 2rem;
 `;
 export const SideBarListContainer = styled.div`
   display: flex;
-  gap: 11px;
+  gap: 1.1rem;
   align-items: center;
   cursor: pointer;
   &:hover img path {
@@ -73,42 +73,41 @@ export const SideBarListContainer = styled.div`
   }
 `;
 export const SideBarListLogo = styled.img`
-  height: 18px;
-  width: 18px;
+  height: 10.8rem;
+  width: 10.8rem;
   fill: #5c5c5c;
   cursor: pointer;
 `;
 export const SideBarListTitle = styled.p`
   color: #5c5c5c;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0px;
+  line-height: 0rem;
   cursor: pointer;
 `;
 // ********************Employees layout styles************************
 export const Employee = styled.div`
   display: flex;
   width: 100%;
-
 `;
 export const EmployeeNav = styled.div`
   width: 18%;
   background-color: #ffffff;
-  /* padding: 32px; */
+  /* padding: 3.2rem; */
 `;
 export const EmployeeMain = styled.div`
   width: 82%;
-  padding: 0px 30px 0px 20px;
+  padding: 0rem 3rem 0rem 2rem;
   background: #f3f3f5;
 `;
 export const BackButton = styled.button`
-  border-radius: 88px;
+  border-radius: 80.8rem;
   border: 1px solid #8f9bb3;
   padding: 0.5em 0.75em;
-  font-size: 13px;
+  font-size: 1.3rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1.6rem;
   color: #222b45;
   display: flex;
   gap: 4px;
@@ -118,38 +117,38 @@ export const BackButton = styled.button`
 export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap:24px; */
+  /* gap:2.4rem; */
 `;
 export const FlexContaier = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1.6rem;
 `;
 export const HeaderEmployee = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 26px;
-  margin-top: 30px;
+  margin-bottom: 2.6rem;
+  margin-top: 3rem;
 `;
 export const HeaderTitle = styled.h1`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 2.4rem;
 `;
 export const IconsEmployee = styled.img`
   display: inline-block;
 `;
 export const EmployeeBody = styled.div`
-  border-radius: 8px;
+  border-radius: 0.8rem;
   border: 1px solid #eff4fa;
   background: #fff;
-  margin-bottom: 80px;
+  margin-bottom: 8rem;
 `;
 export const BodyHeader = styled.div`
-  padding: 8px 24px 5px 24px;
+  padding: 0.8rem 2.4rem 5px 2.4rem;
   border-bottom: 1px solid #f3f3f5;
   display: flex;
   align-items: center;
@@ -157,85 +156,92 @@ export const BodyHeader = styled.div`
 export const BodyHeaderTitle = styled.h1`
   color: #222b45;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  padding: 8px 0px;
+  padding: 0.8rem 0rem;
 `;
 export const BodyMain = styled.div`
-  padding: 10px 24px 56px 24px;
+  padding: 1rem 2.4rem 5.6rem 2.4rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 export const BodyMainHeading = styled.h1`
   color: #222b45;
   font-family: Inter;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 1.6rem;
 `;
 export const FormContainer = styled.div`
+box-sizing: border-box;
   width: 60%;
+
   position: relative;
+   @media only screen and (max-width: 900px) {
+     width: 100%;
+  }
+  
 `;
 export const ImgUpload = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 24px 0px;
+  gap: 1.6rem;
+  margin: 2.4rem 0rem;
 `;
 export const PersonImg = styled.img`
   display: inline-block;
-  width: 92px;
-  height: 92px;
+  width: 9.2rem;
+  height: 9.2rem;
   /* fill: #f8f8f8;
   background-color: #7b7b7b; */
   border-radius: 50%;
-object-fit: cover;
-
+  object-fit: cover;
 `;
 export const LightPara = styled.p`
   color: #8b8b8b;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.2.8rem;
   cursor: pointer;
 `;
 export const UploadImgButton = styled.label`
   color: #595959;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.28px;
-  border-radius: 8px;
+  letter-spacing: -0.2.8rem;
+  border-radius: 0.8rem;
   border: 1px solid #dfdfdf;
   background: #fff;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 4px 4px 0rem rgba(0, 0, 0, 0.15);
   padding: 0.5em;
   display: flex;
   align-items: center;
   gap: 4px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 export const UploadPara = styled.p`
   color: #8c8c8c;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.24px;
+  letter-spacing: -0.2.4rem;
 `;
 export const FlexContaierForm = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  /* margin-bottom: 16px; */
+  gap: 1.6rem;
+  /* margin-bottom: 1.6rem; */
   width: 100%;
 `;
 export const FlexColumnForm = styled.div`
@@ -246,11 +252,11 @@ export const FlexColumnForm = styled.div`
 `;
 export const InputLabel = styled.label`
   color: #222b45;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   display: block;
 `;
 export const InputSpan = styled.span`
@@ -258,14 +264,14 @@ export const InputSpan = styled.span`
   font-weight: 100;
 `;
 export const Input = styled.input`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 16px;
-  width: 100%;  
+  line-height: 1.6rem;
+  width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   padding: 1em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
@@ -274,23 +280,23 @@ export const Input = styled.input`
 export const Errors = styled.p`
   display: block;
   color: red;
-  font-size: 10px;
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 12px;
+  line-height: 1.2rem;
   margin-top: 2px;
 `;
 export const ButtonBlue = styled.button`
   border-radius: 6px;
   background: #279af1;
   display: inline-flex;
-  padding: 11px 14px 12px 14px;
+  padding: 1.1rem 1.4rem 1.2rem 1.4rem;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  color:  #fff;
+  gap: 1rem;
+  color: #fff;
   text-align: center;
-   cursor: pointer;
-  font-size: 14px;
+  cursor: pointer;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -298,118 +304,116 @@ export const ButtonBlue = styled.button`
   /* margin-top: 25px; */
 `;
 export const Select = styled.select`
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 2.4rem;
   width: 100%;
   border: 1px solid #dcdcdc;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   padding: 0.72em;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
   outline: #f0f2f6;
-  /* border-right: 16px solid transparent; */
+  /* border-right: 1.6rem solid transparent; */
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background: url("/images/icons/arrowdown.svg") no-repeat right center;
-  background-size: 12px 10px;
-  background-position: calc(100% - 15px) center;
+  background-size: 1.2rem 1rem;
+  background-position: calc(100% - 1.5rem) center;
 `;
 export const Option = styled.option`
   color: #222b45;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; /* 150% */
-  padding: 8px 11px;
+  line-height: 2.4rem; /* 150% */
+  padding: 0.8rem 1.1rem;
 `;
 export const ButtonGrey = styled.button`
   border-radius: 6px;
   background: var(--neutral-10, #f0f2f6);
   color: var(--neutral-100, #1e202c);
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   display: inline-flex;
-  padding: 11px 14px 12px 14px;
+  padding: 1.1rem 1.4rem 1.2rem 1.4rem;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
   border: none;
   cursor: pointer;
 `;
 export const BluePara = styled.p`
- cursor: pointer;
+  cursor: pointer;
   color: #279af1;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin: 10px 0px 50px 0px ;
- 
+  margin: 1rem 0rem 5rem 0rem;
 `;
 export const AlignFlex = styled.div`
-display: flex;
-align-items: center;
-gap:10px;
-margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 `;
 export const DeleteIcon = styled.img`
   display: inline-block;
-  width: 17px;
-  height: 17px;
+  width: 1.7rem;
+  height: 1.7rem;
   /* cursor: pointer; */
   /* position: absolute;
-  right: 10px;
-  top: 0px; */
+  right: 1rem;
+  top: 0rem; */
 `;
 export const TrashDiv = styled.div`
   color: #f61717;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-style: normal;
   font-weight: 700;
-  /* line-height: 18px; */
+  /* line-height: 10.8rem; */
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0px 0px 12px 0px;
-  margin-bottom: 24px;
-  border-bottom:1px solid #EAEAEA;
+  padding: 0rem 0rem 1.2rem 0rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid #eaeaea;
   cursor: pointer;
 `;
 export const UploadLabel = styled.label`
   display: flex;
-  width: 184px;
-  padding: 8px 11px;
-  gap: 10px;
+  width: 18.4rem;
+  padding: 0.8rem 1.1rem;
+  gap: 1rem;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 1rem;
   border: 1px solid #eff4fa;
   background: var(--default-white, #fff);
-  box-shadow: 0px 2px 4px 0px rgba(5, 16, 55, 0.06),
-    0px 0px 0px 1px #cdd0dc inset;
+  box-shadow: 0rem 2px 4px 0rem rgba(5, 16, 55, 0.06),
+    0rem 0rem 0rem 1px #cdd0dc inset;
   color: #279af1;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px;
+  line-height: 2.4rem;
   cursor: pointer;
 `;
 export const UploadIcon = styled.img`
-  width: 21px;
-  height: 21px;
+  width: 2.1rem;
+  height: 2.1rem;
   display: inline-block;
 `;
 export const RemoveContainer = styled.div`
-display: flex; 
-gap:8px;
-align-items: center;
-
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
 `;

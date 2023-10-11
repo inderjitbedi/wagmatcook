@@ -87,7 +87,7 @@ const VerifyOTP = () => {
           style={{
             display: "flex",
             width: "100%",
-            height: "380px",
+            height: "380rem",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 999,

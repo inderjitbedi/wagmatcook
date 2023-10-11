@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 const style = {
   position: "absolute",
   top: "50%",
@@ -12,7 +12,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "20px 0px",
+  padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const ModalThanks = styled.div`
@@ -20,53 +20,53 @@ const ModalThanks = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 0px;
+  padding: 4rem 0rem;
   position: relative;
 `;
 const ModalThanksImg = styled.img`
   display: block;
-  width: 106px;
-  height: 106px;
+  width: 10.6rem;
+  height: 10.6rem;
 `;
 const ModalIconDelete = styled.img`
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   cursor: pointer;
   position: absolute;
-  right: 10px;
-  top: 0px;
+  right: 1rem;
+  top: 0rem;
 `;
 const ModalThanksHeading = styled.p`
   color: #222b45;
-  font-size: 18px;
+  font-size: 1.8rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 22px;
+  line-height: 2.2rem;
   width: 70%;
   text-align: center;
 `;
 
- const ButtonBlue = styled.button`
-   border-radius: 6px;
-   background: #279af1;
-   display: inline-flex;
-   padding: 11px 14px 12px 14px;
-   justify-content: center;
-   align-items: center;
-   gap: 10px;
-   color: #fff;
-   text-align: center;
-   font-size: 14px;
-   font-style: normal;
-   font-weight: 600;
-   line-height: normal;
-   border: none;
-   cursor: pointer;
- `;
+const ButtonBlue = styled.button`
+  border-radius: 6px;
+  background: #279af1;
+  display: inline-flex;
+  padding: 1.1rem 1.4rem 1.2rem 1.4rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+  text-align: center;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  border: none;
+  cursor: pointer;
+`;
 
 const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
   return (
     <Modal
       sx={{
@@ -97,4 +97,4 @@ const SuccessfullModal = ({ HandleCloseThanks, openThanks }) => {
   );
 };
 
-export default SuccessfullModal
+export default SuccessfullModal;

@@ -63,7 +63,7 @@ const EVDocuments = () => {
     bgcolor: "background.paper",
     border: "1px solid #EFF4FA",
     boxShadow: 45,
-    padding: "20px 0px",
+    padding: "2rem 0rem",
     borderRadius: "8px",
   };
   const [openDelete, setOpenDelete] = useState(false);
@@ -83,34 +83,34 @@ const EVDocuments = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   // drag state
   const [dragActive, setDragActive] = React.useState(false);
-const inputRef = useRef(null);
-   const handleDrag =  (e) =>  {
-     e.preventDefault();
-     e.stopPropagation();
-     if (e.type === "dragenter" || e.type === "dragover") {
-       setDragActive(true);
-     } else if (e.type === "dragleave") {
-       setDragActive(false);
-     }
+  const inputRef = useRef(null);
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
   };
-  const handleDrop = async (e) =>  {
+  const handleDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       let file = e.dataTransfer.files[0];
-         if (!file) {
-      setErrors({ fileError: "Required" });
-      return;
-    }
-    let type = await getFileType(e.dataTransfer.files[0]);
-    if (type != "unknown") {
-      handleUpload(file, type);
-      setFile(file);
-      setErrors({ fileError: "" });
-    } else {
-      toast.error("Unsuported file type.");
-    }
+      if (!file) {
+        setErrors({ fileError: "Required" });
+        return;
+      }
+      let type = await getFileType(e.dataTransfer.files[0]);
+      if (type != "unknown") {
+        handleUpload(file, type);
+        setFile(file);
+        setErrors({ fileError: "" });
+      } else {
+        toast.error("Unsuported file type.");
+      }
     }
   };
 
@@ -326,7 +326,7 @@ const inputRef = useRef(null);
           <FlexSpaceBetween style={{ alignItems: "center" }}>
             <CommenHeader employeeid={employeeid} />
 
-            {/* <EditButton style={{ marginRight: "54px" }}>
+            {/* <EditButton style={{ marginRight: "5.4rem" }}>
           <ButtonIcon src="/images/icons/Pen 2.svg" />
           Edit
         </EditButton> */}
@@ -334,7 +334,7 @@ const inputRef = useRef(null);
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "10px", width: "84%" }}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem", width: "84%" }}>
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
@@ -351,11 +351,11 @@ const inputRef = useRef(null);
                   {result.documents?.map((data) => (
                     <FlexSpaceBetween
                       style={{
-                        marginBottom: "10px",
+                        marginBottom: "1rem",
                         width: "80%",
                         borderRadius: "8px",
                         border: "1.5px solid #EFF4FA",
-                        padding: "16px",
+                        padding: "1.6rem",
                       }}
                     >
                       <FlexContaier>
@@ -401,11 +401,11 @@ const inputRef = useRef(null);
 
               {/* <FlexSpaceBetween
                 style={{
-                  marginBottom: "10px",
+                  marginBottom: "1rem",
                   width: "80%",
                   borderRadius: "8px",
                   border: "1.5px solid #EFF4FA",
-                  padding: "16px",
+                  padding: "1.6rem",
                 }}
               >
                 <FlexContaier>
@@ -416,11 +416,11 @@ const inputRef = useRef(null);
               </FlexSpaceBetween>
               <FlexSpaceBetween
                 style={{
-                  marginBottom: "10px",
+                  marginBottom: "1rem",
                   width: "80%",
                   borderRadius: "8px",
                   border: "1.5px solid #EFF4FA",
-                  padding: "16px",
+                  padding: "1.6rem",
                 }}
               >
                 <FlexContaier>
@@ -449,7 +449,7 @@ const inputRef = useRef(null);
               style={{
                 display: "flex",
                 width: "100%",
-                height: "380px",
+                height: "38rem",
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 999,
@@ -563,7 +563,7 @@ const inputRef = useRef(null);
                   </FlexContaierForm>
 
                   <ButtonBlue
-                    style={{ marginTop: "25px" }}
+                    style={{ marginTop: "2.5rem" }}
                     onClick={(e) => HandleSubmit(e, file)}
                     disabled={isUploading}
                   >
