@@ -205,9 +205,10 @@ const orgController = {
       }
       const org = await Organization.findOneAndUpdate({
         _id: req.organization._id
-      }, req.body);
+      }, req.body, { new: true });
 
       res.status(200).json({
+        org,
         message: "Organization profile updated successfully.",
       });
     } catch (error) {
