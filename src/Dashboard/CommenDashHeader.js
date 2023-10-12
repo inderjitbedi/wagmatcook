@@ -40,12 +40,23 @@ import {
   FlexContaier,
   IconsEmployee,
   LoadMore,
+  SearchBarWrapper,
+  SearchInputMobile,
+  SearchButton,
 } from "./OADashboard/OADashBoardStyles";
 
 const CommenDashHeader = ({ onSearch, text }) => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
+  const [expanded, setExpanded] = useState(false);
 
+  const toggleSearchBar = () => {
+    setExpanded(!expanded);
+    setSearchValue("");
+    
+  };
   const [openSettings, setOpenSettings] = React.useState(false);
   const HandleOpenSettings = () => {
     setOpenSettings(true);
@@ -121,11 +132,13 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const SidebarWrapper = styled.div`
     width: 25rem;
     background-color: #ffffff;
-    height: 100%;
+    height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     transition: width 0.3s;
+    z-index: 100000;
+    overflow-y: scroll;
 
     /* @media (max-width: 768px) {
       width: 0;
@@ -242,7 +255,9 @@ const CommenDashHeader = ({ onSearch, text }) => {
         if (result) {
           // GetNotificationList();
           GetNotificationCount();
-          // toast.success(result.message); //Entry Deleted successfully");
+          // toast.success(result.message, {
+            // className: "toast",
+          // }); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -275,7 +290,9 @@ const CommenDashHeader = ({ onSearch, text }) => {
         if (result) {
           GetNotificationCount();
 
-          // toast.success(result.message); //Entry Updated Successfully");
+          // toast.success(result.message, {
+          //   className: "toast",
+          // }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -358,8 +375,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       setUserType(ROLES.ORG_ADMIN);
     }
   }, []);
-  let API_URL = process.env.REACT_APP_API_URL;
-  console.log("in common header ", screenWidth, typeof screenWidth);
+
   return (
     <>
       {isSidebarOpen && <SidebarContainer />}
@@ -391,6 +407,23 @@ const CommenDashHeader = ({ onSearch, text }) => {
           location.pathname.indexOf("employee/benefits") > -1 ||
           location.pathname.indexOf("tasks-view") > -1 ? (
             " "
+          ) : screenWidth < 600 ? (
+            <SearchBarWrapper expanded={expanded}>
+              <SearchInputMobile
+                type="text"
+                placeholder="Search..."
+                expanded={expanded}
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <SearchButton onClick={toggleSearchBar}>
+                {expanded ? (
+                  <SearchIcon src="/images/icons/Alert-Circle.svg" />
+                ) : (
+                  <SearchIcon src="/images/icons/searchIcon.svg" />
+                )}
+              </SearchButton>
+            </SearchBarWrapper>
           ) : (
             <SearchBox>
               <SearchInput
@@ -408,7 +441,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
             size="small"
           >
             <div
-              style={{ cursor: "pointer", paddingTop: "4px" }}
+              style={{ cursor: "pointer", paddingTop: ".4rem" }}
               onClick={(event) => {
                 handleClickMenuNotification(event);
                 GetNotificationList();

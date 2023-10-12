@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import httpClient from "../../api/httpClient";
@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import { ErrorMessage } from "@hookform/error-message";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import ROLES from "../../constants/roles";
 import {
   HeaderEmployee,
   BackButton,
@@ -40,6 +41,9 @@ import { FlexColContainer } from "../../Dashboard/ManagerDashboard/ManagerStyles
 const JobDetails = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+
   const [departmentData, setDepartmentData] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -173,6 +177,14 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
       GetReportsToList(),
       GetEmployeesJobDetails(),
     ]);
+
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
   }, []);
 
   const HandleSubmitJobDetails = (data) => {
@@ -197,9 +209,15 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
-            toast.success(result.message);
+            toast.success(result.message, {
+              className: "toast",
+            });
           } else {
-            Navigate(`/organization-admin/employee/benefits/${employeeid}`);
+            if (userType === ROLES.HR) {
+              Navigate(`/hr-management/benefits/${employeeid}`);
+            } else {
+              Navigate(`/organization-admin/employee/benefits/${employeeid}`);
+            }
           }
 
           setFormData(result);

@@ -69,6 +69,7 @@ import {
   Sectiondarktitle,
   Sectionsmalltitle,
   ShowMore,
+  FlexColumn100,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -93,7 +94,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: " 44.6rem",
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
@@ -456,7 +457,9 @@ const EVLeaveHistory = () => {
           handleClose();
           reset();
           GetLeaveHistory();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }
@@ -564,7 +567,7 @@ const EVLeaveHistory = () => {
               <SectionCard>
                 {limitedData?.map((data) => (
                   <SectionCardContainer>
-                    <FlexColumn>
+                    <FlexColumn100>
                       <Sectionlighttitle>
                         {" "}
                         {data?.leaveTypeObj?.name || "- "}{" "}
@@ -573,7 +576,7 @@ const EVLeaveHistory = () => {
                         {data?.consumed || " 0"} of{" "}
                         {data?.totalAllocation || "-"} Hrs Consumed
                       </Sectionsmalltitle>
-                    </FlexColumn>
+                    </FlexColumn100>
                   </SectionCardContainer>
                 ))}
               </SectionCard>
@@ -650,7 +653,7 @@ const EVLeaveHistory = () => {
               <TableBody>
                 {result.history?.length == 0 && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" colSpan={8}>
+                    <TableCell align="center" sx={Celllstyle2} colSpan={8}>
                       No Leave History Found
                     </TableCell>
                   </TableRow>

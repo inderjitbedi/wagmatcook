@@ -100,8 +100,8 @@ export const LeaveActionHeader = styled.div`
   gap: 1.2rem;
 `;
 export const LeaveIcon = styled.img`
-  width: 40.8rem;
-  height: 40.8rem;
+  width: 4.8rem;
+  height: 4.8rem;
   object-fit: cover;
   border-radius: 50%;
 `;

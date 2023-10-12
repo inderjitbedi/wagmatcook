@@ -76,7 +76,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -208,7 +208,9 @@ const ManagerLeaves = () => {
           handleClose();
           reset();
           GetLeavesHistory();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           HandleOpenDelete("Reject", error.message);
         }
@@ -265,7 +267,7 @@ const ManagerLeaves = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          toast.error("Error creating department. Please try again.");
+          // toast.error("Error creating department. Please try again.");
           setIsLoading(false);
           reject(error);
         })
@@ -435,7 +437,10 @@ const ManagerLeaves = () => {
                 <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
                   Sr.No
                 </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "188px" }} align="left">
+                <TableCell
+                  sx={{ ...CellStyle, maxWidth: "188px" }}
+                  align="left"
+                >
                   Name
                 </TableCell>
                 <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">

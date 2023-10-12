@@ -55,7 +55,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
@@ -207,7 +207,9 @@ const EVCertificates = () => {
           handleClose();
           GetEmployeesCertificates();
           reset();
-          toast.success(result.message); //Employee certificate added successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Employee certificate added successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -241,7 +243,9 @@ const EVCertificates = () => {
           setUpdate(false);
           handleClose();
           reset();
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -270,7 +274,9 @@ const EVCertificates = () => {
           setId("");
           GetEmployeesCertificates();
 
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }

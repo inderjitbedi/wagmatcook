@@ -61,7 +61,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
@@ -140,6 +140,11 @@ const EVDiscipline = () => {
       }
       AddNewDisciplinary(data);
     } else if (update) {
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
       HandleUpdate(data);
     }
     console.log("form submmited", data);
@@ -208,7 +213,9 @@ const EVDiscipline = () => {
         if (result) {
           handleClose();
           GetEmployeesDisciplinary();
-          toast.success(result.message); //Employee disciplinary added successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Employee disciplinary added successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -320,14 +327,16 @@ const EVDiscipline = () => {
     reset({
       details: data?.details,
       disciplinary: data.disciplinary?._id,
-      file: data?.file?._id,
+      file: data?.file ? data?.file?._id : null,
       issueDate: new Date(data?.issueDate).toISOString().split("T")[0],
       expiryDate: data.expiryDate
         ? new Date(data.expiryDate).toISOString().split("T")[0]
         : null,
     });
     handleOpen();
-    setFile(data.file);
+    if (data.file) {
+      setFile(data.file);
+    }
   };
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
@@ -358,7 +367,9 @@ const EVDiscipline = () => {
           setUpdate(false);
           handleClose();
           reset();
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -387,7 +398,9 @@ const EVDiscipline = () => {
           setId("");
           GetEmployeesDisciplinary();
 
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }

@@ -59,7 +59,7 @@ const EVDocuments = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 446,
+    width: "44.6rem",
     bgcolor: "background.paper",
     border: "1px solid #EFF4FA",
     boxShadow: 45,
@@ -158,7 +158,9 @@ const EVDocuments = () => {
           if (result) {
             handleClose();
             setFile(null);
-            toast.success(result.message);
+            toast.success(result.message, {
+              className: "toast",
+            });
             GetDocuments();
           } else {
             //toast.warn("something went wrong ");
@@ -189,7 +191,9 @@ const EVDocuments = () => {
           HandleCloseDelete();
           setId("");
           GetDocuments();
-          toast.success(result.message); //Benefit deleted successfully.");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }

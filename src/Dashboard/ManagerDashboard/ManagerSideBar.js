@@ -11,13 +11,12 @@ import {
   SideBarLogodiv,
   SideBarListLogo,
   SideBarList,
-   IconDelete,
+  IconDelete,
 } from "../OADashboard/SideBarStyles";
 import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
-  
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
@@ -196,7 +195,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* <Link
+        <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/employee-list"
         >
@@ -230,7 +229,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>  */}
+        </Link>
         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/leaves"
@@ -344,7 +343,8 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
-        {/* <Link
+
+        <Link
           style={{ textDecoration: "none" }}
           to={`/manager-management/account/personal-info/${userData?._id}`}
         >
@@ -375,11 +375,11 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               }
             >
               {" "}
-            My Account
+              My Account
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/helpdesk"
         >

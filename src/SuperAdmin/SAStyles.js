@@ -63,8 +63,8 @@ export const SideBarListContainer = styled.div`
 
 `;
 export const SideBarListLogo = styled.img`
-  height: 10.8rem;
-  width: 10.8rem;
+  height: 1.8rem;
+  width: 1.8rem;
   fill: #5c5c5c;
   cursor: pointer;
 `;

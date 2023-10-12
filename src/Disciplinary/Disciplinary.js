@@ -49,7 +49,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -161,7 +161,9 @@ const Disciplinary = () => {
           setId("");
           HandleCloseDelete();
 
-          toast.success(result.message); //"Entry Deleted Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //"Entry Deleted Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -253,7 +255,9 @@ const Disciplinary = () => {
             GetDisciplinary();
             setFormData("");
             setErrors("");
-            toast.success(result.message); //"Entry Added Successfully");
+            toast.success(result.message, {
+              className: "toast",
+            }); //"Entry Added Successfully");
           } else {
             //toast.warn("something went wrong ");
           }
@@ -315,7 +319,9 @@ const Disciplinary = () => {
             HandleCloseEdit();
             setupDateData("");
             setErrors("");
-            toast.success(result.message); //"Entry Updated Successfully");
+            toast.success(result.message, {
+              className: "toast",
+            }); //"Entry Updated Successfully");
           } else {
             //toast.warn("something went wrong ");
           }

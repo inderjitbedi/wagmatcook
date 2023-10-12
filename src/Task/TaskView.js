@@ -5,6 +5,10 @@ import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
+  ToggelButton,
+  ToggelLabel,
+  StyledLabelChecked,
+  StyledLabelActive,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
   BasicDetailsDiv,
@@ -21,11 +25,17 @@ import {
   Input,
   AddNewButton,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import { Checkbox } from "@mui/material";
 const TaskView = () => {
   const [searchValue, setSearchValue] = useState("");
 
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
+  };
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
   };
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -33,8 +43,22 @@ const TaskView = () => {
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Task Details"} />
       <BackGroundWhite>
-        <DisciplinaryHeading> Details </DisciplinaryHeading>
         <BasicInfoDiv>
+          <FlexSpaceBetween style={{alignItems:"center"}}>
+            <DisciplinaryHeading> Details </DisciplinaryHeading>
+            <ToggelButton
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              type="checkbox"
+              id="toggel"
+            />
+
+            {isChecked ? (
+              <StyledLabelChecked htmlFor="toggel" />
+            ) : (
+              <StyledLabelActive htmlFor="toggel" />
+            )}
+          </FlexSpaceBetween>
           <FlexSpaceBetween>
             <FlexColumn>
               <TitlePara>Task Title</TitlePara>

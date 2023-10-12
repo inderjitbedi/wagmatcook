@@ -105,8 +105,14 @@ submitEmployeeAllocation:`/employee/leave-allocation/:employeeid`,
   // user accout api
   userLeaveBalance: `/employee/leave-balance`,
   // employee list api 
-  getEmployeeList: `employee/list?page=Page&limit=10`,
-deleteEmployeeList:`/employee/delete/Id`,
+  getEmployeeList: `/employee/list?page=Page&limit=10`,
+  deleteEmployeeList: `/employee/delete/Id`,
+  //task apis 
+  getTaskList: `/task/list`,
+  updateTask: `/task/update/:id`,
+  deleteTask: `/task/delete/:id`,
+  createTask: `/task/create`,
+  getAssignees: `/task/assignees`,
 };
 
 export default API_URLS;

@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Dashboard = styled.div`
   display: flex;
@@ -25,6 +25,8 @@ export const DashHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 4rem;
+  position: relative;
+  align-items: center;
 `;
 export const DashHeaderTitle = styled.p`
   color: #222b45;
@@ -130,10 +132,10 @@ export const DashCardContainer = styled.div`
   flex-wrap: wrap;
   margin-bottom: 4rem;
   /* justify-content: space-between; */
-
   align-items: baseline;
   @media only screen and (max-width: 900px) {
-  align-items: none;
+    align-items: none;
+  }
 `;
 export const DashCard = styled.div`
   padding: 1.6rem 2.5rem;
@@ -302,6 +304,55 @@ export const LoadMore = styled.div`
   line-height: 2.2rem;
   margin: 0rem;
   padding: 0.75em 0rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const SearchBarWrapper = styled.div`
+  position: absolute;
+  border-radius: 50px;
+  background: #ffffff;
+
+  box-sizing: border-box;
+  transition: all 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: ${(props) => (props.expanded ? "1.5rem" : "2rem")};
+  right: ${(props) => (props.expanded ? "0rem" : "9rem")};
+  align-items: center;
+  transition: width 0.3s;
+  width: ${(props) => (props.expanded ? "100%" : "30px")};
+  z-index: 1000;
+`;
+export const SearchInputMobile = styled.input`
+  border: none;
+  background: none;
+  padding: 8px;
+  outline: none;
+  width: 100%;
+  margin: 0;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  display: ${(props) => (props.expanded ? "block" : "none")};
+
+  z-index: 1000;
+`;
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+`;
+export const SearchButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+  animation: ${fadeIn} 1s linear;
   display: flex;
   align-items: center;
   justify-content: center;

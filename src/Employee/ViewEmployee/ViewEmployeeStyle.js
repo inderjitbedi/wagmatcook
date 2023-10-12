@@ -233,6 +233,13 @@ export const FlexColumn = styled.div`
   gap: 0.8rem;
   width: 50%;
 `;
+export const FlexColumn100 = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 0.8rem;
+  width: 100%;
+`;
 export const SectionCard = styled.div`
 position: relative;
   display: flex;
@@ -391,7 +398,7 @@ export const BasicDetailsDiv = styled.div`
 export const TitlePara = styled.p`
   color: #8f9bb3;
   font-family: Inter;
-  font-size: 1.2rem;
+  font-size: 1.2rem !important;
   font-style: normal;
   font-weight: 500;
   line-height: 1.6rem;
@@ -401,7 +408,7 @@ export const TitlePara = styled.p`
 export const ViewPara = styled.p`
   color: #222b45;
   font-family: Inter;
-  font-size: 1.4rem;
+  font-size: 1.4rem !important;
   font-style: normal;
   font-weight: 500;
   line-height: 1.8rem;
@@ -687,7 +694,7 @@ export const UploadImageContainer = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 0.0.8rem dashed #d2d3d3;
+  border: 2px dashed #d2d3d3;
   flex-direction: column;
   height: 15.2rem;
   margin-bottom: 1.6rem;
