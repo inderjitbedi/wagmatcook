@@ -844,6 +844,7 @@ const employeeController = {
                 },
                 {
                     $unwind: '$file',
+                    preserveNullAndEmptyArrays: true,
                 },
                 {
                     $lookup: {
