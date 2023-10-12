@@ -1,4 +1,3 @@
-const { Task } = require("@mui/icons-material");
 const notificationConstants = require("../constants/notificationConstants");
 const Notifications = require("../models/notification");
 const Tasks = require("../models/tasks");
