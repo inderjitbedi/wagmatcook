@@ -860,7 +860,7 @@ const employeeController = {
                 {
                     $unwind: {
                         path: '$file',
-                        // preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
+                        preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
                     },
                 },
                 // {
