@@ -857,12 +857,12 @@ const employeeController = {
                         as: 'personalInfo',
                     },
                 },
-                // {
-                //     $unwind: {
-                //         path: '$completedByUserPersonalInfo',
-                //         preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
-                //     },
-                // },
+                {
+                    $unwind: {
+                        path: '$file',
+                        // preserveNullAndEmptyArrays: true, // Preserve documents with empty arrays
+                    },
+                },
                 // {
                 //     $project: {
                 //         file: 1,
