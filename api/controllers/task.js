@@ -85,8 +85,10 @@ const leaveTypeController = {
                     assigner: req.user?._id,
                 }]
             };
-            const tasks = await Tasks.find(filters).populate({ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
-                { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
+            const tasks = await Tasks.find(filters)
+                // .populate(
+                //     { path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+                //     { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });
