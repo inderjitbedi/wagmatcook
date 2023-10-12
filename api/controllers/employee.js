@@ -837,15 +837,18 @@ const employeeController = {
                 {
                     $lookup: {
                         from: 'files',
-                        localField: 'file',
-                        foreignField: '_id',
+                        let: { fileId: '$file' },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $eq: ['$_id', '$$fileId'] },
+                                },
+                            },
+                        ],
                         as: 'file',
                     },
                 },
-                {
-                    $unwind: '$file',
-                    preserveNullAndEmptyArrays: true,
-                },
+
                 {
                     $lookup: {
                         from: 'employeepersonalinfos',
