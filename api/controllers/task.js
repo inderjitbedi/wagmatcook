@@ -65,9 +65,8 @@ const taskController = {
         try {
             const task = await Tasks.findOne({
                 _id: req.params._id
-            })
-                .populate({ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
-                    { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
+            }).populate([{ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+            { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } }])
             res.status(200).json({ task, message: 'Task details fetched successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
@@ -76,6 +75,7 @@ const taskController = {
     },
     async list(req, res) {
         try {
+            console.log(JSON.stringify(req.user));
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
@@ -88,9 +88,10 @@ const taskController = {
                 }]
             };
             const tasks = await Tasks.find(filters)
-                // .populate(
-                //     { path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
-                //     { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
+                .populate([
+                    { path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+                    { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } }
+                ])
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });
