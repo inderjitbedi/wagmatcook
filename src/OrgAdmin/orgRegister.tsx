@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 
-// TODO pxove, this demo shouldn't need to reset the theme.
+// TODO Remove, this demo shouldn't need to reset the theme.
 
 export default function RegisterOrganization() {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -43,7 +43,7 @@ export default function RegisterOrganization() {
     handleUpload(file);
   };
 
-  const pxoveFile = (e: any) => {
+  const RemoveFile = (e: any) => {
     setErrors({ ...errors, fileError: "" });
     setFile(null);
     setFormData({ ...formData, file: null });
@@ -113,7 +113,9 @@ export default function RegisterOrganization() {
       })
         .then(({ result, error }) => {
           if (result) {
-            toast.success(result.message); //Account successfully created.")
+            toast.success(result.message, {
+              className: "toast",
+            }); //Account successfully created.")
             navigate("/organization-admin/dashboard");
           }
           setIsLoading(false);
@@ -214,11 +216,11 @@ export default function RegisterOrganization() {
 
                     <button
                       type="button"
-                      aria-label="pxove button"
-                      className="mx-1 mt-2 pxove-button"
-                      onClick={pxoveFile}
+                      aria-label="Remove button"
+                      className="mx-1 mt-2 Remove-button"
+                      onClick={RemoveFile}
                     >
-                      pxove
+                      Remove
                     </button>
                     {/* <span className='gray-text'>'png', 'jpg', 'jpeg', 'gif', 'tiff'*png *jpeg up to 10MB at least 400px by 400px</span> */}
                   </div>

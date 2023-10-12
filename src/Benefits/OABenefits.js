@@ -185,7 +185,9 @@ const OABenefits = () => {
         if (result) {
           HandleClose();
           reset();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
           GetBenefits();
         } else {
           //toast.warn("something went wrong ");
@@ -216,7 +218,9 @@ const OABenefits = () => {
           HandleCloseDelete();
           setId("");
           GetBenefits();
-          toast.success(result.message); //Benefit deleted successfully.");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -250,7 +254,9 @@ const OABenefits = () => {
           setUpdate(false);
           HandleClose();
           reset();
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -270,7 +276,7 @@ const OABenefits = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 446,
+    width: "44.6rem",
     bgcolor: "background.paper",
     border: "none",
     boxShadow: 45,

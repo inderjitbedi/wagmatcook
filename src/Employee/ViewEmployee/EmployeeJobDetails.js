@@ -243,7 +243,9 @@ const EmployeeJobDetails = () => {
           handleClose();
           GetEmployeesJobDetails();
           reset();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }
@@ -330,7 +332,7 @@ const EmployeeJobDetails = () => {
 
               <BasicInfoContainer>
                 <BasicInfoDiv>
-                  <FlexSpaceBetween style={{ marginBottom: "10rem" }}>
+                  <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Employment Details</BasicHeading>
                     {userType === ROLES.MANAGER ||
                     userType === ROLES.EMPLOYEE ||
@@ -518,7 +520,7 @@ const EmployeeJobDetails = () => {
                             borderRadius: "50%",
                             boxShadow: "none",
                             outine: "none",
-                            marginLeft: "10rem",
+                            marginLeft: "1rem",
                           }}
                           intersectionObserverProps={{
                             margin: "0rem 0rem 0rem 0rem",

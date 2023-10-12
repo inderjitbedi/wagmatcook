@@ -57,7 +57,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -90,6 +90,7 @@ const CellStyle2 = {
 const PendingStyle = {
   borderRadius: "1rem",
   background: "#FFF1DD",
+
   display: "inline-flex",
   padding: "2px 12px",
   alignItems: "center",
@@ -266,7 +267,9 @@ const OALeaves = () => {
         if (result) {
           HandleClose();
           GetLeavesType();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }
@@ -299,7 +302,9 @@ const OALeaves = () => {
           setUpdate(false);
           HandleClose();
           reset();
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -328,7 +333,9 @@ const OALeaves = () => {
           HandleCloseDelete();
           setId("");
           GetLeavesType();
-          toast.success(result.message); //Benefit deleted successfully.");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }

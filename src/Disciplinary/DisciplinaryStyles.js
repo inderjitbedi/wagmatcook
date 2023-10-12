@@ -228,3 +228,75 @@ export const PaginationDiv = styled.div`
   width: 100%;
   margin: 1.6rem 0rem;
 `;
+export const PendingStyle = styled.p`
+  border-radius: 10rem;
+  background: #fff1dd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 1.2rem;
+  margin: 0;
+  color: #e88b00;
+
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+`;
+export const ApproveStyle = styled.p`
+  border-radius: 10rem;
+  background: #c8ffc7;
+  color: #0d7d0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 1.2rem;
+  margin: 0;
+
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+`;
+export const ToggelButton = styled.input`
+  height: 0;
+  width: 0;
+  visibility: hidden;
+`;
+export const ToggelLabel = styled.label`
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 5rem;
+  height: 2.5rem;
+  background: grey;
+  display: block;
+  border-radius: 10rem;
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: #fff;
+    border-radius: 9rem;
+    transition: 0.3s;
+  }
+
+`;
+export const StyledLabelChecked = styled(ToggelLabel)`
+  background: #bada55;
+  &::after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+`;
+
+export const StyledLabelActive = styled(ToggelLabel)`
+  &::after {
+    width: 1.5rem;
+  }
+`;

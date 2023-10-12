@@ -172,7 +172,9 @@ const ManagerLeaveAction = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          // toast.success(result.message);
+          // toast.success(result.message, {
+          //   className: "toast",
+          // });
           HandleOpenDelete(isApproved ? "Approve" : "Reject");
           //Entry Updated Successfully");
         } else {

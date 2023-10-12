@@ -62,7 +62,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -221,7 +221,9 @@ const Employee = () => {
         if (result) {
           HandleCloseDelete();
           GetEmployees();
-          toast.success(result.message); //Entry Deleted successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -434,7 +436,11 @@ const Employee = () => {
                     <TableCell align="center" sx={Celllstyle2}>
                       {index + 1}
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2} style={{minWidth:"150px"}}>
+                    <TableCell
+                      align="left"
+                      sx={Celllstyle2}
+                      style={{ minWidth: "150px" }}
+                    >
                       <TabelDiv
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
@@ -518,9 +524,15 @@ const Employee = () => {
                         ) : (
                           <Icons
                             onClick={() => {
-                              Navigate(
-                                `/organization-admin/employee/personal-info/${data._id}`
-                              );
+                              if (userType === ROLES.HR) {
+                                Navigate(
+                                  `/hr-management/personal-info/${data._id}`
+                                );
+                              } else {
+                                Navigate(
+                                  `/organization-admin/employee/personal-info/${data._id}`
+                                );
+                              }
                             }}
                             src="/images/icons/Pendown.svg"
                           />

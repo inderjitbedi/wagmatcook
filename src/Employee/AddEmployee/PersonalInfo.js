@@ -155,6 +155,13 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
     GetHeadersData();
 
     GetEmployeesPersonalInfo();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
   }, []);
 
   //get Employee Personal Info
@@ -180,9 +187,17 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
-            toast.success(result.message);
+            toast.success(result.message, {
+              className: "toast",
+            });
           } else {
-            Navigate(`/organization-admin/employee/job-details/${employeeid}`);
+            if (userType === ROLES.HR) {
+              Navigate(`/hr-management/job-details/${employeeid}`);
+            } else {
+              Navigate(
+                `/organization-admin/employee/job-details/${employeeid}`
+              );
+            }
           }
           setFormData(result);
         } else {
@@ -231,7 +246,6 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
     background: "#fff",
     boxSizing: "border-box",
     outline: "none", // Removed outline color
-
   };
   const [headerData, setHeaderData] = useState([]);
 

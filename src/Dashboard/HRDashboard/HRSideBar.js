@@ -147,7 +147,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
           </SideBarListContainer>
         </Link>
 
-        {/* <Link
+        <Link
           style={{ textDecoration: "none" }}
           to="/hr-management/employee-list"
         >
@@ -181,7 +181,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
               Employee
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>  */}
+        </Link> 
 
         <Link style={{ textDecoration: "none" }} to="/hr-management/leaves">
           <SideBarListContainer style={{ zIndex: "1" }}>
@@ -236,7 +236,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
+         {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -288,7 +288,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
               Events
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           style={{ textDecoration: "none" }}
           to={`/hr-management/account/personal-info/${userData?._id}`}
@@ -324,7 +324,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link style={{ textDecoration: "none" }} to="/hr-management/helpdesk">
+        {/* <Link style={{ textDecoration: "none" }} to="/hr-management/helpdesk">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -376,7 +376,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>  */}
+        </Link>  */} 
       </SideBarList>
     </div>
   );

@@ -6,6 +6,7 @@ import httpClient from "../api/httpClient";
 import API_URLS from "../constants/apiUrls";
 import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router";
+import { toast } from "react-toastify";
 
 import Modal from "@mui/material/Modal";
 import DeleteModal from "../Modals/DeleteModal";
@@ -39,6 +40,8 @@ import {
   Option,
   Errors,
   LoadMore,
+  PendingStyle,
+  ApproveStyle,
 } from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
@@ -46,7 +49,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: " 44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -89,6 +92,10 @@ const Task = () => {
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
+  const [taskLsit, setTaskList] = useState([]);
+  const [result, setResult] = useState([]);
+  const [assignees, setAssignees] = useState([]);
+
   // add new modal
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -122,7 +129,7 @@ const Task = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      //   HandleSubmit(data);
+      HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
       //   HandleUpdate(data);
     }
@@ -145,6 +152,90 @@ const Task = () => {
     reset({});
     clearErrors();
     setDetailsLength(500);
+  };
+   const GetAssignees = () => {
+     setIsLoading(true);
+     let url = API_URLS.getAssignees;
+
+     httpClient({
+       method: "get",
+       url,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           setAssignees(result);
+          
+         } else {
+           //toast.warn("something went wrong ");
+         }
+       })
+       .catch((error) => {
+         console.error("Error:", error);
+         toast.error("Error Adding Benefits. Please try again.");
+         setIsLoading(false);
+       })
+       .finally(() => {
+         setIsLoading(false);
+       });
+   };
+  const GetTaskList = () => {
+    setIsLoading(true);
+    let url = API_URLS.getTaskList;
+
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+          setTaskList(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleSubmit = (data) => {
+    // e.preventDefault();
+    setIsLoading(true);
+    let url = API_URLS.createTask;
+
+    setIsLoading(true);
+    let dataCopy = data;
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          });
+          GetTaskList();
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error feteching benefits. Please try again.");
+        HandleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   const data = [
     {
@@ -194,30 +285,11 @@ const Task = () => {
         "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
     },
   ];
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
 
-    // const reorderedData = Array.from(benefits);
-    // const [movedItem] = reorderedData.splice(result.source.index, 1);
-    // reorderedData.splice(result.destination.index, 0, movedItem);
-    // console.log("drag is working ");
-    // setBenefits(reorderedData);
-    // HandleReorder(reorderedData.map((item) => item._id));
-  };
-
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: "none",
-    margin: "0 1rem 0 0 ",
-    background: isDragging ? "#279AF1" : "#fff",
-
-    // styles we need to apply on draggables
-    ...draggableStyle,
-  });
-  const getListStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? "#fff" : "#fff",
-    padding: "2px",
-  });
+  useEffect(() => {
+    GetTaskList();
+    GetAssignees();
+  }, []);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
@@ -302,7 +374,7 @@ const Task = () => {
                       Assigned To <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
-                      name="assignedto"
+                      name="assignee"
                       control={control}
                       rules={{
                         required: {
@@ -314,13 +386,15 @@ const Task = () => {
                         <Select {...field} disabled={update}>
                           <Option>Select</Option>
                           {data?.map((data) => (
-                            <Option value={data._id}>{data.name}</Option>
+                            <Option value="6527f7a2b84aea9000a7a515">
+                              {data.name}
+                            </Option>
                           ))}
                         </Select>
                       )}
                     />
                     {errors.assignedto && (
-                      <Errors>{errors.assignedto?.message}</Errors>
+                      <Errors>{errors.assignee?.message}</Errors>
                     )}
                     <InputLabel>
                       Description <InputSpan>*</InputSpan>
@@ -412,153 +486,131 @@ const Task = () => {
           />
         </div>
       ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow
+                sx={{
+                  background: "#FBFBFB",
+                }}
+              >
+                <TableCell
+                  sx={CellHeadStyles}
+                  align="left"
+                  style={{ width: "1rem" }}
                 >
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "2rem" }}
-                  >
-                    Order&nbsp;No.
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "15rem" }}
-                    align="left"
-                  >
-                    Task Title
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Assigned To
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Due Date
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "35rem" }}
-                    align="left"
-                  >
-                    Description
-                  </TableCell>
+                  SNo.
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "15rem" }}
+                  align="left"
+                >
+                  Task Title
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "10rem" }}
+                  align="left"
+                >
+                  Assigned To
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "9rem" }}
+                  align="left"
+                >
+                  Due Date
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "35rem" }}
+                  align="left"
+                >
+                  Description
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "10rem" }}
+                  align="left"
+                >
+                  Status
+                </TableCell>
+                <TableCell
+                  sx={CellHeadStyles}
+                  style={{ minWidth: "10rem" }}
+                  align="left"
+                >
+                  Action
+                </TableCell>
+              </TableRow>
+            </TableHead>
 
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Action
+            <TableBody>
+              {!TaskData?.length && (
+                <TableRow sx={{ height: "20rem" }}>
+                  <TableCell align="center" colSpan={3}>
+                    No benefits found
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <Droppable droppableId="table">
-                {(provided, snapshot) => (
-                  <TableBody
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDraggingOver)}
-                  >
-                    {!TaskData?.length && (
-                      <TableRow sx={{ height: "20rem" }}>
-                        <TableCell align="center" colSpan={3}>
-                          No benefits found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    {TaskData?.map((data, index) => (
-                      <Draggable
-                        key={data._id}
-                        draggableId={data._id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <TableRow
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                            sx={{
-                              "&:last-child td, &:last-child th": {
-                                border: 0,
-                              },
-                              background: "#fff",
-                            }}
-                            key={data._id}
-                          >
-                            <TableCell sx={CellStyle2} align="left">
-                              <MenuIconDiv>
-                                <MenuIcon
-                                  {...provided.dragHandleProps}
-                                  src="/images/icons/Menu Dots.svg "
-                                  style={{ cursor: "grab" }}
-                                />
-                                {data.order}
-                              </MenuIconDiv>
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {data.title}
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {data.assignedto}
-                            </TableCell>
-                            <TableCell sx={CellStyle} align="left">
-                              {data.dueDate}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {data.description}
-                            </TableCell>
-                            <TableCell sx={CellStyle2} align="left">
-                              {" "}
-                              <ActionIconDiv>
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleUpdateAction(data);
-                                  }}
-                                  src="/images/icons/Pendown.svg"
-                                />
-                                <ActionIcons
-                                  onClick={() => {
-                                    Navigate("/organization-admin/tasks-view");
-                                  }}
-                                  src="/images/icons/eye.svg"
-                                />
-                                <ActionIcons
-                                  onClick={() => {
-                                    HandleOpenDelete();
-                                    setId(data._id);
-                                  }}
-                                  src="/images/icons/Trash-2.svg"
-                                />
-                              </ActionIconDiv>
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </Draggable>
-                    ))}
-                  </TableBody>
-                )}
-              </Droppable>
-            </Table>
-          </TableContainer>
-        </DragDropContext>
+              )}
+              {TaskData?.map((data, index) => (
+                <TableRow
+                  sx={{
+                    "&:last-child td, &:last-child th": {
+                      border: 0,
+                    },
+                    background: "#fff",
+                  }}
+                  key={data._id}
+                >
+                  <TableCell sx={CellStyle2} align="left">
+                    <MenuIconDiv>{index + 1}</MenuIconDiv>
+                  </TableCell>
+                  <TableCell sx={CellStyle} align="left">
+                    {data.title}
+                  </TableCell>
+                  <TableCell sx={CellStyle2} align="left">
+                    {data.assignedto}
+                  </TableCell>
+                  <TableCell sx={CellStyle} align="left">
+                    {data.dueDate}
+                  </TableCell>
+                  <TableCell sx={CellStyle2} align="left">
+                    {data.description}
+                  </TableCell>
+                  <TableCell sx={CellStyle2} align="left">
+                    {data.status}
+                  </TableCell>
+                  <TableCell sx={CellStyle2} align="left">
+                    {" "}
+                    <ActionIconDiv>
+                      <ActionIcons
+                        onClick={() => {
+                          HandleUpdateAction(data);
+                        }}
+                        src="/images/icons/Pendown.svg"
+                      />
+                      <ActionIcons
+                        onClick={() => {
+                          Navigate("/organization-admin/tasks-view");
+                        }}
+                        src="/images/icons/eye.svg"
+                      />
+                      <ActionIcons
+                        onClick={() => {
+                          HandleOpenDelete();
+                          setId(data._id);
+                        }}
+                        src="/images/icons/Trash-2.svg"
+                      />
+                    </ActionIconDiv>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
       <DeleteModal
         openDelete={openDelete}

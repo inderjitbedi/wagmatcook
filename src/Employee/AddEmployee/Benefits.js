@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
 import SuccessfullModal from "./SuccessfullModal";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import ROLES from "../../constants/roles";
 import {
   HeaderEmployee,
   BackButton,
@@ -33,11 +34,19 @@ import {
 import API_URLS from "../../constants/apiUrls";
 const Benefits = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const { employeeid, edit } = useParams();
   const [openThanks, setOpenThanks] = useState(false);
-  const HandleOpenThanks = () => setOpenThanks(true);
+  const HandleOpenThanks = () => {
+    setOpenThanks(true);
+  };
   const HandleCloseThanks = () => {
-    Navigate(`/organization-admin/employee/list`);
+    if (userType === ROLES.HR) {
+      Navigate(`/hr-management/employee-list`);
+    } else {
+      Navigate(`/organization-admin/employee/list`);
+    }
     setOpenThanks(false);
   };
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +76,8 @@ const Benefits = ({ isEdit, setIsEdit }) => {
       description: "",
     },
   });
-  const watchStartDate = watch("startDate", "");
+  // const watchStartDate = watch("startDate", "");
+
   const HandleSubmitBenefits = (data) => {
     // e.preventDefault();
     let dataCopy = data;
@@ -89,12 +99,14 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
-            toast.success(result.message);
+            toast.success(result.message, {
+              className: "toast",
+            });
           } else {
             // Navigate(
             //   `/organization-admin/employee/certificates-info/${employeeid}`
             // );
-            HandleOpenThanks();
+            HandleOpenThanks(userType);
           }
 
           setFormData(result);
@@ -195,6 +207,14 @@ const Benefits = ({ isEdit, setIsEdit }) => {
   useEffect(() => {
     GetHeadersData();
     GetBenefits();
+
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
     // GetEmployeesBenefits();
   }, []);
   const [headerData, setHeaderData] = useState([]);

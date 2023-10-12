@@ -67,7 +67,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: " 44.6rem",
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
@@ -250,7 +250,9 @@ const EVPerformance = () => {
             reset();
             setByError(null);
 
-            toast.success(result.message); //Employee proformance added successfully");
+            toast.success(result.message, {
+              className: "toast",
+            }); //Employee proformance added successfully");
           } else {
             //toast.warn("something went wrong ");
           }
@@ -405,7 +407,9 @@ const EVPerformance = () => {
           handleClose();
           reset();
           setByError(null);
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -434,7 +438,9 @@ const EVPerformance = () => {
           setId("");
           GetEmployeesProformance();
 
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
         } else {
           //toast.warn("something went wrong ");
         }
@@ -747,7 +753,7 @@ const EVPerformance = () => {
                               display: "flex",
                               gap: "1.6rem",
                               alignItems: "center",
-                              marginBottom: "20rem",
+                              marginBottom: "2rem",
                             }}
                           >
                             <EditButton
@@ -867,12 +873,7 @@ const EVPerformance = () => {
                             </TimelinePara>
                             <FlexSpaceBetween>
                               <Link
-                                to={
-                                  API_URL +
-                                  data.file?.destination +
-                                  "/" +
-                                  data.file?.name
-                                }
+                                to={API_URL + data.file?.path}
                                 target="_blank"
                                 download
                                 style={{ textDecoration: "none" }}

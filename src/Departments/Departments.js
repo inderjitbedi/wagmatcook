@@ -54,7 +54,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 374,
+  width: "37.4rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -335,7 +335,9 @@ const Departments = () => {
             setId("");
             setUpDateData("");
             setErrors("");
-            toast.success(result.message); //Departments Updated Successfully");
+            toast.success(result.message, {
+              className: "toast",
+            }); //Departments Updated Successfully");
           } else {
             //toast.warn("something went wrong ");
           }
@@ -364,7 +366,9 @@ const Departments = () => {
           setId("");
           HandleCloseDelete();
 
-          toast.success(result.message); //Entry Deleted successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
         }

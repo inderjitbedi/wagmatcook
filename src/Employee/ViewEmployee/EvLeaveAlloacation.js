@@ -70,7 +70,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 446,
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
@@ -208,7 +208,9 @@ const EvLeaveAlloacation = () => {
         if (result) {
           handleClose();
           reset();
-          toast.success(result.message);
+          toast.success(result.message, {
+            className: "toast",
+          });
           GetLeaveAllocation();
         } else {
           //toast.warn("something went wrong ");
@@ -238,7 +240,9 @@ const EvLeaveAlloacation = () => {
           HandleCloseDelete();
           setId("");
           GetLeaveAllocation();
-          toast.success(result.message); //Benefit deleted successfully.");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Benefit deleted successfully.");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -274,7 +278,9 @@ const EvLeaveAlloacation = () => {
           handleClose();
           reset();
 
-          toast.success(result.message); //Entry Updated Successfully");
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -387,7 +393,7 @@ const EvLeaveAlloacation = () => {
               <TableBody>
                 {result?.allocations?.length === 0 && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" colSpan={4}>
+                    <TableCell align="center" sx={Celllstyle2} colSpan={4}>
                       No leave allocations found
                     </TableCell>
                   </TableRow>

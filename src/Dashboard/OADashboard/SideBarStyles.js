@@ -84,6 +84,7 @@ export const SideBarListTitle = styled.p`
   font-weight: 600;
   line-height: 1.6rem;
   cursor: pointer;
+  margin: 0px;
 `;
 export const SidebarArrow = styled.img``;
 export const FlexContainer = styled.div`

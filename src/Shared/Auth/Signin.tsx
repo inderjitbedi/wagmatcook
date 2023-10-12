@@ -63,7 +63,9 @@ const SharedSignin = () => {
           if (result) {
             localStorage.setItem("user-email", formData.email);
             navigate("/verify-otp");
-            toast.success(result.message);
+            toast.success(result.message, {
+              className: "toast",
+            });
           }
           setIsLoading(false);
         })
