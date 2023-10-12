@@ -98,7 +98,7 @@ const employeeController = {
 
             ]);
 
-            const totalEmployees = await UserOrganization.aggregate([
+            let totalEmployees = await UserOrganization.aggregate([
                 {
                     $lookup: {
                         from: 'users',
@@ -119,11 +119,11 @@ const employeeController = {
                     },
                 },
             ]).count('user');
-
+            totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0
             const totalPages = Math.ceil(totalEmployees / req.query.limit);
             res.status(200).json({
                 employees,
-                totalEmployees: totalEmployees[0]?.user || 0,
+                totalEmployees,
                 currentPage: page,
                 totalPages,
                 message: 'Employees fetched successfully'
