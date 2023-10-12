@@ -5,13 +5,16 @@ import ScrollToTop from "../../auth/pages/scrollTop";
 
 const PublicLayout = ({ component: Component }: any) => {
   const componentImageMap: any = {
-    CompleteSignup: './../../../assets/login-image.svg',
+    CompleteSignup: "./../../../assets/solar-bg.png",
   };
   const location = useLocation();
 
   // console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
-  // 
-  const imageUrl = location.pathname.indexOf('/organization-admin/complete-signup') > -1 ? './../../../assets/login-image.svg' : './../assets/login-image.svg';
+  //
+  const imageUrl =
+    location.pathname.indexOf("/organization-admin/complete-signup") > -1
+      ? "./../../../assets/solar-bg.png"
+      : "./../assets/solar-bg.png";
   // console.log(Component.name, imageUrl);
   const { pathname } = useLocation();
 
@@ -20,7 +23,6 @@ const PublicLayout = ({ component: Component }: any) => {
   }, [pathname]);
   return (
     <>
-
       <main role="main">
         <Grid container spacing={2}>
           <Grid item xs={3}>
@@ -37,11 +39,7 @@ const PublicLayout = ({ component: Component }: any) => {
                 </p>
               </div>
               <div className="">
-                <img
-                  src={imageUrl}
-                  alt="background-img"
-                  width="100%"
-                />
+                <img src={imageUrl} alt="background-img" width="100%" />
               </div>
             </div>
           </Grid>
@@ -52,7 +50,7 @@ const PublicLayout = ({ component: Component }: any) => {
         {/* <FooterLayout></FooterLayout> */}
       </main>
     </>
-  )
+  );
 };
 
 export default PublicLayout;

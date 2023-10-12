@@ -19,6 +19,7 @@ const employeeTypeRoute = require('./routes/employeeType')
 const dashboardRoute = require('./routes/dashboard')
 const leaveRoute = require('./routes/leaves')
 const notificationRoute = require('./routes/notification')
+const taskRoute = require('./routes/task')
 
 
 
@@ -77,6 +78,7 @@ app.use('/api/organization-admin', orgAdminRoute);
 app.use('/api/employee', employeeRoute);
 app.use('/api/dashboard', dashboardRoute);
 app.use('/api/notification', notificationRoute);
+app.use('/api/task', taskRoute);
 
 
 

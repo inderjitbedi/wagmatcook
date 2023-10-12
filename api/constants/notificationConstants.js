@@ -27,5 +27,9 @@ module.exports = Object.freeze({
         title: "{responder} rejected your {leavetype} leave request.",
         description: ""
     },
+    TASK_ASSIGNED: {
+        title: "{assigner} has assigned you a new task.",
+        description: ""
+    },
 
 });

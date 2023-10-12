@@ -1266,9 +1266,9 @@ const footer = ` <div class="footer">
 // <body>
 
 //     <div style=" width: 100%;
-  display: flex;
-  
-  justify-content: center;">
+//   display: flex;
+
+//   justify-content: center;">
 //         <div style="  width: 700px;">
 //             ${body}
 //             ${footer}

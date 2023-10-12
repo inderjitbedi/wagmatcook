@@ -39,7 +39,7 @@ const leaveTypeController = {
         try {
             let leaveType = await LeaveType.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
             await leaveType.save();
-            res.status(201).json({ leaveType, message: 'Leave type details fetched successfully.' });
+            res.status(200).json({ leaveType, message: 'Leave type details fetched successfully.' });
         } catch (error) {
             console.error("leaveTypeController:detail:error -", error);
             res.status(400).json(error);
