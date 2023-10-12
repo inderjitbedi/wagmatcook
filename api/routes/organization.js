@@ -10,7 +10,7 @@ const roles = require('../enum/roles');
 router.post('/register', verifyToken([roles.ORG_ADMIN]), orgController.create);
 router.put('/update', verifyToken([roles.ORG_ADMIN]), orgController.update);
 router.get('/details', verifyToken([roles.ORG_ADMIN]), orgController.details);
-router.post('/file/upload/:type', verifyToken([roles.ORG_ADMIN]), upload.single('file'), handleMulterError, fileController.upload);
+router.post('/file/upload/:type', verifyToken([roles.ORG_ADMIN, roles.HR]), upload.single('file'), handleMulterError, fileController.upload);
 router.post('/send-welcome-email', orgController.sendWelcomeEmail);
 
 
