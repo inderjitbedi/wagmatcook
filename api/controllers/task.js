@@ -189,7 +189,7 @@ const taskController = {
             const comment = await TaskComments.findOneAndUpdate({
                 _id: req.params.id,
             }, { isDeleted: true }, { new: true })
-            res.status(200).json({ task, message: 'Comment deleted successfully' });
+            res.status(200).json({ comment, message: 'Comment deleted successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
             res.status(400).json(error);
