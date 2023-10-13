@@ -18,6 +18,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import moment from "moment";
 
 import {
   DisciplinaryDiv,
@@ -95,6 +96,7 @@ const Task = () => {
   const [taskLsit, setTaskList] = useState([]);
   const [result, setResult] = useState([]);
   const [assignees, setAssignees] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // add new modal
   const [open, setOpen] = useState(false);
@@ -131,7 +133,7 @@ const Task = () => {
     if (isEmptyObject(errors) && !update) {
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      //   HandleUpdate(data);
+        HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
@@ -141,11 +143,14 @@ const Task = () => {
     reset({
       title: data.title,
       description: data.description,
-      assignedto: data.assignedto,
-      dueDate: data.dueDate,
+      assignedto: data.assignee._id,
+      dueDate: data.dueDate
+        ? new Date(data.dueDate).toISOString().split("T")[0]
+        : null,
     });
     HandleOpen();
   };
+
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
     HandleOpen();
@@ -153,31 +158,61 @@ const Task = () => {
     clearErrors();
     setDetailsLength(500);
   };
-   const GetAssignees = () => {
-     setIsLoading(true);
-     let url = API_URLS.getAssignees;
 
-     httpClient({
-       method: "get",
-       url,
-     })
-       .then(({ result, error }) => {
-         if (result) {
-           setAssignees(result);
-          
-         } else {
-           //toast.warn("something went wrong ");
-         }
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-         toast.error("Error Adding Benefits. Please try again.");
-         setIsLoading(false);
-       })
-       .finally(() => {
-         setIsLoading(false);
-       });
-   };
+  const GetAssignees = () => {
+    setIsLoading(true);
+    let url = API_URLS.getAssignees;
+
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setAssignees(result.assignees);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteTask.replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetTaskList();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
   const GetTaskList = () => {
     setIsLoading(true);
     let url = API_URLS.getTaskList;
@@ -189,7 +224,7 @@ const Task = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          setTaskList(result);
+          setTaskList(result.tasks);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -231,6 +266,40 @@ const Task = () => {
         console.error("Error:", error);
         toast.error("Error feteching benefits. Please try again.");
         HandleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    //console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.updateTask.replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          setUpdate(false);
+          reset();
+          GetAssignees();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
         setIsLoading(false);
       })
       .finally(() => {
@@ -383,11 +452,14 @@ const Task = () => {
                         },
                       }}
                       render={({ field }) => (
-                        <Select {...field} disabled={update}>
+                        <Select {...field}>
                           <Option>Select</Option>
-                          {data?.map((data) => (
-                            <Option value="6527f7a2b84aea9000a7a515">
-                              {data.name}
+                          {assignees?.map((data) => (
+                            <Option value={data._id}>
+                              {[
+                                data.personalInfo[0]?.firstName,
+                                data.personalInfo[0]?.lastName,
+                              ].join(" ")}
                             </Option>
                           ))}
                         </Select>
@@ -503,14 +575,14 @@ const Task = () => {
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
-                  style={{ minWidth: "15rem" }}
+                  style={{ minWidth: "12rem" }}
                   align="left"
                 >
                   Task Title
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
-                  style={{ minWidth: "10rem" }}
+                  style={{ minWidth: "15rem" }}
                   align="left"
                 >
                   Assigned To
@@ -524,7 +596,7 @@ const Task = () => {
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
-                  style={{ minWidth: "35rem" }}
+                  style={{ minWidth: "30rem" }}
                   align="left"
                 >
                   Description
@@ -538,7 +610,7 @@ const Task = () => {
                 </TableCell>
                 <TableCell
                   sx={CellHeadStyles}
-                  style={{ minWidth: "10rem" }}
+                  style={{ minWidth: "12rem" }}
                   align="left"
                 >
                   Action
@@ -547,14 +619,14 @@ const Task = () => {
             </TableHead>
 
             <TableBody>
-              {!TaskData?.length && (
+              {!taskLsit?.length && (
                 <TableRow sx={{ height: "20rem" }}>
-                  <TableCell align="center" colSpan={3}>
-                    No benefits found
+                  <TableCell align="center" sx={CellStyle2} colSpan={3}>
+                    No tasks found
                   </TableCell>
                 </TableRow>
               )}
-              {TaskData?.map((data, index) => (
+              {taskLsit?.map((data, index) => (
                 <TableRow
                   sx={{
                     "&:last-child td, &:last-child th": {
@@ -568,19 +640,28 @@ const Task = () => {
                     <MenuIconDiv>{index + 1}</MenuIconDiv>
                   </TableCell>
                   <TableCell sx={CellStyle} align="left">
-                    {data.title}
+                    {data.title || " - "}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
-                    {data.assignedto}
+                    {[
+                      data?.assignee?.personalInfo?.firstName,
+                      data?.assignee?.personalInfo?.lastName,
+                    ].join(" ") || " - "}
                   </TableCell>
                   <TableCell sx={CellStyle} align="left">
-                    {data.dueDate}
+                    {data.dueDate
+                      ? moment(data.dueDate).format("DD/MM/YYYY")
+                      : " -"}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
-                    {data.description}
+                    {data.description || " - "}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
-                    {data.status}
+                    {data.isCompleted ? (
+                      <ApproveStyle>Completed</ApproveStyle>
+                    ) : (
+                      <PendingStyle>Pending</PendingStyle>
+                    )}
                   </TableCell>
                   <TableCell sx={CellStyle2} align="left">
                     {" "}
@@ -593,7 +674,9 @@ const Task = () => {
                       />
                       <ActionIcons
                         onClick={() => {
-                          Navigate("/organization-admin/tasks-view");
+                          Navigate(
+                            `/organization-admin/tasks-view/${data._id}`
+                          );
                         }}
                         src="/images/icons/eye.svg"
                       />
@@ -615,9 +698,9 @@ const Task = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        // HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
         message="Are you sure you want to delete this task?"
-        isLoading={isLoading}
+        isLoading={isDeleting}
       />
     </>
   );

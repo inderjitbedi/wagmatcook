@@ -153,7 +153,7 @@ const Routes: any = [
       },
        {
         component: TaskView,
-        path: "tasks-view",
+        path: "tasks-view/:taskid",
         title: "Tasks View",
         to: "/",
         type: "private",

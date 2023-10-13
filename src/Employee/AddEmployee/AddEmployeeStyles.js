@@ -379,7 +379,6 @@ export const TrashDiv = styled.div`
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 700;
-  /* line-height: 10.8rem; */
   display: flex;
   justify-content: flex-end;
   align-items: center;

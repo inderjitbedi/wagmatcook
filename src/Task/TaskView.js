@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
-
+import httpClient from "../api/httpClient";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import API_URLS from "../constants/apiUrls";
+import ROLES from "../constants/roles";
+import moment from "moment";
+import { toast } from "react-toastify";
+import { useNavigate, useLocation, useParams } from "react-router";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
+import DeleteModal from "../Modals/DeleteModal";
 
 import {
-  DisciplinaryDiv,
   DisciplinaryHeading,
   ToggelButton,
-  ToggelLabel,
   StyledLabelChecked,
   StyledLabelActive,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
-  BasicDetailsDiv,
-  BasicInfoContainer,
   BasicInfoDiv,
   FlexSpaceBetween,
   FlexColumn,
@@ -24,11 +27,25 @@ import {
   FlexColumnForm,
   Input,
   AddNewButton,
+  TextAreaComment,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
-import { Checkbox } from "@mui/material";
-const TaskView = () => {
-  const [searchValue, setSearchValue] = useState("");
 
+const TaskView = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+  const { taskid } = useParams();
+  const [userType, setUserType] = useState("");
+
+  const [searchValue, setSearchValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
+  const [update, setUpdate] = useState(false);
+  const [Id, setId] = useState("");
+  const [taskDetails, setTaskDetails] = useState([]);
+  const [commentsList, setCommentsList] = useState([]);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
@@ -37,14 +54,135 @@ const TaskView = () => {
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-  let API_URL = process.env.REACT_APP_API_URL;
+  const GetTaskComments = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getTaskComments.replace(":taskid", taskid);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            setCommentsList(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error in Fetching . Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  const HandleUpdate = (data) => {
+    //console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
 
+    //  let url = API_URLS.addEmployeePerformance
+    //    .replace(":employeeid", employeeid)
+    //    .replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      //  url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    //  let url = API_URLS.deleteEmployeePerformance
+    //    .replace(":employeeid", employeeid)
+    //    .replace(":id", Id);
+    httpClient({
+      method: "put",
+      //  url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          //  GetEmployeesProformance();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+  const GetTaskDetails = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getTaskDetails.replace(":id", taskid);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            setTaskDetails(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error in Fetching . Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  useEffect(() => {
+    GetTaskDetails();
+    GetTaskComments();
+  }, []);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Task Details"} />
       <BackGroundWhite>
         <BasicInfoDiv>
-          <FlexSpaceBetween style={{alignItems:"center"}}>
+          <FlexSpaceBetween style={{ alignItems: "center" }}>
             <DisciplinaryHeading> Details </DisciplinaryHeading>
             <ToggelButton
               checked={isChecked}
@@ -86,7 +224,11 @@ const TaskView = () => {
           <CommentDiv>
             <UserImg src="/images/Oval Copy.jpg" />
 
-            <Input style={{ margin: "0rem" }} type="text" />
+            <TextAreaComment
+              style={{ margin: "0rem" }}
+              placeholder="Add comment"
+              type="text"
+            />
             <AddNewButton>Send</AddNewButton>
           </CommentDiv>
           <CommentDiv>

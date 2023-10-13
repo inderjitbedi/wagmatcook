@@ -593,6 +593,21 @@ export const TextArea = styled.textarea`
   box-sizing: border-box;
   outline: none;
 `;
+export const TextAreaComment = styled.textarea`
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 0.8rem;
+  resize: none;
+  /* height: max-content; */
+  padding: .5em;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+  outline: none;
+`;
 export const InputPara = styled.p`
   color: #737992;
   font-size: 1.4rem;

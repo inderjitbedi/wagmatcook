@@ -76,6 +76,7 @@ export const SearchBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 8px;
 `;
 export const SearchInput = styled.input`
   border: 0rem;
@@ -132,7 +133,7 @@ export const DashCardContainer = styled.div`
   flex-wrap: wrap;
   margin-bottom: 4rem;
   /* justify-content: space-between; */
-  align-items: baseline;
+  /* align-items: baseline; */
   @media only screen and (max-width: 900px) {
     align-items: none;
   }
