@@ -19,6 +19,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import moment from "moment";
+import Pagination from "@mui/material/Pagination";
+import ROLES from "../constants/roles";
 
 import {
   DisciplinaryDiv,
@@ -43,6 +45,7 @@ import {
   LoadMore,
   PendingStyle,
   ApproveStyle,
+  PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
@@ -97,7 +100,12 @@ const Task = () => {
   const [result, setResult] = useState([]);
   const [assignees, setAssignees] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [page, setPage] = useState(1);
+  const [userType, setUserType] = useState("");
 
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   // add new modal
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -133,7 +141,7 @@ const Task = () => {
     if (isEmptyObject(errors) && !update) {
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-        HandleUpdate(data);
+      HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
@@ -215,7 +223,7 @@ const Task = () => {
   };
   const GetTaskList = () => {
     setIsLoading(true);
-    let url = API_URLS.getTaskList;
+    let url = API_URLS.getTaskList.replace("Page", page);
 
     httpClient({
       method: "get",
@@ -290,6 +298,7 @@ const Task = () => {
           setUpdate(false);
           reset();
           GetAssignees();
+          HandleClose();
           toast.success(result.message, {
             className: "toast",
           }); //Entry Updated Successfully");
@@ -358,7 +367,14 @@ const Task = () => {
   useEffect(() => {
     GetTaskList();
     GetAssignees();
-  }, []);
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+  }, [page]);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
@@ -558,142 +574,165 @@ const Task = () => {
           />
         </div>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
-                }}
-              >
-                <TableCell
-                  sx={CellHeadStyles}
-                  align="left"
-                  style={{ width: "1rem" }}
-                >
-                  SNo.
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "12rem" }}
-                  align="left"
-                >
-                  Task Title
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "15rem" }}
-                  align="left"
-                >
-                  Assigned To
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "9rem" }}
-                  align="left"
-                >
-                  Due Date
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "30rem" }}
-                  align="left"
-                >
-                  Description
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "10rem" }}
-                  align="left"
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  sx={CellHeadStyles}
-                  style={{ minWidth: "12rem" }}
-                  align="left"
-                >
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {!taskLsit?.length && (
-                <TableRow sx={{ height: "20rem" }}>
-                  <TableCell align="center" sx={CellStyle2} colSpan={3}>
-                    No tasks found
-                  </TableCell>
-                </TableRow>
-              )}
-              {taskLsit?.map((data, index) => (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
                 <TableRow
                   sx={{
-                    "&:last-child td, &:last-child th": {
-                      border: 0,
-                    },
-                    background: "#fff",
+                    background: "#FBFBFB",
                   }}
-                  key={data._id}
                 >
-                  <TableCell sx={CellStyle2} align="left">
-                    <MenuIconDiv>{index + 1}</MenuIconDiv>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    align="left"
+                    style={{ width: "1rem" }}
+                  >
+                    SNo.
                   </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    {data.title || " - "}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Task Title
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {[
-                      data?.assignee?.personalInfo?.firstName,
-                      data?.assignee?.personalInfo?.lastName,
-                    ].join(" ") || " - "}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "15rem" }}
+                    align="left"
+                  >
+                    Assigned To
                   </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    {data.dueDate
-                      ? moment(data.dueDate).format("DD/MM/YYYY")
-                      : " -"}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "9rem" }}
+                    align="left"
+                  >
+                    Due Date
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {data.description || " - "}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "30rem" }}
+                    align="left"
+                  >
+                    Description
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {data.isCompleted ? (
-                      <ApproveStyle>Completed</ApproveStyle>
-                    ) : (
-                      <PendingStyle>Pending</PendingStyle>
-                    )}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Status
                   </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    {" "}
-                    <ActionIconDiv>
-                      <ActionIcons
-                        onClick={() => {
-                          HandleUpdateAction(data);
-                        }}
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <ActionIcons
-                        onClick={() => {
-                          Navigate(
-                            `/organization-admin/tasks-view/${data._id}`
-                          );
-                        }}
-                        src="/images/icons/eye.svg"
-                      />
-                      <ActionIcons
-                        onClick={() => {
-                          HandleOpenDelete();
-                          setId(data._id);
-                        }}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                    </ActionIconDiv>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+
+              <TableBody>
+                {!taskLsit?.length && (
+                  <TableRow sx={{ height: "20rem" }}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={3}>
+                      No tasks found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {taskLsit?.map((data, index) => (
+                  <TableRow
+                    sx={{
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                      background: "#fff",
+                    }}
+                    key={data._id}
+                  >
+                    <TableCell sx={CellStyle2} align="left">
+                      <MenuIconDiv>{index + 1}</MenuIconDiv>
+                    </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.title || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {[
+                        data?.assignee?.personalInfo?.firstName,
+                        data?.assignee?.personalInfo?.lastName,
+                      ].join(" ") || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.dueDate
+                        ? moment(data.dueDate).format("DD/MM/YYYY")
+                        : " -"}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.description || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.isCompleted ? (
+                        <ApproveStyle>Completed</ApproveStyle>
+                      ) : (
+                        <PendingStyle>Pending</PendingStyle>
+                      )}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {" "}
+                      <ActionIconDiv>
+                        <ActionIcons
+                          onClick={() => {
+                            HandleUpdateAction(data);
+                          }}
+                          src="/images/icons/Pendown.svg"
+                        />
+                        <ActionIcons
+                          onClick={() => {
+                            if (userType === ROLES.HR) {
+                              Navigate(
+                                `/manager-management/tasks-view/${data._id}`
+                              );
+                            } else if (userType === ROLES.MANAGER) {
+                              Navigate(
+                                `/manager-management/tasks-view/${data._id}`
+                              );
+                            } else {
+                              Navigate(
+                                `/organization-admin/tasks-view/${data._id}`
+                              );
+                            }
+                          }}
+                          src="/images/icons/eye.svg"
+                        />
+                        <ActionIcons
+                          onClick={() => {
+                            HandleOpenDelete();
+                            setId(data._id);
+                          }}
+                          src="/images/icons/Trash-2.svg"
+                        />
+                      </ActionIconDiv>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
+        </>
       )}
       <DeleteModal
         openDelete={openDelete}

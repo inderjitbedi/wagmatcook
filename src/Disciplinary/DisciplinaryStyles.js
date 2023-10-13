@@ -234,10 +234,10 @@ export const PendingStyle = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 1.2rem;
+  padding: 4px 1.4rem;
   margin: 0;
   color: #e88b00;
-
+  width: max-content;
   font-family: Inter;
   font-size: 1.4rem;
   font-style: normal;
@@ -251,9 +251,9 @@ export const ApproveStyle = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 1.2rem;
+  padding: 4px 1.4rem;
   margin: 0;
-
+  width: max-content;
   font-family: Inter;
   font-size: 1.4rem;
   font-style: normal;
@@ -285,10 +285,9 @@ export const ToggelLabel = styled.label`
     border-radius: 9rem;
     transition: 0.3s;
   }
-
 `;
 export const StyledLabelChecked = styled(ToggelLabel)`
-  background: #bada55;
+  background: #c8ffc7;
   &::after {
     left: calc(100% - 5px);
     transform: translateX(-100%);

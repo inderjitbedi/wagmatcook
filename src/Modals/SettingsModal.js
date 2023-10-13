@@ -252,10 +252,11 @@ const SettingsModal = ({
     })
       .then(({ result, error }) => {
         if (result) {
-          orgData.name = data.name;
-          orgData.size = data.size;
-          orgData.logo = orgFile;
-          localStorage.setItem("org", JSON.stringify(orgData));
+          // orgData.name = data.name;
+          // orgData.size = data.size;
+          // orgData.logo = orgFile;
+          
+          localStorage.setItem("org", JSON.stringify(result.org));
           HandleCloseSettings();
         } else {
           //toast.warn("something went wrong ");
@@ -277,6 +278,7 @@ const SettingsModal = ({
     const orgDataString = localStorage.getItem("org");
     const orgData = JSON.parse(orgDataString);
     setOrgData(orgData);
+
   }, [orgProfile]);
   console.log("this our file ", file);
   let API_URL = process.env.REACT_APP_API_URL;

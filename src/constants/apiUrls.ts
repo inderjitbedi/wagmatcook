@@ -114,11 +114,12 @@ const API_URLS = {
   createTask: `/task/create`,
   getAssignees: `/task/assignees`,
   getTaskDetails: `/task/details/:id`,
+  markCompleted:`/task//mark-complete/:id`,
   // comments Aopi routes
   getTaskComments: `/task/:taskid/comments`,
-  updateTaskComments: `/task/:taskid/comments/:id/update`,
-  createTaskComments: `/task/:taskid/comments/add`,
-  deleteTaskComments: `/task/:taskid/comments/:id/delete`,
+  updateTaskComments: `/task/:taskid/comment/:id/update`,
+  createTaskComments: `/task/:taskid/comment/add`,
+  deleteTaskComments: `/task/:taskid/comment/:id/delete`,
 };
 
 export default API_URLS;

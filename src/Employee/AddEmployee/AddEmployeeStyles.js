@@ -247,7 +247,7 @@ export const FlexContaierForm = styled.div`
 export const FlexColumnForm = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap: 5px; */
+  gap: 5px;
   width: 100%;
 `;
 export const InputLabel = styled.label`
