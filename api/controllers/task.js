@@ -170,6 +170,7 @@ const taskController = {
             req.body.commenter = req.user?._id;
             const comment = new TaskComments(req.body);
             await comment.save();
+            await comment.populate({ path: 'commenter', populate: { path: 'personalInfo' } });
             // let type = "TASK_ASSIGNED"
             // const notification = new Notifications({
             //     title: notificationConstants[type].title?.replace('{assigner}', req.user?.personalInfo ? [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ') : 'Someone'),
