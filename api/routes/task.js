@@ -11,4 +11,5 @@ router.put('/delete', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), t
 router.put('/mark-complete', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), taskController.markComplete);
 router.get('/details/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), taskController.details);
 router.get('/assignees', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), taskController.assigneeList);
+
 module.exports = router;

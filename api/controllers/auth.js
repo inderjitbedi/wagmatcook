@@ -247,7 +247,7 @@ const authController = {
             let relation = await UserOrganization.findOne({ user: user._id, isActive: true, isDeleted: false, isPrimary: true }).populate('organization');
 
             const personalInfo = await EmployeePersonalInfo.findOneAndUpdate({ employee: user._id }, { firstName: name }, { new: true })
-
+            user = await User.findByIdAndUpdate(user._id, { personalInfo: personalInfo._id }, { new: true })
             res.status(200).json({ user, organization: relation.organization, token, message: 'User signup completed successfully' });
 
         } catch (error) {

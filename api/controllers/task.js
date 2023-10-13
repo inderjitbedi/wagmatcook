@@ -2,8 +2,9 @@ const notificationConstants = require("../constants/notificationConstants");
 const Notifications = require("../models/notification");
 const Tasks = require("../models/tasks");
 const roles = require("../enum/roles");
+const User = require("../models/user");
 
-const leaveTypeController = {
+const taskController = {
     async create(req, res) {
 
         try {
@@ -13,15 +14,15 @@ const leaveTypeController = {
 
             let type = "TASK_ASSIGNED"
             const notification = new Notifications({
-                title: notificationConstants[type].title?.replace('{assigner}', [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ')),
+                title: notificationConstants[type].title?.replace('{assigner}', req.user?.personalInfo ? [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ') : 'Someone'),
                 type,
                 sender: req.user._id,
                 receiver: req.body.assignee
             });
             await notification.save();
-            res.status(201).json({ leaveType, message: 'Task created successfully.' });
+            res.status(201).json({ task, message: 'Task created successfully.' });
         } catch (error) {
-            console.error("leaveTypeController:create:error -", error);
+            console.error("taskController:create:error -", error);
             res.status(400).json(error);
         }
     },
@@ -33,7 +34,7 @@ const leaveTypeController = {
             }, { isDeleted: true }, { new: true })
             res.status(200).json({ task, message: 'Task deleted successfully' });
         } catch (error) {
-            console.error("leaveTypeController:update:error -", error);
+            console.error("taskController:update:error -", error);
             res.status(400).json(error);
         }
     },
@@ -45,7 +46,7 @@ const leaveTypeController = {
             }, { ...req.body }, { new: true })
             res.status(200).json({ task, message: 'Task updated successfully' });
         } catch (error) {
-            console.error("leaveTypeController:update:error -", error);
+            console.error("taskController:update:error -", error);
             res.status(400).json(error);
         }
     },
@@ -56,7 +57,7 @@ const leaveTypeController = {
             }, { isCompleted: true }, { new: true })
             res.status(200).json({ message: 'Task marked as completed successfully' });
         } catch (error) {
-            console.error("leaveTypeController:update:error -", error);
+            console.error("taskController:update:error -", error);
             res.status(400).json(error);
         }
     },
@@ -64,16 +65,17 @@ const leaveTypeController = {
         try {
             const task = await Tasks.findOne({
                 _id: req.params._id
-            }).populate({ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
-                { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
+            }).populate([{ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+            { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } }])
             res.status(200).json({ task, message: 'Task details fetched successfully' });
         } catch (error) {
-            console.error("leaveTypeController:update:error -", error);
+            console.error("taskController:update:error -", error);
             res.status(400).json(error);
         }
     },
     async list(req, res) {
         try {
+            console.log(JSON.stringify(req.user));
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
@@ -85,8 +87,11 @@ const leaveTypeController = {
                     assigner: req.user?._id,
                 }]
             };
-            const tasks = await Tasks.find(filters).populate({ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
-                { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } })
+            const tasks = await Tasks.find(filters)
+                .populate([
+                    { path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+                    { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } }
+                ])
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });
@@ -102,7 +107,7 @@ const leaveTypeController = {
                 message: 'Tasks fetched successfully'
             });
         } catch (error) {
-            console.error("leaveTypeController:list:error -", error);
+            console.error("taskController:list:error -", error);
             res.status(400).json(error);
         }
     },
@@ -152,10 +157,12 @@ const leaveTypeController = {
                 message: 'Assignees fetched successfully'
             });
         } catch (error) {
-            console.error("leaveTypeController:list:error -", error);
+            console.error("taskController:list:error -", error);
             res.status(400).json(error);
         }
     },
 
+
+
 }
-module.exports = leaveTypeController
+module.exports = taskController
