@@ -31,7 +31,7 @@ const taskController = {
         try {
             req.body.assigner = req.user?._id;
             const task = await Tasks.findOneAndUpdate({
-                _id: req.params._id,
+                _id: req.params.id,
             }, { isDeleted: true }, { new: true })
             res.status(200).json({ task, message: 'Task deleted successfully' });
         } catch (error) {
@@ -43,7 +43,7 @@ const taskController = {
         try {
             req.body.assigner = req.user?._id;
             const task = await Tasks.findOneAndUpdate({
-                _id: req.params._id,
+                _id: req.params.id,
             }, { ...req.body }, { new: true })
             res.status(200).json({ task, message: 'Task updated successfully' });
         } catch (error) {
@@ -54,7 +54,7 @@ const taskController = {
     async markComplete(req, res) {
         try {
             const task = await Tasks.findOneAndUpdate({
-                _id: req.params._id,
+                _id: req.params.id,
             }, { isCompleted: true }, { new: true })
             res.status(200).json({ message: 'Task marked as completed successfully' });
         } catch (error) {
@@ -65,7 +65,7 @@ const taskController = {
     async details(req, res) {
         try {
             const task = await Tasks.findOne({
-                _id: req.params._id
+                _id: req.params.id
             }).populate([{ path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
             { path: 'assigner', populate: { path: 'personalInfo', populate: { path: 'photo' } } }])
             res.status(200).json({ task, message: 'Task details fetched successfully' });
