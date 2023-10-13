@@ -91,6 +91,7 @@ export const FlexContainer = styled.div`
 export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
+  gap: .8rem;
 `;
 export const PendingStyle = styled.p`
   border-radius: 1rem;

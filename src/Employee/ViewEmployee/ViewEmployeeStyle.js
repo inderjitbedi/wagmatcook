@@ -491,7 +491,7 @@ export const FlexContaierForm = styled.div`
 export const FlexColumnForm = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap: 5px; */
+  gap: 5px;
   width: 100%;
 `;
 export const InputLabel = styled.label`
@@ -588,6 +588,21 @@ export const TextArea = styled.textarea`
   resize: none;
   height: 10.5rem;
   padding: 1em;
+  color: #222b45;
+  background: #fff;
+  box-sizing: border-box;
+  outline: none;
+`;
+export const TextAreaComment = styled.textarea`
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 0.8rem;
+  resize: none;
+  /* height: max-content; */
+  padding: .5em;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
@@ -736,7 +751,7 @@ export const CommentDiv = styled.div`
 width: 100%;
 display: flex;
 gap: 2rem;
-align-items: center;
+align-items: flex-start;
 margin-bottom: 2.4rem;
 `;
 export const UserImg = styled.img`
