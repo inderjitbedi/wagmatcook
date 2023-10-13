@@ -38,7 +38,8 @@ const TaskView = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const { taskid } = useParams();
   const [userType, setUserType] = useState("");
-
+  const location = useLocation();
+  const [userData, setUserData] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -80,7 +81,7 @@ const TaskView = () => {
       .then(({ result, error }) => {
         if (result) {
           // GetTaskComments();
-          commentsList.push(result.comment);
+          commentsList.unshift(result.comment);
           setComment("");
           toast.success(result.message, {
             className: "toast",
@@ -253,8 +254,21 @@ const TaskView = () => {
     });
   };
   useEffect(() => {
+     let user = localStorage.getItem("user");
+     if (user) {
+       let parsedUser = JSON.parse(user);
+       setUserData(parsedUser);
+       
+     }
     GetTaskDetails();
     GetTaskComments();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
   }, []);
 
   function formatDateDifference(inputDate) {
@@ -340,18 +354,24 @@ const TaskView = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ alignItems: "center" }}>
                 <DisciplinaryHeading> Details </DisciplinaryHeading>
-                <ToggelButton
-                  checked={isChecked}
-                  onChange={handleCheckboxChange}
-                  type="checkbox"
-                  id="toggel"
-                  disabled={isChecked}
-                />
-
-                {isChecked ? (
-                  <StyledLabelChecked htmlFor="toggel" />
+                {userType === ROLES.EMPLOYEE ? (
+                  " "
                 ) : (
-                  <StyledLabelActive htmlFor="toggel" />
+                  <>
+                    <ToggelButton
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                      type="checkbox"
+                      id="toggel"
+                      disabled={isChecked}
+                    />
+
+                    {isChecked ? (
+                      <StyledLabelChecked htmlFor="toggel" />
+                    ) : (
+                      <StyledLabelActive htmlFor="toggel" />
+                    )}
+                  </>
                 )}
               </FlexSpaceBetween>
               <FlexSpaceBetween>
@@ -360,12 +380,23 @@ const TaskView = () => {
                   <ViewPara> {taskDetails?.title || " - "} </ViewPara>
                 </FlexColumn>
                 <FlexColumn>
-                  <TitlePara>Assigned to</TitlePara>
+                  <TitlePara>
+                    {" "}
+                    {userType === ROLES.EMPLOYEE
+                      ? " Assigned By"
+                      : " Assigned To"}
+                  </TitlePara>
                   <ViewPara>
-                    {[
-                      taskDetails?.assignee?.personalInfo?.firstName,
-                      taskDetails?.assignee?.personalInfo?.lastName,
-                    ].join(" ")}
+                    {userType === ROLES.EMPLOYEE
+                      ? [
+                          taskDetails?.assigner?.personalInfo?.firstName,
+                          taskDetails?.assigner?.personalInfo?.lastName,
+                        ].join(" ") || " - "
+                      : [
+                          taskDetails?.assignee?.personalInfo?.firstName,
+                          taskDetails?.assignee?.personalInfo?.lastName,
+                        ].join(" ") || " - "}
+                 
                   </ViewPara>
                 </FlexColumn>
               </FlexSpaceBetween>
@@ -398,7 +429,14 @@ const TaskView = () => {
               <DisciplinaryHeading> Add Comment </DisciplinaryHeading>
 
               <CommentDiv>
-                <UserImg src="/images/Oval Copy.jpg" />
+                <UserImg
+                  src={
+                    taskDetails?.assigner?.personalInfo.photo
+                      ? API_URL +
+                        taskDetails?.assigner?.personalInfo.photo?.path
+                      : "/images/User.jpg"
+                  }
+                />
 
                 <TextAreaComment
                   style={{ margin: "0rem" }}
@@ -426,7 +464,13 @@ const TaskView = () => {
               </CommentDiv>
               {commentsList?.map((data) => (
                 <CommentDiv>
-                  <UserImg src="/images/Oval Copy 2.jpg" />
+                  <UserImg
+                    src={
+                      data.commenter?.personalInfo?.photo
+                        ? API_URL + data.commenter?.personalInfo?.photo?.path
+                        : "/images/User.jpg"
+                    }
+                  />
 
                   <FlexColumnForm>
                     <TitlePara>
@@ -476,22 +520,26 @@ const TaskView = () => {
                     )}
 
                     <FlexContaier>
-                      <ActionIcons
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                        onClick={() => {
-                          HandleUpdateAction(data);
-                        }}
-                        src="/images/icons/Pendown.svg"
-                      />
-                      <ActionIcons
-                        style={{ width: "1.5rem", height: "1.5rem" }}
-                        onClick={() => {
-                          HandleOpenDelete();
-                          setId(data._id);
-                        }}
-                        src="/images/icons/Trash-2.svg"
-                      />
-                      {data.isEdited ? "Edited ": ""}
+                      { userData?._id === data.commenter?._id && (
+                        <>
+                          <ActionIcons
+                            style={{ width: "1.5rem", height: "1.5rem" }}
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                          <ActionIcons
+                            style={{ width: "1.5rem", height: "1.5rem" }}
+                            onClick={() => {
+                              HandleOpenDelete();
+                              setId(data._id);
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        </>
+                      )}
+                      {data.isEdited ? "Edited " : ""}
                     </FlexContaier>
                   </FlexColumnForm>
                 </CommentDiv>

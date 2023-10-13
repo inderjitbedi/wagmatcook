@@ -55,7 +55,6 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const toggleSearchBar = () => {
     setExpanded(!expanded);
     setSearchValue("");
-    
   };
   const [openSettings, setOpenSettings] = React.useState(false);
   const HandleOpenSettings = () => {
@@ -256,7 +255,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
           // GetNotificationList();
           GetNotificationCount();
           // toast.success(result.message, {
-            // className: "toast",
+          // className: "toast",
           // }); //Entry Deleted successfully");
         } else {
           //toast.warn("something went wrong ");
@@ -391,7 +390,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
             location.pathname.indexOf("leaves-request") > -1 ||
             location.pathname.indexOf("personal-info") > -1 ||
             location.pathname.indexOf("employee/benefits") > -1 ||
-            location.pathname.indexOf("tasks-view") > -1) && (
+            location.pathname.indexOf("tasks/details") > -1) && (
             <BackButton onClick={() => Navigate(-1)}>
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -405,7 +404,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
           location.pathname.indexOf("leaves-request") > -1 ||
           location.pathname.indexOf("personal-info") > -1 ||
           location.pathname.indexOf("employee/benefits") > -1 ||
-          location.pathname.indexOf("tasks-view") > -1 ? (
+          location.pathname.indexOf("tasks/details") > -1 ? (
             " "
           ) : screenWidth < 600 ? (
             <SearchBarWrapper expanded={expanded}>

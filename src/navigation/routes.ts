@@ -153,7 +153,7 @@ const Routes: any = [
       },
        {
         component: TaskView,
-        path: "tasks-view/:taskid",
+        path: "tasks/details/:taskid",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -400,7 +400,7 @@ const Routes: any = [
       },
        {
         component: TaskView,
-        path: "tasks-view/:taskid",
+        path: "tasks/details/:taskid",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -635,7 +635,7 @@ const Routes: any = [
       },
        {
         component: TaskView,
-        path: "tasks-view/:taskid",
+        path: "tasks/details/:taskid",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -859,6 +859,22 @@ const Routes: any = [
         title: "Benefits ",
         to: "/",
         type: "private",
+      },
+       {
+        component: Task,
+        path: "tasks",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: TaskView,
+        path: "tasks/details/:taskid",
+        title: "Tasks Details",
+        to: "/",
+        type: "private",
+        index: true,
       },
       {
         component: CertificatesInfo,

@@ -366,7 +366,9 @@ const Task = () => {
 
   useEffect(() => {
     GetTaskList();
-    GetAssignees();
+    if (!(location.pathname.indexOf("user") > -1)) {
+      GetAssignees();
+    }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -380,13 +382,17 @@ const Task = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Tasks</DisciplinaryHeading>
-        <AddNewButton
-          onClick={() => {
-            HandleOpenAddNewAction();
-          }}
-        >
-          Add New
-        </AddNewButton>
+        {userType === ROLES.EMPLOYEE ? (
+          " "
+        ) : (
+          <AddNewButton
+            onClick={() => {
+              HandleOpenAddNewAction();
+            }}
+          >
+            Add New
+          </AddNewButton>
+        )}
         <Modal
           open={open}
           sx={{
@@ -602,7 +608,9 @@ const Task = () => {
                     style={{ minWidth: "15rem" }}
                     align="left"
                   >
-                    Assigned To
+                    {userType === ROLES.EMPLOYEE
+                      ? " Assigned By"
+                      : " Assigned To"}
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -638,7 +646,7 @@ const Task = () => {
               <TableBody>
                 {!taskLsit?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={3}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
                       No tasks found
                     </TableCell>
                   </TableRow>
@@ -660,10 +668,15 @@ const Task = () => {
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {[
-                        data?.assignee?.personalInfo?.firstName,
-                        data?.assignee?.personalInfo?.lastName,
-                      ].join(" ") || " - "}
+                      {userType === ROLES.EMPLOYEE
+                        ? [
+                            data?.assigner?.personalInfo?.firstName,
+                            data?.assigner?.personalInfo?.lastName,
+                          ].join(" ") || " - "
+                        : [
+                            data?.assignee?.personalInfo?.firstName,
+                            data?.assignee?.personalInfo?.lastName,
+                          ].join(" ") || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data.dueDate
@@ -683,37 +696,49 @@ const Task = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        <ActionIcons
-                          onClick={() => {
-                            HandleUpdateAction(data);
-                          }}
-                          src="/images/icons/Pendown.svg"
-                        />
+                        {userType === ROLES.EMPLOYEE ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
                         <ActionIcons
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/manager-management/tasks-view/${data._id}`
+                                `/manager-management/tasks/details/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
-                                `/manager-management/tasks-view/${data._id}`
+                                `/manager-management/tasks/details/${data._id}`
+                              );
+                            } else if (userType === ROLES.EMPLOYEE) {
+                              Navigate(
+                                `/user-management/tasks/details/${data._id}`
                               );
                             } else {
                               Navigate(
-                                `/organization-admin/tasks-view/${data._id}`
+                                `/organization-admin/tasks/details/${data._id}`
                               );
                             }
                           }}
                           src="/images/icons/eye.svg"
                         />
-                        <ActionIcons
-                          onClick={() => {
-                            HandleOpenDelete();
-                            setId(data._id);
-                          }}
-                          src="/images/icons/Trash-2.svg"
-                        />
+                        {userType === ROLES.EMPLOYEE ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleOpenDelete();
+                              setId(data._id);
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>
