@@ -193,14 +193,15 @@ const TaskView = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          
+
           const updatedItems = commentsList?.map((item) =>
-            item._id === editingItemId ? (item = result.task) : item
+            item._id === editingItemId ? (item = result.comment) : item
           );
 
           setCommentsList(updatedItems);
           setId("");
           HandelCloseEdit();
+          
 
           toast.success(result.message, {
             className: "toast",
