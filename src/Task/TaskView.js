@@ -193,16 +193,18 @@ const TaskView = () => {
     })
       .then(({ result, error }) => {
         if (result) {
+          
           const updatedItems = commentsList?.map((item) =>
             item._id === editingItemId ? (item = result.task) : item
           );
+
           setCommentsList(updatedItems);
           setId("");
           HandelCloseEdit();
 
           toast.success(result.message, {
             className: "toast",
-          }); //Entry Updated Successfully");
+          }); 
           setIsUploading(false);
         } else {
           //toast.warn("something went wrong ");
@@ -505,110 +507,6 @@ const TaskView = () => {
 
             <BasicInfoDiv>
               <DisciplinaryHeading>Comments </DisciplinaryHeading>
-
-              {commentsList?.map((data) => (
-                <CommentDiv>
-                  <UserImg
-                    src={
-                      data.commenter?.personalInfo?.photo
-                        ? API_URL + data.commenter?.personalInfo?.photo?.path
-                        : "/images/User.jpg"
-                    }
-                  />
-
-                  <FlexColumnForm>
-                    <FlexSpaceBetween
-                      style={{ margin: "0rem", alignItems: "center" }}
-                    >
-                      <TitlePara>
-                        {[
-                          data?.commenter?.personalInfo?.firstName,
-                          data?.commenter?.personalInfo?.lastName,
-                        ].join(" ")}
-                        &nbsp;&nbsp;
-                        <span>{formatDateDifference(data.createdAt)}</span>
-                      </TitlePara>
-
-                      <FlexContaier>
-                        {userData?._id === data.commenter?._id && (
-                          <>
-                            {editingItemId === data._id ? (
-                              <ActionIcons
-                                style={{ width: "2rem", height: "2rem" }}
-                                onClick={HandelCloseEdit}
-                                src="/images/icons/Alert-Circle.svg"
-                              />
-                            ) : (
-                              <ActionIcons
-                                style={{ width: "2rem", height: "2rem" }}
-                                onClick={() => {
-                                  HandleUpdateAction(data);
-                                }}
-                                src="/images/icons/Pendown.svg"
-                              />
-                            )}
-                            <ActionIcons
-                              style={{ width: "2rem", height: "2rem" }}
-                              onClick={() => {
-                                HandleOpenDelete();
-                                setId(data._id);
-                              }}
-                              src="/images/icons/Trash-2.svg"
-                            />
-                          </>
-                        )}
-                      </FlexContaier>
-                    </FlexSpaceBetween>
-
-                    {editingItemId === data._id ? (
-                      <FlexContaier>
-                        <TextAreaContaier>
-                          <TextAreaComment
-                            style={{ margin: "0rem" }}
-                            // placeholder="Add comment"
-                            type="text"
-                            name="updatedescription"
-                            value={updateComment}
-                            onChange={HandleUpdateCommentChange}
-                          />
-                          {updateCommentError && (
-                            <Errors> {updateCommentError} </Errors>
-                          )}
-                         
-                            <AddNewButton
-                              style={{ alignSelf: "flex-end" }}
-                              onClick={HandleUpdate}
-                            >
-                              {isUploading ? (
-                                <ThreeDots
-                                  height="8"
-                                  width="8"
-                                  radius="9"
-                                  color="#ffffff"
-                                  ariaLabel="three-dots-loading"
-                                  visible={true}
-                                />
-                              ) : (
-                                "Update"
-                              )}
-                            </AddNewButton>
-                         
-                        </TextAreaContaier>
-                      </FlexContaier>
-                    ) : (
-                      <ViewPara>{data?.description}</ViewPara>
-                    )}
-                    {data.isEdited ? (
-                      <span style={{ margin: ".8rem 0rem " }}>
-                        {" "}
-                        Edited at {formatDateDifference(data.updatedAt)}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                  </FlexColumnForm>
-                </CommentDiv>
-              ))}
               <CommentDivADD>
                 <UserImg
                   src={
@@ -628,7 +526,7 @@ const TaskView = () => {
                     value={comment}
                     onChange={HandleCommentChange}
                   />
-                  { <Errors> {commentError} </Errors>}
+                  {<Errors> {commentError} </Errors>}
                   <AddNewButton
                     style={{ width: "8rem", alignSelf: "flex-end" }}
                     onClick={AddNewComment}
@@ -648,6 +546,112 @@ const TaskView = () => {
                   </AddNewButton>
                 </TextAreaContaier>
               </CommentDivADD>
+              {commentsList?.map((data) => (
+                <CommentDiv>
+                  <UserImg
+                    src={
+                      data?.commenter?.personalInfo?.photo
+                        ? API_URL + data?.commenter?.personalInfo?.photo?.path
+                        : "/images/User.jpg"
+                    }
+                  />
+
+                  <FlexColumnForm>
+                    <FlexSpaceBetween
+                      style={{ margin: "0rem", alignItems: "center" }}
+                    >
+                      <TitlePara>
+                        {[
+                          data?.commenter?.personalInfo?.firstName,
+                          data?.commenter?.personalInfo?.lastName,
+                        ].join(" ")}
+                        &nbsp;&nbsp;
+                        <span>{formatDateDifference(data?.createdAt)}</span>
+                      </TitlePara>
+
+                      <FlexContaier>
+                        {userData?._id === data?.commenter?._id && (
+                          <>
+                            {editingItemId === data?._id ? (
+                              <ActionIcons
+                                style={{ width: "2rem", height: "2rem" }}
+                                onClick={HandelCloseEdit}
+                                src="/images/icons/Alert-Circle.svg"
+                              />
+                            ) : (
+                              <ActionIcons
+                                style={{ width: "2rem", height: "2rem" }}
+                                onClick={() => {
+                                  HandleUpdateAction(data);
+                                }}
+                                src="/images/icons/Pendown.svg"
+                              />
+                            )}
+                            {editingItemId === data?._id ? (
+                              ""
+                            ) : (
+                              <ActionIcons
+                                style={{ width: "2rem", height: "2rem" }}
+                                onClick={() => {
+                                  HandleOpenDelete();
+                                  setId(data?._id);
+                                }}
+                                src="/images/icons/Trash-2.svg"
+                              />
+                            )}
+                          </>
+                        )}
+                      </FlexContaier>
+                    </FlexSpaceBetween>
+
+                    {editingItemId === data?._id ? (
+                      <FlexContaier>
+                        <TextAreaContaier>
+                          <TextAreaComment
+                            style={{ margin: "0rem" }}
+                            // placeholder="Add comment"
+                            type="text"
+                            name="updatedescription"
+                            value={updateComment}
+                            onChange={HandleUpdateCommentChange}
+                          />
+                          {updateCommentError && (
+                            <Errors> {updateCommentError} </Errors>
+                          )}
+
+                          <AddNewButton
+                            style={{ alignSelf: "flex-end" }}
+                            onClick={HandleUpdate}
+                          >
+                            {isUploading ? (
+                              <ThreeDots
+                                height="8"
+                                width="8"
+                                radius="9"
+                                color="#ffffff"
+                                ariaLabel="three-dots-loading"
+                                visible={true}
+                              />
+                            ) : (
+                              "Update"
+                            )}
+                          </AddNewButton>
+                        </TextAreaContaier>
+                      </FlexContaier>
+                    ) : (
+                      <ViewPara>{data?.description}</ViewPara>
+                    )}
+                    {data?.isEdited ? (
+                      <span style={{ margin: ".8rem 0rem " }}>
+                        {" "}
+                        Edited at {formatDateDifference(data.updatedAt)}
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </FlexColumnForm>
+                </CommentDiv>
+              ))}
             </BasicInfoDiv>
           </BackGroundWhite>
         </>

@@ -456,7 +456,7 @@ export const ViewPara = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 1.8rem;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   margin: 0;
 `;
 export const TimelineDiv = styled.div`
