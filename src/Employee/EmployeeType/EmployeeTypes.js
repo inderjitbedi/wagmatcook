@@ -21,16 +21,6 @@ import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
 
 import {
-  DashHeader,
-  DashHeaderTitle,
-  DashHeaderSearch,
-  SearchBox,
-  SearchInput,
-  SearchIcon,
-  DashNotification,
-} from "../../Dashboard/OADashboard/OADashBoardStyles";
-
-import {
   AddNewButton,
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -113,9 +103,7 @@ const EmployeeTypes = () => {
   const [employeeTypes, setEmployeeType] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+ 
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };

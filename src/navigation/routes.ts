@@ -52,6 +52,9 @@ import UserLayout from "../Dashboard/UserDashboard/UserLayout";
 import UserAccountLayout from "../Account/UserAccountLayout";
 import Task from "../Task/Task";
 import TaskView from "../Task/TaskView";
+import Documents from "../Documents/Documents";
+import DocumentsTags from "../Documents/DocumentsTags";
+import DocumentHistory from "../Documents/DocumentHistory";
 const Routes: any = [
   {
     component: signup,
@@ -151,9 +154,34 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: TaskView,
         path: "tasks/details/:taskid",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: Documents,
+        path: "documents",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: DocumentHistory,
+        path: "documents/history/:documentid",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+
+      {
+        component: DocumentsTags,
+        path: "document-tags",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -390,7 +418,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: Task,
         path: "tasks",
         title: "tasks",
@@ -398,9 +426,25 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: TaskView,
         path: "tasks/details/:taskid",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: Documents,
+        path: "documents",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: DocumentHistory,
+        path: "documents/history/:documentid",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -619,13 +663,13 @@ const Routes: any = [
       },
       {
         component: ManagerLeaveAction,
-         path:"leaves-request/:employeeid/:requestid",
+        path: "leaves-request/:employeeid/:requestid",
         title: "Leaves",
         to: "/",
         type: "private",
         index: true,
       },
-       {
+      {
         component: Task,
         path: "tasks",
         title: "tasks",
@@ -633,9 +677,25 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: TaskView,
         path: "tasks/details/:taskid",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: Documents,
+        path: "documents",
+        title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+       {
+        component: DocumentHistory,
+        path: "documents/history/:documentid",
         title: "Tasks View",
         to: "/",
         type: "private",
@@ -860,7 +920,7 @@ const Routes: any = [
         to: "/",
         type: "private",
       },
-       {
+      {
         component: Task,
         path: "tasks",
         title: "tasks",
@@ -868,7 +928,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: TaskView,
         path: "tasks/details/:taskid",
         title: "Tasks Details",

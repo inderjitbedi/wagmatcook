@@ -390,7 +390,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
             location.pathname.indexOf("leaves-request") > -1 ||
             location.pathname.indexOf("personal-info") > -1 ||
             location.pathname.indexOf("employee/benefits") > -1 ||
-            location.pathname.indexOf("tasks/details") > -1) && (
+            location.pathname.indexOf("tasks/details") > -1 ||
+            location.pathname.indexOf("documents/history") > -1) && (
             <BackButton onClick={() => Navigate(-1)}>
               <IconsEmployee src="/images/icons/ArrowLeft.svg" />
               Back
@@ -404,7 +405,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
           location.pathname.indexOf("leaves-request") > -1 ||
           location.pathname.indexOf("personal-info") > -1 ||
           location.pathname.indexOf("employee/benefits") > -1 ||
-          location.pathname.indexOf("tasks/details") > -1 ? (
+          location.pathname.indexOf("tasks/details") > -1 ||
+            location.pathname.indexOf("documents/history") > -1 ? (
             " "
           ) : screenWidth < 600 ? (
             <SearchBarWrapper expanded={expanded}>

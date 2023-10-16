@@ -34,6 +34,16 @@ export const DashHeaderTitle = styled.p`
   line-height: 2.4rem;
   text-transform: capitalize;
 `;
+export const TaskHeading = styled.p`
+  color: #222b45;
+
+  font-family: Inter;
+  font-size: 2.4rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 3.2rem;
+  margin: 0rem;
+`;
 export const DashHeaderSearch = styled.div`
   display: flex;
   align-items: center;
@@ -46,7 +56,7 @@ export const SearchBox = styled.div`
   background: #fff;
 
   background-color: #ffffff;
-  padding: .9rem 1.2rem;
+  padding: 0.9rem 1.2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -128,8 +138,7 @@ export const TabelImg = styled.img`
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-object-fit: cover;
-
+  object-fit: cover;
 `;
 export const TabelDiv = styled.div`
   display: flex;
@@ -173,8 +182,7 @@ export const BackButton = styled.button`
 export const IconsEmployee = styled.img`
   display: inline-block;
   cursor: pointer;
-object-fit: cover;
-
+  object-fit: cover;
 `;
 export const FlexContaier = styled.div`
   display: flex;
@@ -191,6 +199,8 @@ export const EmployeeBody = styled.div`
 export const BodyHeader = styled.div`
   width: 100%;
   padding: 2.4rem;
+  box-sizing: border-box;
+  /* margin-bottom: 1rem; */
 `;
 export const BodyHeading = styled.h1`
   color: #222b45;
@@ -208,6 +218,12 @@ export const BodyContainer = styled.div`
 export const SideBarContainer = styled.div`
   width: 20%;
   border-right: 1px solid #eff4fa;
+    @media only screen and (max-width: 600px) {
+     width: 100%;
+     box-sizing: border-box;
+  border-right: none;
+   
+  }
 `;
 export const MainBodyContainer = styled.div`
   width: 100%;
@@ -225,7 +241,6 @@ export const PersonalImg = styled.img`
   border-radius: 9.4rem;
   border: 2px solid #fff;
   object-fit: cover;
-  
 `;
 export const FlexColumn = styled.div`
   display: flex;
@@ -241,7 +256,7 @@ export const FlexColumn100 = styled.div`
   width: 100%;
 `;
 export const SectionCard = styled.div`
-position: relative;
+  position: relative;
   display: flex;
   gap: 1.6rem;
   margin-bottom: 1.6rem;
@@ -266,7 +281,7 @@ export const Sectionlighttitle = styled.h1`
   font-style: normal;
   font-weight: 600;
   line-height: 2.4rem; /* 171.429% */
-  margin:0;
+  margin: 0;
 `;
 export const ShowMore = styled.p`
   color: #8f9bb3;
@@ -285,7 +300,7 @@ export const ShowMore = styled.p`
   right: 0rem; */
 `;
 export const Sectionsmalltitle = styled.p`
- color: #222b45;
+  color: #222b45;
   text-align: right;
   font-family: Inter;
   font-size: 1.4rem;
@@ -305,7 +320,6 @@ export const Sectiondarktitle = styled.p`
   margin: 0;
 `;
 
-
 export const PersonalName = styled.h1`
   color: #222b45;
   font-family: Inter;
@@ -324,7 +338,37 @@ export const PersonalTitle = styled.h2`
   line-height: 0rem;
   text-transform: capitalize;
 `;
+export const TaskTitle = styled.p`
+  color: #222b45;
 
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  margin: 0rem;
+`;
+export const TaskLight = styled.p`
+  color: #8f9bb3;
+
+  font-family: Inter;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.6rem;
+  margin: 0rem;
+  `;
+export const TaskDescription = styled.p`
+  color: #222b45;
+
+  font-family: Inter;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0rem;
+
+  line-height: 2.2rem;
+`;
 export const PersonalDepartment = styled.h3`
   color: #8f9bb3;
   font-family: Inter;
@@ -357,7 +401,7 @@ export const FlexSpaceBetween = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2.4rem;
-  align-items:flex-start;
+  align-items: flex-start;
 `;
 export const EditButton = styled.label`
   border-radius: 80.8rem;
@@ -443,7 +487,7 @@ export const File = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 1.6rem;
-  padding: 0.8rem 1.6rem 0.8rem .9rem;
+  padding: 0.8rem 1.6rem 0.8rem 0.9rem;
   display: flex;
   align-items: center;
   gap: 2px;
@@ -493,6 +537,12 @@ export const FlexColumnForm = styled.div`
   flex-direction: column;
   gap: 5px;
   width: 100%;
+`;
+export const FlexColumnNoWidth = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  /* width: 100%; */
 `;
 export const InputLabel = styled.label`
   color: #222b45;
@@ -598,11 +648,11 @@ export const TextAreaComment = styled.textarea`
   font-weight: 400;
   line-height: 1.6rem;
   width: 100%;
-  border: 1px solid #dcdcdc;
-  border-radius: 0.8rem;
+  border: none;
+  /* border-radius: 0.8rem; */
   resize: none;
-  /* height: max-content; */
-  padding: .5em;
+  height: 6rem;
+  padding: 0.5em;
   color: #222b45;
   background: #fff;
   box-sizing: border-box;
@@ -701,7 +751,7 @@ export const LightPara = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.20.8rem;
+  letter-spacing: -0.2.8rem;
   cursor: pointer;
 `;
 export const UploadImageContainer = styled.label`
@@ -724,13 +774,13 @@ export const UploadImageName = styled.div`
   font-size: 1.2rem;
   font-style: normal;
   font-weight: 400;
-  padding: .9rem .9rem 7px .9rem;
+  padding: 0.9rem 0.9rem 7px 0.9rem;
   align-items: center;
   justify-content: space-between;
 `;
 export const UploadImagePara = styled.div`
   color: #222b45;
-  
+
   font-family: Inter;
   font-size: 1.4rem;
   font-style: normal;
@@ -745,14 +795,30 @@ export const UploadImageLight = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 1.2rem;
+  
 `;
 
 export const CommentDiv = styled.div`
-width: 100%;
-display: flex;
-gap: 2rem;
-align-items: flex-start;
-margin-bottom: 2.4rem;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2.4rem;
+  border-radius: 8px;
+border: 1.5px solid #EFF4FA;
+padding: 1.6rem 1.9rem;
+box-sizing: border-box;
+
+background: #FFF;
+`;
+export const CommentDivADD = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2.4rem;
+box-sizing: border-box;
+
 `;
 export const UserImg = styled.img`
   width: 4rem;
@@ -760,4 +826,57 @@ export const UserImg = styled.img`
   border-radius: 50%;
   object-fit: cover;
 `;
+export const Hr = styled.hr`
+  height: 1px;
+  width: 100%;
+  color: #eff4fa;
+  background-color: #eff4fa;
+`;
+export const TaskStatus = styled.div`
+  padding: 1.1rem 1.4rem 1.2rem 1.4rem;
+  border-radius: 0.8rem;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const TaskSelect = styled.select`
+  color: #9ea0aa;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #222b45;
 
+  text-align: center;
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  color: ${(props) =>
+    props.value === false
+      ? "#E88B00"
+      : props.value === true
+      ? "#0d7d0b"
+      : "#9ea0aa"};
+`;
+export const TaskOption = styled.option`
+  color: #9ea0aa;
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
+
+`;
+export const TextAreaContaier = styled.div`
+  border-radius: 8px;
+  border: 1px solid  #e9ebf0;
+  background: #fff;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+
+`;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EmployeeSideBar from "./EmployeeSideBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { Outlet } from "react-router-dom";
@@ -42,23 +42,50 @@ const EmployeeDetailLayout = () => {
     handleCloseMenu();
     Navigate("/");
   };
-   const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
-   const HandleSearchCahnge = (data) => {
-     setSearchValue(data);
-   };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    function handleResize() {
+      setScreenWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Employee Details" />
       <EmployeeBody>
         <BodyHeader>
           <BodyHeading>Employee Details</BodyHeading>
+          {screenWidth < 600 ? (
+            <SideBarContainer>
+              <EmployeeSideBar
+                employeeId={employeeid}
+                screenWidth={screenWidth}
+              />
+            </SideBarContainer>
+          ) : (
+            ""
+          )}
         </BodyHeader>
         <BodyContainer>
-          <SideBarContainer>
-            <EmployeeSideBar employeeId={employeeid} />
-          </SideBarContainer>
-          <div style={{ width: "80%" }}>
+          {screenWidth < 600 ? (
+            ""
+          ) : (
+            <SideBarContainer>
+              <EmployeeSideBar employeeId={employeeid} />
+            </SideBarContainer>
+          )}
+
+          <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
             <Outlet />
           </div>
         </BodyContainer>

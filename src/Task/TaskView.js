@@ -28,10 +28,23 @@ import {
   CommentDiv,
   UserImg,
   FlexColumnForm,
-  Input,
   AddNewButton,
   TextAreaComment,
   FlexContaier,
+  FlexColumnNoWidth,
+  BasicHeading,
+  TaskTitle,
+  TaskLight,
+  TaskHeading,
+  TaskDescription,
+  Hr,
+  TaskStatus,
+  TaskSelect,
+  TaskOption,
+  ModalIcon,
+  CommentDivADD,
+  TextAreaContaier,
+  Errors,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const TaskView = () => {
@@ -53,21 +66,27 @@ const TaskView = () => {
   const [commentsList, setCommentsList] = useState([]);
   const [comment, setComment] = useState("");
   const [updateComment, setUpdateComment] = useState("");
+  const [commentError, setCommentError] = useState("");
+  const [updateCommentError, setUpdateCommentError] = useState("");
   const [editingItemId, setEditingItemId] = useState(null);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  const handleEditClick = (_id) => {
-    setEditingItemId(_id);
-  };
+  // const handleEditClick = (_id) => {
+  //   setEditingItemId(_id);
+  // };
 
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-    HandleMarkComplete();
-  };
+  // const handleCheckboxChange = () => {
+  //   setIsChecked(!isChecked);
+  //   HandleMarkComplete();
+  // };
   const AddNewComment = () => {
+    if (!comment.trim()) {
+      setCommentError("Comment cannot be empty");
+      return;
+    }
     let dataCopy = { description: comment };
 
     setIsUploading(true);
@@ -156,6 +175,10 @@ const TaskView = () => {
       });
   };
   const HandleUpdate = () => {
+    if (!updateComment.trim()) {
+      setUpdateCommentError("Update Comment cannot be empty");
+      return;
+    }
     setIsUploading(true);
     let dataCopy = { description: updateComment };
 
@@ -238,6 +261,7 @@ const TaskView = () => {
             resolve(result);
             setTaskDetails(result.task);
             setIsChecked(result.task.isCompleted);
+            setSelectedValue(result.task.isCompleted);
           } else {
             //toast.warn("something went wrong ");
           }
@@ -269,7 +293,14 @@ const TaskView = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, []);
+  const [selectedValue, setSelectedValue] = useState(isChecked);
 
+  const handleSelectChange = (e) => {
+    const newValue = e.target.value === "true";
+    setSelectedValue(newValue);
+    setIsChecked(newValue);
+    HandleMarkComplete();
+  };
   function formatDateDifference(inputDate) {
     const currentDate = new Date();
     const inputDateObj = new Date(inputDate);
@@ -309,7 +340,7 @@ const TaskView = () => {
     // }
     else {
       const Date = moment(inputDate).format("YYYY-MM-DD hh:mm A");
-      
+
       return Date;
     }
   }
@@ -324,6 +355,15 @@ const TaskView = () => {
     setId("");
     setEditingItemId(null);
     setUpdateComment("");
+  };
+  const HandleCommentChange = (e) => {
+    setComment(e.target.value);
+    setCommentError("");
+  };
+
+  const HandleUpdateCommentChange = (e) => {
+    setUpdateComment(e.target.value);
+    setUpdateCommentError("");
   };
 
   return (
@@ -353,10 +393,9 @@ const TaskView = () => {
             text={"Task Details"}
           />
           <BackGroundWhite>
-            <BasicInfoDiv>
-              <FlexSpaceBetween style={{ alignItems: "center" }}>
-                <DisciplinaryHeading> Details </DisciplinaryHeading>
-                {userType === ROLES.EMPLOYEE ? (
+            <FlexSpaceBetween>
+              <DisciplinaryHeading> Task Details </DisciplinaryHeading>
+              {/* {userType === ROLES.EMPLOYEE ? (
                   " "
                 ) : (
                   <>
@@ -374,95 +413,99 @@ const TaskView = () => {
                       <StyledLabelActive htmlFor="toggel" />
                     )}
                   </>
-                )}
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <FlexColumn>
-                  <TitlePara>Task Title</TitlePara>
-                  <ViewPara> {taskDetails?.title || " - "} </ViewPara>
-                </FlexColumn>
-                <FlexColumn>
-                  <TitlePara>
-                    {" "}
-                    {userType === ROLES.EMPLOYEE
-                      ? " Assigned By"
-                      : " Assigned To"}
-                  </TitlePara>
-                  <ViewPara>
-                    {userType === ROLES.EMPLOYEE
-                      ? [
-                          taskDetails?.assigner?.personalInfo?.firstName,
-                          taskDetails?.assigner?.personalInfo?.lastName,
-                        ].join(" ") || " - "
-                      : [
-                          taskDetails?.assignee?.personalInfo?.firstName,
-                          taskDetails?.assignee?.personalInfo?.lastName,
-                        ].join(" ") || " - "}
-                  </ViewPara>
-                </FlexColumn>
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <FlexColumn>
-                  <TitlePara>Due Date</TitlePara>
-                  <ViewPara>
-                    {taskDetails?.dueDate
-                      ? moment(taskDetails.dueDate).format("DD/MM/YYYY")
-                      : " - "}{" "}
-                  </ViewPara>
-                </FlexColumn>
-                <FlexColumn>
-                  <TitlePara>Status</TitlePara>
-                  <ViewPara>
-                    {taskDetails.isCompleted ? (
-                      <ApproveStyle>Completed</ApproveStyle>
-                    ) : (
-                      <PendingStyle>Pending</PendingStyle>
-                    )}
-                  </ViewPara>
-                </FlexColumn>
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <FlexColumn>
-                  <TitlePara>Description</TitlePara>
-                  <ViewPara> {taskDetails?.description || " - "} </ViewPara>
-                </FlexColumn>
-              </FlexSpaceBetween>
-              <DisciplinaryHeading> Add Comment </DisciplinaryHeading>
-
-              <CommentDiv>
+                )} */}
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumnNoWidth>
+                <TaskLight>Task Title</TaskLight>
+                <TaskHeading> {taskDetails?.title || " - "} </TaskHeading>
+              </FlexColumnNoWidth>
+              <FlexContaier style={{ gap: ".8rem" }}>
+                <TaskLight>
+                  {" "}
+                  {userType === ROLES.EMPLOYEE
+                    ? " Assigned By"
+                    : " Assigned To"}
+                  :
+                </TaskLight>
                 <UserImg
+                  style={{
+                    width: "3rem",
+                    height: "3rem",
+                  }}
                   src={
-                    taskDetails?.assigner?.personalInfo.photo
+                    userType === ROLES.EMPLOYEE
+                      ? taskDetails?.assigner?.personalInfo?.photo
+                        ? API_URL +
+                          taskDetails?.assigner?.personalInfo?.photo?.path
+                        : "/images/User.jpg"
+                      : taskDetails?.assignee?.personalInfo?.photo
                       ? API_URL +
-                        taskDetails?.assigner?.personalInfo.photo?.path
+                        taskDetails?.assignee?.personalInfo?.photo?.path
                       : "/images/User.jpg"
                   }
                 />
+                <TaskTitle>
+                  {userType === ROLES.EMPLOYEE
+                    ? [
+                        taskDetails?.assigner?.personalInfo?.firstName,
+                        taskDetails?.assigner?.personalInfo?.lastName,
+                      ].join(" ") || " - "
+                    : [
+                        taskDetails?.assignee?.personalInfo?.firstName,
+                        taskDetails?.assignee?.personalInfo?.lastName,
+                      ].join(" ") || " - "}
+                </TaskTitle>
+              </FlexContaier>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumnNoWidth>
+                <TaskLight>Description</TaskLight>
+                <TaskDescription>
+                  {" "}
+                  {taskDetails?.description || " - "}{" "}
+                </TaskDescription>
+              </FlexColumnNoWidth>
+            </FlexSpaceBetween>
 
-                <TextAreaComment
-                  style={{ margin: "0rem" }}
-                  placeholder="Add comment"
-                  type="text"
-                  name="description"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
+            <FlexSpaceBetween
+              style={{
+                border: " 1px solid #eff4fa",
+                borderLeft: "none",
+                borderRight: "none",
+                padding: "1.4rem 0rem ",
+                alignItems: "center",
+              }}
+            >
+              <FlexContaier style={{ gap: "1.3rem" }}>
+                <TaskStatus>
+                  <TaskTitle>Task Status:</TaskTitle>
+                  <TaskSelect
+                    value={selectedValue}
+                    onChange={handleSelectChange}
+                    disabled={isChecked}
+                  >
+                    <TaskOption value={false}>Pending</TaskOption>
+                    <TaskOption value={true}>Completed</TaskOption>
+                  </TaskSelect>
+                </TaskStatus>
+                {/* <AddNewButton>Update</AddNewButton> */}
+              </FlexContaier>
+              <FlexContaier style={{ gap: ".4rem" }}>
+                <ModalIcon src="/svg/Leaves.svg" />
+                <TaskLight>Due Date:</TaskLight>
+                <TaskTitle>
+                  {" "}
+                  {taskDetails?.dueDate
+                    ? moment(taskDetails.dueDate).format("D MMM, YYYY")
+                    : " - "}{" "}
+                </TaskTitle>
+              </FlexContaier>
+            </FlexSpaceBetween>
 
-                <AddNewButton style={{ width: "8rem" }} onClick={AddNewComment}>
-                  {isUploading ? (
-                    <ThreeDots
-                      height="8"
-                      width="8"
-                      radius="9"
-                      color="#ffffff"
-                      ariaLabel="three-dots-loading"
-                      visible={true}
-                    />
-                  ) : (
-                    "Send"
-                  )}
-                </AddNewButton>
-              </CommentDiv>
+            <BasicInfoDiv>
+              <DisciplinaryHeading>Comments </DisciplinaryHeading>
+
               {commentsList?.map((data) => (
                 <CommentDiv>
                   <UserImg
@@ -474,77 +517,137 @@ const TaskView = () => {
                   />
 
                   <FlexColumnForm>
-                    <TitlePara>
-                      {[
-                        data?.commenter?.personalInfo?.firstName,
-                        data?.commenter?.personalInfo?.lastName,
-                      ].join(" ")}
-                      &nbsp;&nbsp;
-                      <span>{formatDateDifference(data.createdAt)}</span>
-                    </TitlePara>
+                    <FlexSpaceBetween
+                      style={{ margin: "0rem", alignItems: "center" }}
+                    >
+                      <TitlePara>
+                        {[
+                          data?.commenter?.personalInfo?.firstName,
+                          data?.commenter?.personalInfo?.lastName,
+                        ].join(" ")}
+                        &nbsp;&nbsp;
+                        <span>{formatDateDifference(data.createdAt)}</span>
+                      </TitlePara>
+
+                      <FlexContaier>
+                        {userData?._id === data.commenter?._id && (
+                          <>
+                            {editingItemId === data._id ? (
+                              <ActionIcons
+                                style={{ width: "2rem", height: "2rem" }}
+                                onClick={HandelCloseEdit}
+                                src="/images/icons/Alert-Circle.svg"
+                              />
+                            ) : (
+                              <ActionIcons
+                                style={{ width: "2rem", height: "2rem" }}
+                                onClick={() => {
+                                  HandleUpdateAction(data);
+                                }}
+                                src="/images/icons/Pendown.svg"
+                              />
+                            )}
+                            <ActionIcons
+                              style={{ width: "2rem", height: "2rem" }}
+                              onClick={() => {
+                                HandleOpenDelete();
+                                setId(data._id);
+                              }}
+                              src="/images/icons/Trash-2.svg"
+                            />
+                          </>
+                        )}
+                      </FlexContaier>
+                    </FlexSpaceBetween>
+
                     {editingItemId === data._id ? (
                       <FlexContaier>
-                        <TextAreaComment
-                          style={{ margin: "0rem" }}
-                          // placeholder="Add comment"
-                          type="text"
-                          name="updatedescription"
-                          value={updateComment}
-                          onChange={(e) => setUpdateComment(e.target.value)}
-                        />
-                        <AddNewButton
-                          style={{ width: "8rem" }}
-                          onClick={HandelCloseEdit}
-                        >
-                          close
-                        </AddNewButton>
-                        <AddNewButton
-                          // style={{ width: "8rem" }}
-                          onClick={HandleUpdate}
-                        >
-                          {isUploading ? (
-                            <ThreeDots
-                              height="8"
-                              width="8"
-                              radius="9"
-                              color="#ffffff"
-                              ariaLabel="three-dots-loading"
-                              visible={true}
-                            />
-                          ) : (
-                            "Update"
+                        <TextAreaContaier>
+                          <TextAreaComment
+                            style={{ margin: "0rem" }}
+                            // placeholder="Add comment"
+                            type="text"
+                            name="updatedescription"
+                            value={updateComment}
+                            onChange={HandleUpdateCommentChange}
+                          />
+                          {updateCommentError && (
+                            <Errors> {updateCommentError} </Errors>
                           )}
-                        </AddNewButton>
+                         
+                            <AddNewButton
+                              style={{ alignSelf: "flex-end" }}
+                              onClick={HandleUpdate}
+                            >
+                              {isUploading ? (
+                                <ThreeDots
+                                  height="8"
+                                  width="8"
+                                  radius="9"
+                                  color="#ffffff"
+                                  ariaLabel="three-dots-loading"
+                                  visible={true}
+                                />
+                              ) : (
+                                "Update"
+                              )}
+                            </AddNewButton>
+                         
+                        </TextAreaContaier>
                       </FlexContaier>
                     ) : (
                       <ViewPara>{data?.description}</ViewPara>
                     )}
-
-                    <FlexContaier>
-                      {userData?._id === data.commenter?._id && (
-                        <>
-                          <ActionIcons
-                            style={{ width: "1.5rem", height: "1.5rem" }}
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                          <ActionIcons
-                            style={{ width: "1.5rem", height: "1.5rem" }}
-                            onClick={() => {
-                              HandleOpenDelete();
-                              setId(data._id);
-                            }}
-                            src="/images/icons/Trash-2.svg"
-                          />
-                        </>
-                      )}
-                      {data.isEdited ? "Edited " : ""}
-                    </FlexContaier>
+                    {data.isEdited ? (
+                      <span style={{ margin: ".8rem 0rem " }}>
+                        {" "}
+                        Edited at {formatDateDifference(data.updatedAt)}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </FlexColumnForm>
                 </CommentDiv>
               ))}
+              <CommentDivADD>
+                <UserImg
+                  src={
+                    taskDetails?.assigner?.personalInfo.photo
+                      ? API_URL +
+                        taskDetails?.assigner?.personalInfo.photo?.path
+                      : "/images/User.jpg"
+                  }
+                />
+
+                <TextAreaContaier>
+                  <TextAreaComment
+                    // style={{ margin: "0rem" }}
+                    placeholder="Add a comment"
+                    type="text"
+                    name="description"
+                    value={comment}
+                    onChange={HandleCommentChange}
+                  />
+                  { <Errors> {commentError} </Errors>}
+                  <AddNewButton
+                    style={{ width: "8rem", alignSelf: "flex-end" }}
+                    onClick={AddNewComment}
+                  >
+                    {isUploading ? (
+                      <ThreeDots
+                        height="8"
+                        width="8"
+                        radius="9"
+                        color="#ffffff"
+                        ariaLabel="three-dots-loading"
+                        visible={true}
+                      />
+                    ) : (
+                      "Send"
+                    )}
+                  </AddNewButton>
+                </TextAreaContaier>
+              </CommentDivADD>
             </BasicInfoDiv>
           </BackGroundWhite>
         </>

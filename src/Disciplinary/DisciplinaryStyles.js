@@ -120,6 +120,26 @@ export const Input = styled.input`
   background: #fff;
   box-sizing: border-box;
 `;
+export const RadioLabel = styled.label`
+  color: #222b45;
+
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6rem;
+`;
+export const FlexContaier = styled.div`
+display: flex;
+gap:0.8rem;
+/* width: 50%; */
+`;
+export const RadioButtonContainer = styled.div`
+width: 50%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+`;
 export const TextArea = styled.textarea`
   font-size: 1.3rem;
   font-weight: 400;

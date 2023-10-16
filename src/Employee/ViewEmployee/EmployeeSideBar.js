@@ -7,6 +7,16 @@ const SideBarList = styled.div`
   flex-direction: column;
   padding: 0rem 2.4rem;
   gap: 1.2rem;
+
+  @media only screen and (max-width: 600px) {
+    flex-direction: row;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 0 1rem 0;
+
+    overflow: hidden;
+    overflow-x: scroll;
+  }
 `;
 const SideBarListContainer = styled.div`
   display: flex;
@@ -28,6 +38,10 @@ const SideBarListTitle = styled.p`
   line-height: 1.6rem;
   cursor: pointer;
   margin: 0rem;
+  @media only screen and (max-width: 600px) {
+    width: max-content;
+    /* text-decoration-line: underline; */
+  }
 `;
 const EmployeeSideBar = (props) => {
   const location = useLocation();
@@ -83,7 +97,9 @@ const EmployeeSideBar = (props) => {
   const style = {
     textDecoration: "none",
     color: "#279AF1",
+    textDecoration: props.screenWidth < 600 ? "underline" : "none" ,
   };
+
   return (
     <>
       {" "}
@@ -93,7 +109,7 @@ const EmployeeSideBar = (props) => {
             <SideBarListContainer style={{ zIndex: "56" }}>
               <SideBarListTitle
                 style={
-                  location.pathname === data.to ? style : { color: "#5C5C5C" }
+                  location.pathname === data.to ? style : { color: "#5C5C5C"  }
                 }
               >
                 {" "}

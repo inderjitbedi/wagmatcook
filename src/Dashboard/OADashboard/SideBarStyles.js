@@ -25,6 +25,7 @@ export const SideBarLogoContainer = styled.div`
   gap: 0.8rem;
   align-items: center;
   width: 100%;
+  box-sizing: border-box;
 `;
 export const SideBarLogo = styled.img`
   height: 5.6rem;

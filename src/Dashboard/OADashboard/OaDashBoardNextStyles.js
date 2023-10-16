@@ -97,7 +97,7 @@ export const MainCardTitleDiv = styled.div`
 `;
 export const MainCardPara = styled.p`
   font-size: 1.4rem;
-  line-height: 1rem;
+  line-height: 1.8rem;
   font-weight: 600;
   color: #222b45;
   text-transform: capitalize;
@@ -175,7 +175,7 @@ export const CardLeavesList = styled.div`
 export const CardLeavesDiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap:4px; */
+  gap:4px;
 `;
 export const CardLeavesPara = styled.p`
   color: #222b45;

@@ -184,7 +184,7 @@ button.MuiButton-containedPrimary {
 }
 
 .MuiInputBase-root {
-  height: 40px;
+  height: max-content;
   padding: 8px 11px 8px 11px;
   border-radius: 6px !important;
   margin: 5px 0 8px;
@@ -696,4 +696,15 @@ input[type="checkbox"] {
   box-shadow: 0px 10px 30px 3px rgba(5, 16, 55, 0.15),
     6px 0px 0px 0px #2bc128 inset;
     box-sizing: border-box;
+}
+.css-cgl6zv-MuiAutocomplete-root .MuiAutocomplete-tag {
+  border-radius: 10rem;
+background: #C8FFC7;
+padding: 2px 1.2rem;
+color:  #0D7D0B;
+text-align: center;
+font-size: 1.4rem;
+font-style: normal;
+font-weight: 400;
+line-height: 2.4rem;
 }

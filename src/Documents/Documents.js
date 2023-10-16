@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { RotatingLines } from "react-loader-spinner";
-import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import { useForm, Controller } from "react-hook-form";
-import httpClient from "../api/httpClient";
-import API_URLS from "../constants/apiUrls";
+import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router";
 import { toast } from "react-toastify";
-
-import Modal from "@mui/material/Modal";
-import DeleteModal from "../Modals/DeleteModal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,10 +12,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
+import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
+import httpClient from "../api/httpClient";
+import DeleteModal from "../Modals/DeleteModal";
+import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import { WithContext as ReactTags } from "react-tag-input";
 
 import {
   DisciplinaryDiv,
@@ -45,7 +46,11 @@ import {
   PendingStyle,
   ApproveStyle,
   PaginationDiv,
+  FlexContaier,
+  RadioLabel,
+  RadioButtonContainer,
 } from "../Disciplinary/DisciplinaryStyles";
+
 
 const style = {
   position: "absolute",
@@ -83,11 +88,10 @@ const CellStyle2 = {
   lineHeight: "1.5rem",
 };
 
-const Task = () => {
+const Documents = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
-  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -95,17 +99,25 @@ const Task = () => {
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
-  const [taskLsit, setTaskList] = useState([]);
   const [result, setResult] = useState([]);
-  const [assignees, setAssignees] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
+  const [departmentData, setDepartmentData] = useState([]);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
-  // add new modal
+  const {
+    register,
+    control,
+    clearErrors,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    mode: "all",
+  });
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
   const HandleClose = () => {
@@ -118,16 +130,6 @@ const Task = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  const {
-    register,
-    control,
-    clearErrors,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    mode: "all",
-  });
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -138,9 +140,9 @@ const Task = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      HandleSubmit(data);
+      //  HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      HandleUpdate(data);
+      //  HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
@@ -165,208 +167,10 @@ const Task = () => {
     clearErrors();
     setDetailsLength(500);
   };
-
-  const GetAssignees = () => {
-    setIsLoading(true);
-    let url = API_URLS.getAssignees;
-
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setAssignees(result.assignees);
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const HandleDelete = () => {
-    setIsDeleting(true);
-    let url = API_URLS.deleteTask.replace(":id", Id);
-
-    httpClient({
-      method: "put",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          HandleCloseDelete();
-          setId("");
-          GetTaskList();
-
-          toast.success(result.message, {
-            className: "toast",
-          });
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error Deleting Benefits. Please try again.");
-        setIsDeleting(false);
-      })
-      .finally(() => {
-        setIsDeleting(false);
-      });
-  };
-  const GetTaskList = () => {
-    setIsLoading(true);
-    let url = API_URLS.getTaskList.replace("Page", page);
-
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-          setTaskList(result.tasks);
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const HandleSubmit = (data) => {
-    // e.preventDefault();
-    setIsLoading(true);
-    let url = API_URLS.createTask;
-
-    setIsLoading(true);
-    let dataCopy = data;
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          HandleClose();
-          reset();
-          toast.success(result.message, {
-            className: "toast",
-          });
-          GetTaskList();
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error feteching benefits. Please try again.");
-        HandleClose();
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
-    setIsLoading(true);
-    let dataCopy = data;
-
-    let url = API_URLS.updateTask.replace(":id", Id);
-
-    httpClient({
-      method: "put",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setId("");
-          setUpdate(false);
-          reset();
-          GetAssignees();
-          HandleClose();
-          toast.success(result.message, {
-            className: "toast",
-          }); //Entry Updated Successfully");
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error Updating Benefits . Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const data = [
-    {
-      _id: 1,
-      name: "option1",
-    },
-    {
-      _id: 2,
-      name: "option2",
-    },
-    {
-      _id: 3,
-      name: "option3",
-    },
-  ];
-  const TaskData = [
-    {
-      order: 1,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 2,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 3,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 4,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-  ];
-
   useEffect(() => {
-    GetTaskList();
+    // GetTaskList();
     if (!(location.pathname.indexOf("user") > -1)) {
-      GetAssignees();
+      //   GetAssignees();
     }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -376,11 +180,103 @@ const Task = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, [page]);
+  const GetDepartments = () => {
+    setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getDepartmentsList;
+
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setDepartmentData(result.departments);
+            resolve(result.departments);
+             const suggestions = result?.departments?.map((data) => ({
+               id: data?.userData._id,
+               text: data?.name,
+             }));
+            setSuggestions(suggestions);
+            
+            setIsLoading(false);
+
+          } else {
+            //toast.warn("something went wrong ");
+            setIsLoading(false);
+
+            reject("No data received from GetDepartments API");
+          }
+        })
+        .catch((error) => {
+          // toast.error("Error getting department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
+  };
+  useEffect(() => {
+    GetDepartments();
+  }, []);
+  const KeyCodes = {
+    comma: 188,
+    enter: 13,
+  };
+  const delimiters = [KeyCodes.comma, KeyCodes.enter];
+  const [suggestions, setSuggestions] = useState([]);
+
+  const TaskData = [
+    {
+      order: 1,
+      title: "Mobile Responsive",
+      department: "Mobile Responsive",
+      keywords: "tags ",
+      fileName: "Lalit Kumar",
+      updatedby: "eren",
+      updatedon: "22/9/2023",
+    },
+    {
+      order: 2,
+      title: "Mobile Responsive",
+      department: "Mobile Responsive",
+      keywords: "tags ",
+      fileName: "Lalit Kumar",
+      updatedby: "eren",
+      updatedon: "22/9/2023",
+    },
+    {
+      order: 3,
+      title: "Mobile Responsive",
+      department: "Mobile Responsive",
+      keywords: "tags ",
+      fileName: "Lalit Kumar",
+      updatedby: "eren",
+      updatedon: "22/9/2023",
+    },
+    {
+      order: 4,
+      title: "Mobile Responsive",
+      department: "Mobile Responsive",
+      keywords: "tags ",
+      fileName: "Lalit Kumar",
+      updatedby: "eren",
+      updatedon: "22/9/2023",
+    },
+    {
+      order: 5,
+      title: "Mobile Responsive",
+      department: "Mobile Responsive",
+      keywords: "tags ",
+      fileName: "Lalit Kumar",
+      updatedby: "eren",
+      updatedon: "22/9/2023",
+    },
+  ];
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Documents" />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Tasks</DisciplinaryHeading>
+        <DisciplinaryHeading>All Documents</DisciplinaryHeading>
         {userType === ROLES.EMPLOYEE ? (
           " "
         ) : (
@@ -431,7 +327,7 @@ const Task = () => {
               <>
                 <ModalUpperDiv>
                   <ModalHeading>
-                    {!update ? "Add Tasks" : "Update Task"}
+                    {!update ? "Add Document" : "Update Documents"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -446,7 +342,7 @@ const Task = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <InputLabel>
-                      Task Title <InputSpan>*</InputSpan>
+                      Title <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -457,14 +353,13 @@ const Task = () => {
                         },
                       })}
                     />
-                    {errors.taskTitle && (
-                      <Errors>{errors.taskTitle?.message}</Errors>
-                    )}
+                    {errors.title && <Errors>{errors.title?.message}</Errors>}
+
                     <InputLabel>
-                      Assigned To <InputSpan>*</InputSpan>
+                      Departments <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
-                      name="assignee"
+                      name="department"
                       control={control}
                       rules={{
                         required: {
@@ -472,70 +367,129 @@ const Task = () => {
                           message: "Required",
                         },
                       }}
-                      render={({ field }) => (
-                        <Select {...field}>
-                          <Option>Select</Option>
-                          {assignees?.map((data) => (
-                            <Option value={data._id}>
-                              {[
-                                data.personalInfo[0]?.firstName,
-                                data.personalInfo[0]?.lastName,
-                              ].join(" ")}
-                            </Option>
-                          ))}
-                        </Select>
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Autocomplete
+                          multiple
+                          id="tags-standard"
+                          value={
+                            value
+                              ? departmentData.filter((option) =>
+                                  value.includes(option._id)
+                                ) ?? []
+                              : []
+                          }
+                          onChange={(event, newValue) => {
+                            onChange(
+                              newValue ? newValue.map((item) => item._id) : []
+                            );
+                          }}
+                          sx={{ width: " 100% " }}
+                          isOptionEqualToValue={(option, value) =>
+                            option._id === value._id
+                          }
+                          getOptionLabel={(option) =>
+                            option.name && `${option.name}`
+                          }
+                          options={departmentData}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              inputRef={ref}
+                              placeholder="Select Departments"
+                            />
+                          )}
+                        />
                       )}
                     />
-                    {errors.assignedto && (
-                      <Errors>{errors.assignee?.message}</Errors>
+
+                    {errors.department && (
+                      <Errors>{errors.department?.message}</Errors>
                     )}
                     <InputLabel>
-                      Description <InputSpan>*</InputSpan>
+                      Keywords <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <TextArea
-                      type="text"
-                      {...register("description", {
+                    <Controller
+                      name="keywords"
+                      control={control}
+                      rules={{
                         required: {
                           value: true,
                           message: "Required",
                         },
-                        maxLength: {
-                          value: 500,
-                          message: "Details exceeds 500 characters ",
-                        },
-                        // minLength: {
-                        //   value: 10,
-                        //   message: "Atleast write  10 characters ",
-                        // },
-                        onChange: (value) => {
-                          setDetailsLength(500 - value.target.value.length);
-                        },
-                      })}
+                      }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <ReactTags
+                          inputRef={ref}
+                          tags={value}
+                          suggestions={suggestions}
+                          delimiters={delimiters}
+                          handleDelete={(i) => {
+                            if (Array.isArray(value)) {
+                              const updatedTags = [...value];
+                              updatedTags.splice(i, 1);
+                              onChange(updatedTags);
+                            }
+                          }}
+                          handleAddition={(tag) => {
+                            const updatedTags = Array.isArray(value)
+                              ? [...value, tag]
+                              : [tag];
+                            onChange(updatedTags);
+                          }}
+                          handleDrag={(tag, currPos, newPos) => {
+                            const updatedTags = Array.isArray(value)
+                              ? [...value]
+                              : [];
+                            updatedTags.splice(currPos, 1);
+                            updatedTags.splice(newPos, 0, tag);
+                            onChange(updatedTags);
+                          }}
+                          inputFieldPosition="bottom"
+                          autocomplete
+                          placeholder={value?.length ? "Add More " : "Add"}
+                          // editable
+                        />
+                      )}
                     />
-
-                    <InputPara>
-                      {" "}
-                      {<Errors>{errors.description?.message}</Errors>}{" "}
-                      <span style={{ justifySelf: "flex-end" }}>
-                        {" "}
-                        {detailsLength > -1 ? detailsLength : 0} characters left
-                      </span>
-                    </InputPara>
-
+                    {errors.keywords && (
+                      <Errors>{errors.keywords?.message}</Errors>
+                    )}
                     <InputLabel>
-                      Due Date <InputSpan>*</InputSpan>
+                      Versions <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
-                      type="date"
-                      {...register("dueDate", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {<Errors>{errors.dueDate?.message}</Errors>}
-
+                    <RadioButtonContainer>
+                      <FlexContaier>
+                        <Input
+                          type="radio"
+                          id="major"
+                          name="version"
+                          {...register("version", {
+                            required: {
+                              value: true,
+                              message: " Required",
+                            },
+                          })}
+                        />
+                        <RadioLabel htmlFor="major">Major</RadioLabel>
+                      </FlexContaier>
+                      <FlexContaier>
+                        <Input
+                          type="radio"
+                          id="minor"
+                          name="version"
+                          {...register("version", {
+                            required: {
+                              value: true,
+                              message: " Required",
+                            },
+                          })}
+                        />
+                        <RadioLabel htmlFor="minor">Minor</RadioLabel>
+                      </FlexContaier>
+                    </RadioButtonContainer>
+                    {errors.version && (
+                      <Errors>{errors.version?.message}</Errors>
+                    )}
                     {!update ? (
                       <AddNewButton
                         type="submit"
@@ -600,37 +554,42 @@ const Task = () => {
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
-                    Task Title
+                    Title
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "15rem" }}
                     align="left"
                   >
-                    {userType === ROLES.EMPLOYEE
-                      ? " Assigned By"
-                      : " Assigned To"}
+                    Department Name
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Due Date
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "30rem" }}
-                    align="left"
-                  >
-                    Description
+                    Keywords
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
-                    Status
+                    File Name
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Updated By
+                  </TableCell>{" "}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Updated On
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -643,14 +602,14 @@ const Task = () => {
               </TableHead>
 
               <TableBody>
-                {!taskLsit?.length && (
+                {!TaskData?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No tasks found
+                      No Documents found
                     </TableCell>
                   </TableRow>
                 )}
-                {taskLsit?.map((data, index) => (
+                {TaskData?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -667,30 +626,19 @@ const Task = () => {
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {userType === ROLES.EMPLOYEE
-                        ? [
-                            data?.assigner?.personalInfo?.firstName,
-                            data?.assigner?.personalInfo?.lastName,
-                          ].join(" ") || " - "
-                        : [
-                            data?.assignee?.personalInfo?.firstName,
-                            data?.assignee?.personalInfo?.lastName,
-                          ].join(" ") || " - "}
+                      {data.department}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.dueDate
-                        ? moment(data.dueDate).format("DD/MM/YYYY")
-                        : " -"}
+                      {data.keywords}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.description || " - "}
+                      {data.filename || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.isCompleted ? (
-                        <ApproveStyle>Completed</ApproveStyle>
-                      ) : (
-                        <PendingStyle>Pending</PendingStyle>
-                      )}
+                      {data.updatedby || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.updatedon}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
@@ -709,19 +657,15 @@ const Task = () => {
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/manager-management/tasks/details/${data._id}`
+                                `/manager-management/documents/history/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
-                                `/manager-management/tasks/details/${data._id}`
-                              );
-                            } else if (userType === ROLES.EMPLOYEE) {
-                              Navigate(
-                                `/user-management/tasks/details/${data._id}`
+                                `/manager-management/documents/history/${data._id}`
                               );
                             } else {
                               Navigate(
-                                `/organization-admin/tasks/details/${data._id}`
+                                `/organization-admin/documents/history/${data._id}`
                               );
                             }
                           }}
@@ -738,6 +682,11 @@ const Task = () => {
                             src="/images/icons/Trash-2.svg"
                           />
                         )}
+
+                        <ActionIcons
+                          onClick={() => {}}
+                          src="/images/icons/Download.svg"
+                        />
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>
@@ -761,7 +710,7 @@ const Task = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        HandleDelete={HandleDelete}
+        //   HandleDelete={HandleDelete}
         message="Are you sure you want to delete this task?"
         isLoading={isDeleting}
       />
@@ -769,4 +718,4 @@ const Task = () => {
   );
 };
 
-export default Task;
+export default Documents;
