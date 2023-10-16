@@ -254,12 +254,11 @@ const TaskView = () => {
     });
   };
   useEffect(() => {
-     let user = localStorage.getItem("user");
-     if (user) {
-       let parsedUser = JSON.parse(user);
-       setUserData(parsedUser);
-       
-     }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUserData(parsedUser);
+    }
     GetTaskDetails();
     GetTaskComments();
     if (location.pathname.indexOf("manager") > -1) {
@@ -297,18 +296,21 @@ const TaskView = () => {
     } else if (timeDifference < millisecondsInDay) {
       const hours = Math.floor(timeDifference / millisecondsInHour);
       return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-    } else if (timeDifference < millisecondsInWeek) {
-      const days = Math.floor(timeDifference / millisecondsInDay);
-      return `${days} ${days === 1 ? "day" : "days"} ago`;
-    } else if (timeDifference < millisecondsInMonth) {
-      const weeks = Math.floor(timeDifference / millisecondsInWeek);
-      return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
-    } else if (timeDifference < millisecondsInYear) {
-      const months = Math.floor(timeDifference / millisecondsInMonth);
-      return `${months} ${months === 1 ? "month" : "months"} ago`;
-    } else {
-      const years = Math.floor(timeDifference / millisecondsInYear);
-      return `${years} ${years === 1 ? "year" : "years"} ago`;
+    }
+    // else if (timeDifference < millisecondsInWeek) {
+    //   const days = Math.floor(timeDifference / millisecondsInDay);
+    //   return `${days} ${days === 1 ? "day" : "days"} ago`;
+    // } else if (timeDifference < millisecondsInMonth) {
+    //   const weeks = Math.floor(timeDifference / millisecondsInWeek);
+    //   return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+    // } else if (timeDifference < millisecondsInYear) {
+    //   const months = Math.floor(timeDifference / millisecondsInMonth);
+    //   return `${months} ${months === 1 ? "month" : "months"} ago`;
+    // }
+    else {
+      const Date = moment(inputDate).format("YYYY-MM-DD hh:mm A");
+      
+      return Date;
     }
   }
   const HandleUpdateAction = (data) => {
@@ -396,7 +398,6 @@ const TaskView = () => {
                           taskDetails?.assignee?.personalInfo?.firstName,
                           taskDetails?.assignee?.personalInfo?.lastName,
                         ].join(" ") || " - "}
-                 
                   </ViewPara>
                 </FlexColumn>
               </FlexSpaceBetween>
@@ -520,7 +521,7 @@ const TaskView = () => {
                     )}
 
                     <FlexContaier>
-                      { userData?._id === data.commenter?._id && (
+                      {userData?._id === data.commenter?._id && (
                         <>
                           <ActionIcons
                             style={{ width: "1.5rem", height: "1.5rem" }}
