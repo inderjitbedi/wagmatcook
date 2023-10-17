@@ -211,12 +211,18 @@ const authController = {
             delete user.password
             let relation = {};
             if (user.role != roles.SUPER_ADMIN) {
-                relation = await UserOrganization.findOne({ user: user._id }).populate({
+                relation = await UserOrganization.findOne({ user: user._id }).populate([{
                     path: 'organization',
                     populate: {
                         path: 'logo',
                     },
-                });
+
+                }, {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo',
+                    },
+                }]);
             }
             res.status(200).json({ user, organization: relation?.organization || {}, token, message: 'User signed in successfully' });
         } catch (error) {

@@ -170,7 +170,7 @@ const taskController = {
             req.body.commenter = req.user?._id;
             const comment = new TaskComments(req.body);
             await comment.save();
-            await comment.populate({ path: 'commenter', populate: { path: 'personalInfo' } });
+            await comment.populate({ path: 'commenter', populate: { path: 'personalInfo', populate: { path: 'photo' } } });
             // let type = "TASK_ASSIGNED"
             // const notification = new Notifications({
             //     title: notificationConstants[type].title?.replace('{assigner}', req.user?.personalInfo ? [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ') : 'Someone'),
@@ -201,10 +201,12 @@ const taskController = {
             req.body.commenter = req.user?._id;
             req.body.task = req.params?.taskid;
             req.body.isEdited = true;
-            const task = await TaskComments.findOneAndUpdate({
+            const comment = await TaskComments.findOneAndUpdate({
                 _id: req.params.id,
             }, { ...req.body }, { new: true })
-            res.status(200).json({ task, message: 'Comment updated successfully' });
+            await comment.populate({ path: 'commenter', populate: { path: 'personalInfo', populate: { path: 'photo' } } });
+
+            res.status(200).json({ comment, message: 'Comment updated successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
             res.status(400).json(error);
@@ -217,6 +219,7 @@ const taskController = {
             const startIndex = (page - 1) * limit;
             let filters = {
                 task: req.params.taskid,
+                isDeleted: false
             }
             const comments = await TaskComments.find(filters).populate({ path: 'commenter', populate: { path: 'personalInfo', populate: { path: 'photo' } } },).skip(startIndex)
                 .limit(limit)
