@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { RotatingLines } from "react-loader-spinner";
+import {
+  RotatingLines, ThreeDots
+} from "react-loader-spinner";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -50,6 +52,11 @@ import {
   RadioLabel,
   RadioButtonContainer,
 } from "../Disciplinary/DisciplinaryStyles";
+import {
+  EditButton,
+  LightPara,
+  ButtonIcon,
+} from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 
 const style = {
@@ -104,6 +111,8 @@ const Documents = () => {
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
   const [departmentData, setDepartmentData] = useState([]);
+  const [file, setFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
@@ -114,6 +123,7 @@ const Documents = () => {
     clearErrors,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "all",
@@ -193,14 +203,13 @@ const Documents = () => {
           if (result) {
             setDepartmentData(result.departments);
             resolve(result.departments);
-             const suggestions = result?.departments?.map((data) => ({
-               id: data?.userData._id,
-               text: data?.name,
-             }));
+            const suggestions = result?.departments?.map((data) => ({
+              id: data?.userData._id,
+              text: data?.name,
+            }));
             setSuggestions(suggestions);
-            
-            setIsLoading(false);
 
+            setIsLoading(false);
           } else {
             //toast.warn("something went wrong ");
             setIsLoading(false);
@@ -272,6 +281,38 @@ const Documents = () => {
       updatedon: "22/9/2023",
     },
   ];
+  // };
+  const getFileType = (file) => {
+    const fileExtension = file.name.split(".").pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+      return "image";
+    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+      return "video";
+    } else if (fileExtension === "pdf") {
+      return "pdf";
+    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+      return "xlsx";
+    } else if (fileExtension === "doc" || fileExtension === "docx") {
+      return "doc";
+    } else {
+      return "unknown";
+    }
+  };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    let type = await getFileType(e.target.files[0]);
+    //console.log("this file type:", type);
+    if (type != "unknown") {
+      // handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.");
+    }
+  };
+    const removeFile = (e) => {
+      setFile(null);
+      setValue("file", null);
+    };
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Documents" />
@@ -455,7 +496,7 @@ const Documents = () => {
                       <Errors>{errors.keywords?.message}</Errors>
                     )}
                     <InputLabel>
-                      Versions <InputSpan>*</InputSpan>
+                      Version <InputSpan>*</InputSpan>
                     </InputLabel>
                     <RadioButtonContainer>
                       <FlexContaier>
@@ -487,9 +528,61 @@ const Documents = () => {
                         <RadioLabel htmlFor="minor">Minor</RadioLabel>
                       </FlexContaier>
                     </RadioButtonContainer>
+                    <input
+                      style={{ width: "50%" }}
+                      type="file"
+                      {...register(`file`, {
+                        // required: {
+                        //   value: update ? false : true,
+                        //   message: "Required",
+                        // },
+                        onChange: (e) => {
+                          handleFileChange(e);
+                        },
+                      })}
+                      id="upload"
+                      className="custom"
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1.6rem",
+                        alignItems: "center",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <EditButton
+                        htmlFor="upload"
+                        style={{ width: "max-content" }}
+                      >
+                        {" "}
+                        <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                        {isUploading ? (
+                          <ThreeDots
+                            height="8"
+                            width="80"
+                            radius="9"
+                            color="#279AF1"
+                            ariaLabel="three-dots-loading"
+                            visible={true}
+                          />
+                        ) : !file ? (
+                          "Upload Document "
+                        ) : file?.originalName.length <= 32 ? (
+                          file?.originalName
+                        ) : (
+                          file?.originalName?.substring(0, 30) + "..."
+                        )}
+                      </EditButton>
+                      {file && (
+                        <LightPara onClick={removeFile}>Remove</LightPara>
+                      )}
+                    </div>
+                    {errors.file && <Errors> {errors.file?.message} </Errors>}
                     {errors.version && (
                       <Errors>{errors.version?.message}</Errors>
                     )}
+
                     {!update ? (
                       <AddNewButton
                         type="submit"

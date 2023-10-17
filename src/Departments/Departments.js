@@ -47,6 +47,7 @@ import {
   InputLabel,
   InputSpan,
   PaginationDiv,
+  DisciplinaryHeading,
 } from "../Disciplinary/DisciplinaryStyles";
 
 const style = {
@@ -399,6 +400,7 @@ const Departments = () => {
         <CommenDashHeader onSearch={HandleSearchCahnge} text="Departments" />
 
         <DepartmentFilterContainer>
+          <DisciplinaryHeading>Departments</DisciplinaryHeading>
           {/* <DepartmentFilterdiv>
             {FilterData.map((data) => (
               <DepartmentFilterButton>{data}</DepartmentFilterButton>

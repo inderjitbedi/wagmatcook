@@ -6,6 +6,12 @@ export const Dashboard = styled.div`
   width: 100%;
   height: 100vh;
 `;
+export const Main = styled.div`
+  padding: 0rem 3rem 8rem 2rem;
+  background: #f3f3f5;
+  width: 100%;
+  box-sizing: border-box;
+`;
 
 export const DashNav = styled.div`
   width: 20%;
@@ -20,6 +26,7 @@ export const DashMain = styled.div`
   height: max-content;
   min-height: 100vh;
   overflow-x: hidden;
+  box-sizing: border-box;
 `;
 export const DashHeader = styled.div`
   display: flex;
@@ -27,17 +34,29 @@ export const DashHeader = styled.div`
   padding-bottom: 4rem;
   position: relative;
   align-items: center;
+  /* padding: 0rem 3rem 4rem 2rem; */
+  box-sizing: border-box;
+  @media only screen and (max-width: 600px) {
+    
+    padding: 0rem 0rem 2rem 0rem;
+  }
 `;
 export const DashHeaderTitle = styled.p`
   color: #222b45;
   font-weight: 600;
   font-size: 2rem;
   line-height: 2.4rem;
+
+  @media only screen and (max-width: 600px) {
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    margin-left: 4px;
+  }
 `;
 export const DashHeaderSearch = styled.div`
   display: flex;
   align-items: center;
-  gap: 2.4rem;
+  gap: 1.6rem;
 `;
 export const FlexContaier = styled.div`
   display: flex;

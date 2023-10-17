@@ -183,6 +183,10 @@ export const IconsEmployee = styled.img`
   display: inline-block;
   cursor: pointer;
   object-fit: cover;
+  @media only screen and (max-width: 600px) {
+    height: 2.2rem;
+    width: 2.2rem;
+  }
 `;
 export const FlexContaier = styled.div`
   display: flex;
@@ -195,12 +199,21 @@ export const EmployeeBody = styled.div`
   background: #fff;
   margin-bottom: 8rem;
   padding-bottom: 8rem;
+   @media only screen and (max-width: 600px) {
+     margin-bottom: 4rem;
+  padding-bottom: 4rem;
+    
+  }
 `;
 export const BodyHeader = styled.div`
   width: 100%;
   padding: 2.4rem;
   box-sizing: border-box;
   /* margin-bottom: 1rem; */
+  @media only screen and (max-width: 600px) {
+    /* background: #f3f3f5; */
+    padding: 2.4rem 0 2.4rem 2.4rem;
+  }
 `;
 export const BodyHeading = styled.h1`
   color: #222b45;
@@ -218,15 +231,15 @@ export const BodyContainer = styled.div`
 export const SideBarContainer = styled.div`
   width: 20%;
   border-right: 1px solid #eff4fa;
-    @media only screen and (max-width: 600px) {
-     width: 100%;
-     box-sizing: border-box;
-  border-right: none;
-   
+  @media only screen and (max-width: 600px) {
+    width: 100%;
+    box-sizing: border-box;
+    border-right: none;
   }
 `;
 export const MainBodyContainer = styled.div`
   width: 100%;
+  box-sizing: border-box;
 `;
 export const PersonalInfo = styled.div`
   width: 100%;
@@ -234,6 +247,7 @@ export const PersonalInfo = styled.div`
   align-items: center;
   gap: 2rem;
   padding: 0rem 2.2rem 1rem 2.2rem;
+  box-sizing: border-box;
 `;
 export const PersonalImg = styled.img`
   width: 9.4rem;
@@ -357,7 +371,7 @@ export const TaskLight = styled.p`
   font-weight: 500;
   line-height: 1.6rem;
   margin: 0rem;
-  `;
+`;
 export const TaskDescription = styled.p`
   color: #222b45;
 
@@ -382,9 +396,16 @@ export const BasicInfoContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 `;
 export const BasicInfoDiv = styled.div`
   width: 71%;
+   @media only screen and (max-width: 600px) {
+    width: 100%;
+  padding: 0rem 2.2rem 1rem 2.2rem;
+
+
+  }
 `;
 export const BackGroundWhite = styled.div`
   width: 100%;
@@ -402,6 +423,7 @@ export const FlexSpaceBetween = styled.div`
   align-items: center;
   margin-bottom: 2.4rem;
   align-items: flex-start;
+  box-sizing: border-box;
 `;
 export const EditButton = styled.label`
   border-radius: 80.8rem;
@@ -531,6 +553,10 @@ export const FlexContaierForm = styled.div`
   /* margin-bottom: 1.6rem; */
   width: 100%;
   box-sizing: border-box;
+   @media only screen and (max-width: 600px) {
+    
+    flex-direction: column;
+  }
 `;
 export const FlexColumnForm = styled.div`
   display: flex;
@@ -795,7 +821,6 @@ export const UploadImageLight = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 1.2rem;
-  
 `;
 
 export const CommentDiv = styled.div`
@@ -805,11 +830,11 @@ export const CommentDiv = styled.div`
   align-items: flex-start;
   margin-bottom: 2.4rem;
   border-radius: 8px;
-border: 1.5px solid #EFF4FA;
-padding: 1.6rem 1.9rem;
-box-sizing: border-box;
+  border: 1.5px solid #eff4fa;
+  padding: 1.6rem 1.9rem;
+  box-sizing: border-box;
 
-background: #FFF;
+  background: #fff;
 `;
 export const CommentDivADD = styled.div`
   width: 100%;
@@ -817,8 +842,7 @@ export const CommentDivADD = styled.div`
   gap: 2rem;
   align-items: flex-start;
   margin-bottom: 2.4rem;
-box-sizing: border-box;
-
+  box-sizing: border-box;
 `;
 export const UserImg = styled.img`
   width: 4rem;
@@ -868,15 +892,13 @@ export const TaskOption = styled.option`
   font-style: normal;
   font-weight: 500;
   line-height: 2rem;
-
 `;
 export const TextAreaContaier = styled.div`
   border-radius: 8px;
-  border: 1px solid  #e9ebf0;
+  border: 1px solid #e9ebf0;
   background: #fff;
   width: 100%;
   display: flex;
   flex-direction: column;
   padding: 0.8rem;
-
 `;

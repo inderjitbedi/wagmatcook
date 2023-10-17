@@ -12,7 +12,7 @@ const SideBarList = styled.div`
     flex-direction: row;
     box-sizing: border-box;
     width: 100%;
-    padding: 0 0 1rem 0;
+    padding: 0 0 1.8rem 0;
 
     overflow: hidden;
     overflow-x: scroll;
@@ -97,7 +97,8 @@ const EmployeeSideBar = (props) => {
   const style = {
     textDecoration: "none",
     color: "#279AF1",
-    textDecoration: props.screenWidth < 600 ? "underline" : "none" ,
+    // textDecoration: props.screenWidth < 600 ? "underline" : "none",
+  
   };
 
   return (

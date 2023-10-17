@@ -17,11 +17,18 @@ import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
+
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
   const [userType, setUserType] = useState("");
+  const Navigate = useNavigate();
 
+  const HandleLogout = () => {
+    localStorage.clear();
+
+    Navigate("/");
+  };
   const SideBarData = [
     {
       Title: "Dashboard",
@@ -411,6 +418,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+
         {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/helpdesk"
@@ -467,6 +475,41 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>  */}
+        {screenWidth < 1200 && (
+          <SideBarListContainer
+            style={{ zIndex: "1", marginTop: "-1rem" }}
+   
+            onClick={HandleLogout}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 31 32"
+              fill="none"
+            >
+              <path
+                d="M15.5 26.5208C9.79306 26.5208 5.16667 21.8944 5.16667 16.1875C5.16667 10.4805 9.79306 5.85413 15.5 5.85413"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12.9173 16.1875H25.834M25.834 16.1875L21.959 12.3125M25.834 16.1875L21.959 20.0625"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <SideBarListTitle
+              style={{ color: "#5C5C5C" }}
+            >
+              {" "}
+              Logout
+            </SideBarListTitle>
+          </SideBarListContainer>
+        )}
       </SideBarList>
     </div>
   );

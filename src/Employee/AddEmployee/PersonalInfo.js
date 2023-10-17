@@ -37,6 +37,7 @@ import {
   Select,
   Option,
   AlignFlex,
+  FlexColumnForm50,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 
@@ -797,11 +798,11 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
                   </FlexColumnForm>
                 </FlexContaierForm>
                 <FlexContaierForm>
-                  <FlexColumnForm style={{ width: "50%" }}>
+                  <FlexColumnForm50>
                     <InputLabel>Pronouns</InputLabel>
                     <Input type="text" {...register("pronouns", {})} />
                     {<Errors> {errors.pronouns?.message} </Errors>}
-                  </FlexColumnForm>
+                  </FlexColumnForm50>
                 </FlexContaierForm>
               </FormContainer>
               <ButtonBlue

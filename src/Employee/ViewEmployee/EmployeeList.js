@@ -420,9 +420,9 @@ const Employee = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {result.employees?.length == 0 && (
+                {!result.employees?.length  && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" colSpan={7}>
+                    <TableCell align="center"  sx={Celllstyle2} colSpan={7}>
                       No employee found
                     </TableCell>
                   </TableRow>

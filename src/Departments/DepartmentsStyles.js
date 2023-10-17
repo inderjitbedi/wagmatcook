@@ -18,7 +18,7 @@ export const DepartmentIconImg = styled.img`
 export const DepartmentFilterContainer = styled.div`
   display: flex;
   align-items: flex-end;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
 `;
 export const AddNewButton = styled.button`

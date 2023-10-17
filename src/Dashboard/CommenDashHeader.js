@@ -380,24 +380,23 @@ const CommenDashHeader = ({ onSearch, text }) => {
       {isSidebarOpen && <SidebarContainer />}
       <DashHeader>
         <FlexContaier>
-          {screenWidth < 1200 && (
-            <HiOutlineMenu
-              onClick={ToggleSidebar}
-              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
-            />
-          )}
-          {(location.pathname.indexOf("details") > -1 ||
-            location.pathname.indexOf("leaves-request") > -1 ||
-            location.pathname.indexOf("personal-info") > -1 ||
-            location.pathname.indexOf("employee/benefits") > -1 ||
-            location.pathname.indexOf("tasks/details") > -1 ||
-            location.pathname.indexOf("documents/history") > -1) && (
-            <BackButton onClick={() => Navigate(-1)}>
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-              Back
-            </BackButton>
-          )}
-          <DashHeaderTitle> {text} </DashHeaderTitle>
+          {screenWidth < 1200
+            ? " "
+            : (location.pathname.indexOf("details") > -1 ||
+                location.pathname.indexOf("leaves-request") > -1 ||
+                location.pathname.indexOf("personal-info") > -1 ||
+                location.pathname.indexOf("employee/benefits") > -1 ||
+                location.pathname.indexOf("tasks/details") > -1 ||
+                location.pathname.indexOf("documents/history") > -1) && (
+                <BackButton onClick={() => Navigate(-1)}>
+                  <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+                  Back
+                </BackButton>
+              )}
+          <DashHeaderTitle>
+            {" "}
+            {screenWidth < 1200 ? <span>Wagmatcook</span> : text}{" "}
+          </DashHeaderTitle>
         </FlexContaier>
 
         <DashHeaderSearch>
@@ -406,7 +405,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
           location.pathname.indexOf("personal-info") > -1 ||
           location.pathname.indexOf("employee/benefits") > -1 ||
           location.pathname.indexOf("tasks/details") > -1 ||
-            location.pathname.indexOf("documents/history") > -1 ? (
+          location.pathname.indexOf("documents/history") > -1 ? (
             " "
           ) : screenWidth < 600 ? (
             <SearchBarWrapper expanded={expanded}>
@@ -453,33 +452,43 @@ const CommenDashHeader = ({ onSearch, text }) => {
             </div>
           </Badge>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              gap: "5px",
-            }}
-            onClick={(event) => handleClickMenu(event)}
-          >
-            <DashNotification
-              src={
-                userType === ROLES.ORG_ADMIN && orgData?.logo
-                  ? API_URL + orgData?.logo?.path
-                  : headerData?.personalInfo?.photo
-                  ? API_URL + headerData?.personalInfo.photo?.path
-                  : "/images/icons/Logout.svg"
-              }
-            />
-            <img
-              src="/images/icons/arrowdown.svg"
+          {screenWidth < 1200 ? (
+            ""
+          ) : (
+            <div
               style={{
-                width: "5px",
-                height: "9px",
-                transform: anchorEl ? "rotate(180deg)" : undefined,
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                gap: "5px",
               }}
+              onClick={(event) => handleClickMenu(event)}
+            >
+              <DashNotification
+                src={
+                  userType === ROLES.ORG_ADMIN && orgData?.logo
+                    ? API_URL + orgData?.logo?.path
+                    : headerData?.personalInfo?.photo
+                    ? API_URL + headerData?.personalInfo.photo?.path
+                    : "/images/icons/Logout.svg"
+                }
+              />
+              <img
+                src="/images/icons/arrowdown.svg"
+                style={{
+                  width: "5px",
+                  height: "9px",
+                  transform: anchorEl ? "rotate(180deg)" : undefined,
+                }}
+              />
+            </div>
+          )}
+          {screenWidth < 1200 && (
+            <HiOutlineMenu
+              onClick={ToggleSidebar}
+              style={{ width: "3rem", height: "3rem", cursor: "pointer" }}
             />
-          </div>
+          )}
         </DashHeaderSearch>
       </DashHeader>
       <Menu

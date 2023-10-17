@@ -439,6 +439,7 @@ const OALeaves = () => {
         </MenuItem>
       </Menu>
       <DepartmentFilterContainer style={{ marginBottom: "2rem" }}>
+        <DisciplinaryHeading>Leave Types</DisciplinaryHeading>
         {/* <DepartmentFilterdiv>
             {FilterData.map((data) => (
               <DepartmentFilterButton>{data}</DepartmentFilterButton>

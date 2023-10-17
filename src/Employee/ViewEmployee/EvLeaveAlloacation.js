@@ -391,7 +391,7 @@ const EvLeaveAlloacation = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {result?.allocations?.length === 0 && (
+                { !result?.allocations?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={Celllstyle2} colSpan={4}>
                       No leave allocations found
