@@ -12,9 +12,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useNavigate, useLocation,useParams } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router";
 import Pagination from "@mui/material/Pagination";
 import httpClient from "../api/httpClient";
+import { Link } from "react-router-dom";
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -64,6 +65,8 @@ const CellStyle2 = {
 };
 
 const DocumentHistory = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
   const { documentid } = useParams();
@@ -84,42 +87,42 @@ const DocumentHistory = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
- const GetDocumentsDetails = () => {
-   return new Promise((resolve, reject) => {
-     setIsLoading(true);
+  const GetDocumentsDetails = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
 
-     let url = API_URLS.getDocumentDetails.replace(":id", documentid);
-     httpClient({
-       method: "get",
-       url,
-     })
-       .then(({ result, error }) => {
-         if (result) {
-           setResult(result);
-           resolve(result);
-         } else {
-           //toast.warn("something went wrong ");
-         }
-       })
-       .catch((error) => {
-         //console.error("Error:", error);
-         toast.error("Error creating department. Please try again.");
-         setIsLoading(false);
-         reject(error);
-       })
-       .finally(() => {
-         setIsLoading(false);
-       });
-   });
- };
+      let url = API_URLS.getDocumentDetails.replace(":id", documentid);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
   useEffect(() => {
-  GetDocumentsDetails()
-},[])
+    GetDocumentsDetails();
+  }, []);
   return (
     <>
       <CommenDashHeader
         onSearch={HandleSearchCahnge}
-        text={"Documents History"}
+        text={"Document History"}
       />
       <DisciplinaryDiv>
         <DisciplinaryHeading>Version History</DisciplinaryHeading>
@@ -157,14 +160,14 @@ const DocumentHistory = () => {
                     align="left"
                     style={{ width: "1rem" }}
                   >
-                    No.
+                    Version
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
-                    Modified
+                    File Name
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -178,27 +181,27 @@ const DocumentHistory = () => {
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
-                    Original Name
+                    Modified At
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Download
+                    Action
                   </TableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {!historyList?.length && (
+                {!result?.document?.versions?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={4}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={5}>
                       No history found
                     </TableCell>
                   </TableRow>
                 )}
-                {historyList?.map((data, index) => (
+                {result?.document?.versions?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -209,22 +212,34 @@ const DocumentHistory = () => {
                     key={data._id}
                   >
                     <TableCell sx={CellStyle2} align="left">
-                      <MenuIconDiv>{index + 1}</MenuIconDiv>
+                      <MenuIconDiv>{data.version}</MenuIconDiv>
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.title || " - "}
+                      {data?.file?.originalName}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.modifiedBy}
+                      {[
+                        data?.modifiedBy?.personalInfo?.firstName,
+                        data?.modifiedBy?.personalInfo?.lastName,
+                      ].join(" ") || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.modifiedBy}
+                      {data?.updatedAt
+                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
+                        : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      <ActionIcons
-                        onClick={() => {}}
-                        src="/images/icons/Download.svg"
-                      />
+                      <Link
+                        to={API_URL + data?.file?.path}
+                        target="_blank"
+                        download
+                        style={{ textDecoration: "none" }}
+                      >
+                        <ActionIcons
+                          onClick={() => {}}
+                          src="/images/icons/Download.svg"
+                        />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
