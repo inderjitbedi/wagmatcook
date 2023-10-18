@@ -84,14 +84,14 @@ const CellStyle = {
   fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 600,
-  lineHeight: "1.5rem",
+  lineHeight: "2rem",
 };
 const CellStyle2 = {
   color: "#222B45",
   fontSize: "1.4rem",
   fontStyle: "normal",
   fontWeight: 400,
-  lineHeight: "1.5rem",
+  lineHeight: "2rem",
 };
 
 const Documents = () => {
@@ -810,13 +810,13 @@ const Documents = () => {
                     background: "#FBFBFB",
                   }}
                 >
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     align="left"
-                    style={{ width: "1rem" }}
+                    style={{ minwidth: "4rem" }}
                   >
-                    SNo.
-                  </TableCell>
+                    Sr.&nbsp;No.
+                  </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -879,7 +879,7 @@ const Documents = () => {
               <TableBody>
                 {!result?.document?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={8}>
                       No Documents found
                     </TableCell>
                   </TableRow>
@@ -894,9 +894,9 @@ const Documents = () => {
                     }}
                     key={data._id}
                   >
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={CellStyle} align="left">
                       {data.title || " - "}
                     </TableCell>
@@ -909,12 +909,15 @@ const Documents = () => {
                       {data?.tags?.map((tag) => tag.name).join(", ")}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data?.versions[data?.versions?.length - 1]?.version ||
-                        " - "}
+                      {data?.versions[0]?.version || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data?.versions[data?.versions?.length - 1]?.file
-                        ?.originalName || " - "}
+                      {data?.versions[0]?.file?.originalName?.length <= 15
+                        ? data?.versions[0]?.file?.originalName
+                        : data?.versions[0]?.file?.originalName?.substring(
+                            0,
+                            15
+                          ) + "..." || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {[
@@ -972,11 +975,7 @@ const Documents = () => {
                           />
                         )}
                         <Link
-                          to={
-                            API_URL +
-                            data?.versions[data?.versions?.length - 1]?.file
-                              ?.path
-                          }
+                          to={API_URL + data?.versions[0]?.file?.path}
                           target="_blank"
                           download
                           style={{ textDecoration: "none" }}
