@@ -66,7 +66,7 @@ const documentController = {
         try {
             let document = await Document.findById(req.params.id).populate({
                 path: "versions",
-                options: { sort: { version: -1 }, limit: 1 },
+                options: { sort: { version: -1 } },
             });
 
             let { title, file, version, newTags, tags, departments } = req.body;
@@ -157,9 +157,7 @@ const documentController = {
                     ],
                 },
             ]);
-            res
-                .status(200)
-                .json({ document, message: "Document details fetched successfully." });
+            res.status(200).json({ document, message: "Document details fetched successfully." });
         } catch (error) {
             console.error("documentController:detail:error -", error);
             res.status(400).json(error);
@@ -190,12 +188,11 @@ const documentController = {
                         path: "versions",
                         options: {
                             sort: { version: -1 },
-                            limit: 1,
-                            populate: [
-                                { path: "file" },
-                                { path: "modifiedBy", populate: "personalInfo" },
-                            ],
                         },
+                        populate: [
+                            { path: "file" },
+                            { path: "modifiedBy", populate: "personalInfo" },
+                        ],
                     },
                 ])
                 .skip(startIndex)
