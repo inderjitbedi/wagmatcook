@@ -8,7 +8,7 @@ const File = require("../models/file");
 const documentController = {
     async create(req, res) {
         try {
-            let { title, file, version, tags, departments } = req.body
+            let { title, file, version, tags, newTags, departments } = req.body
             file = await File.findOne({ _id: file });
             if (file) {
                 file = await fileController.moveToUploads(req, file)
