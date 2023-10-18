@@ -79,6 +79,7 @@ import {
   CardListPara,
   CardListSpan,
   SectionCardImg,
+  CardLeavesParaMobile,
 } from "./OaDashBoardNextStyles.js";
 import { DepartmentIconImg } from "../../Departments/DepartmentsStyles.js";
 
@@ -333,8 +334,8 @@ const OADashBoard = ({ screenWidth }) => {
       ) : (
         <>
           <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-            <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
-            
+          <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+
           <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
           {orgData ? (
             <SectionCard>
@@ -566,6 +567,9 @@ const OADashBoard = ({ screenWidth }) => {
                     <CardLeavesDiv style={{ width: "50%" }}>
                       <MainCardPara>{data.name}</MainCardPara>
                       <MainCardParaLight>{data.description}</MainCardParaLight>
+                      <CardLeavesParaMobile>
+                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver}
+                      </CardLeavesParaMobile>
                     </CardLeavesDiv>
 
                     <div

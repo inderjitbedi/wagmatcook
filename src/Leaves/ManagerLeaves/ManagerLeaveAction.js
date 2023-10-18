@@ -256,7 +256,7 @@ const ManagerLeaveAction = () => {
                     <ColumnFlexDiv>
                       <Titlelight>From</Titlelight>
                       {leaveDetails.from
-                        ? moment(leaveDetails.from).format("DD/MM/YYYY")
+                        ? moment(leaveDetails.from).format("D MMM, YYYY")
                         : " - "}
                       <Titledark> </Titledark>
                     </ColumnFlexDiv>
@@ -265,7 +265,7 @@ const ManagerLeaveAction = () => {
                       <Titledark>
                         {" "}
                         {leaveDetails.to
-                          ? moment(leaveDetails.to).format("DD/MM/YYYY")
+                          ? moment(leaveDetails.to).format("D MMM, YYYY")
                           : " - "}
                       </Titledark>
                     </ColumnFlexDiv>

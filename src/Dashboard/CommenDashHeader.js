@@ -44,7 +44,22 @@ import {
   SearchInputMobile,
   SearchButton,
 } from "./OADashboard/OADashBoardStyles";
-
+export const newStyle = styled.p`
+  border-radius: 10rem;
+  background: #27acf1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 1.4rem;
+  margin: 0;
+  color: #27def1;
+  width: max-content;
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+`;
 const CommenDashHeader = ({ onSearch, text }) => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -466,11 +481,12 @@ const CommenDashHeader = ({ onSearch, text }) => {
             >
               <DashNotification
                 src={
-                  userType === ROLES.ORG_ADMIN && orgData?.logo
-                    ? API_URL + orgData?.logo?.path
-                    : headerData?.personalInfo?.photo
+                  // userType === ROLES.ORG_ADMIN && orgData?.logo
+                  //   ? API_URL + orgData?.logo?.path
+                  //     :
+                  headerData?.personalInfo?.photo
                     ? API_URL + headerData?.personalInfo.photo?.path
-                    : "/images/icons/Logout.svg"
+                    : "/images/User.jpg"
                 }
               />
               <img
@@ -606,17 +622,16 @@ const CommenDashHeader = ({ onSearch, text }) => {
                           : "/images/User.jpg"
                       }
                     />
-                    
+
                     <NotificationFlexCol>
                       <NotificationListText>{data.title}</NotificationListText>
                       <NotificationListTextLight>
                         {data.createdAt
-                          ? moment(data.createdAt).format("YYYY-MM-DD hh:mm A")
+                          ? moment(data.createdAt).format("D MMM, YYYY hh:mm A")
                           : "-"}
                       </NotificationListTextLight>
                     </NotificationFlexCol>
                   </NotificationList>
-
                 </>
               ))}
               {notificationList.length > 5 && !showAll ? (

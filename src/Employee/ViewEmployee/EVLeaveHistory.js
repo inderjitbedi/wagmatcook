@@ -692,11 +692,11 @@ const EVLeaveHistory = () => {
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.from
-                        ? moment(data.from).format("DD/MM/YYYY")
+                        ? moment(data.from).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.to ? moment(data.to).format("DD/MM/YYYY") : " - "}
+                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.hours || " - "}

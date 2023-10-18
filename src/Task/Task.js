@@ -679,7 +679,7 @@ const Task = () => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data.dueDate
-                        ? moment(data.dueDate).format("DD/MM/YYYY")
+                        ? moment(data.dueDate).format("D MMM, YYYY")
                         : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

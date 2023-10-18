@@ -199,10 +199,9 @@ export const EmployeeBody = styled.div`
   background: #fff;
   margin-bottom: 8rem;
   padding-bottom: 8rem;
-   @media only screen and (max-width: 600px) {
-     margin-bottom: 4rem;
-  padding-bottom: 4rem;
-    
+  @media only screen and (max-width: 600px) {
+    margin-bottom: 4rem;
+    padding-bottom: 4rem;
   }
 `;
 export const BodyHeader = styled.div`
@@ -400,11 +399,10 @@ export const BasicInfoContainer = styled.div`
 `;
 export const BasicInfoDiv = styled.div`
   width: 71%;
-   @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 600px) {
+    box-sizing: border-box;
     width: 100%;
-  padding: 0rem 2.2rem 1rem 2.2rem;
-
-
+    padding: 0rem 2.2rem 1rem 2.2rem;
   }
 `;
 export const BackGroundWhite = styled.div`
@@ -553,8 +551,7 @@ export const FlexContaierForm = styled.div`
   /* margin-bottom: 1.6rem; */
   width: 100%;
   box-sizing: border-box;
-   @media only screen and (max-width: 600px) {
-    
+  @media only screen and (max-width: 600px) {
     flex-direction: column;
   }
 `;

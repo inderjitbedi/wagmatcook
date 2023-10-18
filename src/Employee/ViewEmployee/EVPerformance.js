@@ -360,7 +360,7 @@ const EVPerformance = () => {
     reset({
       details: data.details,
       // completedBy: data.completedBy,
-      file: data.file._id,
+      file: data.file?._id,
       reviewDate: new Date(data.reviewDate).toISOString().split("T")[0],
       nextReviewDate: data.nextReviewDate
         ? new Date(data.nextReviewDate).toISOString().split("T")[0]
@@ -843,7 +843,9 @@ const EVPerformance = () => {
                               <TitlePara>
                                 Date of Review:{" "}
                                 {data.reviewDate
-                                  ? moment(data.reviewDate).format("DD/MM/YYYY")
+                                  ? moment(data.reviewDate).format(
+                                      "D MMM, YYYY"
+                                    )
                                   : " - "}
                               </TitlePara>
                             </FlexSpaceBetween>

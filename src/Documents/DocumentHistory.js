@@ -12,7 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation,useParams } from "react-router";
 import Pagination from "@mui/material/Pagination";
 import httpClient from "../api/httpClient";
 import {
@@ -66,7 +66,7 @@ const CellStyle2 = {
 const DocumentHistory = () => {
   const Navigate = useNavigate();
   const location = useLocation();
-
+  const { documentid } = useParams();
   const [isLoading, setIsLoading] = useState(false);
 
   const [Id, setId] = useState("");
@@ -84,8 +84,37 @@ const DocumentHistory = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
- 
+ const GetDocumentsDetails = () => {
+   return new Promise((resolve, reject) => {
+     setIsLoading(true);
 
+     let url = API_URLS.getDocumentDetails.replace(":id", documentid);
+     httpClient({
+       method: "get",
+       url,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           setResult(result);
+           resolve(result);
+         } else {
+           //toast.warn("something went wrong ");
+         }
+       })
+       .catch((error) => {
+         //console.error("Error:", error);
+         toast.error("Error creating department. Please try again.");
+         setIsLoading(false);
+         reject(error);
+       })
+       .finally(() => {
+         setIsLoading(false);
+       });
+   });
+ };
+  useEffect(() => {
+  GetDocumentsDetails()
+},[])
   return (
     <>
       <CommenDashHeader
@@ -146,10 +175,17 @@ const DocumentHistory = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Original Name
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Size
+                    Download
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -158,7 +194,7 @@ const DocumentHistory = () => {
                 {!historyList?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={4}>
-                      No tasks found
+                      No history found
                     </TableCell>
                   </TableRow>
                 )}
@@ -181,9 +217,14 @@ const DocumentHistory = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {data.modifiedBy}
                     </TableCell>
-
                     <TableCell sx={CellStyle2} align="left">
-                      {data.size || " - "}
+                      {data.modifiedBy}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      <ActionIcons
+                        onClick={() => {}}
+                        src="/images/icons/Download.svg"
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

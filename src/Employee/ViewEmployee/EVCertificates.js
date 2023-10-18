@@ -725,7 +725,7 @@ const EVCertificates = () => {
                             <TitlePara>Expriry </TitlePara>
                             <ViewPara>
                               {data.expiryDate
-                                ? moment(data.expiryDate).format("DD/MM/YYYY")
+                                ? moment(data.expiryDate).format("D MMM, YYYY")
                                 : " - "}{" "}
                             </ViewPara>
                           </FlexColumn>
