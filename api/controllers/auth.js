@@ -199,7 +199,12 @@ const authController = {
     async loginWithOtp(req, res) {
         try {
             const { email, otp } = req.body;
-            let user = await User.findOne({ email, otp, otpExpiry: { $gt: Date.now() } });
+            let user = await User.findOne({ email, otp, otpExpiry: { $gt: Date.now() } }).populate({
+                path: 'personalInfo',
+                populate: {
+                    path: 'photo',
+                },
+            });
             if (!user) {
                 return res.status(400).json({ message: 'Invalid or expired One Time Password(OTP)' });
             }
@@ -211,18 +216,14 @@ const authController = {
             delete user.password
             let relation = {};
             if (user.role != roles.SUPER_ADMIN) {
-                relation = await UserOrganization.findOne({ user: user._id }).populate([{
-                    path: 'organization',
-                    populate: {
-                        path: 'logo',
-                    },
+                relation = await UserOrganization.findOne({ user: user._id }).populate(
+                    [{
+                        path: 'organization',
+                        populate: {
+                            path: 'logo',
+                        },
 
-                }, {
-                    path: 'personalInfo',
-                    populate: {
-                        path: 'photo',
-                    },
-                }]);
+                    }]);
             }
             res.status(200).json({ user, organization: relation?.organization || {}, token, message: 'User signed in successfully' });
         } catch (error) {
