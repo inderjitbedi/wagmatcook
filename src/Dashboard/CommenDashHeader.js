@@ -207,6 +207,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       .then(({ result, error }) => {
         if (result) {
           setNotificationList(result.notifications);
+          HandleMarkRead(result.notifications);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -270,9 +271,9 @@ const CommenDashHeader = ({ onSearch, text }) => {
         setIsLoading(false);
       });
   };
-  const HandleMarkRead = () => {
+  const HandleMarkRead = (data) => {
     setIsLoading(true);
-    const notificationIds = notificationList
+    const notificationIds = data
       ?.filter((notification) => !notification.isRead)
       .map((notification) => notification._id);
 
@@ -445,7 +446,6 @@ const CommenDashHeader = ({ onSearch, text }) => {
               onClick={(event) => {
                 handleClickMenuNotification(event);
                 GetNotificationList();
-                HandleMarkRead();
               }}
             >
               <DashNotification src="/images/icons/Notifications.svg" />
@@ -579,12 +579,12 @@ const CommenDashHeader = ({ onSearch, text }) => {
               <NotificationsHeader>
                 <FlexNotificationContainer>
                   <NotificationHeading>Notifications</NotificationHeading>
-                  <NotificationSelect>
+                  {/* <NotificationSelect>
                     <NotificationOption>All</NotificationOption>
                     <NotificationOption>Last Week</NotificationOption>
                     <NotificationOption>Last Month</NotificationOption>
                     <NotificationOption>Last 24 Hrs</NotificationOption>
-                  </NotificationSelect>
+                  </NotificationSelect> */}
                 </FlexNotificationContainer>
                 <FlexNotificationContainer>
                   <NotificationHeading
@@ -606,6 +606,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
                           : "/images/User.jpg"
                       }
                     />
+                    
                     <NotificationFlexCol>
                       <NotificationListText>{data.title}</NotificationListText>
                       <NotificationListTextLight>
@@ -615,6 +616,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
                       </NotificationListTextLight>
                     </NotificationFlexCol>
                   </NotificationList>
+
                 </>
               ))}
               {notificationList.length > 5 && !showAll ? (
@@ -624,7 +626,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
                     onClick={handleShowMoreClick}
                   >
                     {" "}
-                    Loadmore{" "}
+                    Load more{" "}
                   </span>
                 </LoadMore>
               ) : (

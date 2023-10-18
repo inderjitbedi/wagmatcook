@@ -68,7 +68,20 @@ const style = {
   height: "50rem",
   overflowY: "scroll",
 };
-
+const ApprovedStyles = {
+  borderRadius: "10rem",
+  background: "var(--green-20, #C8FFC7)",
+  display: "inline-flex",
+  padding: "2px 1.2rem",
+  alignItems: "center",
+  color: "var(--green-90, #0D7D0B)",
+  textAlign: "center",
+  fontFamily: "Inter",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "2.4rem",
+};
 const EmployeeJobDetails = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const [isEdit, setIsEdit] = useState(false);
@@ -534,19 +547,29 @@ const EmployeeJobDetails = () => {
                                 {data.department?.name || " - "}
                               </ViewPara>
                             </FlexColumn>
-                            <TitlePara>
-                              From:{" "}
-                              {data.startDate
-                                ? moment(data.startDate).format("DD/MM/YYYY")
-                                : " - "}
-                              <span style={{ marginLeft: "14px" }}>
-                                {" "}
-                                To:
-                                {data.endDate
-                                  ? moment(data.endDate).format("DD/MM/YYYY")
-                                  : " Present "}
-                              </span>{" "}
-                            </TitlePara>
+                            <FlexColumn>
+                              <TitlePara>
+                                From:{" "}
+                                {data.startDate
+                                  ? moment(data.startDate).format("DD/MM/YYYY")
+                                  : " - "}
+                                <span style={{ marginLeft: "14px" }}>
+                                  {" "}
+                                  To:
+                                  {data.endDate
+                                    ? moment(data.endDate).format("DD/MM/YYYY")
+                                    : " Present "}
+                                </span>{" "}
+                              </TitlePara>
+                              <TitlePara>
+                                {data?.isPrimary && (
+                                  <span style={ApprovedStyles}>
+                                    {" "}
+                                    Primary
+                                  </span>
+                                )}
+                              </TitlePara>
+                            </FlexColumn>
                           </TimelineDiv>
                         </VerticalTimelineElement>
                       ))}

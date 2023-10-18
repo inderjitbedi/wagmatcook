@@ -82,9 +82,11 @@ const EmployeeDetailLayout = () => {
       <EmployeeBody>
         <BodyHeader>
           <BackButtonContainer>
-            <BackArrowButton onClick={() => Navigate(-1)}>
-              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-            </BackArrowButton>
+            {screenWidth < 600 && (
+              <BackArrowButton onClick={() => Navigate(-1)}>
+                <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+              </BackArrowButton>
+            )}
             <BodyHeading>Employee Details</BodyHeading>
           </BackButtonContainer>
 

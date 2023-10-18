@@ -69,6 +69,7 @@ const TaskView = () => {
   const [commentError, setCommentError] = useState("");
   const [updateCommentError, setUpdateCommentError] = useState("");
   const [editingItemId, setEditingItemId] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
@@ -179,7 +180,7 @@ const TaskView = () => {
       setUpdateCommentError("Update Comment cannot be empty");
       return;
     }
-    setIsUploading(true);
+    setIsUpdating(true);
     let dataCopy = { description: updateComment };
 
     let url = API_URLS.updateTaskComments
@@ -193,7 +194,6 @@ const TaskView = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-
           const updatedItems = commentsList?.map((item) =>
             item._id === editingItemId ? (item = result.comment) : item
           );
@@ -201,12 +201,11 @@ const TaskView = () => {
           setCommentsList(updatedItems);
           setId("");
           HandelCloseEdit();
-          
 
           toast.success(result.message, {
             className: "toast",
-          }); 
-          setIsUploading(false);
+          });
+          setIsUpdating(false);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -214,10 +213,10 @@ const TaskView = () => {
       .catch((error) => {
         //console.error("Error:", error);
         toast.error("Error Updating Benefits . Please try again.");
-        setIsUploading(false);
+        setIsUpdating(false);
       })
       .finally(() => {
-        setIsUploading(false);
+        setIsUpdating(false);
       });
   };
   const HandleDelete = () => {
@@ -511,9 +510,8 @@ const TaskView = () => {
               <CommentDivADD>
                 <UserImg
                   src={
-                    taskDetails?.assigner?.personalInfo.photo
-                      ? API_URL +
-                        taskDetails?.assigner?.personalInfo.photo?.path
+                    userData?.personalInfo?.photo
+                      ? API_URL + userData?.personalInfo?.photo?.path
                       : "/images/User.jpg"
                   }
                 />
@@ -531,11 +529,12 @@ const TaskView = () => {
                   <AddNewButton
                     style={{ width: "8rem", alignSelf: "flex-end" }}
                     onClick={AddNewComment}
+                    disabled={isUploading}
                   >
                     {isUploading ? (
                       <ThreeDots
                         height="8"
-                        width="8"
+                        width="80"
                         radius="9"
                         color="#ffffff"
                         ariaLabel="three-dots-loading"
@@ -623,11 +622,12 @@ const TaskView = () => {
                           <AddNewButton
                             style={{ alignSelf: "flex-end" }}
                             onClick={HandleUpdate}
+                            disabled={isUpdating}
                           >
-                            {isUploading ? (
+                            {isUpdating ? (
                               <ThreeDots
                                 height="8"
-                                width="8"
+                                width="80"
                                 radius="9"
                                 color="#ffffff"
                                 ariaLabel="three-dots-loading"
@@ -640,15 +640,25 @@ const TaskView = () => {
                         </TextAreaContaier>
                       </FlexContaier>
                     ) : (
-                      <ViewPara>{data?.description}</ViewPara>
-                    )}
-                    {data?.isEdited ? (
-                      <span style={{ margin: ".8rem 0rem " }}>
-                        {" "}
-                        Edited at {formatDateDifference(data.updatedAt)}
-                      </span>
-                    ) : (
-                      ""
+                      <ViewPara>
+                        {data?.description}{" "}
+                        {data?.isEdited ? (
+                          <span
+                            style={{
+                              margin: ".8rem 0rem ",
+                              fontSize: "1rem",
+                                fontWeight: "300",
+                              opacity:".6"
+                            }}
+                          >
+                            {" "}
+                            (edited)
+                            {/* at {formatDateDifference(data.updatedAt)} */}
+                          </span>
+                        ) : (
+                          ""
+                        )}
+                      </ViewPara>
                     )}
                   </FlexColumnForm>
                 </CommentDiv>

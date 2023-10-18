@@ -14,7 +14,7 @@ const PublicLayout = ({ component: Component }: any) => {
   const imageUrl =
     location.pathname.indexOf("/organization-admin/complete-signup") > -1
       ? "./../../../assets/solar-bg.png"
-      : "/images/login-image.svg";
+      : "/images/image 4.svg";
   // console.log(Component.name, imageUrl);
   const { pathname } = useLocation();
 
@@ -39,7 +39,7 @@ const PublicLayout = ({ component: Component }: any) => {
                 </p>
               </div>
               <div className="" style={{ backgroundColor: "#093FE1" }}>
-                <img src={imageUrl} alt="background-img" width="100%" />
+                {/* <img src={imageUrl} alt="background-img" width="100%" /> */}
               </div>
             </div>
           </Grid>

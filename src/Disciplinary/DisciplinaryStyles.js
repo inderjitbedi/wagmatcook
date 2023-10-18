@@ -139,6 +139,7 @@ width: 50%;
 display: flex;
 align-items: center;
 justify-content: space-between;
+margin-bottom: 1.5rem;
 `;
 export const TextArea = styled.textarea`
   font-size: 1.3rem;
