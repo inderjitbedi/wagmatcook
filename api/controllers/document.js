@@ -14,6 +14,7 @@ const documentController = {
                 file = await fileController.moveToUploads(req, file)
             }
 
+
             if (newTags?.length) {
                 let newDocumentTags = await DocumentTags.insertMany(
                     newTags.map((tag) => {
