@@ -2,7 +2,7 @@ const versions = require("../enum/versions");
 const Document = require("../models/document");
 const DocumentTags = require("../models/documentTags");
 const DocumentVersion = require("../models/documentVersions");
-const fileController = require('../controllers/file');
+const fileController = require("../controllers/file");
 const File = require("../models/file");
 
 const documentController = {
@@ -15,22 +15,34 @@ const documentController = {
             }
 
             if (newTags?.length) {
-                let newDocumentTags = await DocumentTags.insertMany(newTags.map(tag => { title: tag }));
+                let newDocumentTags = await DocumentTags.insertMany(
+                    newTags.map((tag) => {
+                        return {
+                            name: tag,
+                            createdBy: req.user?._id,
+                            organization: req.organization?._id,
+                        };
+                    })
+                );
                 console.log(newDocumentTags);
-                newDocumentTags = newDocumentTags.map(tag => tag._id);
+                newDocumentTags = newDocumentTags.map((tag) => tag._id);
                 console.log(newDocumentTags);
 
                 console.log("old = ", tags, "\n new=", newDocumentTags);
                 tags = [...tags, ...newDocumentTags];
             }
-            const documentVersion = new DocumentVersion({ modifiedBy: req.user._id, file, version: version === versions.MAJOR ? 1 : 0.1 });
+            const documentVersion = new DocumentVersion({
+                modifiedBy: req.user._id,
+                file,
+                version: version === versions.MAJOR ? 1 : 0.1,
+            });
             await documentVersion.save();
             console.log({
                 title,
                 tags,
                 departments,
                 versions: [documentVersion._id],
-                organization: req.organization?._id || null
+                organization: req.organization?._id || null,
             });
             const document = new Document({
                 title,
@@ -38,10 +50,12 @@ const documentController = {
                 departments,
                 versions: [documentVersion._id],
                 organization: req.organization?._id || null,
-                lastUpdatedBy: req.user._id
+                lastUpdatedBy: req.user._id,
             });
             await document.save();
-            res.status(201).json({ document, message: 'Document created successfully.' });
+            res
+                .status(201)
+                .json({ document, message: "Document created successfully." });
         } catch (error) {
             console.error("documentController:create:error -", error);
             res.status(400).json(error);
@@ -49,42 +63,61 @@ const documentController = {
     },
     async update(req, res) {
         try {
+            let document = await Document.findById(req.params.id).populate({
+                path: "versions",
+                options: { sort: { version: -1 }, limit: 1 },
+            });
 
-            let document = await Document.findById(req.params.id)
-                .populate({
-                    path: 'versions',
-                    options: { sort: { version: -1 }, limit: 1 }
-                })
-
-            let { title, file, version, newTags, tags, departments } = req.body
+            let { title, file, version, newTags, tags, departments } = req.body;
 
             file = await File.findOne({ _id: file });
             if (file) {
-                file = await fileController.moveToUploads(req, file)
+                file = await fileController.moveToUploads(req, file);
             }
 
-            let currentVersion = version === versions.MAJOR ? 1 : 0.1
+            let currentVersion = version === versions.MAJOR ? 1 : 0.1;
             if (document.versions?.length) {
-                currentVersion = document.versions[0].version
+                currentVersion = document.versions[0].version;
             }
 
             if (newTags?.length) {
-                let newDocumentTags = await DocumentTags.insertMany(newTags.map(tag => { return { name: tag, createdBy: req.user?._id, organization: req.organization?._id } }));
-                newDocumentTags = newDocumentTags.map(tag => tag._id);
+                let newDocumentTags = await DocumentTags.insertMany(
+                    newTags.map((tag) => {
+                        return {
+                            name: tag,
+                            createdBy: req.user?._id,
+                            organization: req.organization?._id,
+                        };
+                    })
+                );
+                newDocumentTags = newDocumentTags.map((tag) => tag._id);
                 tags = [...tags, ...newDocumentTags];
             }
-            const documentVersion = new DocumentVersion({ modifiedBy: req.user._id, file, version: version === versions.MAJOR ? Math.floor(currentVersion) + 1 : currentVersion + 0.1 });
+            const documentVersion = new DocumentVersion({
+                modifiedBy: req.user._id,
+                file,
+                version:
+                    version === versions.MAJOR
+                        ? Math.floor(currentVersion) + 1
+                        : currentVersion + 0.1,
+            });
             await documentVersion.save();
 
-            document = await Document.findByIdAndUpdate(req.params.id, {
-                title,
-                tags,
-                departments,
-                $push: { versions: documentVersion._id },
-                organization: req.organization?._id || null,
-                lastUpdatedBy: req.user._id
-            }, { new: true });
-            res.status(200).json({ document, message: 'Document updated successfully.' });
+            document = await Document.findByIdAndUpdate(
+                req.params.id,
+                {
+                    title,
+                    tags,
+                    departments,
+                    $push: { versions: documentVersion._id },
+                    organization: req.organization?._id || null,
+                    lastUpdatedBy: req.user._id,
+                },
+                { new: true }
+            );
+            res
+                .status(200)
+                .json({ document, message: "Document updated successfully." });
         } catch (error) {
             console.error("documentController:update:error -", error);
             res.status(400).json(error);
@@ -93,8 +126,11 @@ const documentController = {
     async delete(req, res) {
         try {
             req.body.updatedBy = req.user._id;
-            const document = await Document.findByIdAndUpdate(req.params.id, { isDeleted: true, lastUpdatedBy: req.user._id });
-            res.status(200).json({ message: 'Document Tag deleted successfully' });
+            const document = await Document.findByIdAndUpdate(req.params.id, {
+                isDeleted: true,
+                lastUpdatedBy: req.user._id,
+            });
+            res.status(200).json({ message: "Document Tag deleted successfully" });
         } catch (error) {
             console.error("documentController:delete:error -", error);
             res.status(400).json(error);
@@ -102,10 +138,27 @@ const documentController = {
     },
     async detail(req, res) {
         try {
-            let filters = { isDeleted: false, _id: req.params.id, organization: req.organization?._id || null };
-            let document = await Document.findOne(filters).populate([{ path: 'tags' }, { path: "lastUpdatedBy", populate: "personalInfo" }, { path: 'departments' },
-            { path: 'versions', options: { sort: { version: -1 } }, populate: [{ path: "file" }, { path: "modifiedBy", populate: "personalInfo" }] }])
-            res.status(200).json({ document, message: 'Document details fetched successfully.' });
+            let filters = {
+                isDeleted: false,
+                _id: req.params.id,
+                organization: req.organization?._id || null,
+            };
+            let document = await Document.findOne(filters).populate([
+                { path: "tags" },
+                { path: "lastUpdatedBy", populate: "personalInfo" },
+                { path: "departments" },
+                {
+                    path: "versions",
+                    options: { sort: { version: -1 } },
+                    populate: [
+                        { path: "file" },
+                        { path: "modifiedBy", populate: "personalInfo" },
+                    ],
+                },
+            ]);
+            res
+                .status(200)
+                .json({ document, message: "Document details fetched successfully." });
         } catch (error) {
             console.error("documentController:detail:error -", error);
             res.status(400).json(error);
@@ -113,19 +166,37 @@ const documentController = {
     },
     async list(req, res) {
         try {
-
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization: req.organization?._id || null };
+            let filters = {
+                isDeleted: false,
+                organization: req.organization?._id || null,
+            };
 
             // if (req.query.searchKey) {
             //     filters.$or = [
             //         { name: { $regex: req.query.searchKey, $options: 'i' } },
             //     ];
             // }
-            const document = await Document.find(filters).populate([{ path: 'tags' }, { path: 'departments' }, { path: "lastUpdatedBy", populate: "personalInfo" }, { path: 'versions', options: { sort: { version: -1 }, limit: 1, populate: [{ path: "file" }, { path: "modifiedBy", populate: "personalInfo" }] } },])
+            const document = await Document.find(filters)
+                .populate([
+                    { path: "tags" },
+                    { path: "departments" },
+                    { path: "lastUpdatedBy", populate: "personalInfo" },
+                    {
+                        path: "versions",
+                        options: {
+                            sort: { version: -1 },
+                            limit: 1,
+                            populate: [
+                                { path: "file" },
+                                { path: "modifiedBy", populate: "personalInfo" },
+                            ],
+                        },
+                    },
+                ])
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
@@ -138,13 +209,12 @@ const documentController = {
                 totalDocuments,
                 currentPage: page,
                 totalPages,
-                message: 'Document Tags fetched successfully'
+                message: "Document Tags fetched successfully",
             });
         } catch (error) {
             console.error("documentController:list:error -", error);
             res.status(400).json(error);
         }
     },
-
-}
-module.exports = documentController
+};
+module.exports = documentController;
