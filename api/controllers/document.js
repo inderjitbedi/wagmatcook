@@ -125,7 +125,7 @@ const documentController = {
             //         { name: { $regex: req.query.searchKey, $options: 'i' } },
             //     ];
             // }
-            const document = await Document.find(filters).populate([{ path: 'tags' }, { path: 'departments' }, { path: "lastUpdatedBy", populate: "personalInfo" }, { path: 'versions', options: { sort: { version: -1 }, limit: 1 } },])
+            const document = await Document.find(filters).populate([{ path: 'tags' }, { path: 'departments' }, { path: "lastUpdatedBy", populate: "personalInfo" }, { path: 'versions', options: { sort: { version: -1 }, limit: 1, populate: [{ path: "file" }, { path: "modifiedBy", populate: "personalInfo" }] } },])
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
