@@ -20,6 +20,7 @@ const dashboardRoute = require('./routes/dashboard')
 const leaveRoute = require('./routes/leaves')
 const notificationRoute = require('./routes/notification')
 const taskRoute = require('./routes/task')
+const documentTagRoute = require('./routes/documentTag')
 
 
 
@@ -79,6 +80,7 @@ app.use('/api/employee', employeeRoute);
 app.use('/api/dashboard', dashboardRoute);
 app.use('/api/notification', notificationRoute);
 app.use('/api/task', taskRoute);
+app.use('/api/document-tag', documentTagRoute);
 
 
 
