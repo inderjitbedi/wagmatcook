@@ -22,6 +22,7 @@ import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { WithContext as ReactTags } from "react-tag-input";
+import { DevTool } from "@hookform/devtools";
 
 import {
   DisciplinaryDiv,
@@ -55,6 +56,7 @@ import {
   LightPara,
   ButtonIcon,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import { Link } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -93,6 +95,8 @@ const CellStyle2 = {
 };
 
 const Documents = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -133,6 +137,7 @@ const Documents = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
+    setFile(null);
   };
 
   const HandleSearchCahnge = (data) => {
@@ -164,7 +169,19 @@ const Documents = () => {
 
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      //  HandleUpdate(data);
+      const newTags = data?.tags
+        .filter((tag) => tag.id === tag.text)
+        .map((tag) => tag.text);
+      data.tags = data.tags
+        .filter((tag) => tag.id !== tag.text)
+        .map((tag) => tag.id);
+      data.newTags = newTags;
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
+      HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
@@ -173,12 +190,15 @@ const Documents = () => {
     setDetailsLength(500 - data?.description?.length);
     reset({
       title: data.title,
-      description: data.description,
-      assignedto: data.assignee._id,
-      dueDate: data.dueDate
-        ? new Date(data.dueDate).toISOString().split("T")[0]
-        : null,
+      departments: data.departments?.map((data) => data._id),
+      tags: data.tags?.map((data) => ({
+        id: data?._id,
+        text: data?.name,
+      })),
+      file: data?.versions[data?.versions?.length - 1]?.file?._id,
     });
+    // setValue("departments",data.departments)
+    setFile(data?.versions[data?.versions?.length - 1]?.file);
     HandleOpen();
   };
 
@@ -187,7 +207,7 @@ const Documents = () => {
     HandleOpen();
     reset({});
     clearErrors();
-    setDetailsLength(500);
+    setFile(null);
   };
   useEffect(() => {
     // GetTaskList();
@@ -304,6 +324,8 @@ const Documents = () => {
         if (result) {
           HandleClose();
           reset();
+          GetDocuments();
+
           toast.success(result.message, {
             className: "toast",
           });
@@ -322,6 +344,70 @@ const Documents = () => {
         setIsLoading(false);
       });
   };
+  const HandleUpdate = (data) => {
+    //console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.updateDocument.replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetDocuments();
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteEmployeePerformance.replace(":id", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetDocuments();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
   useEffect(() => {
     GetDepartments();
     GetDocumentTagsList();
@@ -334,53 +420,6 @@ const Documents = () => {
   };
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-  const TaskData = [
-    {
-      order: 1,
-      title: "Mobile Responsive",
-      department: "Mobile Responsive",
-      keywords: "tags ",
-      fileName: "Lalit Kumar",
-      updatedby: "eren",
-      updatedon: "22/9/2023",
-    },
-    {
-      order: 2,
-      title: "Mobile Responsive",
-      department: "Mobile Responsive",
-      keywords: "tags ",
-      fileName: "Lalit Kumar",
-      updatedby: "eren",
-      updatedon: "22/9/2023",
-    },
-    {
-      order: 3,
-      title: "Mobile Responsive",
-      department: "Mobile Responsive",
-      keywords: "tags ",
-      fileName: "Lalit Kumar",
-      updatedby: "eren",
-      updatedon: "22/9/2023",
-    },
-    {
-      order: 4,
-      title: "Mobile Responsive",
-      department: "Mobile Responsive",
-      keywords: "tags ",
-      fileName: "Lalit Kumar",
-      updatedby: "eren",
-      updatedon: "22/9/2023",
-    },
-    {
-      order: 5,
-      title: "Mobile Responsive",
-      department: "Mobile Responsive",
-      keywords: "tags ",
-      fileName: "Lalit Kumar",
-      updatedby: "eren",
-      updatedon: "22/9/2023",
-    },
-  ];
   // };
 
   const getFileType = (file) => {
@@ -534,7 +573,7 @@ const Documents = () => {
                       Departments <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
-                      name="department"
+                      name="departments"
                       control={control}
                       rules={{
                         required: {
@@ -838,14 +877,14 @@ const Documents = () => {
               </TableHead>
 
               <TableBody>
-                {!TaskData?.length && (
+                {!result?.document?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
                       No Documents found
                     </TableCell>
                   </TableRow>
                 )}
-                {TaskData?.map((data, index) => (
+                {result?.document?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -862,22 +901,31 @@ const Documents = () => {
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.department}
+                      {data?.departments
+                        ?.map((department) => department.name)
+                        .join(", ")}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.tags?.map((tag) => tag.name).join(", ")}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.keywords}
+                      {data?.versions[data?.versions?.length - 1]?.version ||
+                        " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.versions[data?.versions?.length - 1]?.file
+                        ?.originalName || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.version}
+                      {[
+                        data?.lastUpdatedBy?.personalInfo?.firstName,
+                        data?.lastUpdatedBy?.personalInfo?.lastName,
+                      ].join(" ") || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.filename || " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.updatedby || " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.updatedon}
+                      {data?.updatedAt
+                        ? moment(data?.updatedAt).format("D MMM, YYYY")
+                        : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
@@ -923,11 +971,21 @@ const Documents = () => {
                             src="/images/icons/Trash-2.svg"
                           />
                         )}
-
-                        <ActionIcons
-                          onClick={() => {}}
-                          src="/images/icons/Download.svg"
-                        />
+                        <Link
+                          to={
+                            API_URL +
+                            data?.versions[data?.versions?.length - 1]?.file
+                              ?.path
+                          }
+                          target="_blank"
+                          download
+                          style={{ textDecoration: "none" }}
+                        >
+                          <ActionIcons
+                            onClick={() => {}}
+                            src="/images/icons/Download.svg"
+                          />
+                        </Link>
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>
@@ -951,10 +1009,11 @@ const Documents = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        //   HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
         message="Are you sure you want to delete this task?"
         isLoading={isDeleting}
       />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };
