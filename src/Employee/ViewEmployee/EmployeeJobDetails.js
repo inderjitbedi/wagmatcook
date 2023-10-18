@@ -59,7 +59,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width:"80%",
+  width: "80%",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -404,7 +404,7 @@ const EmployeeJobDetails = () => {
                                 <TitlePara>Position End Date</TitlePara>
                                 <ViewPara>
                                   {data?.endDate
-                                    ? moment(data?.endDate).format("DD/MM/YYYY")
+                                    ? moment(data?.endDate).format("D MMM, YYYY")
                                     : "Present"}
                                 </ViewPara>
                               </FlexColumn>
@@ -551,22 +551,19 @@ const EmployeeJobDetails = () => {
                               <TitlePara>
                                 From:{" "}
                                 {data.startDate
-                                  ? moment(data.startDate).format("DD/MM/YYYY")
+                                  ? moment(data.startDate).format("D MMM, YYYY")
                                   : " - "}
                                 <span style={{ marginLeft: "14px" }}>
                                   {" "}
                                   To:
                                   {data.endDate
-                                    ? moment(data.endDate).format("DD/MM/YYYY")
+                                    ? moment(data.endDate).format("D MMM, YYYY")
                                     : " Present "}
                                 </span>{" "}
                               </TitlePara>
                               <TitlePara>
                                 {data?.isPrimary && (
-                                  <span style={ApprovedStyles}>
-                                    {" "}
-                                    Primary
-                                  </span>
+                                  <span style={ApprovedStyles}> Primary</span>
                                 )}
                               </TitlePara>
                             </FlexColumn>

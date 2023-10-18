@@ -515,10 +515,12 @@ const ManagerLeaves = () => {
                     Design
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    {data.from ? moment(data.from).format("DD/MM/YYYY") : " - "}
+                    {data.from
+                      ? moment(data.from).format("D MMM, YYYY")
+                      : " - "}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
-                    {data.to ? moment(data.to).format("DD/MM/YYYY") : " - "}
+                    {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
                   </TableCell>
                   <TableCell align="left" sx={CellStyle2}>
                     {data.leaveType?.name}

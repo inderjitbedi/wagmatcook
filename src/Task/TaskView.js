@@ -294,6 +294,7 @@ const TaskView = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
+
   }, []);
   const [selectedValue, setSelectedValue] = useState(isChecked);
 
@@ -485,7 +486,7 @@ const TaskView = () => {
                   <TaskSelect
                     value={selectedValue}
                     onChange={handleSelectChange}
-                    disabled={isChecked}
+                    disabled={isChecked || userType === ROLES.EMPLOYEE}
                   >
                     <TaskOption value={false}>Pending</TaskOption>
                     <TaskOption value={true}>Completed</TaskOption>
@@ -647,8 +648,8 @@ const TaskView = () => {
                             style={{
                               margin: ".8rem 0rem ",
                               fontSize: "1rem",
-                                fontWeight: "300",
-                              opacity:".6"
+                              fontWeight: "300",
+                              opacity: ".6",
                             }}
                           >
                             {" "}

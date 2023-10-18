@@ -146,10 +146,17 @@ const DocumentHistory = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Original Name
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Size
+                    Download
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -158,7 +165,7 @@ const DocumentHistory = () => {
                 {!historyList?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={4}>
-                      No tasks found
+                      No history found
                     </TableCell>
                   </TableRow>
                 )}
@@ -181,9 +188,14 @@ const DocumentHistory = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {data.modifiedBy}
                     </TableCell>
-
                     <TableCell sx={CellStyle2} align="left">
-                      {data.size || " - "}
+                      {data.modifiedBy}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      <ActionIcons
+                        onClick={() => {}}
+                        src="/images/icons/Download.svg"
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

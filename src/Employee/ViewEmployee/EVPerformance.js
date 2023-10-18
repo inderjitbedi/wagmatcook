@@ -843,7 +843,9 @@ const EVPerformance = () => {
                               <TitlePara>
                                 Date of Review:{" "}
                                 {data.reviewDate
-                                  ? moment(data.reviewDate).format("DD/MM/YYYY")
+                                  ? moment(data.reviewDate).format(
+                                      "D MMM, YYYY"
+                                    )
                                   : " - "}
                               </TitlePara>
                             </FlexSpaceBetween>

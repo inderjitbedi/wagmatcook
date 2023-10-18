@@ -790,7 +790,7 @@ const Documents = () => {
                     style={{ minWidth: "15rem" }}
                     align="left"
                   >
-                    Department Name
+                    Department
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -801,10 +801,17 @@ const Documents = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "5rem" }}
+                    align="left"
+                  >
+                    Version
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
-                    File Name
+                    Original Name
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -818,7 +825,7 @@ const Documents = () => {
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
-                    Updated On
+                    Last Updated
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -860,6 +867,9 @@ const Documents = () => {
                     <TableCell sx={CellStyle} align="left">
                       {data.keywords}
                     </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.version}
+                    </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data.filename || " - "}
                     </TableCell>
@@ -872,7 +882,8 @@ const Documents = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
                           " "
                         ) : (
                           <ActionIcons
@@ -886,7 +897,7 @@ const Documents = () => {
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/manager-management/documents/history/${data._id}`
+                                `/hr-management/documents/history/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
@@ -900,7 +911,8 @@ const Documents = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
                           " "
                         ) : (
                           <ActionIcons

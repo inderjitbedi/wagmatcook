@@ -748,7 +748,7 @@ const EVDiscipline = () => {
                             <TitlePara>
                               issued On:{" "}
                               {data.issueDate
-                                ? moment(data.issueDate).format("DD/MM/YYYY")
+                                ? moment(data.issueDate).format("D MMM, YYYY")
                                 : " - "}
                             </TitlePara>
                           </FlexSpaceBetween>
@@ -802,7 +802,9 @@ const EVDiscipline = () => {
                               <ReviewsDiv>
                                 Expiry Date:{" "}
                                 {data.expiryDate
-                                  ? moment(data.expiryDate).format("DD/MM/YYYY")
+                                  ? moment(data.expiryDate).format(
+                                      "D MMM, YYYY"
+                                    )
                                   : " - "}
                               </ReviewsDiv>
                             )}

@@ -466,11 +466,12 @@ const CommenDashHeader = ({ onSearch, text }) => {
             >
               <DashNotification
                 src={
-                  userType === ROLES.ORG_ADMIN && orgData?.logo
-                    ? API_URL + orgData?.logo?.path
-                    : headerData?.personalInfo?.photo
+                  // userType === ROLES.ORG_ADMIN && orgData?.logo
+                  //   ? API_URL + orgData?.logo?.path
+                  //     :
+                  headerData?.personalInfo?.photo
                     ? API_URL + headerData?.personalInfo.photo?.path
-                    : "/images/icons/Logout.svg"
+                    : "/images/User.jpg"
                 }
               />
               <img
@@ -606,17 +607,16 @@ const CommenDashHeader = ({ onSearch, text }) => {
                           : "/images/User.jpg"
                       }
                     />
-                    
+
                     <NotificationFlexCol>
                       <NotificationListText>{data.title}</NotificationListText>
                       <NotificationListTextLight>
                         {data.createdAt
-                          ? moment(data.createdAt).format("YYYY-MM-DD hh:mm A")
+                          ? moment(data.createdAt).format("D MMM, YYYY hh:mm A")
                           : "-"}
                       </NotificationListTextLight>
                     </NotificationFlexCol>
                   </NotificationList>
-
                 </>
               ))}
               {notificationList.length > 5 && !showAll ? (

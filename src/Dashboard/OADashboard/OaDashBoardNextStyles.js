@@ -175,13 +175,32 @@ export const CardLeavesList = styled.div`
 export const CardLeavesDiv = styled.div`
   display: flex;
   flex-direction: column;
-  gap:4px;
+  gap: 4px;
+    @media only screen and (max-width:600px) {
+   width: 80% !important;
+  }
 `;
 export const CardLeavesPara = styled.p`
   color: #222b45;
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.5rem;
+  @media only screen and (max-width: 600px) {
+    display: none;
+    visibility: none;
+  }
+`;
+export const CardLeavesParaMobile = styled.p`
+  display: none;
+  visibility: none;
+  color: #222b45;
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  @media only screen and (max-width: 600px) {
+    display: inline-block;
+    visibility: visible;
+  }
 `;
 
 export const CardLeavesButton = styled.button`

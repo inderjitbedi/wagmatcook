@@ -51,17 +51,17 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
     //  {
     //    Title: "Events",
     //    src: "/svg/fire.svg",
-    //    //  to: "/organization-admin/leaves",
+    //    //  to: "/manager-management/leaves",
     //  },
     //  {
     //    Title: "My Account",
     //    src: "/svg/person.svg",
-    //    //  to: "/organization-admin/leaves",
+    //    //  to: "/manager-management/leaves",
     //  },
     //  {
     //    Title: "Helpdesk",
     //    src: "/svg/alert-circle.svg",
-    //    //  to: "/organization-admin/leaves",
+    //    //  to: "/manager-management/leaves",
     //  },
   ];
   const style = {
@@ -325,6 +325,74 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/manager-management/documents"
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <path
+                d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
+                stroke={
+                  location.pathname === "/manager-management/documents" 
+    
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+              />
+              <path
+                d="M7.06445 9.75H11.7741"
+                stroke={
+                  location.pathname === "/manager-management/documents"
+                 
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M7.06445 6.75H11.7741"
+                stroke={
+                  location.pathname === "/manager-management/documents" 
+                 
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M7.06445 12H9.41929"
+                stroke={
+                  location.pathname === "/manager-management/documents" 
+                 
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+            <SideBarListTitle
+              style={
+                location.pathname === "/manager-management/documents" 
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Documents Library
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
         {/* 
          <Link
           style={{ textDecoration: "none" }}
@@ -478,7 +546,6 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         {screenWidth < 1200 && (
           <SideBarListContainer
             style={{ zIndex: "1", marginTop: "-1rem" }}
-   
             onClick={HandleLogout}
           >
             <svg
@@ -502,9 +569,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
                 stroke-linejoin="round"
               />
             </svg>
-            <SideBarListTitle
-              style={{ color: "#5C5C5C" }}
-            >
+            <SideBarListTitle style={{ color: "#5C5C5C" }}>
               {" "}
               Logout
             </SideBarListTitle>
