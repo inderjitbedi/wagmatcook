@@ -114,12 +114,27 @@ const API_URLS = {
   createTask: `/task/create`,
   getAssignees: `/task/assignees`,
   getTaskDetails: `/task/details/:id`,
-  markCompleted:`/task//mark-complete/:id`,
+  markCompleted:`/task/mark-complete/:id`,
   // comments Aopi routes
   getTaskComments: `/task/:taskid/comments`,
   updateTaskComments: `/task/:taskid/comment/:id/update`,
   createTaskComments: `/task/:taskid/comment/add`,
   deleteTaskComments: `/task/:taskid/comment/:id/delete`,
+  //documents tags api urls
+   getDocumentTags: `/document-tag/list?page=Page&limit=10&searchKey=searchValue`,
+  deleteDocumentTags: `/document-tag/delete/:id`,
+  createDocumentTags: `/document-tag/create`,
+  updateDocumentTags: `/document-tag/update/:id`,
+  reorderDocumentTags: `/document-tag/reorder`,
+  //apis for documents 
+  getDocumentTagsList: `/document-tag/list`,
+  createDocument: `/document/create`,
+  updateDocument: `/document/update/:id`,
+  deleteDocument: `/document/delete/:id`,
+  getDocuments: `/document/list?page=Page&limit=10&searchKey=searchValue`,
+  getDocumentDetails:`/document/detail/:id`,
+   
+
 };
 
 export default API_URLS;

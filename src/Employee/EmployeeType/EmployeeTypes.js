@@ -372,7 +372,7 @@ const EmployeeTypes = () => {
                 style={{
                   display: "flex",
                   width: "100%",
-                  height: "3rem",
+                  height: "30rem",
                   justifyContent: "center",
                   alignItems: "center",
                 }}

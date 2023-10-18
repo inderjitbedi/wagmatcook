@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  RotatingLines, ThreeDots
-} from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -58,7 +56,6 @@ import {
   ButtonIcon,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -113,6 +110,7 @@ const Documents = () => {
   const [departmentData, setDepartmentData] = useState([]);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
@@ -150,7 +148,21 @@ const Documents = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      //  HandleSubmit(data);
+      const newTags = data?.tags
+        .filter((tag) => tag.id === tag.text)
+        .map((tag) => tag.text);
+      data.tags = data.tags
+        .filter((tag) => tag.id !== tag.text)
+        .map((tag) => tag.id);
+      data.newTags = newTags;
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
+      console.log("form data", data);
+
+      HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
       //  HandleUpdate(data);
     }
@@ -203,11 +215,6 @@ const Documents = () => {
           if (result) {
             setDepartmentData(result.departments);
             resolve(result.departments);
-            const suggestions = result?.departments?.map((data) => ({
-              id: data?.userData._id,
-              text: data?.name,
-            }));
-            setSuggestions(suggestions);
 
             setIsLoading(false);
           } else {
@@ -224,15 +231,108 @@ const Documents = () => {
         });
     });
   };
+  const GetDocumentTagsList = () => {
+    setIsLoading(true);
+    let url = API_URLS.getDocumentTagsList;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          const suggestions = result?.documentTags?.map((data) => ({
+            id: data?._id,
+            text: data?.name,
+          }));
+          setSuggestions(suggestions);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetDocuments = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+
+      let url = API_URLS.getDocuments
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  const HandleSubmit = (data) => {
+    // e.preventDefault();
+    setIsLoading(true);
+    let url = API_URLS.createDocument;
+
+    setIsLoading(true);
+    let dataCopy = data;
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          });
+          // GetBenefits();
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error feteching benefits. Please try again.");
+        HandleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   useEffect(() => {
     GetDepartments();
+    GetDocumentTagsList();
+    GetDocuments();
   }, []);
+  console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
     comma: 188,
     enter: 13,
   };
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-  const [suggestions, setSuggestions] = useState([]);
 
   const TaskData = [
     {
@@ -282,6 +382,7 @@ const Documents = () => {
     },
   ];
   // };
+
   const getFileType = (file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -304,15 +405,48 @@ const Documents = () => {
     let type = await getFileType(e.target.files[0]);
     //console.log("this file type:", type);
     if (type != "unknown") {
-      // handleUpload(file, type);
+      handleUpload(file, type);
     } else {
       toast.error("Unsuported file type.");
     }
   };
-    const removeFile = (e) => {
-      setFile(null);
-      setValue("file", null);
-    };
+  const handleUpload = (file, type) => {
+    setIsUploading(true);
+
+    if (file) {
+      const binary = new FormData();
+      binary.append("file", file);
+
+      httpClient({
+        method: "post",
+        url: API_URLS.uploadDocuments.replace(":type", type),
+        data: binary, // Use 'data' to send the FormData
+        headers: {
+          "Content-Type": "multipart/form-data", // Set the Content-Type header to 'multipart/form-data'
+        },
+      })
+        .then((data) => {
+          //console.log(data);
+
+          if (data?.result) {
+            //console.log(data?.result);
+            setFile(data?.result?.file);
+
+            setIsUploading(false);
+          } else {
+            // setErrors({ ...errors, fileError: data?.error?.error });
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          setIsUploading(false);
+        });
+    }
+  };
+  const removeFile = (e) => {
+    setFile(null);
+    setValue("file", null);
+  };
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Documents" />
@@ -450,7 +584,7 @@ const Documents = () => {
                       Keywords <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
-                      name="keywords"
+                      name="tags"
                       control={control}
                       rules={{
                         required: {
@@ -503,6 +637,7 @@ const Documents = () => {
                         <Input
                           type="radio"
                           id="major"
+                          value="MAJOR"
                           name="version"
                           {...register("version", {
                             required: {
@@ -517,6 +652,7 @@ const Documents = () => {
                         <Input
                           type="radio"
                           id="minor"
+                          value="MINOR"
                           name="version"
                           {...register("version", {
                             required: {
@@ -528,14 +664,17 @@ const Documents = () => {
                         <RadioLabel htmlFor="minor">Minor</RadioLabel>
                       </FlexContaier>
                     </RadioButtonContainer>
+                    {errors.version && (
+                      <Errors>{errors.version?.message}</Errors>
+                    )}
                     <input
-                      style={{ width: "50%" }}
+                      style={{ width: "50%", marginTop: "1.5rem" }}
                       type="file"
                       {...register(`file`, {
-                        // required: {
-                        //   value: update ? false : true,
-                        //   message: "Required",
-                        // },
+                        required: {
+                          value: update ? false : true,
+                          message: "Required",
+                        },
                         onChange: (e) => {
                           handleFileChange(e);
                         },
@@ -579,9 +718,6 @@ const Documents = () => {
                       )}
                     </div>
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
-                    {errors.version && (
-                      <Errors>{errors.version?.message}</Errors>
-                    )}
 
                     {!update ? (
                       <AddNewButton
