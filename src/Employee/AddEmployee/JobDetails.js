@@ -34,6 +34,8 @@ import {
   AlignFlex,
   DeleteIcon,
   TrashDiv,
+  FlexColumnForm50,
+  FlexContaierForm50,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 import { FlexColContainer } from "../../Dashboard/ManagerDashboard/ManagerStyles";
@@ -408,10 +410,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
             </BodyMainHeading>
             <form onSubmit={handleSubmit(onSubmit)}>
               {fields.map((field, index) => (
-                <FormContainer
-                  key={field.id}
-                  style={isEdit ? { width: "80%" } : { width: "60%" }}
-                >
+                <FormContainer key={field.id}>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>
@@ -524,7 +523,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                     </FlexColumnForm>
                   </FlexContaierForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
-                    <FlexColumnForm style={{ width: "50%" }}>
+                    <FlexColumnForm50>
                       <InputLabel>
                         Reports to <InputSpan>*</InputSpan>
                       </InputLabel>
@@ -559,10 +558,8 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                         errors={errors}
                         name={`positions.${index}.reportsTo`}
                       />
-                    </FlexColumnForm>
-                    <FlexContaierForm
-                      style={{ alignItems: "flex-start", width: "50%" }}
-                    >
+                    </FlexColumnForm50>
+                    <FlexContaierForm50 style={{ alignItems: "flex-start" }}>
                       <FlexColumnForm>
                         <InputLabel>
                           Position Start Date <InputSpan>*</InputSpan>
@@ -652,7 +649,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                           name={`positions.${index}.endDate`}
                         />
                       </FlexColumnForm>
-                    </FlexContaierForm>
+                    </FlexContaierForm50>
                   </FlexContaierForm>
                   <FlexContaierForm>
                     <FlexContaierForm style={{ alignItems: "flex-start" }}>

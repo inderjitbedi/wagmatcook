@@ -5,6 +5,8 @@ import { Outlet } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import styled, { keyframes } from "styled-components";
+
 import {
   Dashboard,
   DashNav,
@@ -26,6 +28,21 @@ import {
   SideBarContainer,
   MainBodyContainer,
 } from "./ViewEmployeeStyle";
+
+const BackArrowButton = styled.div`
+  padding: 5px 4px 5px 6px;
+  border-radius: 88px;
+  border: 1px solid #8f9bb3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const BackButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-bottom: 1.5rem;
+`;
 const EmployeeDetailLayout = () => {
   const Navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -64,7 +81,13 @@ const EmployeeDetailLayout = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Employee Details" />
       <EmployeeBody>
         <BodyHeader>
-          <BodyHeading>Employee Details</BodyHeading>
+          <BackButtonContainer>
+            <BackArrowButton onClick={() => Navigate(-1)}>
+              <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+            </BackArrowButton>
+            <BodyHeading>Employee Details</BodyHeading>
+          </BackButtonContainer>
+
           {screenWidth < 600 ? (
             <SideBarContainer>
               <EmployeeSideBar

@@ -177,7 +177,7 @@ export const BodyMainHeading = styled.h1`
 `;
 export const FormContainer = styled.div`
 box-sizing: border-box;
-  width: 60%;
+  width: 70%;
 
   position: relative;
    @media only screen and (max-width: 900px) {
@@ -243,12 +243,37 @@ export const FlexContaierForm = styled.div`
   gap: 1.6rem;
   /* margin-bottom: 1.6rem; */
   width: 100%;
+  @media only screen and (max-width: 600px) {
+   flex-direction:column;
+  }
+`;
+export const FlexContaierForm50 = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 1.6rem;
+  /* margin-bottom: 1.6rem; */
+  box-sizing: border-box;
+  width: 50%;
+  @media only screen and (max-width: 600px) {
+   flex-direction:column;
+   width: 100%;
+  }
 `;
 export const FlexColumnForm = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
   width: 100%;
+  box-sizing: border-box;
+`;
+export const FlexColumnForm50 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 50%;
+   @media only screen and (max-width: 600px) {
+    width: 100%
+  }
 `;
 export const InputLabel = styled.label`
   color: #222b45;

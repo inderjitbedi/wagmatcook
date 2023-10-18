@@ -338,7 +338,7 @@ const EVDocuments = () => {
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "1rem", width: "84%" }}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem"}}>
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
@@ -348,7 +348,7 @@ const EVDocuments = () => {
                   <ButtonBlue onClick={() => handleOpen()}>Add New</ButtonBlue>
                 )}
               </FlexSpaceBetween>
-              {result?.documents?.length === 0 ? (
+              {!result?.documents?.length ? (
                 <NoDocumentfound message="No documents to show" />
               ) : (
                 <>

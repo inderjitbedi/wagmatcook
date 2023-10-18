@@ -112,6 +112,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           setFormData(result);
         } else {
           //toast.warn("something went wrong ");
+          setIsLoading(false);
         }
       })
       .catch((error) => {
@@ -150,15 +151,16 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           GetEmployeesBenefits(result.benefits);
         } else {
           //toast.warn("something went wrong ");
+          setIsLoading(false);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error in fetching benefits. Please try again.");
-        // setIsLoading(false);
+        setIsLoading(false);
       })
       .finally(() => {
-        // setIsLoading(false);
+        setIsLoading(false);
       });
   };
 
@@ -192,6 +194,8 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           setValue("description", description);
         } else {
           //toast.warn("something went wrong ");
+        setIsLoading(false);
+
         }
       })
       .catch((error) => {

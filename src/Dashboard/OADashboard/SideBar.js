@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   SidebarTitle,
   SideBarLogoContainer,
@@ -86,6 +87,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
       src: "/svg/Reports.svg",
     },
   ];
+  const Navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState({
     dashbord: false,
@@ -97,7 +99,8 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
     employeetype: false,
     task: false,
     documenttags: false,
-    documents:false,
+    documents: false,
+    logout: false,
   });
   const toggleSubMenu = () => {
     setIsOpen(!isOpen);
@@ -118,6 +121,11 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
   const style = {
     textDecoration: "none",
     color: "#279AF1",
+  };
+  const HandleLogout = () => {
+    localStorage.clear();
+
+    Navigate("/");
   };
   console.log(orgData, "this is orgdata");
   let API_URL = process.env.REACT_APP_API_URL;
@@ -329,28 +337,9 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
         </Link>
         <FlexContainer onClick={toggleSubMenu}>
           <SideBarListTitle>Organization Settings(OA)</SideBarListTitle>
-          {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="9"
-              height="5"
-              viewBox="0 0 9 5"
-              fill="none"
-              style={{
-                width: "1rem",
-                height: "14px",
-                transform: isOpen ? "rotate(180deg)" : undefined,
-              }}
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M8.79723 0.195262C9.06759 0.455612 9.06759 0.877722 8.79723 1.13807L4.98954 4.80474C4.71917 5.06509 4.28083 5.06509 4.01046 4.80474L0.202772 1.13807C-0.0675917 0.877722 -0.0675917 0.455612 0.202772 0.195262C0.473135 -0.0650873 0.91148 -0.0650873 1.18184 0.195262L4.5 3.39052L7.81816 0.195262C8.08852 -0.0650874 8.52686 -0.0650874 8.79723 0.195262Z"
-                fill={isOpen ? "#279AF1" : "#5C5C5C"}
-              />
-            </svg> */}
         </FlexContainer>
 
-        <SideBarList style={{ padding: "2rem" }}>
+        <SideBarList style={{ padding: "2rem", boxSizing:"border-box" ,marginTop:"1rem"}}>
           <Link
             onMouseEnter={() => handleMouseEnter("departments")}
             onMouseLeave={() => handleMouseLeave("departments")}
@@ -874,6 +863,42 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
+        {screenWidth < 1200 && (
+          <SideBarListContainer
+            style={{ zIndex: "1", marginTop: "-1rem" }}
+            onMouseEnter={() => handleMouseEnter("logout")}
+            onMouseLeave={() => handleMouseLeave("logout")}
+            onClick={HandleLogout}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 31 32"
+              fill="none"
+            >
+              <path
+                d="M15.5 26.5208C9.79306 26.5208 5.16667 21.8944 5.16667 16.1875C5.16667 10.4805 9.79306 5.85413 15.5 5.85413"
+                stroke={isHovering.logout ? "#279AF1" : "#5C5C5C"}
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12.9173 16.1875H25.834M25.834 16.1875L21.959 12.3125M25.834 16.1875L21.959 20.0625"
+                stroke={isHovering.logout ? "#279AF1" : "#5C5C5C"}
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <SideBarListTitle
+              style={isHovering.logout ? style : { color: "#5C5C5C" }}
+            >
+              {" "}
+              Logout
+            </SideBarListTitle>
+          </SideBarListContainer>
+        )}
       </SideBarList>
     </div>
   );

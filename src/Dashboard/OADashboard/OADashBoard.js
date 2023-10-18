@@ -49,6 +49,7 @@ import {
   NotificationFlexCol,
   NotificationSelect,
   NotificationOption,
+  Main,
 } from "./OADashBoardStyles";
 import {
   SectionCard,
@@ -332,7 +333,8 @@ const OADashBoard = ({ screenWidth }) => {
       ) : (
         <>
           <OADAashModal isOpen={isModalOpen} closeModal={closeModal} />
-          <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+            <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
+            
           <DashHeading>Welcome {user?.name || "Jason poter"}!</DashHeading>
           {orgData ? (
             <SectionCard>

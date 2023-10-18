@@ -100,6 +100,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "0.8rem",
+  height: "59.7rem",
+  overflowY: "scroll",
 };
 const rows = [
   {
@@ -651,7 +653,7 @@ const EVLeaveHistory = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {result.history?.length == 0 && (
+                {!result.history?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={Celllstyle2} colSpan={8}>
                       No Leave History Found
