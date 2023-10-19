@@ -431,7 +431,7 @@ const Task = () => {
               <>
                 <ModalUpperDiv>
                   <ModalHeading>
-                    {!update ? "Add Tasks" : "Update Task"}
+                    {!update ? "Add Task" : "Update Task"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -461,7 +461,7 @@ const Task = () => {
                       <Errors>{errors.taskTitle?.message}</Errors>
                     )}
                     <InputLabel>
-                      Assigned To <InputSpan>*</InputSpan>
+                      Assign To <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="assignee"
@@ -689,7 +689,7 @@ const Task = () => {
                       {data.isCompleted ? (
                         <ApproveStyle>Completed</ApproveStyle>
                       ) : (
-                        <PendingStyle>Pending</PendingStyle>
+                        <PendingStyle>In-Progress</PendingStyle>
                       )}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

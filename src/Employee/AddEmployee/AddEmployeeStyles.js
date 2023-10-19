@@ -281,8 +281,9 @@ export const InputLabel = styled.label`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   display: block;
+  line-height: 2rem;
 `;
 export const InputSpan = styled.span`
   color: red;

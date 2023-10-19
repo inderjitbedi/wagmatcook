@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useNavigate, useLocation, useParams } from "react-router";
 import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import DeleteModal from "../Modals/DeleteModal";
+import styled, { keyframes } from "styled-components";
 
 import {
   DisciplinaryHeading,
@@ -45,6 +46,8 @@ import {
   CommentDivADD,
   TextAreaContaier,
   Errors,
+  IconsEmployee,
+  FlexSpaceBetweenmobile,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const TaskView = () => {
@@ -146,13 +149,14 @@ const TaskView = () => {
         });
     });
   };
-  const HandleMarkComplete = () => {
+  const HandleMarkComplete = (data) => {
     // setIsUploading(true);
     let url = API_URLS.markCompleted.replace(":id", taskid);
-
+    let dataCopy = { isCompleted: data };
     httpClient({
       method: "put",
       url,
+      data: dataCopy,
     })
       .then(({ result, error }) => {
         if (result) {
@@ -294,15 +298,14 @@ const TaskView = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-
   }, []);
   const [selectedValue, setSelectedValue] = useState(isChecked);
 
   const handleSelectChange = (e) => {
-    const newValue = e.target.value === "true";
+    const newValue = JSON.parse(e.target.value);
     setSelectedValue(newValue);
     setIsChecked(newValue);
-    HandleMarkComplete();
+    HandleMarkComplete(newValue);
   };
   function formatDateDifference(inputDate) {
     const currentDate = new Date();
@@ -368,6 +371,28 @@ const TaskView = () => {
     setUpdateComment(e.target.value);
     setUpdateCommentError("");
   };
+  const BackArrowButton = styled.div`
+    display: none;
+
+    @media only screen and (max-width: 600px) {
+      padding: 5px 4px 5px 6px;
+      border-radius: 88px;
+      border: 1px solid #8f9bb3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  `;
+  const BackButtonContainer = styled.div`
+    display: none;
+    @media only screen and (max-width: 600px) {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+  `;
+  const Navigate = useNavigate();
 
   return (
     <>
@@ -396,8 +421,13 @@ const TaskView = () => {
             text={"Task Details"}
           />
           <BackGroundWhite>
-            <FlexSpaceBetween>
-              <DisciplinaryHeading> Task Details </DisciplinaryHeading>
+            <FlexSpaceBetweenmobile>
+              <FlexContaier>
+                <BackArrowButton onClick={() => Navigate(-1)}>
+                  <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+                </BackArrowButton>
+                <DisciplinaryHeading> Task Details </DisciplinaryHeading>
+              </FlexContaier>
               {/* {userType === ROLES.EMPLOYEE ? (
                   " "
                 ) : (
@@ -417,8 +447,8 @@ const TaskView = () => {
                     )}
                   </>
                 )} */}
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
+            </FlexSpaceBetweenmobile>
+            <FlexSpaceBetweenmobile>
               <FlexColumnNoWidth>
                 <TaskLight>Task Title</TaskLight>
                 <TaskHeading> {taskDetails?.title || " - "} </TaskHeading>
@@ -460,8 +490,8 @@ const TaskView = () => {
                       ].join(" ") || " - "}
                 </TaskTitle>
               </FlexContaier>
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
+            </FlexSpaceBetweenmobile>
+            <FlexSpaceBetweenmobile>
               <FlexColumnNoWidth>
                 <TaskLight>Description</TaskLight>
                 <TaskDescription>
@@ -469,7 +499,7 @@ const TaskView = () => {
                   {taskDetails?.description || " - "}{" "}
                 </TaskDescription>
               </FlexColumnNoWidth>
-            </FlexSpaceBetween>
+            </FlexSpaceBetweenmobile>
 
             <FlexSpaceBetween
               style={{
@@ -486,9 +516,9 @@ const TaskView = () => {
                   <TaskSelect
                     value={selectedValue}
                     onChange={handleSelectChange}
-                    disabled={isChecked || userType === ROLES.EMPLOYEE}
+                    // disabled={isChecked}
                   >
-                    <TaskOption value={false}>Pending</TaskOption>
+                    <TaskOption value={false}>In-Progress</TaskOption>
                     <TaskOption value={true}>Completed</TaskOption>
                   </TaskSelect>
                 </TaskStatus>

@@ -612,6 +612,15 @@ const CommenDashHeader = ({ onSearch, text }) => {
                   <NotificationIcon src="/svg/outline.svg" />
                 </FlexNotificationContainer>
               </NotificationsHeader>
+              {!limitedData?.length && 
+                <LoadMore>
+                  <span
+                  
+                  >
+                    no notification found
+                  </span>
+                </LoadMore>
+              }
               {limitedData?.map((data) => (
                 <>
                   <NotificationList>

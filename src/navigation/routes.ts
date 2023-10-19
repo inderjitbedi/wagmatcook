@@ -55,6 +55,8 @@ import TaskView from "../Task/TaskView";
 import Documents from "../Documents/Documents";
 import DocumentsTags from "../Documents/DocumentsTags";
 import DocumentHistory from "../Documents/DocumentHistory";
+import LeaveHistory from "../Leaves/LeaveHistory";
+
 const Routes: any = [
   {
     component: signup,
@@ -170,7 +172,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: DocumentHistory,
         path: "documents/history/:documentid",
         title: "Tasks View",
@@ -427,6 +429,14 @@ const Routes: any = [
         index: true,
       },
       {
+        component: LeaveHistory,
+        path: "leave/history",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
         component: TaskView,
         path: "tasks/details/:taskid",
         title: "Tasks View",
@@ -434,7 +444,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: Documents,
         path: "documents",
         title: "Tasks View",
@@ -442,7 +452,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: DocumentHistory,
         path: "documents/history/:documentid",
         title: "Tasks View",
@@ -685,7 +695,15 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+           {
+        component: LeaveHistory,
+        path: "leave/history",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
         component: Documents,
         path: "documents",
         title: "Tasks View",
@@ -693,7 +711,7 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-       {
+      {
         component: DocumentHistory,
         path: "documents/history/:documentid",
         title: "Tasks View",
@@ -899,7 +917,7 @@ const Routes: any = [
       {
         component: ManagerDashBoard,
         path: "dashboard",
-        title: "Manager DashBoard",
+        title: "User DashBoard",
         to: "/",
         type: "private",
         index: true,
