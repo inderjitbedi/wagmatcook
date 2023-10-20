@@ -45,20 +45,9 @@ const BackButtonContainer = styled.div`
 `;
 const EmployeeDetailLayout = () => {
   const Navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
+
   const { employeeid } = useParams();
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
+
   const [searchValue, setSearchValue] = useState("");
 
   const HandleSearchCahnge = (data) => {

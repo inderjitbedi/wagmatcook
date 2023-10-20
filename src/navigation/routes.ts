@@ -56,7 +56,8 @@ import Documents from "../Documents/Documents";
 import DocumentsTags from "../Documents/DocumentsTags";
 import DocumentHistory from "../Documents/DocumentHistory";
 import LeaveHistory from "../Leaves/LeaveHistory";
-
+import JobPosting from "../Staffing/JobPosting";
+import JobView from "../Staffing/JobView";
 const Routes: any = [
   {
     component: signup,
@@ -695,9 +696,25 @@ const Routes: any = [
         type: "private",
         index: true,
       },
-           {
+      {
         component: LeaveHistory,
         path: "leave/history",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: JobPosting,
+        path: "job-posting",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: JobView,
+        path: "job-posting/details/:jobid",
         title: "tasks",
         to: "/",
         type: "private",

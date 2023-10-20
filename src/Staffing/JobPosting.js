@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RotatingLines } from "react-loader-spinner";
-import CommenDashHeader from "../Dashboard/CommenDashHeader";
-import { useForm, Controller } from "react-hook-form";
-import httpClient from "../api/httpClient";
-import API_URLS from "../constants/apiUrls";
-import Box from "@mui/material/Box";
-import { useNavigate, useLocation } from "react-router";
-import { toast } from "react-toastify";
-
 import Modal from "@mui/material/Modal";
-import DeleteModal from "../Modals/DeleteModal";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,10 +7,19 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
+import { useNavigate, useLocation } from "react-router";
+import { toast } from "react-toastify";
+import Box from "@mui/material/Box";
+import { useForm, Controller } from "react-hook-form";
+import { RotatingLines } from "react-loader-spinner";
+import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import DeleteModal from "../Modals/DeleteModal";
+import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
+import httpClient from "../api/httpClient";
+import { AiOutlinePrinter } from "react-icons/ai";
 
 import {
   DisciplinaryDiv,
@@ -58,6 +57,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
+  height: "55rem",
+  overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -82,12 +83,10 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
-
-const Task = () => {
+const JobPosting = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
-  const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -95,28 +94,14 @@ const Task = () => {
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
-  const [taskLsit, setTaskList] = useState([]);
   const [result, setResult] = useState([]);
-  const [assignees, setAssignees] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
+  const [departmentData, setDepartmentData] = useState([]);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
-  };
-  // add new modal
-  const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
-  const HandleClose = () => {
-    setOpen(false);
-    setDetailsLength(500);
-    clearErrors();
-    reset({});
-  };
-
-  const HandleSearchCahnge = (data) => {
-    setSearchValue(data);
   };
   const {
     register,
@@ -128,6 +113,17 @@ const Task = () => {
   } = useForm({
     mode: "all",
   });
+  const [open, setOpen] = useState(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => {
+    setOpen(false);
+    setDetailsLength(500);
+    clearErrors();
+    reset({});
+  };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -138,9 +134,9 @@ const Task = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      HandleSubmit(data);
+      //   HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      HandleUpdate(data);
+      //   HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
@@ -165,209 +161,37 @@ const Task = () => {
     clearErrors();
     setDetailsLength(500);
   };
-
-  const GetAssignees = () => {
+  const GetDepartments = () => {
     setIsLoading(true);
-    let url = API_URLS.getAssignees;
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getDepartmentsList;
 
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setAssignees(result.assignees);
-        } else {
-          //toast.warn("something went wrong ");
-        }
+      httpClient({
+        method: "get",
+        url,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        .then(({ result, error }) => {
+          if (result) {
+            setDepartmentData(result.departments);
+            resolve(result.departments);
+
+            setIsLoading(false);
+          } else {
+            //toast.warn("something went wrong ");
+            setIsLoading(false);
+
+            reject("No data received from GetDepartments API");
+          }
+        })
+        .catch((error) => {
+          // toast.error("Error getting department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
   };
-  const HandleDelete = () => {
-    setIsDeleting(true);
-    let url = API_URLS.deleteTask.replace(":id", Id);
-
-    httpClient({
-      method: "put",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          HandleCloseDelete();
-          setId("");
-          GetTaskList();
-
-          toast.success(result.message, {
-            className: "toast",
-          });
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error Deleting Benefits. Please try again.");
-        setIsDeleting(false);
-      })
-      .finally(() => {
-        setIsDeleting(false);
-      });
-  };
-  const GetTaskList = () => {
-    setIsLoading(true);
-    let url = API_URLS.getTaskList.replace("Page", page);
-
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setResult(result);
-          setTaskList(result.tasks);
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const HandleSubmit = (data) => {
-    // e.preventDefault();
-    setIsLoading(true);
-    let url = API_URLS.createTask;
-
-    setIsLoading(true);
-    let dataCopy = data;
-    httpClient({
-      method: "post",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          HandleClose();
-          reset();
-          toast.success(result.message, {
-            className: "toast",
-          });
-          GetTaskList();
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error feteching benefits. Please try again.");
-        HandleClose();
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
-    setIsLoading(true);
-    let dataCopy = data;
-
-    let url = API_URLS.updateTask.replace(":id", Id);
-
-    httpClient({
-      method: "put",
-      url,
-      data: dataCopy,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setId("");
-          setUpdate(false);
-          reset();
-          GetAssignees();
-          HandleClose();
-          toast.success(result.message, {
-            className: "toast",
-          }); //Entry Updated Successfully");
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        //console.error("Error:", error);
-        toast.error("Error Updating Benefits . Please try again.");
-        setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-  const data = [
-    {
-      _id: 1,
-      name: "option1",
-    },
-    {
-      _id: 2,
-      name: "option2",
-    },
-    {
-      _id: 3,
-      name: "option3",
-    },
-  ];
-  const TaskData = [
-    {
-      order: 1,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 2,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 3,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-    {
-      order: 4,
-      title: "Mobile Responsive",
-      assignedto: "Lalit Kumar",
-      dueDate: "10/09/2023",
-      description:
-        "is composed by Arko Pravo Mukherjee, vocals by Ali Azmat and lyrics by Arko Pravo Mukherjee ",
-    },
-  ];
-
   useEffect(() => {
-    GetTaskList();
-    if (!(location.pathname.indexOf("user") > -1)) {
-      GetAssignees();
-    }
+    GetDepartments();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -376,22 +200,73 @@ const Task = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, [page]);
+  const jobPosting = [
+    {
+      id: 1,
+      title: "Developer",
+      description: "works in js and react ",
+      duration: "5 months",
+      rate: "500",
+      department: "IT",
+      position: "head",
+      postingDate: "22,Nov 2023",
+    },
+    {
+      id: 2,
+      title: "Developer",
+      description: "works in js and react ",
+      duration: "5 months",
+      rate: "500",
+      department: "IT",
+      position: "head",
+      postingDate: "22,Nov 2023",
+    },
+    {
+      id: 3,
+      title: "Developer",
+      description: "works in js and react ",
+      duration: "5 months",
+      rate: "500",
+      department: "IT",
+      position: "head",
+      postingDate: "22,Nov 2023",
+    },
+
+    {
+      id: 4,
+      title: "Developer",
+      description: "works in js and react ",
+      duration: "5 months",
+      rate: "500",
+      department: "IT",
+      position: "head",
+      postingDate: "22,Nov 2023",
+    },
+    {
+      id: 5,
+      title: "Developer",
+      description: "works in js and react ",
+      duration: "5 months",
+      rate: "500",
+      department: "IT",
+      position: "head",
+      postingDate: "22,Nov 2023",
+    },
+  ];
+
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Job Posting"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Tasks</DisciplinaryHeading>
-        {userType === ROLES.EMPLOYEE ? (
-          " "
-        ) : (
-          <AddNewButton
-            onClick={() => {
-              HandleOpenAddNewAction();
-            }}
-          >
-            Add New
-          </AddNewButton>
-        )}
+        <DisciplinaryHeading>All Job Posting</DisciplinaryHeading>
+
+        <AddNewButton
+          onClick={() => {
+            HandleOpenAddNewAction();
+          }}
+        >
+          Add New
+        </AddNewButton>
         <Modal
           open={open}
           sx={{
@@ -431,7 +306,7 @@ const Task = () => {
               <>
                 <ModalUpperDiv>
                   <ModalHeading>
-                    {!update ? "Add Task" : "Update Task"}
+                    {!update ? "Add Job" : "Update Job"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -446,7 +321,7 @@ const Task = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <InputLabel>
-                      Task Title <InputSpan>*</InputSpan>
+                      Job Title <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -457,14 +332,14 @@ const Task = () => {
                         },
                       })}
                     />
-                    {errors.taskTitle && (
-                      <Errors>{errors.taskTitle?.message}</Errors>
+                    {errors.title && (
+                      <Errors>{errors.title?.message}</Errors>
                     )}
                     <InputLabel>
-                      Assign To <InputSpan>*</InputSpan>
+                      Department <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
-                      name="assignee"
+                      name="department"
                       control={control}
                       rules={{
                         required: {
@@ -475,19 +350,68 @@ const Task = () => {
                       render={({ field }) => (
                         <Select {...field}>
                           <Option>Select</Option>
-                          {assignees?.map((data) => (
-                            <Option value={data._id}>
-                              {[
-                                data.personalInfo[0]?.firstName,
-                                data.personalInfo[0]?.lastName,
-                              ].join(" ")}
-                            </Option>
+                          {departmentData?.map((data) => (
+                            <Option value={data._id}>{data.name}</Option>
                           ))}
                         </Select>
                       )}
                     />
-                    {errors.assignedto && (
-                      <Errors>{errors.assignee?.message}</Errors>
+                    {errors.department && (
+                      <Errors>{errors.department?.message}</Errors>
+                    )}
+                    <InputLabel>
+                      Duration <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("duration", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.duration && (
+                      <Errors>{errors.duration?.message}</Errors>
+                    )}
+                    <InputLabel>
+                      Salary <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("salary", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          return (
+                            (!isNaN(parseFloat(fieldValue)) &&
+                              isFinite(fieldValue)) ||
+                            "Must be a number"
+                          );
+                        },
+                        pattern: {
+                          value: /^[+]?\d+(\.\d+)?$/,
+                          message: "Please enter valid cost",
+                        },
+                      })}
+                    />
+                    {errors.salary && <Errors>{errors.salary?.message}</Errors>}
+                    <InputLabel>
+                      Position <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("postion", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {errors.postion && (
+                      <Errors>{errors.postion?.message}</Errors>
                     )}
                     <InputLabel>
                       Description <InputSpan>*</InputSpan>
@@ -522,7 +446,7 @@ const Task = () => {
                       </span>
                     </InputPara>
 
-                    <InputLabel>
+                    {/* <InputLabel>
                       Due Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
@@ -534,7 +458,7 @@ const Task = () => {
                         },
                       })}
                     />
-                    {<Errors>{errors.dueDate?.message}</Errors>}
+                    {<Errors>{errors.dueDate?.message}</Errors>} */}
 
                     {!update ? (
                       <AddNewButton
@@ -593,45 +517,64 @@ const Task = () => {
                     align="left"
                     style={{ width: "1rem" }}
                   >
-                    Sr. No.
+                    Sr.&nbsp;No.
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
-                    Task Title
+                    Job Title
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "15rem" }}
+                    style={{ minWidth: "6rem" }}
                     align="left"
                   >
-                    {userType === ROLES.EMPLOYEE
-                      ? " Assigned By"
-                      : " Assigned To"}
+                    Duration
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Due Date
+                    Department
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "30rem" }}
+                    style={{ minWidth: "6rem" }}
+                    align="left"
+                  >
+                    Salary
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "7rem" }}
+                    align="left"
+                  >
+                    Position
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "7rem" }}
+                    align="left"
+                  >
+                    Posting&nbsp;Date
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "18rem" }}
                     align="left"
                   >
                     Description
                   </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Status
-                  </TableCell>
+                  {/* <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "10rem" }}
+                      align="left"
+                    >
+                      Status
+                    </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -643,14 +586,14 @@ const Task = () => {
               </TableHead>
 
               <TableBody>
-                {!taskLsit?.length && (
+                {!jobPosting?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No tasks found
+                      No job posting found
                     </TableCell>
                   </TableRow>
                 )}
-                {taskLsit?.map((data, index) => (
+                {jobPosting?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -667,31 +610,34 @@ const Task = () => {
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {userType === ROLES.EMPLOYEE
-                        ? [
-                            data?.assigner?.personalInfo?.firstName,
-                            data?.assigner?.personalInfo?.lastName,
-                          ].join(" ") || " - "
-                        : [
-                            data?.assignee?.personalInfo?.firstName,
-                            data?.assignee?.personalInfo?.lastName,
-                          ].join(" ") || " - "}
+                      {data.duration}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.dueDate
-                        ? moment(data.dueDate).format("D MMM, YYYY")
-                        : " -"}
+                      {data.department}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.rate || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.Position || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.postingDate || " - "}
+                      {/* {data.dueDate
+                          ? moment(data.dueDate).format("D MMM, YYYY")
+                          : " -"} */}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data.description || " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.isCompleted ? (
-                        <ApproveStyle>Completed</ApproveStyle>
-                      ) : (
-                        <PendingStyle>In-Progress</PendingStyle>
-                      )}
-                    </TableCell>
+
+                    {/* <TableCell sx={CellStyle2} align="left">
+                        {data.isCompleted ? (
+                          <ApproveStyle>Completed</ApproveStyle>
+                        ) : (
+                          <PendingStyle>In-Progress</PendingStyle>
+                        )}
+                      </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
@@ -709,23 +655,31 @@ const Task = () => {
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/hr-management/tasks/details/${data._id}`
+                                `/hr-management/job-posting/details/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
-                                `/manager-management/tasks/details/${data._id}`
+                                `/manager-management/job-posting/details/${data._id}`
                               );
                             } else if (userType === ROLES.EMPLOYEE) {
                               Navigate(
-                                `/user-management/tasks/details/${data._id}`
+                                `/user-management/job-posting/details/${data._id}`
                               );
                             } else {
                               Navigate(
-                                `/organization-admin/tasks/details/${data._id}`
+                                `/organization-admin/job-posting/details/${data._id}`
                               );
                             }
                           }}
                           src="/images/icons/eye.svg"
+                        />
+                        <AiOutlinePrinter
+                          style={{
+                            width: "2rem",
+                            height: "2rem",
+                            cursor: "pointer",
+                            color: "#279AF1",
+                          }}
                         />
                         {userType === ROLES.EMPLOYEE ? (
                           " "
@@ -761,12 +715,12 @@ const Task = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this task?"
+        //   HandleDelete={HandleDelete}
+        message="Are you sure you want to delete this job posting?"
         isLoading={isDeleting}
       />
     </>
   );
 };
 
-export default Task;
+export default JobPosting;

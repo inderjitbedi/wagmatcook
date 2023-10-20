@@ -715,7 +715,7 @@ const OALeaves = () => {
                     >
                       {leaves?.length === 0 && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" colSpan={6}>
+                          <TableCell align="center" sx={CellStyle2} colSpan={6}>
                             No leaves found
                           </TableCell>
                         </TableRow>

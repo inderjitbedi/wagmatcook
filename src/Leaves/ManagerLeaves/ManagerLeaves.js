@@ -476,7 +476,7 @@ const ManagerLeaves = () => {
             <TableBody>
               {result?.leaves?.length == 0 && (
                 <TableRow sx={{ height: "20rem" }}>
-                  <TableCell align="center" colSpan={7}>
+                  <TableCell align="center" sx={CellStyle2} colSpan={7}>
                     No Leaves found
                   </TableCell>
                 </TableRow>

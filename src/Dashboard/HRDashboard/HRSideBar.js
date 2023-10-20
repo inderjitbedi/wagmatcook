@@ -16,7 +16,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { BiTask } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
-
+import { BsFilePost } from "react-icons/bs";
 
 const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
   const location = useLocation();
@@ -265,7 +265,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
               }
             >
               {" "}
-              Leave History
+              My Leaves
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
@@ -436,6 +436,30 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             >
               {" "}
               Document Library
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/hr-management/job-posting"
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <BsFilePost
+              style={
+                location.pathname === "/hr-management/job-posting"
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            />
+            <SideBarListTitle
+              style={
+                location.pathname === "/hr-management/job-posting"
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Staffing
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

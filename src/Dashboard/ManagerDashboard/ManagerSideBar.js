@@ -314,7 +314,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               }
             >
               {" "}
-              Leave History
+              My Leaves
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
