@@ -1,0 +1,923 @@
+import React, { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "react-toastify";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
+import moment from "moment";
+import API_URLS from "../constants/apiUrls";
+import ROLES from "../constants/roles";
+import httpClient from "../api/httpClient";
+import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import {
+  MainBodyContainer,
+  PersonalInfo,
+  PersonalImg,
+  FlexColumn,
+  PersonalName,
+  PersonalTitle,
+  PersonalDepartment,
+  FlexSpaceBetween,
+  LeaveDiv,
+  TabelDiv,
+  TabelImg,
+  TabelDarkPara,
+  TabelParaContainer,
+  Icons,
+  Input,
+  FlexContaierForm,
+  FlexColumnForm,
+  InputLabel,
+  Errors,
+  ModalHeading,
+  ModalContainer,
+  ModalIcon,
+  ModalFormContainer,
+  InputSpan,
+  ModalThanks,
+  ModalIconDelete,
+  ModalThanksImg,
+  ModalThanksHeading,
+  Select,
+  Option,
+  InputPara,
+  TextArea,
+  SectionCard,
+  SectionCardContainer,
+  Sectionlighttitle,
+  Sectiondarktitle,
+  Sectionsmalltitle,
+  ShowMore,
+  FlexColumn100,
+  ButtonBlue,
+} from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import {
+  DisciplinaryDiv,
+  DisciplinaryHeading,
+} from "../Disciplinary/DisciplinaryStyles";
+const CellStyle = {
+  color: "#8F9BB3",
+  padding: "1.6rem 0.8rem",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: "600",
+  lineHeight: "1.6rem",
+};
+const Celllstyle2 = {
+  color: "#222B45",
+  padding: "1.6rem 0.8rem",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: "400",
+  lineHeight: "15px",
+};
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: " 44.6rem",
+  bgcolor: "background.paper",
+  border: "1px solid #EFF4FA",
+  boxShadow: 45,
+  padding: "2rem 0rem",
+  borderRadius: "0.8rem",
+  height: "59.7rem",
+  overflowY: "scroll",
+};
+const PendingStyle = {
+  borderRadius: "10rem",
+  background: "#FFF1DD",
+  display: "inline-flex",
+  padding: "2px 1.2rem",
+  alignItems: "center",
+  color: "#E88B00",
+  textAlign: "center",
+  fontFamily: "Inter",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "2.4rem",
+};
+const ApprovedStyles = {
+  borderRadius: "10rem",
+  background: "var(--green-20, #C8FFC7)",
+  display: "inline-flex",
+  padding: "2px 1.2rem",
+  alignItems: "center",
+  color: "var(--green-90, #0D7D0B)",
+  textAlign: "center",
+  fontFamily: "Inter",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "2.4rem",
+};
+
+const RejectedStyles = {
+  borderRadius: "10rem",
+  background: "#FFE6E3",
+  display: "inline-flex",
+  padding: "2px 1.2rem",
+  alignItems: "center",
+  color: "#EA4335",
+  textAlign: "center",
+  fontFamily: "Inter",
+  fontSize: "1.4rem",
+  fontStyle: "normal",
+  fontWeight: 600,
+  lineHeight: "2.4rem",
+};
+const LeaveHistory = () => {
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [isAccount, setIsAccount] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const [Id, setId] = useState("");
+  const [update, setUpdate] = useState(false);
+  const [detailsLength, setDetailsLength] = useState(500);
+  const { employeeid } = useParams();
+  const Navigate = useNavigate();
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setUpdate(false);
+    clearErrors();
+    reset({});
+    setOpen(false);
+    setDetailsLength(500);
+  };
+  const [user, setUser] = useState();
+
+  const [openThanks, setOpenThanks] = useState(false);
+  const handleOpenThanks = () => setOpenThanks(true);
+  const handleCloseThanks = () => setOpenThanks(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState([]);
+  const [isSatus, setIsSatus] = useState("");
+  const [formData, setFormData] = useState([]);
+  const [reportList, setReportList] = useState([]);
+  const [leaveType, setLeaveType] = useState([]);
+  const [leaveBalance, setLeaveBalance] = useState([]);
+  const [showAll, setShowAll] = useState(false);
+
+  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
+
+  const handleShowMoreClick = () => {
+    setShowAll(!showAll);
+  };
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    reset,
+    setError,
+    clearErrors,
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      status: "PENDING",
+    },
+  });
+  const onSubmit = (data) => {
+    console.log("form submmited", data);
+
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors)) {
+      HandleSubmit(data);
+    }
+  };
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data?.requesterComment?.length);
+
+    reset({
+      leaveType: data.leaveType._id,
+      from: new Date(data.from).toISOString().split("T")[0],
+      to: new Date(data.to).toISOString().split("T")[0],
+      hours: data.hours,
+      requesterComment: data.requesterComment,
+      responder: data.responder?._id,
+      status: data.status,
+    });
+    setIsSatus(data.status);
+    handleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    handleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  };
+
+  const GetReportList = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getReporttoList;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            resolve(result);
+            const FilterforAdmin = result?.users?.filter(
+              (item) => item.userData.role !== "ORGANIZATION_ADMIN"
+            );
+            const extractedDataArray = FilterforAdmin?.map((user) => {
+              if (user.personalInfo.length > 0) {
+                const {
+                  _id: personalInfoId,
+                  firstName,
+                  lastName,
+                } = user.personalInfo[0];
+                return {
+                  _id: user.user,
+                  personalInfoId,
+                  name: `${firstName} ${lastName ? lastName : ""}`,
+                };
+              } else {
+                const { _id: userDataId, name } = user.userData;
+                return { _id: user.user, userDataId, name };
+              }
+            });
+            const filteredArray = extractedDataArray.filter(
+              (obj) => obj._id !== user?._id
+            );
+            setReportList(filteredArray);
+            console.log("ideal data :", extractedDataArray);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+
+  const GetLeaveAlloaction = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // GetLeavesType();
+      //   const trimid = employeeid.trim();
+      let url = API_URLS.EmployeeAllocation.replace(":employeeid", user?._id);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setLeaveType(result.allocations);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  const GetLeaveAlloactionBalance = () => {
+    // setIsLoading(true);
+    // GetLeavesType();
+    // const trimid = employeeid.trim();
+    let url = API_URLS.userLeaveBalance;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setLeaveBalance(result.leaves);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        // setIsLoading(false);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+  const HandleSubmit = (data) => {
+    // e.preventDefault();
+    setIsLoading(true);
+    let url = API_URLS.submitEmployeeLeaveHistory.replace(
+      ":employeeid",
+      user?._id
+    );
+
+    let dataCopy = data;
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          handleClose();
+          reset();
+          GetLeaveHistory();
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error feteching benefits. Please try again.");
+        handleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetLeaveHistory = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // const trimid = employeeid?.trim();
+      let url = API_URLS.getLeaveHistory.replace(":employeeid", user?._id);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+
+  let API_URL = process.env.REACT_APP_API_URL;
+  console.log("this is account:", isAccount, userType);
+  const userstyle = {
+    padding: "1.6rem 2.0rem",
+    background: "#fff",
+    borderRadius: "0.8rem 0.8rem 0rem 0rem",
+  };
+  const [searchValue, setSearchValue] = useState("");
+
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+  }, []);
+  useEffect(() => {
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetLeaveAlloactionBalance();
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
+    if (user) {
+      Promise.all([GetReportList(), GetLeaveAlloaction(), GetLeaveHistory()]);
+    }
+  }, [user, searchValue]);
+  return (
+    <>
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            height: "70vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <RotatingLines
+            strokeColor="#279AF1"
+            strokeWidth="3"
+            animationDuration="0.75"
+            width="52"
+            visible={true}
+          />
+        </div>
+      ) : (
+        <MainBodyContainer>
+          <CommenDashHeader
+            onSearch={HandleSearchCahnge}
+            text="Leave Histroy"
+          />
+
+          <SectionCard>
+            {limitedData?.map((data) => (
+              <SectionCardContainer>
+                <FlexColumn100>
+                  <Sectionlighttitle>
+                    {" "}
+                    {data?.leaveTypeObj?.name || "- "}{" "}
+                  </Sectionlighttitle>
+                  <Sectionsmalltitle>
+                    {data?.consumed || " 0"} of {data?.totalAllocation || "-"}{" "}
+                    Hrs Consumed
+                  </Sectionsmalltitle>
+                </FlexColumn100>
+              </SectionCardContainer>
+            ))}
+          </SectionCard>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            {leaveBalance?.length > 4 && (
+              <ShowMore onClick={handleShowMoreClick}>
+                {showAll ? "Show Less" : "Show More "}
+              </ShowMore>
+            )}
+          </div>
+          <DisciplinaryDiv>
+            <DisciplinaryHeading> Leave History</DisciplinaryHeading>
+
+            <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+              Add New
+            </ButtonBlue>
+          </DisciplinaryDiv>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow
+                  sx={{
+                    background: "#FBFBFB",
+                  }}
+                >
+                  <TableCell sx={{ ...CellStyle, maxWidth: "2.5rem" }}>
+                    Sr.No
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "12.8rem" }}
+                    align="left"
+                  >
+                    Leave&nbsp;Type
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "18.4rem" }}
+                    align="left"
+                  >
+                    Applied&nbsp;to
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "10rem" }}
+                    align="left"
+                  >
+                    From
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "10rem" }}
+                    align="left"
+                  >
+                    To
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "40rem" }}
+                    align="left"
+                  >
+                    Hours
+                  </TableCell>
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {!result.history?.length && (
+                  <TableRow sx={{ height: "20rem" }}>
+                    <TableCell align="center" sx={Celllstyle2} colSpan={8}>
+                      No Leave History Found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {result?.history?.map((data, index) => (
+                  <TableRow
+                    key={data.index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                    style={{ background: "#fff" }}
+                  >
+                    <TableCell align="center" sx={Celllstyle2}>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      <TabelDiv>
+                        {/* <TabelImg src="/images/Oval Copy 2.jpg" /> */}
+                        <TabelParaContainer>
+                          <TabelDarkPara>
+                            {data?.leaveType?.name || " - "}
+                          </TabelDarkPara>
+                        </TabelParaContainer>
+                      </TabelDiv>
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {(data.responder?.personalInfo?.firstName
+                        ? data.responder?.personalInfo?.firstName
+                        : " - ") +
+                        " " +
+                        (data.responder?.personalInfo?.lastName
+                          ? data.responder?.personalInfo?.lastName
+                          : " ")}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {data.from
+                        ? moment(data.from).format("D MMM, YYYY")
+                        : " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      {data.hours || " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
+                      <span
+                        style={
+                          data.status === "PENDING"
+                            ? PendingStyle
+                            : data.status === "APPROVED"
+                            ? ApprovedStyles
+                            : RejectedStyles
+                        }
+                      >
+                        {" "}
+                        {data.status}{" "}
+                      </span>
+                    </TableCell>
+                    <TableCell align="center" sx={Celllstyle2}>
+                      <Icons
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          HandleUpdateAction(data);
+                        }}
+                        src="/images/icons/eye.svg"
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* modal applying leaves  */}
+          <Modal
+            open={open}
+            // onClose={handleClose}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(0.8rem)",
+            }}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    height: "38rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 999,
+                  }}
+                >
+                  <RotatingLines
+                    strokeColor="#279AF1"
+                    strokeWidth="3"
+                    animationDuration="0.75"
+                    width="52"
+                    visible={true}
+                  />
+                </div>
+              ) : (
+                <>
+                  <ModalContainer>
+                    <ModalHeading>
+                      {!update ? "Applying for Leave" : "View Leave"}
+                    </ModalHeading>
+                    <ModalIcon
+                      onClick={handleClose}
+                      src="/images/icons/Alert-Circle.svg"
+                    />
+                  </ModalContainer>
+
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <ModalFormContainer>
+                      {/* <SearchBox style={{ marginBottom: "1.6rem" }}>
+                    <SearchIcon src="/images/icons/searchIcon.svg" />
+                    <SearchInput
+                      type="text"
+                      placeholder="Search..."
+                    ></SearchInput>
+                  </SearchBox> */}
+                      <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            From {update ? " " : <InputSpan>*</InputSpan>}{" "}
+                          </InputLabel>
+                          <Input
+                            readOnly={update}
+                            type="date"
+                            {...register("from", {
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                              onChange: (e) => {
+                                const endDate = getValues("to");
+                                const startDate = new Date(e.target.value);
+                                if (startDate >= new Date(endDate) && endDate) {
+                                  setError("to", {
+                                    type: "custom",
+                                    message:
+                                      "End date must not be earlier than start date",
+                                  });
+                                } else {
+                                  setError("to", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.from?.message}</Errors>}
+                        </FlexColumnForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            To {update ? " " : <InputSpan>*</InputSpan>}
+                          </InputLabel>
+                          <Input
+                            readOnly={update}
+                            type="date"
+                            {...register("to", {
+                              required: {
+                                value: true,
+                                message: " Required",
+                              },
+                              validate: (fieldValue) => {
+                                const startDateValue = getValues("from");
+
+                                const endDateValue = getValues("to");
+
+                                if (endDateValue && startDateValue) {
+                                  const endDate = new Date(endDateValue);
+                                  const startDate = new Date(startDateValue);
+                                  if (startDate > endDate) {
+                                    return "End date must not be earlier than start date";
+                                    // return setError("to", {
+                                    //   type: "custom",
+                                    //   message:
+                                    //     "End date must not be earlier than start date",
+                                    // });
+                                  } else {
+                                    return clearErrors("to");
+                                  }
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.to?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Leave Type {update ? " " : <InputSpan>*</InputSpan>}{" "}
+                          </InputLabel>
+
+                          <Controller
+                            name="leaveType"
+                            control={control}
+                            rules={{
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field} disabled={update}>
+                                <Option>Select</Option>
+                                {leaveType?.map((data) => (
+                                  <Option value={data.leaveType?._id}>
+                                    {data.leaveType?.name}
+                                  </Option>
+                                ))}
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.leaveType?.message}</Errors>}
+                        </FlexColumnForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Hours {update ? " " : <InputSpan>*</InputSpan>}
+                          </InputLabel>
+                          <Input
+                            type="text"
+                            readOnly={update}
+                            {...register("hours", {
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                              validate: (fieldValue) => {
+                                return (
+                                  (!isNaN(parseFloat(fieldValue)) &&
+                                    isFinite(fieldValue)) ||
+                                  "Invalid Hours number "
+                                );
+                              },
+                              pattern: {
+                                value: /^[+]?\d+(\.\d+)?$/,
+                                message: "Please enter valid hours",
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.hours?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>Description</InputLabel>
+                          <TextArea
+                            style={update ? { marginBottom: "1.6rem" } : {}}
+                            type="text"
+                            readOnly={update}
+                            {...register("requesterComment", {
+                              // required: {
+                              //   value: true,
+                              //   message: " Required",
+                              // },
+                              maxLength: {
+                                value: 500,
+                                message: "Details exceeds  500 characters ",
+                              },
+
+                              onChange: (value) => {
+                                setDetailsLength(
+                                  500 - value.target.value.length
+                                );
+                              },
+                            })}
+                          />
+                          {update ? (
+                            " "
+                          ) : (
+                            <InputPara>
+                              {
+                                <Errors>
+                                  {errors.requesterComment?.message}
+                                </Errors>
+                              }{" "}
+                              <span style={{ justifySelf: "flex-end" }}>
+                                {" "}
+                                {detailsLength > -1 ? detailsLength : 0}{" "}
+                                characters left
+                              </span>
+                            </InputPara>
+                          )}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      <FlexContaierForm>
+                        <FlexColumnForm>
+                          <InputLabel>
+                            Send Leave Request to{" "}
+                            {update ? " " : <InputSpan>*</InputSpan>}
+                          </InputLabel>
+                          <Controller
+                            name="responder"
+                            control={control}
+                            rules={{
+                              required: {
+                                value: true,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field} disabled={update}>
+                                <Option>Select</Option>
+                                {reportList?.map((data) => (
+                                  <Option value={data._id}>{data.name}</Option>
+                                ))}
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.responder?.message}</Errors>}
+                        </FlexColumnForm>
+                      </FlexContaierForm>
+                      {!update ? (
+                        <ButtonBlue type="submit"> Submit</ButtonBlue>
+                      ) : (
+                        <span
+                          style={
+                            isSatus === "PENDING"
+                              ? PendingStyle
+                              : isSatus === "APPROVED"
+                              ? ApprovedStyles
+                              : RejectedStyles
+                            // isSatus === "PENDING"
+                            //   ? PendingStyle
+                            //   : ApprovedStyles
+                          }
+                        >
+                          {" "}
+                          {isSatus}{" "}
+                        </span>
+                      )}
+                    </ModalFormContainer>
+                  </form>
+                </>
+              )}
+            </Box>
+          </Modal>
+          {/* thanks modal for leaves */}
+          <Modal
+            open={openThanks}
+            // onClose={handleCloseThanks}
+            sx={{
+              backgroundColor: "rgb(27, 27, 27, 0.75)",
+              backdropFilter: "blur(0.8rem)",
+            }}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ModalThanks>
+                <ModalIconDelete
+                  onClick={handleCloseThanks}
+                  src="/images/icons/Alert-Circle.svg"
+                />
+                <ModalThanksImg src="/images/icons/Calendar Mark.svg" />
+                <ModalThanksHeading>
+                  Your leave request sent successfully.
+                </ModalThanksHeading>
+                <ButtonBlue onClick={handleCloseThanks}>Thanks</ButtonBlue>
+              </ModalThanks>
+            </Box>
+          </Modal>
+        </MainBodyContainer>
+      )}
+    </>
+  );
+};
+
+export default LeaveHistory;

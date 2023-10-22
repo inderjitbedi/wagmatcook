@@ -16,6 +16,8 @@ import { useNavigate, useLocation, useParams } from "react-router";
 import Pagination from "@mui/material/Pagination";
 import httpClient from "../api/httpClient";
 import { Link } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -39,7 +41,9 @@ import {
   PendingStyle,
   ApproveStyle,
   PaginationDiv,
+  FlexContaier,
 } from "../Disciplinary/DisciplinaryStyles";
+import { IconsEmployee } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
   fontFamily: "Inter",
@@ -118,6 +122,18 @@ const DocumentHistory = () => {
   useEffect(() => {
     GetDocumentsDetails();
   }, []);
+  const BackArrowButton = styled.div`
+    display: none;
+
+    @media only screen and (max-width: 600px) {
+      padding: 5px 4px 5px 6px;
+      border-radius: 88px;
+      border: 1px solid #8f9bb3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  `;
   return (
     <>
       <CommenDashHeader
@@ -125,7 +141,12 @@ const DocumentHistory = () => {
         text={"Document History"}
       />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>Version History</DisciplinaryHeading>
+        <FlexContaier>
+          {/* <BackArrowButton onClick={() => Navigate(-1)}>
+            <IconsEmployee src="/images/icons/ArrowLeft.svg" />
+          </BackArrowButton> */}
+          <DisciplinaryHeading>Version History</DisciplinaryHeading>
+        </FlexContaier>
       </DisciplinaryDiv>
       {isLoading ? (
         <div

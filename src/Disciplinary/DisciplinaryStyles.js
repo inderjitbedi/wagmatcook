@@ -122,25 +122,67 @@ export const Input = styled.input`
 `;
 export const RadioLabel = styled.label`
   color: #222b45;
-
+  cursor: pointer;
   font-family: Inter;
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6rem;
+  margin-right: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:8px;
 `;
 export const FlexContaier = styled.div`
-display: flex;
-gap:0.8rem;
-/* width: 50%; */
+  display: flex;
+  gap: 0.8rem;
+  /* width: 50%; */
+  position: relative;
 `;
 export const RadioButtonContainer = styled.div`
-width: 50%;
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 1.5rem;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 `;
+export const RadioButton = styled.input`
+  visibility: hidden;
+  display: none;
+  &:checked + span {
+    border: 2px solid #279af1;
+  }
+  &:checked + span::after {
+    opacity: 1;
+  }
+`;
+export const RadioSpan = styled.span`
+  /* left: -8px;
+  top: 6px; */
+  cursor: pointer;
+  width: 17px;
+  height: 17px;
+  border: 2px solid #9a9a9a;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  &::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+
+    background: #279af1;
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+`;
+
 export const TextArea = styled.textarea`
   font-size: 1.3rem;
   font-weight: 400;
@@ -161,8 +203,9 @@ export const InputLabel = styled.label`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   display: block;
+  line-height: 2rem;
 `;
 export const InputSpan = styled.span`
   color: red;

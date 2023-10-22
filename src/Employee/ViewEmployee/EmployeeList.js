@@ -92,6 +92,7 @@ const Employee = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
+  const [user, setUser] = useState();
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -142,6 +143,11 @@ const Employee = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          const filterData = result?.employees.filter(
+            (data) => data._id !== user?._id
+          );
+          console.log("filtered data:", filterData);
+          setEmployeeList(filterData);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -158,7 +164,6 @@ const Employee = () => {
   // console.log("result of the fetch api ", result);
   // caling the fetch employee list api
   useEffect(() => {
-    GetEmployees();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -166,6 +171,14 @@ const Employee = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
+    let user = localStorage.getItem("user");
+
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+    GetEmployees();
+
   }, [page]);
   console.log("user type", userType);
   const HandleSubmitData = (data) => {
@@ -420,14 +433,14 @@ const Employee = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!result.employees?.length  && (
+                {!employeeList?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center"  sx={Celllstyle2} colSpan={7}>
+                    <TableCell align="center" sx={Celllstyle2} colSpan={7}>
                       No employee found
                     </TableCell>
                   </TableRow>
                 )}
-                {result.employees?.map((data, index) => (
+                {employeeList?.map((data, index) => (
                   <TableRow
                     key={data.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

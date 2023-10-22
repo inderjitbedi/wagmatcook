@@ -239,6 +239,7 @@ const ManagerLeaves = () => {
             const FilterforAdmin = result?.users?.filter(
               (item) => item.userData.role !== "ORGANIZATION_ADMIN"
             );
+
             const extractedDataArray = FilterforAdmin?.map((user) => {
               if (user.personalInfo.length > 0) {
                 const {
@@ -475,7 +476,7 @@ const ManagerLeaves = () => {
             <TableBody>
               {result?.leaves?.length == 0 && (
                 <TableRow sx={{ height: "20rem" }}>
-                  <TableCell align="center" colSpan={7}>
+                  <TableCell align="center" sx={CellStyle2} colSpan={7}>
                     No Leaves found
                   </TableCell>
                 </TableRow>
@@ -614,72 +615,75 @@ const ManagerLeaves = () => {
 
               <form onSubmit={handleSubmit(onSubmit)}>
                 <ModalFormContainer>
-                  <Controller
-                    name="employee"
-                    control={control}
-                    rules={{
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                    }}
-                    render={({ field: { onChange, value, ref } }) => (
-                      <Autocomplete
-                        value={
-                          value
-                            ? options.find((option) => {
-                                return value === option.user;
-                              }) ?? null
-                            : null
-                        }
-                        onChange={(event, newValue) => {
-                          onChange(newValue ? newValue.user : null);
-                        }}
-                        id="asynchronous-demo"
-                        sx={{ width: " 100% " }}
-                        open={openAuto}
-                        onOpen={() => {
-                          setOpenAuto(true);
-                        }}
-                        onClose={() => {
-                          setOpenAuto(false);
-                        }}
-                        isOptionEqualToValue={(option, value) =>
-                          option.user === value.user
-                        }
-                        getOptionLabel={(option) =>
-                          option.personalInfo &&
-                          `${option.personalInfo?.firstName} ${option.personalInfo?.lastName}`
-                        }
-                        options={options}
-                        loading={loading}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            inputRef={ref}
-                            label="Select Employee"
-                            InputProps={{
-                              ...params.InputProps,
-                              endAdornment: (
-                                <React.Fragment>
-                                  {loading ? (
-                                    <CircularProgress
-                                      color="inherit"
-                                      size={20}
-                                    />
-                                  ) : null}
-                                  {params.InputProps.endAdornment}
-                                </React.Fragment>
-                              ),
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
+                  <FlexColumnForm>
+                    <InputLabel>
+                      Select Employee <InputSpan>*</InputSpan>{" "}
+                    </InputLabel>
+                    <Controller
+                      name="employee"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field: { onChange, value, ref } }) => (
+                        <Autocomplete
+                          value={
+                            value
+                              ? options.find((option) => {
+                                  return value === option.user;
+                                }) ?? null
+                              : null
+                          }
+                          onChange={(event, newValue) => {
+                            onChange(newValue ? newValue.user : null);
+                          }}
+                          id="asynchronous-demo"
+                          sx={{ width: " 100% " }}
+                          open={openAuto}
+                          onOpen={() => {
+                            setOpenAuto(true);
+                          }}
+                          onClose={() => {
+                            setOpenAuto(false);
+                          }}
+                          isOptionEqualToValue={(option, value) =>
+                            option.user === value.user
+                          }
+                          getOptionLabel={(option) =>
+                            option.personalInfo &&
+                            `${option.personalInfo?.firstName} ${option.personalInfo?.lastName}`
+                          }
+                          options={options}
+                          loading={loading}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              inputRef={ref}
+                              InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                  <React.Fragment>
+                                    {loading ? (
+                                      <CircularProgress
+                                        color="inherit"
+                                        size={20}
+                                      />
+                                    ) : null}
+                                    {params.InputProps.endAdornment}
+                                  </React.Fragment>
+                                ),
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
 
-                  {<Errors>{errors.employee?.message}</Errors>}
-
+                    {<Errors>{errors.employee?.message}</Errors>}
+                  </FlexColumnForm>
                   <FlexContaierForm style={{ alignItems: "flex-start" }}>
                     <FlexColumnForm>
                       <InputLabel>

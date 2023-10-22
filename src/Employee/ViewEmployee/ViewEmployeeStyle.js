@@ -254,6 +254,10 @@ export const PersonalImg = styled.img`
   border-radius: 9.4rem;
   border: 2px solid #fff;
   object-fit: cover;
+  /* @media only screen and (max-width: 600px) {
+    width: 5.9rem;
+    height: 5.9rem;
+  } */
 `;
 export const FlexColumn = styled.div`
   display: flex;
@@ -339,7 +343,8 @@ export const PersonalName = styled.h1`
   font-size: 1.8rem;
   font-style: normal;
   font-weight: 700;
-  line-height: 0rem;
+  line-height: 2.6rem;
+  margin: 0;
   text-transform: capitalize;
 `;
 export const PersonalTitle = styled.h2`
@@ -348,8 +353,9 @@ export const PersonalTitle = styled.h2`
   font-size: 1.6rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 0rem;
+  line-height: 2.4rem;
   text-transform: capitalize;
+  margin: 0;
 `;
 export const TaskTitle = styled.p`
   color: #222b45;
@@ -388,8 +394,9 @@ export const PersonalDepartment = styled.h3`
   font-size: 1.3rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 0rem;
+  line-height: 1.8rem;
   text-transform: capitalize;
+  margin: 0;
 `;
 export const BasicInfoContainer = styled.div`
   width: 100%;
@@ -423,6 +430,21 @@ export const FlexSpaceBetween = styled.div`
   align-items: flex-start;
   box-sizing: border-box;
 `;
+export const FlexSpaceBetweenmobile = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.4rem;
+  align-items: flex-start;
+  box-sizing: border-box;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: flex-start;
+    align-items: flex-start !important;
+  }
+`;
 export const EditButton = styled.label`
   border-radius: 80.8rem;
   border: 1px solid #8f9bb3;
@@ -439,6 +461,9 @@ export const EditButton = styled.label`
   gap: 4px;
   cursor: pointer;
   text-transform: capitalize;
+    @media only screen and (max-width: 600px) {
+    margin-right:1rem !important;
+  }
 `;
 export const ButtonIcon = styled.img`
   width: 1.7rem;
@@ -573,8 +598,9 @@ export const InputLabel = styled.label`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   display: block;
+  line-height: 2rem;
   /* text-transform: capitalize; */
 `;
 export const InputSpan = styled.span`

@@ -50,6 +50,8 @@ import {
   FlexContaier,
   RadioLabel,
   RadioButtonContainer,
+  RadioButton,
+  RadioSpan,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
   EditButton,
@@ -381,7 +383,7 @@ const Documents = () => {
   };
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = API_URLS.deleteEmployeePerformance.replace(":id", Id);
+    let url = API_URLS.deleteDocument.replace(":id", Id);
     httpClient({
       method: "put",
       url,
@@ -412,7 +414,7 @@ const Documents = () => {
     GetDepartments();
     GetDocumentTagsList();
     GetDocuments();
-  }, []);
+  }, [page, searchValue]);
   console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
     comma: 188,
@@ -673,34 +675,40 @@ const Documents = () => {
                     </InputLabel>
                     <RadioButtonContainer>
                       <FlexContaier>
-                        <Input
-                          type="radio"
-                          id="major"
-                          value="MAJOR"
-                          name="version"
-                          {...register("version", {
-                            required: {
-                              value: true,
-                              message: " Required",
-                            },
-                          })}
-                        />
-                        <RadioLabel htmlFor="major">Major</RadioLabel>
+                        <RadioLabel htmlFor="major">
+                          <RadioButton
+                            type="radio"
+                            id="major"
+                            value="MAJOR"
+                            name="version"
+                            {...register("version", {
+                              required: {
+                                value: true,
+                                message: " Required",
+                              },
+                            })}
+                          />
+                          <RadioSpan />Major
+                        </RadioLabel>
                       </FlexContaier>
                       <FlexContaier>
-                        <Input
-                          type="radio"
-                          id="minor"
-                          value="MINOR"
-                          name="version"
-                          {...register("version", {
-                            required: {
-                              value: true,
-                              message: " Required",
-                            },
-                          })}
-                        />
-                        <RadioLabel htmlFor="minor">Minor</RadioLabel>
+                        <RadioLabel htmlFor="minor">
+                          <RadioButton
+                            type="radio"
+                            id="minor"
+                            value="MINOR"
+                            name="version"
+                            {...register("version", {
+                              required: {
+                                value: true,
+                                message: " Required",
+                              },
+                            })}
+                          />
+
+                            <RadioSpan />
+                            Minor
+                        </RadioLabel>
                       </FlexContaier>
                     </RadioButtonContainer>
                     {errors.version && (
@@ -927,7 +935,7 @@ const Documents = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment(data?.updatedAt).format("D MMM, YYYY")
+                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
                         : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
@@ -1009,7 +1017,7 @@ const Documents = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this task?"
+        message="Are you sure you want to delete this document?"
         isLoading={isDeleting}
       />
       {/* <DevTool control={control} /> */}

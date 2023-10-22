@@ -187,7 +187,7 @@ button.MuiButton-containedPrimary {
   height: max-content;
   padding: 8px 11px 8px 11px;
   border-radius: 6px !important;
-  margin: 5px 0 8px;
+  margin: 0px 0px 10px 0px;
 }
 
 .MuiOutlinedInput-notchedOutline {
@@ -542,7 +542,7 @@ input[type="checkbox"] {
   background: #fff;
   box-sizing: border-box;
   outline: #dcdcdc;
-  margin-top: 8px;
+  // margin-top: 8px;
 }
 
 .ReactTags__selected span.ReactTags__tag {
@@ -695,21 +695,59 @@ input[type="checkbox"] {
   // width: 40rem;
   box-shadow: 0px 10px 30px 3px rgba(5, 16, 55, 0.15),
     6px 0px 0px 0px #2bc128 inset;
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 .css-cgl6zv-MuiAutocomplete-root .MuiAutocomplete-tag {
   border-radius: 10rem;
-background: #C8FFC7;
-padding: 2px 1.2rem;
-color:  #0D7D0B;
-text-align: center;
-font-size: 1.4rem;
-font-style: normal;
-font-weight: 400;
-line-height: 2.4rem;
+  background: #c8ffc7;
+  padding: 2px 1.2rem;
+  color: #0d7d0b;
+  text-align: center;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2.4rem;
 }
 .css-1q60rmi-MuiAutocomplete-endAdornment {
-   
-    right: 15px !important;
-    top: 32% !important; 
+  right: 15px !important;
+  top: 32% !important;
+}
+// input[type="radio"] {
+//   display: none;
+//   &:span {
+//     height: 3rem;
+//     width: 3rem;
+//     border: 4px solid #279af1;
+//     border-radius: 50%;
+//     display: inline-block;
+//     position: absolute;
+//     top: -0.45rem;
+//     left: 0;
+
+//     &::after {
+//       content: "";
+//       display: block;
+//       height: 1.5rem;
+//       width: 1.5rem;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       background-color: #279af1;
+//       opacity: 0;
+//       transition: all 0.2s;
+//     }
+//   }
+// }
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+  color: #8f9bb3 !important;
+  font-family: Inter !important;
+  font-size: 1.6rem !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 1.6rem !important;
+  margin: 0rem !important;
+}
+.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #279AF1 !important;
 }
