@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Table from "@mui/material/Table";
-import Modal from "@mui/material/Modal";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import moment from "moment";
-import Pagination from "@mui/material/Pagination";
+
 import { useNavigate, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
@@ -19,116 +10,32 @@ import DeleteModal from "../Modals/DeleteModal";
 import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
 import Applicants from "./Applicants";
 import Selected from "./Selected";
 import Interviewing from "./Interviewing";
 
-
+import { DisciplinaryHeading } from "../Disciplinary/DisciplinaryStyles";
 import {
-  DisciplinaryDiv,
-  DisciplinaryHeading,
-  AddNewButton,
-  MenuIcon,
-  MenuIconDiv,
-  ActionIconDiv,
-  ActionIcons,
-  ModalUpperDiv,
-  ModalHeading,
-  ModalIcon,
-  ModalUpperMid,
-  Input,
-  TextArea,
-  InputLabel,
-  InputSpan,
-  InputPara,
-  Select,
-  Option,
-  Errors,
-  PendingStyle,
-  ApproveStyle,
-  PaginationDiv,
-} from "../Disciplinary/DisciplinaryStyles";
-import {
-  BasicInfoDiv,
   FlexSpaceBetween,
   FlexColumn,
-  TitlePara,
-  ViewPara,
   BackGroundWhite,
-  CommentDiv,
-  UserImg,
-  FlexColumnForm,
-  TextAreaComment,
   FlexContaier,
   FlexColumnNoWidth,
-  BasicHeading,
   TaskTitle,
   TaskLight,
   TaskHeading,
   TaskDescription,
-  Hr,
-  TaskStatus,
-  TaskSelect,
-  TaskOption,
-  CommentDivADD,
-  TextAreaContaier,
   IconsEmployee,
   FlexSpaceBetweenmobile,
+  BasicInfoDiv,
+  ViewPara,
+  TitlePara
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: " 44.6rem",
-  bgcolor: "background.paper",
-  border: "none",
-  boxShadow: 45,
-  padding: "2rem 0rem",
-  borderRadius: "8px",
-};
-const CellHeadStyles = {
-  color: "#8F9BB3",
-  fontFamily: "Inter",
-  fontSize: "1.4rem",
-  fontStyle: "normal",
-  fontWeight: 600,
-  lineHeight: "1.6rem",
-};
 
-const CellStyle = {
-  color: "#222B45",
-  fontSize: "1.4rem",
-  fontStyle: "normal",
-  fontWeight: 600,
-  lineHeight: "1.5rem",
-};
-const CellStyle2 = {
-  color: "#222B45",
-  fontSize: "1.4rem",
-  fontStyle: "normal",
-  fontWeight: 400,
-  lineHeight: "1.5rem",
-};
-const inputStyles = {
-  fontSize: "1.3rem",
-  fontWeight: 400,
-  lineHeight: "1.6rem",
-  width: "100%",
-  border: "1px solid #dcdcdc",
-  borderRadius: "8px",
-  padding: "1em",
-  marginBottom: "1rem",
-  color: "#222b45",
-  background: "#fff",
-  boxSizing: "border-box",
-  outline: "none", // Removed outline color
-};
 const JobView = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const { jobid } = useParams();
@@ -331,30 +238,42 @@ const JobView = () => {
         </div>
       ) : (
         <>
-          <CommenDashHeader
-            onSearch={HandleSearchCahnge}
-            text={"Job Details"}
-          />
-          <BackGroundWhite>
+          <BasicInfoDiv>
             <FlexSpaceBetweenmobile>
               <FlexContaier>
-                <BackArrowButton onClick={() => Navigate(-1)}>
+                {/* <BackArrowButton onClick={() => Navigate(-1)}>
                   <IconsEmployee src="/images/icons/ArrowLeft.svg" />
-                </BackArrowButton>
-                <DisciplinaryHeading> Job Details </DisciplinaryHeading>
+                </BackArrowButton> */}
+                <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
               </FlexContaier>
             </FlexSpaceBetweenmobile>
-            <FlexSpaceBetweenmobile>
-              <FlexColumnNoWidth>
-                <TaskLight>Task Title</TaskLight>
-                <TaskHeading> {"developer" || " - "} </TaskHeading>
-              </FlexColumnNoWidth>
-              <FlexContaier style={{ gap: ".8rem" }}>
-                <TaskLight>Department - </TaskLight>
+            <FlexSpaceBetween>
+              <FlexColumn>
+                <TitlePara>Job Title</TitlePara>
+                <ViewPara> {"developer" || " - "} </ViewPara>
+              </FlexColumn>
+              <FlexColumn>
+                <TaskLight>Department</TaskLight>
                 <TaskTitle>Accounts</TaskTitle>
-              </FlexContaier>
-            </FlexSpaceBetweenmobile>
-            <FlexSpaceBetweenmobile>
+              </FlexColumn>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumn>
+                <TaskLight>Duration</TaskLight>
+                <TaskDescription>{" 1 Year" || " - "}</TaskDescription>
+              </FlexColumn>
+              <FlexColumn>
+                <TaskLight>Wage Rate/Salary</TaskLight>
+                <TaskDescription>{"Head Accountant" || " - "}</TaskDescription>
+              </FlexColumn>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumnNoWidth>
+                <TaskLight>Posting Date</TaskLight>
+                <TaskDescription>{"22 Nov 2023" || " - "}</TaskDescription>
+              </FlexColumnNoWidth>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
               <FlexColumnNoWidth>
                 <TaskLight>Description</TaskLight>
                 <TaskDescription>
@@ -363,28 +282,18 @@ const JobView = () => {
                     " - "}{" "}
                 </TaskDescription>
               </FlexColumnNoWidth>
-            </FlexSpaceBetweenmobile>
-            <FlexSpaceBetween>
-              <FlexColumn>
-                <TaskLight>Duration</TaskLight>
-                <TaskDescription>{" 1 Year" || " - "}</TaskDescription>
-              </FlexColumn>
-              <FlexColumn>
-                <TaskLight>Position</TaskLight>
-                <TaskDescription>{"Head Accountant" || " - "}</TaskDescription>
-              </FlexColumn>
             </FlexSpaceBetween>
             <FlexSpaceBetween>
-              <FlexColumn>
-                <TaskLight>Salary</TaskLight>
-                <TaskDescription>{"$5000" || " - "}</TaskDescription>
-              </FlexColumn>
-              <FlexColumn>
-                <TaskLight>Posting Date</TaskLight>
-                <TaskDescription>{"22 Nov 2023" || " - "}</TaskDescription>
-              </FlexColumn>
+              <FlexColumnNoWidth>
+                <TaskLight>Term of Position</TaskLight>
+                <TaskDescription>
+                  {" "}
+                  {"Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You’ve nailed the design and the responsiveness at various breakpoints works really well." ||
+                    " - "}{" "}
+                </TaskDescription>
+              </FlexColumnNoWidth>
             </FlexSpaceBetween>
-            <div style={{ width: "100%" }}>
+            {/* <div style={{ width: "100%" }}>
               <Tabs
                 value={valueTab}
                 onChange={HandleChangeTab}
@@ -396,15 +305,15 @@ const JobView = () => {
               </Tabs>
             </div>
             <CustomTabPanel value={valueTab} index={0}>
-             <Applicants />
+              <Applicants />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={1}>
-             <Interviewing />
+              <Interviewing />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={2}>
-             <Selected />
-            </CustomTabPanel>
-          </BackGroundWhite>
+              <Selected />
+            </CustomTabPanel> */}
+          </BasicInfoDiv>
         </>
       )}
       <DeleteModal

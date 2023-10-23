@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 
 export const SidebarTitle = styled.p`
@@ -10,6 +10,65 @@ export const SidebarTitle = styled.p`
   padding: 0rem 3.2rem;
 
 `;
+export const SearchBarWrapper = styled.div`
+  position: absolute;
+  border-radius: 50px;
+  background: #ffffff;
+
+  box-sizing: border-box;
+  transition: all 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: ${(props) => (props.expanded ? "1.5rem" : "2rem")};
+  right: ${(props) => (props.expanded ? "0rem" : "9rem")};
+  align-items: center;
+  transition: width 0.3s;
+  width: ${(props) => (props.expanded ? "100%" : "30px")};
+  z-index: 1000;
+`;
+export const SearchInputMobile = styled.input`
+  border: none;
+  background: none;
+  padding: 8px;
+  outline: none;
+  width: 100%;
+  margin: 0;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  display: ${(props) => (props.expanded ? "block" : "none")};
+
+  z-index: 1000;
+`;
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+`;
+export const SearchButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+  animation: ${fadeIn} 1s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const IconDelete = styled.img`
+  display: inline-block;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 0rem;
+`;
+
 export const SideBarLogoContainer = styled.div`
   padding: 1.6rem 3.2rem;
   display: flex;
@@ -80,7 +139,6 @@ export const Dashboard = styled.div`
   display: flex;
   width: 100%;
   height: 100vh;
-  overflow-y: scroll;
 `;
 export const DashNav = styled.div`
   width: 18%;
@@ -91,12 +149,15 @@ export const DashNav = styled.div`
 export const DashMain = styled.div`
   width: 82%;
   padding: 0rem 3rem 0rem 2rem;
+  box-sizing: border-box;
   background: #f3f3f5;
 `;
 export const DashHeader = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 4rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 export const DashHeaderTitle = styled.p`
   color: #222b45;
@@ -200,7 +261,6 @@ export const DisciplinaryDiv = styled.div`
   border: 1px solid #eff4fa;
   align-items: center;
   justify-content: space-between;
-
   padding: 1rem 2rem;
 `;
 export const DisciplinaryHeading = styled.p`
@@ -232,6 +292,7 @@ export const ModalUpperMid = styled.div`
   /* border-bottom: 1px solid #eff4fa; */
   padding: 1.6rem 3.5rem 1.6rem 3.5rem;
   box-sizing: border-box;
+
 `;
 export const Input = styled.input`
   font-size: 1.3rem;
@@ -266,7 +327,7 @@ export const InputLabel = styled.label`
   font-style: normal;
   font-weight: 600;
   line-height: normal;
-  /* margin-bottom: 1rem; */
+  margin-bottom: 0.5rem;
   display: block;
   line-height: 2rem;
 `;

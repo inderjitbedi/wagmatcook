@@ -245,6 +245,7 @@ export const FlexContaierForm = styled.div`
   width: 100%;
   @media only screen and (max-width: 600px) {
    flex-direction:column;
+   gap:0px;
   }
 `;
 export const FlexContaierForm50 = styled.div`

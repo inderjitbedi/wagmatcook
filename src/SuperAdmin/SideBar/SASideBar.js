@@ -7,14 +7,21 @@ import {
   SideBarListLogo,
   SideBarListTitle,
   SideBarList,
+  IconDelete,
 } from "../SAStyles";
- const style = {
-   textDecoration: "none",
-   color: "#279AF1",
- };
-const SASideBar = () => {
+const style = {
+  textDecoration: "none",
+  color: "#279AF1",
+};
+const SASideBar = ({ screenWidth, ToggleSidebar }) => {
   const location = useLocation();
+  const Navigate = useNavigate();
 
+  const HandleLogout = () => {
+    localStorage.clear();
+
+    Navigate("/");
+  };
   const SideBarData = [
     // {
     //   Title: "User",
@@ -28,8 +35,14 @@ const SASideBar = () => {
     },
   ];
   return (
-    <>
+    <div style={{ position: "relative" }}>
       {" "}
+      {screenWidth < 1200 && (
+        <IconDelete
+          onClick={ToggleSidebar}
+          src="/images/icons/Alert-Circle.svg"
+        />
+      )}{" "}
       <SidebarTitle>Wagmatcook</SidebarTitle>
       <span
         style={{
@@ -65,8 +78,37 @@ const SASideBar = () => {
             </SideBarListContainer>
           </NavLink>
         ))}
+        {screenWidth < 1200 && (
+          <SideBarListContainer
+            style={{ zIndex: "1", marginTop: "-1rem" }}
+            onClick={HandleLogout}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 31 32"
+              fill="none"
+            >
+              <path
+                d="M15.5 26.5208C9.79306 26.5208 5.16667 21.8944 5.16667 16.1875C5.16667 10.4805 9.79306 5.85413 15.5 5.85413"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12.9173 16.1875H25.834M25.834 16.1875L21.959 12.3125M25.834 16.1875L21.959 20.0625"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <SideBarListTitle> Logout</SideBarListTitle>
+          </SideBarListContainer>
+        )}
       </SideBarList>
-    </>
+    </div>
   );
 };
 

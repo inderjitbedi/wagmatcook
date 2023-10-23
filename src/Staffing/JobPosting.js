@@ -259,7 +259,6 @@ const JobPosting = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Job Posting"} />
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Job Posting</DisciplinaryHeading>
-
         <AddNewButton
           onClick={() => {
             HandleOpenAddNewAction();
@@ -332,9 +331,7 @@ const JobPosting = () => {
                         },
                       })}
                     />
-                    {errors.title && (
-                      <Errors>{errors.title?.message}</Errors>
-                    )}
+                    {errors.title && <Errors>{errors.title?.message}</Errors>}
                     <InputLabel>
                       Department <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -375,7 +372,7 @@ const JobPosting = () => {
                       <Errors>{errors.duration?.message}</Errors>
                     )}
                     <InputLabel>
-                      Salary <InputSpan>*</InputSpan>
+                    Wage Rate/Salary <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
@@ -399,9 +396,9 @@ const JobPosting = () => {
                     />
                     {errors.salary && <Errors>{errors.salary?.message}</Errors>}
                     <InputLabel>
-                      Position <InputSpan>*</InputSpan>
+                    Term of Position <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
+                    <TextArea
                       type="text"
                       {...register("postion", {
                         required: {
@@ -446,19 +443,19 @@ const JobPosting = () => {
                       </span>
                     </InputPara>
 
-                    {/* <InputLabel>
-                      Due Date <InputSpan>*</InputSpan>
+                    <InputLabel>
+                      Posting Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="date"
-                      {...register("dueDate", {
+                      {...register("postingDate", {
                         required: {
                           value: true,
                           message: "Required",
                         },
                       })}
                     />
-                    {<Errors>{errors.dueDate?.message}</Errors>} */}
+                    {<Errors>{errors.postingDate?.message}</Errors>}
 
                     {!update ? (
                       <AddNewButton
@@ -526,33 +523,19 @@ const JobPosting = () => {
                   >
                     Job Title
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
                     Duration
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
                     Department
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "6rem" }}
-                    align="left"
-                  >
-                    Salary
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "7rem" }}
-                    align="left"
-                  >
-                    Position
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -563,18 +546,39 @@ const JobPosting = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "6rem" }}
+                    align="left"
+                  >
+                    Wage&nbsp;Rate/Salary
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "7rem" }}
+                    align="left"
+                  >
+                    Applicants
+                  </TableCell>
+                  {/* <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "7rem" }}
+                    align="left"
+                  >
+                    Posting&nbsp;Date
+                  </TableCell> */}
+                  {/* <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "18rem" }}
                     align="left"
                   >
                     Description
+                  </TableCell> */}
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Status
                   </TableCell>
-                  {/* <TableCell
-                      sx={CellHeadStyles}
-                      style={{ minWidth: "10rem" }}
-                      align="left"
-                    >
-                      Status
-                    </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -609,35 +613,39 @@ const JobPosting = () => {
                     <TableCell sx={CellStyle} align="left">
                       {data.title || " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.duration}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={CellStyle} align="left">
                       {data.department}
                     </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.postingDate}
+                    </TableCell>
+
                     <TableCell sx={CellStyle2} align="left">
                       {data.rate || " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.Position || " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    </TableCell> */}
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.postingDate || " - "}
-                      {/* {data.dueDate
+                      {data.dueDate
                           ? moment(data.dueDate).format("D MMM, YYYY")
-                          : " -"} */}
-                    </TableCell>
+                          : " -"}
+                    </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
-                      {data.description || " - "}
+                      {data.applicants || " 25"}
                     </TableCell>
 
-                    {/* <TableCell sx={CellStyle2} align="left">
+                    <TableCell sx={CellStyle2} align="left">
                         {data.isCompleted ? (
                           <ApproveStyle>Completed</ApproveStyle>
                         ) : (
-                          <PendingStyle>In-Progress</PendingStyle>
+                          <PendingStyle>Pending</PendingStyle>
                         )}
-                      </TableCell> */}
+                      </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
@@ -655,7 +663,7 @@ const JobPosting = () => {
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/hr-management/job-posting/details/${data._id}`
+                                `/hr-management/job-posting/details/job/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(

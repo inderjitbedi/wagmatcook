@@ -64,6 +64,31 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
+  const [isHovering, setIsHovering] = useState({
+    dashbord: false,
+    employee: false,
+    leaves: false,
+    myleaves: false,
+    account: false,
+    documents: false,
+    staffing: false,
+    task: false,
+    logout: false,
+    events: false,
+  });
+  const handleMouseEnter = (linkName) => {
+    setIsHovering((prevState) => ({
+      ...prevState,
+      [linkName]: true,
+    }));
+  };
+
+  const handleMouseLeave = (linkName) => {
+    setIsHovering((prevState) => ({
+      ...prevState,
+      [linkName]: false,
+    }));
+  };
   return (
     <div style={{ position: "relative" }}>
       {screenWidth < 1200 && (
@@ -102,6 +127,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
         <Link
           style={{ textDecoration: "none" }}
           to="/user-management/dashboard"
+          onMouseEnter={() => handleMouseEnter("dashboard")}
+          onMouseLeave={() => handleMouseLeave("dashboard")}
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -116,7 +143,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                 clip-rule="evenodd"
                 d="M5.49525 5.25C5.49525 4.83525 5.84691 4.5 6.2802 4.5C6.71349 4.5 7.06515 4.83525 7.06515 5.25C7.06515 5.66475 6.71349 6 6.2802 6C5.84691 6 5.49525 5.66475 5.49525 5.25ZM8.63504 5.25C8.63504 4.83525 8.98669 4.5 9.41998 4.5C9.85328 4.5 10.2049 4.83525 10.2049 5.25C10.2049 5.66475 9.85328 6 9.41998 6C8.98669 6 8.63504 5.66475 8.63504 5.25ZM3.92536 6.75V4.5C3.92536 4.086 4.2778 3.75 4.71031 3.75H14.1297C14.5622 3.75 14.9146 4.086 14.9146 4.5V6.75H3.92536ZM14.9146 13.5C14.9146 13.914 14.5622 14.25 14.1297 14.25H4.71031C4.2778 14.25 3.92536 13.914 3.92536 13.5V8.25H14.9146V13.5ZM14.1297 2.25H4.71031C3.41201 2.25 2.35547 3.2595 2.35547 4.5V6.75V8.25V13.5C2.35547 14.7405 3.41201 15.75 4.71031 15.75H14.1297C15.428 15.75 16.4845 14.7405 16.4845 13.5V8.25V6.75V4.5C16.4845 3.2595 15.428 2.25 14.1297 2.25Z"
                 fill={
-                  location.pathname.indexOf("dashboard") > -1
+                  location.pathname.indexOf("dashboard") > -1 ||
+                  isHovering.dashboard
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -135,7 +163,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                   clip-rule="evenodd"
                   d="M5.49525 5.25C5.49525 4.83525 5.84691 4.5 6.2802 4.5C6.71349 4.5 7.06515 4.83525 7.06515 5.25C7.06515 5.66475 6.71349 6 6.2802 6C5.84691 6 5.49525 5.66475 5.49525 5.25ZM8.63504 5.25C8.63504 4.83525 8.98669 4.5 9.41998 4.5C9.85328 4.5 10.2049 4.83525 10.2049 5.25C10.2049 5.66475 9.85328 6 9.41998 6C8.98669 6 8.63504 5.66475 8.63504 5.25ZM3.92536 6.75V4.5C3.92536 4.086 4.2778 3.75 4.71031 3.75H14.1297C14.5622 3.75 14.9146 4.086 14.9146 4.5V6.75H3.92536ZM14.9146 13.5C14.9146 13.914 14.5622 14.25 14.1297 14.25H4.71031C4.2778 14.25 3.92536 13.914 3.92536 13.5V8.25H14.9146V13.5ZM14.1297 2.25H4.71031C3.41201 2.25 2.35547 3.2595 2.35547 4.5V6.75V8.25V13.5C2.35547 14.7405 3.41201 15.75 4.71031 15.75H14.1297C15.428 15.75 16.4845 14.7405 16.4845 13.5V8.25V6.75V4.5C16.4845 3.2595 15.428 2.25 14.1297 2.25Z"
                   fill={
-                    location.pathname.indexOf("dashboard") > -1
+                    location.pathname.indexOf("dashboard") > -1 ||
+                    isHovering.dashboard
                       ? "#279AF1"
                       : "#5C5C5C"
                   }
@@ -145,7 +174,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("dashboard") > -1
+                location.pathname.indexOf("dashboard") > -1 ||
+                isHovering.dashboard
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -158,6 +188,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
         <Link
           style={{ textDecoration: "none" }}
           to={`/user-management/leaves/${userData?._id}`}
+          onMouseEnter={() => handleMouseEnter("leaves")}
+          onMouseLeave={() => handleMouseLeave("leaves")}
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -172,7 +204,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                 clip-rule="evenodd"
                 d="M16.4815 8.2305H16.4838C16.9163 8.2305 17.268 8.565 17.2688 8.97825C17.2751 10.9815 16.4642 12.8678 14.9854 14.2882C13.5073 15.7088 11.5387 16.494 9.44209 16.5H9.41932C7.33058 16.5 5.36586 15.726 3.88467 14.3182C2.39798 12.906 1.57614 11.025 1.56986 9.02175C1.56358 7.01775 2.37443 5.13225 3.85327 3.71175C5.33132 2.29125 7.29997 1.506 9.39656 1.5C10.0206 1.509 10.6564 1.569 11.2655 1.7085C11.6862 1.806 11.9461 2.211 11.844 2.61375C11.7428 3.01575 11.3165 3.26325 10.8974 3.16725C10.4099 3.05475 9.89264 3.0075 9.40127 3C7.72384 3.0045 6.14845 3.633 4.96632 4.76925C3.78341 5.9055 3.13504 7.4145 3.13975 9.01725C3.14446 10.62 3.80225 12.1245 4.99144 13.2548C6.17671 14.3805 7.74817 15 9.41932 15H9.43738C11.1148 14.9955 12.6902 14.367 13.8723 13.2308C15.0552 12.0938 15.7036 10.5855 15.6989 8.98275C15.6981 8.56875 16.0482 8.23125 16.4815 8.2305ZM6.50953 8.46968C6.81644 8.17643 7.31253 8.17643 7.61944 8.46968L9.38086 10.1527L14.3237 4.75568C14.6094 4.44593 15.1047 4.41293 15.4312 4.68593C15.757 4.95818 15.7899 5.43218 15.5042 5.74418L10.0096 11.7442C9.86674 11.9002 9.66266 11.9924 9.44523 11.9999H9.41932C9.21131 11.9999 9.01194 11.9212 8.86437 11.7802L6.50953 9.53018C6.20261 9.23693 6.20261 8.76293 6.50953 8.46968Z"
                 fill={
-                  location.pathname.indexOf("leaves") > -1
+                  location.pathname.indexOf("leaves") > -1 || isHovering.leaves
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -191,7 +223,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                   clip-rule="evenodd"
                   d="M16.4815 8.2305H16.4838C16.9163 8.2305 17.268 8.565 17.2688 8.97825C17.2751 10.9815 16.4642 12.8678 14.9854 14.2882C13.5073 15.7088 11.5387 16.494 9.44209 16.5H9.41932C7.33058 16.5 5.36586 15.726 3.88467 14.3182C2.39798 12.906 1.57614 11.025 1.56986 9.02175C1.56358 7.01775 2.37443 5.13225 3.85327 3.71175C5.33132 2.29125 7.29997 1.506 9.39656 1.5C10.0206 1.509 10.6564 1.569 11.2655 1.7085C11.6862 1.806 11.9461 2.211 11.844 2.61375C11.7428 3.01575 11.3165 3.26325 10.8974 3.16725C10.4099 3.05475 9.89264 3.0075 9.40127 3C7.72384 3.0045 6.14845 3.633 4.96632 4.76925C3.78341 5.9055 3.13504 7.4145 3.13975 9.01725C3.14446 10.62 3.80225 12.1245 4.99144 13.2548C6.17671 14.3805 7.74817 15 9.41932 15H9.43738C11.1148 14.9955 12.6902 14.367 13.8723 13.2308C15.0552 12.0938 15.7036 10.5855 15.6989 8.98275C15.6981 8.56875 16.0482 8.23125 16.4815 8.2305ZM6.50953 8.46968C6.81644 8.17643 7.31253 8.17643 7.61944 8.46968L9.38086 10.1527L14.3237 4.75568C14.6094 4.44593 15.1047 4.41293 15.4312 4.68593C15.757 4.95818 15.7899 5.43218 15.5042 5.74418L10.0096 11.7442C9.86674 11.9002 9.66266 11.9924 9.44523 11.9999H9.41932C9.21131 11.9999 9.01194 11.9212 8.86437 11.7802L6.50953 9.53018C6.20261 9.23693 6.20261 8.76293 6.50953 8.46968Z"
                   fill={
-                    location.pathname.indexOf("leaves") > -1
+                    location.pathname.indexOf("leaves") > -1 ||
+                    isHovering.leaves
                       ? "#279AF1"
                       : "white"
                   }
@@ -201,7 +234,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("leaves") > -1
+                location.pathname.indexOf("leaves") > -1 || isHovering.leaves
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -211,18 +244,25 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link style={{ textDecoration: "none" }} to="/user-management/tasks">
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/user-management/tasks"
+          onMouseEnter={() => handleMouseEnter("task")}
+          onMouseLeave={() => handleMouseLeave("task")}
+        >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <BiTask
               style={
-                location.pathname === "/user-management/tasks"
+                location.pathname === "/user-management/tasks" ||
+                isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
             />
             <SideBarListTitle
               style={
-                location.pathname === "/user-management/tasks"
+                location.pathname === "/user-management/tasks" ||
+                isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -232,7 +272,12 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link style={{ textDecoration: "none" }} to="/user-management/events">
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/user-management/events"
+          onMouseEnter={() => handleMouseEnter("events")}
+          onMouseLeave={() => handleMouseLeave("events")}
+        >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -246,7 +291,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                 clip-rule="evenodd"
                 d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
                 fill={
-                  location.pathname.indexOf("events") > -1
+                  location.pathname.indexOf("events") > -1 || isHovering.events
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -265,7 +310,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                   clip-rule="evenodd"
                   d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
                   fill={
-                    location.pathname.indexOf("events") > -1
+                    location.pathname.indexOf("events") > -1 ||
+                    isHovering.events
                       ? "#279AF1"
                       : "white"
                   }
@@ -275,7 +321,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("events") > -1
+                location.pathname.indexOf("events") > -1 || isHovering.events
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -288,6 +334,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
         <Link
           style={{ textDecoration: "none" }}
           to={`/user-management/account/personal-info/${userData?._id}`}
+          onMouseEnter={() => handleMouseEnter("account")}
+          onMouseLeave={() => handleMouseLeave("account")}
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -302,7 +350,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                 clip-rule="evenodd"
                 d="M14.9141 15C14.9141 15.414 14.5632 15.75 14.1291 15.75C13.695 15.75 13.3442 15.414 13.3442 15C13.3442 12.9323 11.5835 11.25 9.41943 11.25C7.25533 11.25 5.4947 12.9323 5.4947 15C5.4947 15.414 5.14383 15.75 4.70975 15.75C4.27568 15.75 3.9248 15.414 3.9248 15C3.9248 12.105 6.39032 9.75 9.41943 9.75C12.4485 9.75 14.9141 12.105 14.9141 15ZM9.41943 3.75C10.2852 3.75 10.9893 4.42275 10.9893 5.25C10.9893 6.07725 10.2852 6.75 9.41943 6.75C8.55363 6.75 7.84954 6.07725 7.84954 5.25C7.84954 4.42275 8.55363 3.75 9.41943 3.75ZM9.41943 8.25C11.151 8.25 12.5592 6.9045 12.5592 5.25C12.5592 3.5955 11.151 2.25 9.41943 2.25C7.68784 2.25 6.27964 3.5955 6.27964 5.25C6.27964 6.9045 7.68784 8.25 9.41943 8.25Z"
                 fill={
-                  location.pathname.indexOf("account") > -1
+                  location.pathname.indexOf("account") > -1 ||
+                  isHovering.account
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -310,7 +359,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("account") > -1
+                location.pathname.indexOf("account") > -1 || isHovering.account
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -320,7 +369,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link style={{ textDecoration: "none" }} to="/user-management/helpdesk">
+        {/* <Link style={{ textDecoration: "none" }} to="/user-management/helpdesk">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -372,11 +421,13 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               Helpdesk
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         {screenWidth < 1200 && (
           <SideBarListContainer
             style={{ zIndex: "1", marginTop: "-1rem" }}
             onClick={HandleLogout}
+            onMouseEnter={() => handleMouseEnter("logout")}
+            onMouseLeave={() => handleMouseLeave("logout")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -399,7 +450,9 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
                 stroke-linejoin="round"
               />
             </svg>
-            <SideBarListTitle style={{ color: "#5C5C5C" }}>
+            <SideBarListTitle
+              style={isHovering.logout ? style : { color: "#5C5C5C" }}
+            >
               {" "}
               Logout
             </SideBarListTitle>

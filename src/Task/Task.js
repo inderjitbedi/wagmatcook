@@ -593,7 +593,7 @@ const Task = () => {
                     align="left"
                     style={{ width: "1rem" }}
                   >
-                    Sr. No.
+                    Sr.&nbsp;No.
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}

@@ -58,6 +58,9 @@ import DocumentHistory from "../Documents/DocumentHistory";
 import LeaveHistory from "../Leaves/LeaveHistory";
 import JobPosting from "../Staffing/JobPosting";
 import JobView from "../Staffing/JobView";
+import JobDetailsLayout from "../Staffing/JobDetailsLayout";
+import Applicants from "../Staffing/Applicants";
+import Offboarding from "../OffBoarding/offBoarding";
 const Routes: any = [
   {
     component: signup,
@@ -144,6 +147,14 @@ const Routes: any = [
         component: Departments,
         path: "departments",
         title: "Departments",
+        to: "/",
+        type: "private",
+        index: true,
+      },
+      {
+        component: Offboarding,
+        path: "offboarding",
+        title: "Offboarding",
         to: "/",
         type: "private",
         index: true,
@@ -713,13 +724,31 @@ const Routes: any = [
         index: true,
       },
       {
-        component: JobView,
-        path: "job-posting/details/:jobid",
-        title: "tasks",
+        component: JobDetailsLayout,
+        path: "job-posting/details",
+        title: "HUMAN_RESOURCE",
         to: "/",
         type: "private",
-        index: true,
+        children: [
+          {
+            component: JobView,
+            path: "job/:employeeId",
+            title: "tasks",
+            to: "/",
+            type: "private",
+            index: true,
+          },
+          {
+            component: Applicants,
+            path: "applicants/:employeeId",
+            title: "tasks",
+            to: "/",
+            type: "private",
+            index: true,
+          },
+        ],
       },
+
       {
         component: Documents,
         path: "documents",

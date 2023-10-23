@@ -39,7 +39,11 @@ const PublicLayout = ({ component: Component }: any) => {
                 </p>
               </div>
               <div className="" style={{ backgroundColor: "#093FE1" }}>
-                {/* <img src={imageUrl} alt="background-img" width="100%" /> */}
+                <img
+                  src="/images/image 4.svg"
+                  alt="background-img"
+                  width="100%"
+                />
               </div>
             </div>
           </Grid>
