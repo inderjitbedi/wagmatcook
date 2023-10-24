@@ -394,6 +394,7 @@ const Departments = () => {
     HandleOpenEdit();
   };
 
+  
   return (
     <div style={{ height: "100%" }}>
       <>

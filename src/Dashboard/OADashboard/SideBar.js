@@ -19,6 +19,7 @@ import {
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { BiTask } from "react-icons/bi";
+import { FaUserSlash } from "react-icons/fa";
 
 const SideBar = ({ ToggleSidebar, screenWidth }) => {
   const location = useLocation();
@@ -101,6 +102,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
     task: false,
     documenttags: false,
     documents: false,
+    offboarding:false,
     logout: false,
   });
   const toggleSubMenu = () => {
@@ -283,6 +285,34 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             >
               {" "}
               Tasks
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
+        <Link
+          onMouseEnter={() => handleMouseEnter("offboarding")}
+          onMouseLeave={() => handleMouseLeave("offboarding")}
+          style={{ textDecoration: "none" }}
+          to="/organization-admin/offboarding"
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <FaUserSlash
+              style={
+                location.pathname === "/organization-admin/offboarding" ||
+                isHovering.offboarding
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            />
+            <SideBarListTitle
+              style={
+                location.pathname === "/organization-admin/offboarding" ||
+                isHovering.offboarding
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Offboarding
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

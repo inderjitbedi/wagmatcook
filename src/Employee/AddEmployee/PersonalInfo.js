@@ -228,6 +228,8 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
       console.log(file);
       if (file) {
         data.photo = file._id;
+      } else {
+        data.photo = null;
       }
 
       HandleSubmitPersonalInfo(data);

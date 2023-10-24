@@ -10,12 +10,25 @@ export const DashNav = styled.div`
   background-color: #ffffff;
   /* padding: 32px; */
 `;
+export const BackButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-bottom: 1.5rem;
+`;
 export const AlignFlex = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
 `;
-
+export const BackArrowButton = styled.div`
+  padding: 5px 4px 5px 6px;
+  border-radius: 88px;
+  border: 1px solid #8f9bb3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export const DashMain = styled.div`
   width: 82%;
   padding: 0rem 3rem 6rem 2rem;
@@ -214,6 +227,16 @@ export const BodyHeader = styled.div`
     padding: 2.4rem 0 2.4rem 2.4rem;
   }
 `;
+export const BodyHeaderjob = styled.div`
+  width: 100%;
+  padding: 1.4rem;
+  box-sizing: border-box;
+  /* margin-bottom: 1rem; */
+  @media only screen and (max-width: 600px) {
+    /* background: #f3f3f5; */
+    padding: 2.4rem 0 2.4rem 2.4rem;
+  }
+`;
 export const BodyHeading = styled.h1`
   color: #222b45;
   font-size: 1.7rem;
@@ -403,9 +426,11 @@ export const BasicInfoContainer = styled.div`
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+  
 `;
 export const BasicInfoDiv = styled.div`
   width: 71%;
+  padding: 0rem 2.2rem 1rem 2.2rem;
   @media only screen and (max-width: 600px) {
     box-sizing: border-box;
     width: 100%;

@@ -80,13 +80,32 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
+
 const SALayout = () => {
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    useEffect(() => {
+      function handleResize() {
+        setScreenWidth(window.innerWidth);
+      }
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
   return (
     <Dashboard>
-      <DashNav>
-        <SASideBar />
-      </DashNav>
-      <DashMain>
+      {screenWidth < 1200 ? (
+        " "
+      ) : (
+        <DashNav>
+          <SASideBar />
+        </DashNav>
+      )}
+      <DashMain
+        style={screenWidth < 1200 ? { width: "100%" } : { width: "80%" }}
+      >
         <Outlet />
       </DashMain>
     </Dashboard>

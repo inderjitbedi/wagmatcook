@@ -138,6 +138,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
     return () => clearTimeout(searchTimer);
   }, [searchValue]);
+
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const ToggleSidebar = () => {
@@ -149,7 +150,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
     height: 100vh;
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     transition: width 0.3s;
     z-index: 100000;
     overflow-y: scroll;

@@ -546,19 +546,40 @@ const Applicants = () => {
                   >
                     Name
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
                     Email
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
                     Phone
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "9rem" }}
+                    align="left"
+                  >
+                    Applied&nbsp;on
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "9rem" }}
+                    align="left"
+                  >
+                    Interview&nbsp;Date
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Status
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -594,11 +615,25 @@ const Applicants = () => {
                     <TableCell sx={CellStyle} align="left">
                       {data.title || " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.duration}
+                    </TableCell> */}
+                    <TableCell sx={CellStyle} align="left">
+                      {data.department}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data.department}
+                    </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data.department}
+                    </TableCell>
+
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.isCompleted ? (
+                        <ApproveStyle>Completed</ApproveStyle>
+                      ) : (
+                        <PendingStyle>Pending</PendingStyle>
+                      )}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
@@ -624,6 +659,13 @@ const Applicants = () => {
                             src="/images/icons/Trash-2.svg"
                           />
                         )}
+                        <ActionIcons
+                          onClick={() => {
+                            // HandleOpenDelete();
+                            // setId(data._id);
+                          }}
+                          src="/images/icons/Download.svg"
+                        />
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>

@@ -171,15 +171,17 @@ const Employee = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
+
+    GetEmployees();
+  }, [page, user]);
+  useEffect(() => {
     let user = localStorage.getItem("user");
 
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
-    GetEmployees();
-
-  }, [page]);
+  }, []);
   console.log("user type", userType);
   const HandleSubmitData = (data) => {
     return data;
@@ -476,7 +478,7 @@ const Employee = () => {
                           src={
                             data.photoInfo && data.photoInfo.length
                               ? API_URL + data.photoInfo[0]?.path
-                              : API_URL
+                              : "/images/User.jpg"
                           }
                         />
                         <TabelParaContainer>
