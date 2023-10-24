@@ -20,6 +20,7 @@ const sendGrid = require("../providers/sendGrid");
 const Notifications = require("../models/notification");
 const notificationType = require("../enum/notificationType");
 const notificationConstants = require("../constants/notificationConstants");
+const Offboarding = require("../models/offboarding");
 
 
 const employeeController = {
@@ -1386,6 +1387,151 @@ const employeeController = {
             res.status(200).json({
                 leaves,
                 message: 'Employee leave balance fetched successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    },
+    async offboard(req, res) {
+        try {
+            let user = await User.findOne({ _id: req.body.from })
+            if (!user) {
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
+            }
+            user = await User.findOne({ _id: req.body.to })
+            if (!user) {
+                return res.status(400).json({ message: 'Provided invalid employee id.' });
+            }
+
+
+
+            let relation = await EmployeePositionHistory.findOne({ reportsTo: req.body.from, employee: req.body.to });
+
+            console.log("relation = ", relation);
+            if (relation) {
+                return res.status(400).json({ message: 'One can\'t be it\'s own Reporting Manager.' });
+            }
+            const offboard = await EmployeePositionHistory.updateMany({ reportsTo: req.body.from }, { reportsTo: req.body.to })
+
+            // todo: pending leaves ?
+
+            const offboarding = new Offboarding({
+                ...req.body,
+                doneBy: req.user._id,
+            })
+            await offboarding.save()
+            res.status(200).json({
+                message: 'Employee responsibilities transferred successfully'
+            });
+        } catch (error) {
+            console.error("employeeController:getBenefit:error -", error);
+            res.status(400).json(error);
+        }
+    }, async offboardingList(req, res) {
+        try {
+
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 9999;
+            const startIndex = (page - 1) * limit;
+            let filters = { isDeleted: false, role: { $nin: [roles.ORG_ADMIN, roles.EMPLOYEE] }, }
+
+            const employees = await User.aggregate([
+                {
+                    $match: filters,
+                },
+                {
+                    $lookup: {
+                        from: 'userorganizations',
+                        localField: '_id',
+                        foreignField: 'user',
+                        as: 'userOrganizations',
+                    },
+                },
+                {
+                    $match: {
+                        'userOrganizations.organization': req.organization?._id || null,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'offboardings',
+                        localField: '_id',
+                        foreignField: 'from',
+                        as: 'offboardingData'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$offboardingData',
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users', // Assuming your "Users" collection name is 'users'
+                        localField: 'offboardingData.to', // Assuming 'to' is the field to be populated
+                        foreignField: '_id', // Assuming '_id' is the identifier in the "Users" collection
+                        as: 'offboardingData.to'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$offboardingData.to',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos', // Assuming your "Users" collection name is 'users'
+                        localField: 'offboardingData.to.personalInfo', // Assuming 'to' is the field to be populated
+                        foreignField: '_id', // Assuming '_id' is the identifier in the "Users" collection
+                        as: 'toPersonalInfo'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$toPersonalInfo',
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $skip: startIndex,
+                },
+                {
+                    $limit: limit,
+                }
+
+            ])
+            let totalEmployees = await UserOrganization.aggregate([
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'user',
+                        foreignField: '_id',
+                        as: 'userData',
+                    },
+                },
+                {
+                    $unwind: '$userData',
+                },
+                {
+                    $match: {
+                        'userData.isActive': true,
+                        'userData.isDeleted': false,
+                        'organization': req.organization?._id || null,
+                        'userData.role': { $nin: [roles.ORG_ADMIN, roles.EMPLOYEE] },
+                    },
+                },
+            ]).count('user');
+            totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0
+            const totalPages = Math.ceil(totalEmployees / req.query.limit);
+            res.status(200).json({
+                employees,
+                totalEmployees,
+                currentPage: page,
+                totalPages,
+                message: 'Offboarding list fetched successfully'
             });
         } catch (error) {
             console.error("employeeController:getBenefit:error -", error);
