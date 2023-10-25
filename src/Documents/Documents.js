@@ -1016,10 +1016,10 @@ const Documents = () => {
                           to={API_URL + data?.versions[0]?.file?.path}
                           target="_blank"
                           download
-                          style={{ textDecoration: "none" }}
+                          style={{ textDecoration: "none" ,marginTop:".6rem"}}
                         >
                           <ActionIcons
-                            onClick={() => {}}
+                          
                             src="/images/icons/Download.svg"
                           />
                         </Link>

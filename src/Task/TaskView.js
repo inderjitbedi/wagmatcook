@@ -98,19 +98,21 @@ const TaskView = () => {
 
   const selectOption = (option) => {
     const newValue = JSON.parse(option);
-    setSelectedValue(newValue);
-    setIsChecked(newValue);
-    HandleMarkComplete(newValue);
+    if (newValue !== selectedValue) {
+      HandleMarkComplete(newValue);
+      setSelectedValue(newValue);
+      setIsChecked(newValue);
+    }
     setIsOpen(false);
   };
   const options = [
     {
-      value: true,
-      text: "Completed",
+      value: false,
+      text: "In-Progress",
     },
     {
-      value: false,
-      text: "In - Progress",
+      value: true,
+      text: "Completed",
     },
   ];
   const AddNewComment = () => {
@@ -529,7 +531,7 @@ const TaskView = () => {
               </FlexColumnNoWidth>
             </FlexSpaceBetweenmobile>
 
-            <FlexSpaceBetween
+            <FlexSpaceBetweenmobile
               style={{
                 border: " 1px solid #eff4fa",
                 borderLeft: "none",
@@ -542,7 +544,7 @@ const TaskView = () => {
                 <TaskStatus>
                   <TaskTitle>Task Status:&nbsp;</TaskTitle>
                   <TaskSelect onClick={toggleDropdown} value={selectedValue}>
-                    {selectedValue ? " Completed" : " In - Progress"}
+                    {selectedValue ? " Completed" : " In-Progress"}
                     {isOpen && (
                       <TaskOption>
                         {options.map((option) => (
@@ -563,7 +565,7 @@ const TaskView = () => {
                       fill="none"
                       style={{
                         transform: isOpen ? "rotate(180deg)" : undefined,
-                        marginTop:"2px",
+                        marginTop: "2px",
                       }}
                     >
                       <path
@@ -587,7 +589,7 @@ const TaskView = () => {
                     : " - "}{" "}
                 </TaskTitle>
               </FlexContaier>
-            </FlexSpaceBetween>
+            </FlexSpaceBetweenmobile>
 
             <BasicInfoDiv>
               <DisciplinaryHeading>Comments </DisciplinaryHeading>
