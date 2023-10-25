@@ -56,7 +56,7 @@ const taskController = {
             const task = await Tasks.findOneAndUpdate({
                 _id: req.params.id,
             }, { isCompleted: !!req.body.isCompleted }, { new: true })
-            res.status(200).json({ message: 'Task marked as ' + !!req.body.isCompleted ? 'completed' : 'in-progress' + ' successfully' });
+            res.status(200).json({ message: 'Task marked as ' + (req.body.isCompleted ? 'completed' : 'in-progress') + ' successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
             res.status(400).json(error);

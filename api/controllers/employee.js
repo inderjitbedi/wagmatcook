@@ -1412,6 +1412,9 @@ const employeeController = {
             if (relation) {
                 return res.status(400).json({ message: 'One can\'t be it\'s own Reporting Manager.' });
             }
+
+
+
             const offboard = await EmployeePositionHistory.updateMany({ reportsTo: req.body.from }, { reportsTo: req.body.to })
 
             // todo: pending leaves ?
@@ -1421,6 +1424,20 @@ const employeeController = {
                 doneBy: req.user._id,
             })
             await offboarding.save()
+
+            // const filter = { from: req.body.from };
+            // const update = {
+            //     $setOnInsert: { doneBy: req.user._id },
+            //     // Additional fields you want to update if the document is found
+            // };
+
+            // const options = { upsert: true, new: true };
+
+            // const offboarding = await Offboarding.findOneAndUpdate({ from: req.body.from }, {
+            //     ...req.body,
+            //     doneBy: req.user._id,
+            // }, { upsert: true, new: true });
+            // console.log(offboarding);
             res.status(200).json({
                 message: 'Employee responsibilities transferred successfully'
             });
@@ -1428,7 +1445,8 @@ const employeeController = {
             console.error("employeeController:getBenefit:error -", error);
             res.status(400).json(error);
         }
-    }, async offboardingList(req, res) {
+    },
+    async offboardingList(req, res) {
         try {
 
             const page = parseInt(req.query.page) || 1;
@@ -1484,9 +1502,9 @@ const employeeController = {
                 },
                 {
                     $lookup: {
-                        from: 'users', // Assuming your "Users" collection name is 'users'
-                        localField: 'offboardingData.to', // Assuming 'to' is the field to be populated
-                        foreignField: '_id', // Assuming '_id' is the identifier in the "Users" collection
+                        from: 'users',
+                        localField: 'offboardingData.to',
+                        foreignField: '_id',
                         as: 'offboardingData.to'
                     }
                 },
@@ -1498,9 +1516,9 @@ const employeeController = {
                 },
                 {
                     $lookup: {
-                        from: 'employeepersonalinfos', // Assuming your "Users" collection name is 'users'
-                        localField: 'offboardingData.to.personalInfo', // Assuming 'to' is the field to be populated
-                        foreignField: '_id', // Assuming '_id' is the identifier in the "Users" collection
+                        from: 'employeepersonalinfos',
+                        localField: 'offboardingData.to.personalInfo',
+                        foreignField: '_id',
                         as: 'toPersonalInfo'
                     }
                 },
