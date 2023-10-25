@@ -656,6 +656,14 @@ const ManagerLeaves = () => {
                             option.personalInfo &&
                             `${option.personalInfo?.firstName} ${option.personalInfo?.lastName}`
                           }
+                          PaperComponent={(props) => (
+                            <Paper
+                              sx={{
+                                fontSize: "1.6rem !important",
+                              }}
+                              {...props}
+                            />
+                          )}
                           options={options}
                           loading={loading}
                           renderInput={(params) => (

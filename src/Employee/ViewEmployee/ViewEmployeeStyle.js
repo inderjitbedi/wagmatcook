@@ -4,6 +4,38 @@ export const Dashboard = styled.div`
   display: flex;
   width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
+`;
+export const AuthLayout = styled.div`
+  display: flex;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+  @media only screen and (max-width: 900px) {
+    flex-direction: column;
+    height: 100vh;
+  }
+`;
+export const PrimaryDiv = styled.div`
+  width: 25%;
+  background-color: #ffffff;
+  /* @media only screen and (max-width: 1100px) {
+    width: 22%;
+  } */
+  @media only screen and (max-width: 900px) {
+    width: 100%;
+  }
+`;
+export const SecondaryDIv = styled.div`
+  width: 75%;
+  /* @media only screen and (max-width: 1100px) {
+    width: 78%;
+  } */
+  @media only screen and (max-width: 900px) {
+    width: 100%;
+    padding-bottom: 20rem;
+  }
 `;
 export const DashNav = styled.div`
   width: 18%;
@@ -426,7 +458,6 @@ export const BasicInfoContainer = styled.div`
   display: flex;
   justify-content: center;
   box-sizing: border-box;
-  
 `;
 export const BasicInfoDiv = styled.div`
   width: 71%;
@@ -486,8 +517,8 @@ export const EditButton = styled.label`
   gap: 4px;
   cursor: pointer;
   text-transform: capitalize;
-    @media only screen and (max-width: 600px) {
-    margin-right:1rem !important;
+  @media only screen and (max-width: 600px) {
+    margin-right: 1rem !important;
   }
 `;
 export const ButtonIcon = styled.img`
@@ -732,6 +763,13 @@ export const TextAreaComment = styled.textarea`
   box-sizing: border-box;
   outline: none;
 `;
+export const TaskFlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+`;
 export const InputPara = styled.p`
   color: #737992;
   font-size: 1.4rem;
@@ -912,14 +950,19 @@ export const TaskStatus = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
 `;
-export const TaskSelect = styled.select`
+export const TaskSelect = styled.div`
   color: #9ea0aa;
   border: none;
   background: transparent;
+  display: flex;
+  gap:8px;
+  align-items: center;
   outline: none;
   color: #222b45;
-
+position: relative;
   text-align: center;
   font-family: Inter;
   font-size: 1.4rem;
@@ -933,14 +976,36 @@ export const TaskSelect = styled.select`
       ? "#0d7d0b"
       : "#9ea0aa"};
 `;
-export const TaskOption = styled.option`
-  color: #9ea0aa;
-  font-family: Inter;
-  font-size: 1.2rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 2rem;
+export const TaskOption = styled.ul`
+  list-style: none;
+  margin: 0;
+width: max-content;
+  padding: 0px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  /* display: none; */
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background: #fff;
+  z-index: 1;
 `;
+export const TaskLi = styled.li`
+  color: #1e202c;
+
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2rem;
+  padding: 8px;
+  cursor: pointer;
+  &:hover {
+    color: #ffffff;
+    background-color: #279af1;
+  }
+`;
+
 export const TextAreaContaier = styled.div`
   border-radius: 8px;
   border: 1px solid #e9ebf0;

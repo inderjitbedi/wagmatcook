@@ -145,19 +145,19 @@ const CommenDashHeader = ({ onSearch, text }) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   const SidebarWrapper = styled.div`
-    width: 25rem;
-    background-color: #ffffff;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transition: width 0.3s;
-    z-index: 100000;
-    overflow-y: scroll;
-
-    /* @media (max-width: 768px) {
-      width: 0;
-    } */
+  display:none;
+    @media only screen and (max-width: 1200px) {
+      display: block;
+      width: 25rem;
+      background-color: #ffffff;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      right: 0;
+      transition: width 0.3s;
+      z-index: 100000;
+      overflow-y: scroll;
+    }
   `;
   const SidebarContainer = () => {
     if (userType === ROLES.HR) {

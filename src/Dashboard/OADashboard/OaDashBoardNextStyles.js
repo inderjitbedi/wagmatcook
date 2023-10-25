@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const SectionCard = styled.div`
   display: flex;
-  gap: 1.6rem;
+  gap: 8px;
   margin-bottom: 2.4rem;
   width: 100%;
   justify-content: space-between;
@@ -12,42 +12,70 @@ export const SectionCard = styled.div`
 export const SectionCardContainer = styled.div`
   background-color: #4fafff;
   border-radius: 8px;
-  flex: 1 1 25rem;
+  flex: 0 1 calc(25% - 40px);
   padding: 1rem 0rem 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 20rem;
+  @media only screen and (max-width: 800px) {
+    flex: 0 1 calc(50% - 20px);
+  }
+  @media only screen and (max-width: 450px) {
+    flex: 0 1 calc(100% - 20px);
+  }
 `;
 
 export const SectionCardContainer2 = styled.div`
   background-color: #886ef2;
   border-radius: 8px;
-  flex: 1 1 25rem;
+  flex: 0 1 calc(25% - 40px);
   padding: 1rem 0rem 1rem 2rem;
+  min-width: 20rem;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media only screen and (max-width: 800px) {
+    flex: 0 1 calc(50% - 20px);
+  }
+  @media only screen and (max-width: 450px) {
+    flex: 0 1 calc(100% - 20px);
+  }
 `;
 export const SectionCardContainer3 = styled.div`
   background-color: #60b4c2;
   border-radius: 8px;
-  flex: 1 1 25rem;
+  flex: 0 1 calc(25% - 40px);
   padding: 1rem 0rem 1rem 2rem;
+  min-width: 20rem;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media only screen and (max-width: 800px) {
+    flex: 0 1 calc(50% - 20px);
+  }
+  @media only screen and (max-width: 450px) {
+    flex: 0 1 calc(100% - 20px);
+  }
 `;
 export const SectionCardContainer4 = styled.div`
   background-color: #49d157;
   border-radius: 8px;
-  flex: 1 1 25rem;
+  flex: 0 1 calc(25% - 40px);
   padding: 1rem 0rem 1rem 2rem;
+  min-width: 20rem;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media only screen and (max-width: 800px) {
+    flex: 0 1 calc(50% - 20px);
+  }
+  @media only screen and (max-width: 450px) {
+    flex: 0 1 calc(100% - 20px);
+  }
 `;
 export const SectionCardFlex = styled.div`
   display: flex;

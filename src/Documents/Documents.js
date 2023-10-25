@@ -606,6 +606,14 @@ const Documents = () => {
                           getOptionLabel={(option) =>
                             option.name && `${option.name}`
                           }
+                          PaperComponent={(props) => (
+                            <Paper
+                              sx={{
+                                fontSize: "1.6rem !important",
+                              }}
+                              {...props}
+                            />
+                          )}
                           options={departmentData}
                           renderInput={(params) => (
                             <TextField
@@ -688,7 +696,8 @@ const Documents = () => {
                               },
                             })}
                           />
-                          <RadioSpan />Major
+                          <RadioSpan />
+                          Major
                         </RadioLabel>
                       </FlexContaier>
                       <FlexContaier>
@@ -705,9 +714,8 @@ const Documents = () => {
                               },
                             })}
                           />
-
-                            <RadioSpan />
-                            Minor
+                          <RadioSpan />
+                          Minor
                         </RadioLabel>
                       </FlexContaier>
                     </RadioButtonContainer>
@@ -905,7 +913,25 @@ const Documents = () => {
                     {/* <TableCell sx={CellStyle2} align="left">
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell> */}
-                    <TableCell sx={CellStyle} align="left">
+                    <TableCell
+                      sx={{...CellStyle,cursor:"pointer"}}
+                      align="left"
+                      onClick={() => {
+                        if (userType === ROLES.HR) {
+                          Navigate(
+                            `/hr-management/documents/history/${data._id}`
+                          );
+                        } else if (userType === ROLES.MANAGER) {
+                          Navigate(
+                            `/manager-management/documents/history/${data._id}`
+                          );
+                        } else {
+                          Navigate(
+                            `/organization-admin/documents/history/${data._id}`
+                          );
+                        }
+                      }}
+                    >
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
@@ -917,7 +943,11 @@ const Documents = () => {
                       {data?.tags?.map((tag) => tag.name).join(", ")}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data?.versions[0]?.version || " - "}
+                      {data?.versions[0]?.version !== undefined
+                        ? Number.isInteger(data.versions[0].version)
+                          ? data.versions[0].version.toFixed(1)
+                          : data.versions[0].version
+                        : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.versions[0]?.file?.originalName?.length <= 15

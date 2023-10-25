@@ -91,16 +91,32 @@ const Offboarding = () => {
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
   const [update, setUpdate] = useState(false);
-
+  const [employeeList, setEmployeeList] = useState([]);
+  const [selectedName, setSelectedName] = useState("");
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [transferTo, setTransferTo] = useState("");
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
+  const [OffboardList, setOffboardList] = useState([]);
   const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
+  const HandleOpen = (data) => {
+    const Name = [
+      data.personalInfo[0]?.firstName,
+      data.personalInfo[0]?.lastName,
+    ].join(" ");
+    setSelectedName(Name);
+
+    setOpen(true);
+  };
+
   const HandleClose = () => {
     setOpen(false);
     clearErrors();
     reset({});
+    setId("");
+    setSelectedName("");
   };
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -124,19 +140,126 @@ const Offboarding = () => {
       }
       return true;
     }
-    if (isEmptyObject(errors) && !update) {
-      //  HandleSubmit(data);
-    } else if (update && isEmptyObject(errors)) {
-      //  HandleUpdate(data);
+    if (isEmptyObject(errors)) {
+      data.from = Id;
+      // HandleUpdate(data);
+      HandleClose();
+      setIsConfirmationModalOpen(true);
+      setFormData(data);
+      console.log("modal open", isConfirmationModalOpen);
     }
   };
+  const handleUpdateConfirmed = () => {
+    HandleUpdate(formData);
 
+    setIsConfirmationModalOpen(false);
+  };
+  const handleCancelUpdate = () => {
+    setIsConfirmationModalOpen(false);
+  };
+  const GetOffboardList = () => {
+    setIsLoading(true);
+    return new Promise((resolve, reject) => {
+      let url = API_URLS.getOffboardingList;
+
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setOffboardList(result.employees);
+            resolve(result.employees);
+
+            setIsLoading(false);
+          } else {
+            //toast.warn("something went wrong ");
+            setIsLoading(false);
+
+            reject("No data received from GetDepartments API");
+          }
+        })
+        .catch((error) => {
+          // toast.error("Error getting department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        });
+    });
+  };
+  const GetEmployeesList = () => {
+    setIsLoading(true);
+
+    let url = API_URLS.getEmployeeList.replace("Page", page);
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+          const filteredEmployees = result.employees.filter(
+            (employee) => employee.role !== "EMPLOYEE"
+          );
+          setEmployeeList(filteredEmployees);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        // console.error("Error:", error);
+        toast.error("Error creating Employee. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.updateOffboarding;
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          setSelectedName("");
+          GetEmployeesList();
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const temp = [1, 2, 3, 4, 5, 6];
+  useEffect(() => {
+    GetOffboardList();
+    GetEmployeesList();
+  }, []);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Offboarding"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Tasks</DisciplinaryHeading>
+        <DisciplinaryHeading>All Employee</DisciplinaryHeading>
         <Modal
           open={open}
           sx={{
@@ -191,21 +314,47 @@ const Offboarding = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <InputLabel>
-                      Assigned to<InputSpan>*</InputSpan>
+                      Assign the responsibilities of {selectedName} to
+                      <InputSpan>*</InputSpan>
                     </InputLabel>
-                    <Input
+                    <Controller
+                      name={`to`}
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option value="">Select</Option>
+                          {employeeList?.map((data) => (
+                            <Option value={data._id}>
+                              {" "}
+                              {[
+                                data.personalInfo[0]?.firstName,
+                                data.personalInfo[0]?.lastName,
+                              ].join(" ") || " - "}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                    {errors.to && <Errors>{errors.to?.message}</Errors>}
+                    <InputLabel>
+                      Notes <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <TextArea
                       type="text"
-                      {...register("assigneTo", {
+                      {...register("notes", {
                         required: {
                           value: true,
                           message: "Required",
                         },
                       })}
                     />
-                    {errors.assigneTo && (
-                      <Errors>{errors.assigneTo?.message}</Errors>
-                    )}
-
+                    {errors.notes && <Errors>{errors.notes?.message}</Errors>}
                     {!update ? (
                       <AddNewButton
                         type="submit"
@@ -298,14 +447,14 @@ const Offboarding = () => {
               </TableHead>
 
               <TableBody>
-                {!temp?.length && (
+                {!employeeList?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No tasks found
+                      No employee found
                     </TableCell>
                   </TableRow>
                 )}
-                {temp?.map((data, index) => (
+                {employeeList?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -319,13 +468,20 @@ const Offboarding = () => {
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {"Lalit Kumar" || " - "}
+                      {[
+                        data.personalInfo[0]?.firstName,
+                        data.personalInfo[0]?.lastName,
+                      ].join(" ") || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {"lalitkuamr@email.com"}
+                      {data.email || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {"Hr"}
+                      {(data.role === ROLES.EMPLOYEE
+                        ? "USER"
+                        : data.role === ROLES.HR
+                        ? " HR"
+                        : data.role) || " - "}
                     </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">
@@ -337,6 +493,7 @@ const Offboarding = () => {
                           <ActionIcons
                             onClick={() => {
                               HandleOpen(data);
+                              setId(data._id);
                             }}
                             src="/images/icons/Pendown.svg"
                           />
@@ -361,6 +518,15 @@ const Offboarding = () => {
           )}
         </>
       )}
+      <DeleteModal
+        openDelete={isConfirmationModalOpen}
+        message={`Are you sure you want to transfer the responsibilities?`}
+        HandleCloseDelete={handleCancelUpdate}
+        isLoading={isLoading}
+        HandleDelete={handleUpdateConfirmed}
+        Option={true}
+      />
+      
     </>
   );
 };

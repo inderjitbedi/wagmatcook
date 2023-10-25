@@ -671,7 +671,27 @@ const Task = () => {
                     <TableCell sx={CellStyle2} align="left">
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell>
-                    <TableCell sx={CellStyle} align="left">
+                    <TableCell
+                      sx={{...CellStyle , cursor:"pointer"}}
+                      align="left"
+                      onClick={() => {
+                        if (userType === ROLES.HR) {
+                          Navigate(`/hr-management/tasks/details/${data._id}`);
+                        } else if (userType === ROLES.MANAGER) {
+                          Navigate(
+                            `/manager-management/tasks/details/${data._id}`
+                          );
+                        } else if (userType === ROLES.EMPLOYEE) {
+                          Navigate(
+                            `/user-management/tasks/details/${data._id}`
+                          );
+                        } else {
+                          Navigate(
+                            `/organization-admin/tasks/details/${data._id}`
+                          );
+                        }
+                      }}
+                    >
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

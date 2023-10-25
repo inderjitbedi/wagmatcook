@@ -2,6 +2,11 @@ import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import ScrollToTop from "../../auth/pages/scrollTop";
+import {
+  AuthLayout,
+  PrimaryDiv,
+  SecondaryDIv,
+} from "../../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const PublicLayout = ({ component: Component }: any) => {
   const componentImageMap: any = {
@@ -24,7 +29,35 @@ const PublicLayout = ({ component: Component }: any) => {
   return (
     <>
       <main role="main">
-        <Grid container spacing={2}>
+        <AuthLayout>
+          <PrimaryDiv>
+            <div className="sidebar">
+              <div className="content-box">
+                <div className="logo">Wagmatcook</div>
+                <h4 className="mt-6">
+                  Communicate to Employees via Feeds, SMS, Email
+                </h4>
+                <p>
+                  Welcome to our website! We hope it provides you with a good
+                  perspective about our community. Better yet, come visit us and
+                  the experiences we are willing to share with you.
+                </p>
+              </div>
+              <div className="ImageContainer" style={{ backgroundColor: "#093FE1" }}>
+                <img
+                  src="/images/image 4.svg"
+                  alt="background-img"
+                  width="100%"
+                />
+              </div>
+            </div>
+          </PrimaryDiv>
+          <SecondaryDIv>
+            <Component />
+          </SecondaryDIv>
+        </AuthLayout>
+
+        {/* <Grid container spacing={2}>
           <Grid item xs={3}>
             <div className="sidebar">
               <div className="content-box">
@@ -50,7 +83,7 @@ const PublicLayout = ({ component: Component }: any) => {
           <Grid item xs={9}>
             <Component />
           </Grid>
-        </Grid>
+        </Grid> */}
         {/* <FooterLayout></FooterLayout> */}
       </main>
     </>
