@@ -19,6 +19,7 @@ import httpClient from "../api/httpClient";
 import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router";
 import { toast } from "react-toastify";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 
 import {
   DisciplinaryDiv,
@@ -235,7 +236,7 @@ const Offboarding = () => {
         if (result) {
           setId("");
           setSelectedName("");
-          GetEmployeesList();
+          GetOffboardList();
           setUpdate(false);
           HandleClose();
           reset();
@@ -509,11 +510,16 @@ const Offboarding = () => {
                         {userType === ROLES.EMPLOYEE ? (
                           " "
                         ) : (
-                          <ActionIcons
+                          <AiOutlineUserSwitch
+                            style={{
+                              width: "2rem",
+                              height: "2rem",
+                              color: "#279AF1",
+                              cursor: "pointer",
+                            }}
                             onClick={() => {
                               HandleOpen(data);
                             }}
-                            src="/images/icons/Pendown.svg"
                           />
                         )}
                       </ActionIconDiv>
