@@ -1440,6 +1440,7 @@ const employeeController = {
                 {
                     $match: filters,
                 },
+
                 {
                     $lookup: {
                         from: 'userorganizations',
@@ -1451,6 +1452,20 @@ const employeeController = {
                 {
                     $match: {
                         'userOrganizations.organization': req.organization?._id || null,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos',
+                        localField: 'personalInfo',
+                        foreignField: '_id',
+                        as: 'fromPersonalInfo'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$fromPersonalInfo',
+                        preserveNullAndEmptyArrays: true,
                     },
                 },
                 {
