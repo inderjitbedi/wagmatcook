@@ -978,7 +978,7 @@ position: relative;
 `;
 export const TaskOption = styled.ul`
   list-style: none;
-  margin: 0;
+  margin-top: 8px;
 width: max-content;
   padding: 0px;
   position: absolute;

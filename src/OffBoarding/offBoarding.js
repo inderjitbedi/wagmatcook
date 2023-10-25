@@ -19,6 +19,7 @@ import httpClient from "../api/httpClient";
 import Box from "@mui/material/Box";
 import { useNavigate, useLocation } from "react-router";
 import { toast } from "react-toastify";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 
 import {
   DisciplinaryDiv,
@@ -107,8 +108,9 @@ const Offboarding = () => {
       data.personalInfo[0]?.lastName,
     ].join(" ");
     setSelectedName(Name);
-
+    setId(data._id);
     setOpen(true);
+    GetEmployeesList(data._id);
   };
 
   const HandleClose = () => {
@@ -186,7 +188,7 @@ const Offboarding = () => {
         });
     });
   };
-  const GetEmployeesList = () => {
+  const GetEmployeesList = (userid) => {
     setIsLoading(true);
 
     let url = API_URLS.getEmployeeList.replace("Page", page);
@@ -197,9 +199,13 @@ const Offboarding = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          const filteredEmployees = result.employees.filter(
-            (employee) => employee.role !== "EMPLOYEE"
-          );
+          const filteredEmployees = result.employees.filter((employee) => {
+            if (employee.role === "EMPLOYEE") {
+              return false;
+            }
+            return employee._id !== userid;
+          });
+
           setEmployeeList(filteredEmployees);
         } else {
           //toast.warn("something went wrong ");
@@ -230,7 +236,7 @@ const Offboarding = () => {
         if (result) {
           setId("");
           setSelectedName("");
-          GetEmployeesList();
+          GetOffboardList();
           setUpdate(false);
           HandleClose();
           reset();
@@ -253,7 +259,6 @@ const Offboarding = () => {
   const temp = [1, 2, 3, 4, 5, 6];
   useEffect(() => {
     GetOffboardList();
-    GetEmployeesList();
   }, []);
   return (
     <>
@@ -435,6 +440,13 @@ const Offboarding = () => {
                   >
                     Role
                   </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "9rem" }}
+                    align="left"
+                  >
+                    Assigned To
+                  </TableCell>
 
                   <TableCell
                     sx={CellHeadStyles}
@@ -447,14 +459,14 @@ const Offboarding = () => {
               </TableHead>
 
               <TableBody>
-                {!employeeList?.length && (
+                {!OffboardList?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
                       No employee found
                     </TableCell>
                   </TableRow>
                 )}
-                {employeeList?.map((data, index) => (
+                {OffboardList?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -469,8 +481,8 @@ const Offboarding = () => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {[
-                        data.personalInfo[0]?.firstName,
-                        data.personalInfo[0]?.lastName,
+                        data?.fromPersonalInfo.firstName,
+                        data?.fromPersonalInfo?.lastName,
                       ].join(" ") || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
@@ -483,6 +495,14 @@ const Offboarding = () => {
                         ? " HR"
                         : data.role) || " - "}
                     </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      {data?.toPersonalInfo?.firstName
+                        ? [
+                            data?.toPersonalInfo?.firstName,
+                            data?.toPersonalInfo?.lastName,
+                          ].join(" ")
+                        : " - "}
+                    </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
@@ -490,12 +510,16 @@ const Offboarding = () => {
                         {userType === ROLES.EMPLOYEE ? (
                           " "
                         ) : (
-                          <ActionIcons
+                          <AiOutlineUserSwitch
+                            style={{
+                              width: "2rem",
+                              height: "2rem",
+                              color: "#279AF1",
+                              cursor: "pointer",
+                            }}
                             onClick={() => {
                               HandleOpen(data);
-                              setId(data._id);
                             }}
-                            src="/images/icons/Pendown.svg"
                           />
                         )}
                       </ActionIconDiv>
@@ -526,7 +550,6 @@ const Offboarding = () => {
         HandleDelete={handleUpdateConfirmed}
         Option={true}
       />
-      
     </>
   );
 };
