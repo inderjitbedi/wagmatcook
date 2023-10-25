@@ -5,6 +5,7 @@ const { verifySuperAdmin } = require('../middlewares/jwtMiddleware');
 
 router.get('/organization-list', verifySuperAdmin, orgController.listOrganizationsWithPrimaryUsers);
 router.post('/invite', verifySuperAdmin, orgController.initiate);
+router.put('/organization-admin/update/:organizationid/:userid', verifySuperAdmin, orgController.saUpdateOrgAdmin);
 
 
 module.exports = router;

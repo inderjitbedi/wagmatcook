@@ -131,7 +131,7 @@ const documentController = {
                 isDeleted: true,
                 lastUpdatedBy: req.user._id,
             });
-            res.status(200).json({ message: "Document Tag deleted successfully" });
+            res.status(200).json({ message: "Document deleted successfully" });
         } catch (error) {
             console.error("documentController:delete:error -", error);
             res.status(400).json(error);
@@ -181,7 +181,7 @@ const documentController = {
             // }
             const document = await Document.find(filters)
                 .populate([
-                    { path: "tags" },
+                    // { path: "tags" },
                     { path: "departments" },
                     { path: "lastUpdatedBy", populate: "personalInfo" },
                     {
@@ -195,6 +195,10 @@ const documentController = {
                         ],
                     },
                 ])
+                .populate({
+                    path: "tags",
+                    match: { isDeleted: false }, // Filter tags with isDeleted: false
+                })
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ order: 1 });
@@ -207,7 +211,7 @@ const documentController = {
                 totalDocuments,
                 currentPage: page,
                 totalPages,
-                message: "Document Tags fetched successfully",
+                message: "Documents fetched successfully",
             });
         } catch (error) {
             console.error("documentController:list:error -", error);
