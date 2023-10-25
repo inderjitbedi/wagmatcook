@@ -132,6 +132,7 @@ const SAOrganization = () => {
   };
   // const [organizationData, setOrganization] = useState([]);
   const [result, setResult] = useState([]);
+  const [userId, setUserId] = useState("");
   // getting list of organization list from a api
   const onSubmit = (data) => {
     function isEmptyObject(obj) {
@@ -145,7 +146,7 @@ const SAOrganization = () => {
     if (isEmptyObject(errors) && !update) {
       HandleSubmit(data);
     } else if (update) {
-      // HandleUpdate(data);
+      HandleUpdate(data);
     }
     console.log("form submmited :", data);
   };
@@ -174,7 +175,44 @@ const SAOrganization = () => {
         setIsLoading(false);
       });
   };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
 
+    let url = API_URLS.updateSuperAdmin
+      .replace(":organizationid", Id)
+      .replace(":userid", userId);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetOrganizationList();
+          setUserId("");
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const HandleSubmit = (data) => {
     let url = API_URLS.adminInviteOrganizationAdmin;
 
@@ -209,6 +247,7 @@ const SAOrganization = () => {
   const HandleUpdateAction = (data) => {
     setUpdate(true);
     setId(data._id);
+    setUserId(data.primaryUser._id);
     reset({
       name: data.name,
       email: data.primaryUser.email,
@@ -220,6 +259,8 @@ const SAOrganization = () => {
     HandleOpen();
     reset({});
     clearErrors();
+    setId("");
+    setUserId("");
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -236,19 +277,19 @@ const SAOrganization = () => {
     navigate("/");
   };
   const SidebarWrapper = styled.div`
-    width: 25rem;
-    background-color: #ffffff;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transition: width 0.3s;
-    z-index: 100000;
-    overflow-y: scroll;
-
-    /* @media (max-width: 768px) {
-      width: 0;
-    } */
+    display: none;
+    @media only screen and (max-width: 1200px) {
+      display: block;
+      width: 25rem;
+      background-color: #ffffff;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      right: 0;
+      transition: width 0.3s;
+      z-index: 100000;
+      overflow-y: scroll;
+    }
   `;
   const SidebarContainer = () => {
     return (

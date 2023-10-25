@@ -580,7 +580,7 @@ const Departments = () => {
                         HandleOpenEdit();
                       }}
                     >
-                      <img src="/images/icons/Pendown.svg" />
+                      <img src="/images/icons/Pen-empty.svg" />
                     </DepartmentCardButtoncolor>
                     <DepartmentCardButtongrey
                       onClick={() => {

@@ -159,7 +159,7 @@ const Applicants = () => {
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
-    setId(data._id);
+    setId(data?._id);
     setDetailsLength(500 - data?.description?.length);
     reset({
       title: data.title,

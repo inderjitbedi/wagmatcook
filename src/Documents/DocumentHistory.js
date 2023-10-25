@@ -233,7 +233,13 @@ const DocumentHistory = () => {
                     key={data._id}
                   >
                     <TableCell sx={CellStyle2} align="left">
-                      <MenuIconDiv>{data.version}</MenuIconDiv>
+                      <MenuIconDiv>
+                        {data.version !== undefined
+                          ? Number.isInteger(data.version)
+                            ? data.version.toFixed(1)
+                            : data.version
+                          : " - "}
+                      </MenuIconDiv>
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data?.file?.originalName}

@@ -64,6 +64,7 @@ const DeleteModal = ({
   HandleDelete,
   isLoading,
   message,
+  Option,
 }) => {
   return (
     <Modal
@@ -112,8 +113,7 @@ const DeleteModal = ({
               }}
               disabled={isLoading}
             >
-              {" "}
-              Delete{" "}
+              {Option ? "YES " : "Delete"}
             </DeleteButton>
           </ModalThanks>
         )}

@@ -48,6 +48,8 @@ import {
   Errors,
   IconsEmployee,
   FlexSpaceBetweenmobile,
+  TaskFlexColumn,
+  TaskLi,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const TaskView = () => {
@@ -79,16 +81,41 @@ const TaskView = () => {
   // const handleEditClick = (_id) => {
   //   setEditingItemId(_id);
   // };
-
-  const [isChecked, setIsChecked] = useState(false);
-
   // const handleCheckboxChange = () => {
   //   setIsChecked(!isChecked);
   //   HandleMarkComplete();
   // };
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(isChecked);
+
+  //custom dropdown
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const selectOption = (option) => {
+    const newValue = JSON.parse(option);
+    setSelectedValue(newValue);
+    setIsChecked(newValue);
+    HandleMarkComplete(newValue);
+    setIsOpen(false);
+  };
+  const options = [
+    {
+      value: true,
+      text: "Completed",
+    },
+    {
+      value: false,
+      text: "In - Progress",
+    },
+  ];
   const AddNewComment = () => {
     if (!comment.trim()) {
-      setCommentError("Comment cannot be empty");
+      setCommentError("Required");
       return;
     }
     let dataCopy = { description: comment };
@@ -181,7 +208,7 @@ const TaskView = () => {
   };
   const HandleUpdate = () => {
     if (!updateComment.trim()) {
-      setUpdateCommentError("Update Comment cannot be empty");
+      setUpdateCommentError("Required");
       return;
     }
     setIsUpdating(true);
@@ -283,6 +310,7 @@ const TaskView = () => {
         });
     });
   };
+
   useEffect(() => {
     let user = localStorage.getItem("user");
     if (user) {
@@ -299,7 +327,6 @@ const TaskView = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, []);
-  const [selectedValue, setSelectedValue] = useState(isChecked);
 
   const handleSelectChange = (e) => {
     const newValue = JSON.parse(e.target.value);
@@ -361,6 +388,7 @@ const TaskView = () => {
     setId("");
     setEditingItemId(null);
     setUpdateComment("");
+    setUpdateCommentError(null);
   };
   const HandleCommentChange = (e) => {
     setComment(e.target.value);
@@ -456,7 +484,7 @@ const TaskView = () => {
               <FlexContaier style={{ gap: ".8rem" }}>
                 <TaskLight>
                   {" "}
-                  {userType === ROLES.EMPLOYEE 
+                  {userType === ROLES.EMPLOYEE
                     ? " Assigned By"
                     : " Assigned To"}
                   :
@@ -512,14 +540,39 @@ const TaskView = () => {
             >
               <FlexContaier style={{ gap: "1.3rem" }}>
                 <TaskStatus>
-                  <TaskTitle>Task Status:</TaskTitle>
-                  <TaskSelect
-                    value={selectedValue}
-                    onChange={handleSelectChange}
-                    // disabled={isChecked}
-                  >
-                    <TaskOption value={false}>In-Progress</TaskOption>
-                    <TaskOption value={true}>Completed</TaskOption>
+                  <TaskTitle>Task Status:&nbsp;</TaskTitle>
+                  <TaskSelect onClick={toggleDropdown} value={selectedValue}>
+                    {selectedValue ? " Completed" : " In - Progress"}
+                    {isOpen && (
+                      <TaskOption>
+                        {options.map((option) => (
+                          <TaskLi
+                            key={option.text}
+                            onClick={() => selectOption(option.value)}
+                          >
+                            {option.text}
+                          </TaskLi>
+                        ))}
+                      </TaskOption>
+                    )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      style={{
+                        transform: isOpen ? "rotate(180deg)" : undefined,
+                        marginTop:"2px",
+                      }}
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.5894 0.244078C10.9149 0.569515 10.9149 1.09715 10.5894 1.42259L6.00609 6.00592C5.68065 6.33136 5.15301 6.33136 4.82757 6.00592L0.244242 1.42259C-0.0811958 1.09715 -0.0811958 0.569515 0.244242 0.244078C0.569678 -0.0813591 1.09732 -0.0813591 1.42275 0.244078L5.41683 4.23816L9.41091 0.244078C9.73634 -0.0813592 10.264 -0.0813592 10.5894 0.244078Z"
+                        fill={selectedValue ? "#0d7d0b" : "#E88B00"}
+                      />
+                    </svg>
                   </TaskSelect>
                 </TaskStatus>
                 {/* <AddNewButton>Update</AddNewButton> */}
@@ -546,36 +599,38 @@ const TaskView = () => {
                       : "/images/User.jpg"
                   }
                 />
+                <TaskFlexColumn>
+                  <TextAreaContaier>
+                    <TextAreaComment
+                      // style={{ margin: "0rem" }}
+                      placeholder="Add a comment"
+                      type="text"
+                      name="description"
+                      value={comment}
+                      onChange={HandleCommentChange}
+                    />
 
-                <TextAreaContaier>
-                  <TextAreaComment
-                    // style={{ margin: "0rem" }}
-                    placeholder="Add a comment"
-                    type="text"
-                    name="description"
-                    value={comment}
-                    onChange={HandleCommentChange}
-                  />
+                    <AddNewButton
+                      style={{ width: "8rem", alignSelf: "flex-end" }}
+                      onClick={AddNewComment}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? (
+                        <ThreeDots
+                          height="8"
+                          width="80"
+                          radius="9"
+                          color="#ffffff"
+                          ariaLabel="three-dots-loading"
+                          visible={true}
+                        />
+                      ) : (
+                        "Send"
+                      )}
+                    </AddNewButton>
+                  </TextAreaContaier>
                   {<Errors> {commentError} </Errors>}
-                  <AddNewButton
-                    style={{ width: "8rem", alignSelf: "flex-end" }}
-                    onClick={AddNewComment}
-                    disabled={isUploading}
-                  >
-                    {isUploading ? (
-                      <ThreeDots
-                        height="8"
-                        width="80"
-                        radius="9"
-                        color="#ffffff"
-                        ariaLabel="three-dots-loading"
-                        visible={true}
-                      />
-                    ) : (
-                      "Send"
-                    )}
-                  </AddNewButton>
-                </TextAreaContaier>
+                </TaskFlexColumn>
               </CommentDivADD>
               {commentsList?.map((data) => (
                 <CommentDiv>
@@ -637,38 +692,40 @@ const TaskView = () => {
 
                     {editingItemId === data?._id ? (
                       <FlexContaier>
-                        <TextAreaContaier>
-                          <TextAreaComment
-                            style={{ margin: "0rem" }}
-                            // placeholder="Add comment"
-                            type="text"
-                            name="updatedescription"
-                            value={updateComment}
-                            onChange={HandleUpdateCommentChange}
-                          />
+                        <TaskFlexColumn>
+                          <TextAreaContaier>
+                            <TextAreaComment
+                              style={{ margin: "0rem" }}
+                              // placeholder="Add comment"
+                              type="text"
+                              name="updatedescription"
+                              value={updateComment}
+                              onChange={HandleUpdateCommentChange}
+                            />
+
+                            <AddNewButton
+                              style={{ alignSelf: "flex-end" }}
+                              onClick={HandleUpdate}
+                              disabled={isUpdating}
+                            >
+                              {isUpdating ? (
+                                <ThreeDots
+                                  height="8"
+                                  width="80"
+                                  radius="9"
+                                  color="#ffffff"
+                                  ariaLabel="three-dots-loading"
+                                  visible={true}
+                                />
+                              ) : (
+                                "Update"
+                              )}
+                            </AddNewButton>
+                          </TextAreaContaier>
                           {updateCommentError && (
                             <Errors> {updateCommentError} </Errors>
                           )}
-
-                          <AddNewButton
-                            style={{ alignSelf: "flex-end" }}
-                            onClick={HandleUpdate}
-                            disabled={isUpdating}
-                          >
-                            {isUpdating ? (
-                              <ThreeDots
-                                height="8"
-                                width="80"
-                                radius="9"
-                                color="#ffffff"
-                                ariaLabel="three-dots-loading"
-                                visible={true}
-                              />
-                            ) : (
-                              "Update"
-                            )}
-                          </AddNewButton>
-                        </TextAreaContaier>
+                        </TaskFlexColumn>
                       </FlexContaier>
                     ) : (
                       <ViewPara>

@@ -146,6 +146,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                 }
                 data.department = data.department._id;
                 data.employeeType = data.employeeType._id;
+                data.reportsTo = data.reportsTo._id;
               });
             }
 

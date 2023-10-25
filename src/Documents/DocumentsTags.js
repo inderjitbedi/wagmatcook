@@ -612,7 +612,7 @@ const DocumentsTags = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this employee type?"
+        message="Are you sure you want to delete this document tag?"
         isLoading={isLoading}
       />
     </>
