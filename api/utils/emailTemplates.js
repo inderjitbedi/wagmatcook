@@ -226,405 +226,310 @@ const emailTemplates = {
                             </tr>
                         </table>
                     </div>
-                `)
-        }
-    },
-    welcome(data) {
-        return {
-            subject: 'Wagmatcook | Welcome',
-            html: `<!DOCTYPE html>
-            <html lang="en">
-              <head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Document</title>
-                <link rel="stylesheet" href="EmailTemplatesCss.css" />
-                <link rel="preconnect" href="https://fonts.googleapis.com" />
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-                <link
-                  href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;900&display=swap"
-                  rel="stylesheet"
-                />
-              </head>
-            
-              <body>
-                <div
-                  style="
-                    width: 100%;
-                  "
-                >
-                  <div style="width: 700px">
-                    <div
-                      style="
-                        padding: 36px 50px 0px 50px;
-                        background: #093fe1;
-                        width: 100%;
-                        margin: 0 auto;
-                    
-                      "
-                    >
-                      <p
-                        style="
-                          color: #fff;
-                          font-family: Inter;
-                          font-size: 24px;
-                          font-style: normal;
-                          font-weight: 700;
-                          line-height: normal;
-                          letter-spacing: -0.48px;
-                          width: 100%;
-                        "
-                      >
-                        Wagmatcook
-                      </p>
-                      <div
-                        style="
-                          color: #fff;
-                          text-align: center;
-                          font-family: Inter;
-                          font-size: 32px;
-                          font-style: normal;
-                          font-weight: 700;
-                          line-height: 48px; /* 150% */
-                          letter-spacing: -0.64px;
-                          width: 80%;
-                          margin: 0 auto;
-                        "
-                      >
-                        Welcome to the Wagmatcook HR Portal
-                      </div>
-                      
-                      <img  width="284"
-                      height="263"
-                     src="https://hrapi.chantsit.com/public/welcome.png" >
-                            </div>
-                            <h2
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 700;
-                                line-height: 28px;
-                                margin: 0px;
-                                align-items: center;
-                              "
-                            >
-                              Access to your employment details
-                            </h2>
-                            <p
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 400;
-                                line-height: 28px;
-                                margin: 0;
-                              "
-                            >
-                              Instantly view your employment details and related files
-                            </p>
-                          </div>
-                          <div
-                            style="
-                              display: inline-block;
-                              vertical-align: top;
-                              box-sizing: border-box;
-                              width: calc(50% - 50px);
-                              margin: 16px;
-                            "
-                          >
-                            <div
-                              style="
-                                width: 49px;
-                                height: 49px;
-                                background-color: #eef2ff;
-                                border-radius: 50%;
-                                position:relative;
-                              "
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                 style="
-                                  position: absolute;
-                                  top: 50%;
-                                  left: 50%;
-                                  transform: translate(-50%, -50%);
-                                "
-                              >
-                                <path
-                                  d="M18.18 8.03933L18.6435 7.57589C19.4113 6.80804 20.6563 6.80804 21.4241 7.57589C22.192 8.34374 22.192 9.58868 21.4241 10.3565L20.9607 10.82M18.18 8.03933C18.18 8.03933 18.238 9.02414 19.1069 9.89309C19.9759 10.762 20.9607 10.82 20.9607 10.82M18.18 8.03933L13.9194 12.2999C13.6308 12.5885 13.4865 12.7328 13.3624 12.8919C13.2161 13.0796 13.0906 13.2827 12.9882 13.4975C12.9014 13.6797 12.8368 13.8732 12.7078 14.2604L12.2946 15.5L12.1609 15.901M20.9607 10.82L16.7001 15.0806C16.4115 15.3692 16.2672 15.5135 16.1081 15.6376C15.9204 15.7839 15.7173 15.9094 15.5025 16.0118C15.3203 16.0986 15.1268 16.1632 14.7396 16.2922L13.5 16.7054L13.099 16.8391M13.099 16.8391L12.6979 16.9728C12.5074 17.0363 12.2973 16.9867 12.1553 16.8447C12.0133 16.7027 11.9637 16.4926 12.0272 16.3021L12.1609 15.901M13.099 16.8391L12.1609 15.901"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                />
-                                <path
-                                  d="M8 13H10.5"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  d="M8 9H14.5"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  d="M8 17H9.5"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  opacity="0.5"
-                                  d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                />
-                              </svg>
-                            </div>
-                            <h2
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 700;
-                                line-height: 28px;
-                                margin: 0px;
-                                align-items: center;
-                              "
-                            >
-                              Leave Management
-                            </h2>
-                            <p
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 400;
-                                line-height: 28px;
-                                margin: 0;
-                              "
-                            >
-                              View your leave balances and submit leave requests directly
-                              through the portal.
-                            </p>
-                          </div>
-                          <div
-                            style="
-                              margin: 16px;
-                              display: inline-block;
-                              vertical-align: top;
-                              box-sizing: border-box;
-                              width: calc(50% - 50px);
-                            "
-                          >
-                            <div
-                              style="
-                                width: 49px;
-                                height: 49px;
-                                background-color: #eef2ff;
-                                border-radius: 50%;
-                              position:relative;
-                              "
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                 style="
-                                  position: absolute;
-                                  top: 50%;
-                                  left: 50%;
-                                  transform: translate(-50%, -50%);
-                                "
-                              >
-                                <path
-                                  d="M4 11H16C17.8856 11 18.8284 11 19.4142 11.5858C20 12.1716 20 13.1144 20 15V16C20 18.8284 20 20.2426 19.1213 21.1213C18.2426 22 16.8284 22 14 22H10C7.17157 22 5.75736 22 4.87868 21.1213C4 20.2426 4 18.8284 4 16V11Z"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                />
-                                <path
-                                  d="M4.00153 10.9997C3.51773 9.19412 3.27584 8.29135 3.48389 7.51489C3.62019 7.00622 3.88798 6.5424 4.26035 6.17003C4.82875 5.60162 5.73152 5.35973 7.53706 4.87593L14.54 2.99949C15.2133 2.8191 15.5499 2.72891 15.8447 2.70958C17.0555 2.63022 18.1949 3.28804 18.7315 4.37629C18.8622 4.64129 18.9524 4.97791 19.1328 5.65114C19.1929 5.87556 19.223 5.98776 19.2295 6.08604C19.2559 6.48964 19.0366 6.86943 18.6739 7.04832C18.5855 7.09188 18.4733 7.12195 18.2489 7.18208L4.00153 10.9997Z"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                />
-                                <path
-                                  opacity="0.5"
-                                  d="M14.7004 2.94159L14.0627 8.28886"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  opacity="0.5"
-                                  d="M8.42184 4.62372L7.78409 9.97099"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  opacity="0.5"
-                                  d="M14 16.5C14 16.0778 13.6028 15.793 12.8084 15.2235C12.0031 14.6462 11.6005 14.3575 11.3002 14.5695C11 14.7814 11 15.3543 11 16.5C11 17.6457 11 18.2186 11.3002 18.4305C11.6005 18.6425 12.0031 18.3538 12.8084 17.7765C13.6028 17.207 14 16.9222 14 16.5Z"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                              </svg>
-                            </div>
-                            <h2
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 700;
-                                line-height: 28px;
-                                margin: 0px;
-                                align-items: center;
-                              "
-                            >
-                              Organization Documents
-                            </h2>
-                            <p
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 400;
-                                line-height: 28px;
-                                margin: 0;
-                              "
-                            >
-                              Quick access to organizational policies, procedures and other
-                              important information.
-                            </p>
-                          </div>
-                          <div
-                            style="
-                              margin: 16px;
-                              display: inline-block;
-                              vertical-align: top;
-                              box-sizing: border-box;
-                              width: calc(50% - 50px);
-                            "
-                          >
-                            <div
-                              style="
-                                width: 49px;
-                                height: 49px;
-                                background-color: #eef2ff;
-                                border-radius: 50%;
-                                position:relative;
-                              "
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                 style="
-                                  position: absolute;
-                                  top: 50%;
-                                  left: 50%;
-                                  transform: translate(-50%, -50%);
-                                "
-                              >
-                                <path
-                                  opacity="0.5"
-                                  d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                />
-                                <path
-                                  d="M7 18V9"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  d="M12 18V6"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                                <path
-                                  d="M17 18V13"
-                                  stroke="#093FE1"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                />
-                              </svg>
-                            </div>
-                            <h2
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 700;
-                                line-height: 28px;
-                                margin: 0px;
-                                align-items: center;
-                              "
-                            >
-                              Announcements
-                            </h2>
-                            <p
-                              style="
-                                color: #222b45;
-                                font-family: Inter;
-                                font-size: 16px;
-                                font-style: normal;
-                                font-weight: 400;
-                                line-height: 28px;
-                                margin: 0;
-                              "
-                            >
-                              Stay up to date with work related announcements and other
-                              informaiton.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      style="
-                        width: 100%;
-                        color: #222b45;
-                        font-family: Inter;
-                        font-size: 14px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: 24px;
-                        margin-bottom: 90px;
-                        padding: 20px 50px 0px 50px;
-                      "
-                    >
-                      <p style="margin: 0px">Best regards,</p>
-                      <p style="margin: 0px">The Wagmatcook Team</p>
-                      <p style="margin: 0px">www.wagmatcook.com</p>
-                    </div>
-                  </div>
-                </div>
-              </body>
-            </html>
-              `
-        }
-    }
-}
+                `
+      ),
+    };
+  },
+  welcome(data) {
+    return {
+      subject: "Wagmatcook | Welcome",
+      html: `<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+    body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      font-family: "Inter", sans-serif;
+    }
+
+    table,
+    td {
+      mso-table-lspace: 0px !important;
+      mso-table-rspace: 0px !important;
+    }
+
+    table {
+      border-spacing: 0 !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+      margin: 0 auto !important;
+    }
+
+    @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+      u~div .email-container {
+        min-width: 320px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+      u~div .email-container {
+        min-width: 375px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 414px) {
+      u~div .email-container {
+        min-width: 414px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <center style="width: 100%">
+    <div style="max-width: 700px; margin: 0 auto" class="email-container">
+      <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+        style="margin: auto">
+        <tr>
+          <td valign="top">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
+            >
+              <tr>
+                <td style="text-align: left; padding: 36px 50px 0px 50px">
+                  <p style="
+                        color:#093FE1;
+                        font-family: 'Inter', sans-serif;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 700;
+                        line-height: normal;
+                        letter-spacing: -0.48px;
+                        width: 100%;
+                      ">
+                    Wagmatcook
+                  </p>
+                </td>
+              <tr>
+                <td align="center">
+                  <center style="width: 152px;
+height: 152px; background-color: #FFEDED;; border-radius: 50%;">
+                    <img src="https://hrapi.chantsit.com/public/reject.png"
+                    style="margin: 25px;" />
+                  </center>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p style="
+              color: #222B45;
+              text-align: center;
+              font-family: 'Inter', sans-serif;
+              font-size: 32px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 48px; /* 150% */
+              letter-spacing: -0.64px;
+              width: 80%;
+              margin: 20px auto;
+            ">
+                    Leave Request Rejected!
+                  </p>
+                </td>
+              </tr>
+        </tr>
+      </table>
+      </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td style="text-align: left; padding: 40px 50px 0px 50px;">
+                <h1 style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 32px;
+                margin: 0;
+              ">
+                  Hi, Tom
+                </h1>
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+                  Your leave request has not been approved.
+                </p>
+
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+                  Following are the applied leave details:
+                </p>
+
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Leave type:<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                    Earned Leave
+                  </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  From Date:<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                    27 Mar 2023</span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  To Date:
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                    31 Mar 2023</span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Hours:
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                    8 hours
+                  </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 25px 0px 0px 0px;
+              ">
+                 Please view details for more information or to re-submit a new request
+                </p>
+                <button style="border-radius: 8px;
+    margin-top: 35px;
+  color: #fff;
+  text-align: center;
+ font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #279af1;
+  padding: 0.75em 1.25em;">View Details</button>
+
+              </td>
+            </tr>
+
+
+
+          </table>
+
+        </td>
+
+      </tr>
+      </table>
+      <table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="left" style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 24px;
+               
+                padding: 60px 50px 40px 50px;
+              ">
+            <p style="margin: 0px">Best regards,</p>
+            <p style="margin: 0px">The Wagmatcook Team</p>
+            <p style="margin: 0px">www.wagmatcook.com</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </center>
+</body>
+
+</html>`,
+    };
+  },
+};
 
 const footer = ` <div class="footer">
 <div class="icons-container">

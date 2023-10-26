@@ -113,7 +113,8 @@ const DeleteModal = ({
               }}
               disabled={isLoading}
             >
-              {Option ? "YES " : "Delete"}
+              
+             {Option ? "YES "  : "Delete"}
             </DeleteButton>
           </ModalThanks>
         )}
