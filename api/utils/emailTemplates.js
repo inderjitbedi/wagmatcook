@@ -1,10 +1,10 @@
-
 const emailTemplates = {
-    forgotPassword(data) {
-
-        return {
-            subject: 'Wagmatcook | Password Reset',
-            html: getFullTemplate(data, `
+  forgotPassword(data) {
+    return {
+      subject: "Wagmatcook | Password Reset",
+      html: getFullTemplate(
+        data,
+        `
                 <div class="f-fallback">
                     <h1>Hi ${data.req.body.email},</h1>
                     <p>You are receiving this email because you (or someone else) has requested
@@ -47,14 +47,16 @@ const emailTemplates = {
                         </tr>
                     </table>
                 </div>
-            `)
-        }
-    },
-    invite(data) {
-
-        return {
-            subject: 'Wagmatcook | Invitation to Sign Up',
-            html: getFullTemplate(data, `
+            `
+      ),
+    };
+  },
+  invite(data) {
+    return {
+      subject: "Wagmatcook | Invitation to Sign Up",
+      html: getFullTemplate(
+        data,
+        `
                 <div class="f-fallback">
                     <h1>Hi ${data.user.email},</h1>
                     <p>  You've been invited to join our platform. Your presence will be highly appreciated.
@@ -93,15 +95,17 @@ const emailTemplates = {
                         </tr>
                     </table>
                 </div>
-            `)
-        }
-    },
+            `
+      ),
+    };
+  },
 
-    tempPassword(data) {
-
-        return {
-            subject: 'Wagmatcook | Temporary Password',
-            html: getFullTemplate(data, `
+  tempPassword(data) {
+    return {
+      subject: "Wagmatcook | Temporary Password",
+      html: getFullTemplate(
+        data,
+        `
                 <div class="f-fallback">
                     <h1>Hi ${data.req.user.name},</h1>
                     <p>We received a request to verify your account. To complete the verification process, please use the following temporary password:
@@ -129,14 +133,16 @@ const emailTemplates = {
                     </p>
                  
                 </div>
-            `)
-        }
-    },
-    sendOtp(data) {
-
-        return {
-            subject: 'Wagmatcook | One Time Password',
-            html: getFullTemplate(data, `
+            `
+      ),
+    };
+  },
+  sendOtp(data) {
+    return {
+      subject: "Wagmatcook | One Time Password",
+      html: getFullTemplate(
+        data,
+        `
                 <div class="f-fallback">
                     <h1>Hi ${data.req.user.name || data.req.user.email},</h1>
                     <p>You are receiving this email because you requested a One-Time Password (OTP) for signing in. Your OTP is an additional layer of security to verify your identity. Please do not share this OTP with anyone.
@@ -163,14 +169,17 @@ const emailTemplates = {
                     </p>
                  
                 </div>
-            `)
-        }
-    },
+            `
+      ),
+    };
+  },
 
-    inviteUser(data) {
-        return {
-            subject: 'Wagmatcook | Invitation to signup',
-            html: getFullTemplate(data, `
+  inviteUser(data) {
+    return {
+      subject: "Wagmatcook | Invitation to signup",
+      html: getFullTemplate(
+        data,
+        `
                     <div class="f-fallback">
                         <h1>Hi ${data.req.body.email},</h1>
                         <p>We are excited to invite you to join our online portal! Our portal offers
@@ -217,13 +226,14 @@ const emailTemplates = {
                             </tr>
                         </table>
                     </div>
-                `)
-        }
-    },
-    welcome(data) {
-        return {
-            subject: 'Wagmatcook | Welcome',
-            html: `
+                `
+      ),
+    };
+  },
+  welcome(data) {
+    return {
+      subject: "Wagmatcook | Welcome",
+      html: `
             
     <!DOCTYPE html>
 <html lang="en">
@@ -819,11 +829,10 @@ const emailTemplates = {
 </body>
 
 </html>
-            `
-        }
-    }
-}
-
+            `,
+    };
+  },
+};
 
 const footer = ` <div class="footer">
 <div class="icons-container">
@@ -1091,7 +1100,7 @@ const footer = ` <div class="footer">
 //             margin: 0;
 //         }
 
-//         
+//
 //             color: #222b45;
 //             font-family: Inter;
 //             font-size: 16px;
@@ -1223,7 +1232,6 @@ const footer = ` <div class="footer">
 //             .header {
 //                 padding: 10px 10px 0px 10px;
 
-
 //                 gap: 15px;
 //             }
 
@@ -1281,7 +1289,7 @@ const footer = ` <div class="footer">
 // }
 
 const getFullTemplate = (data, body) => {
-    return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
    <html xmlns="www.w3.org/1999/xhtml">
    
    <head>
@@ -1756,7 +1764,6 @@ const getFullTemplate = (data, body) => {
        </body>
        
        </html>
-               `
-
-}
-module.exports = emailTemplates
+               `;
+};
+module.exports = emailTemplates;

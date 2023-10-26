@@ -112,7 +112,15 @@ const Offboarding = () => {
     setOpen(true);
     GetEmployeesList(data._id);
   };
-
+ const HandleUpdateAction = (data) => {
+   setUpdate(true);
+   reset({
+     to: data.offboardingData.to._id,
+     notes: data.offboardingData.notes,
+   });
+   HandleOpen(data);
+  
+ };
   const HandleClose = () => {
     setOpen(false);
     clearErrors();
@@ -256,7 +264,6 @@ const Offboarding = () => {
         setIsLoading(false);
       });
   };
-  const temp = [1, 2, 3, 4, 5, 6];
   useEffect(() => {
     GetOffboardList();
   }, []);
@@ -264,7 +271,7 @@ const Offboarding = () => {
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Offboarding"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Employee</DisciplinaryHeading>
+        <DisciplinaryHeading>All Employees</DisciplinaryHeading>
         <Modal
           open={open}
           sx={{
@@ -304,7 +311,7 @@ const Offboarding = () => {
               <>
                 <ModalUpperDiv>
                   <ModalHeading>
-                    {!update ? "Offboarding" : "Update Task"}
+                    {!update ? "Offboarding" : "View offboarding"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -320,7 +327,7 @@ const Offboarding = () => {
                   <ModalUpperMid>
                     <InputLabel>
                       Assign the responsibilities of {selectedName} to
-                      <InputSpan>*</InputSpan>
+                      {update ? " " : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <Controller
                       name={`to`}
@@ -332,7 +339,7 @@ const Offboarding = () => {
                         },
                       }}
                       render={({ field }) => (
-                        <Select {...field}>
+                        <Select {...field} disabled={update}>
                           <Option value="">Select</Option>
                           {employeeList?.map((data) => (
                             <Option value={data._id}>
@@ -348,7 +355,7 @@ const Offboarding = () => {
                     />
                     {errors.to && <Errors>{errors.to?.message}</Errors>}
                     <InputLabel>
-                      Notes <InputSpan>*</InputSpan>
+                      Notes {update ? " " : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <TextArea
                       type="text"
@@ -358,6 +365,7 @@ const Offboarding = () => {
                           message: "Required",
                         },
                       })}
+                      disabled={update}
                     />
                     {errors.notes && <Errors>{errors.notes?.message}</Errors>}
                     {!update ? (
@@ -368,15 +376,7 @@ const Offboarding = () => {
                       >
                         Submit
                       </AddNewButton>
-                    ) : (
-                      <AddNewButton
-                        type="submit"
-                        disabled={isLoading}
-                        style={{ marginTop: "2.5rem" }}
-                      >
-                        Update
-                      </AddNewButton>
-                    )}
+                    ) : ""}
                   </ModalUpperMid>
                 </form>
               </>
@@ -506,23 +506,32 @@ const Offboarding = () => {
 
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
-                      <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <AiOutlineUserSwitch
-                            style={{
-                              width: "2rem",
-                              height: "2rem",
-                              color: "#279AF1",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => {
-                              HandleOpen(data);
-                            }}
+                      {data?.toPersonalInfo ? (
+                        <ActionIconDiv>
+                          <ActionIcons
+                            src="/images/icons/eye.svg"
+                            onClick={() => HandleUpdateAction(data)}
                           />
-                        )}
-                      </ActionIconDiv>
+                        </ActionIconDiv>
+                      ) : (
+                        <ActionIconDiv>
+                          {userType === ROLES.EMPLOYEE ? (
+                            " "
+                          ) : (
+                            <AiOutlineUserSwitch
+                              style={{
+                                width: "2rem",
+                                height: "2rem",
+                                color: "#279AF1",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => {
+                                HandleOpen(data);
+                              }}
+                            />
+                          )}
+                        </ActionIconDiv>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
