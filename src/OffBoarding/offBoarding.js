@@ -112,15 +112,14 @@ const Offboarding = () => {
     setOpen(true);
     GetEmployeesList(data._id);
   };
- const HandleUpdateAction = (data) => {
-   setUpdate(true);
-   reset({
-     to: data.offboardingData.to._id,
-     notes: data.offboardingData.notes,
-   });
-   HandleOpen(data);
-  
- };
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    reset({
+      to: data.offboardingData.to._id,
+      notes: data.offboardingData.notes,
+    });
+    HandleOpen(data);
+  };
   const HandleClose = () => {
     setOpen(false);
     clearErrors();
@@ -376,7 +375,9 @@ const Offboarding = () => {
                       >
                         Submit
                       </AddNewButton>
-                    ) : ""}
+                    ) : (
+                      ""
+                    )}
                   </ModalUpperMid>
                 </form>
               </>
