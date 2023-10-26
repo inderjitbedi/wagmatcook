@@ -260,7 +260,7 @@ const orgController = {
       let users = await User.find({ isActive: true, receivedWelcomeEmail: false });
 
       // for (const user of users) {
-      sendGrid.send("iinderjitbedi@gmail.com", 'welcome', { req });
+      sendGrid.send("lalit.kumar@quantumsystem.in", 'welcome', { req });
       // }
       res.status(200).json({
         message: 'Employee leave request sent successfully'
