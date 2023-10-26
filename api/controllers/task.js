@@ -55,8 +55,8 @@ const taskController = {
         try {
             const task = await Tasks.findOneAndUpdate({
                 _id: req.params.id,
-            }, { isCompleted: true }, { new: true })
-            res.status(200).json({ message: 'Task marked as completed successfully' });
+            }, { isCompleted: !!req.body.isCompleted }, { new: true })
+            res.status(200).json({ message: 'Task marked as ' + (req.body.isCompleted ? 'completed' : 'in-progress') + ' successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
             res.status(400).json(error);
@@ -115,7 +115,7 @@ const taskController = {
     async assigneeList(req, res) {
         try {
 
-            let filters = { isDeleted: false, role: roles.EMPLOYEE }
+            let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN }, _id: { $ne: req.user._id } }
 
             const assignees = await User.aggregate([
                 {

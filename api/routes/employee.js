@@ -150,6 +150,8 @@ router.post('/leave-history/:id/request', verifyToken([roles.ORG_ADMIN, roles.HR
 router.get('/active-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getActiveList);
 
 router.get('/leave-balance', verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveBalance);
+router.put('/offboard', verifyToken([roles.HR, roles.MANAGER, roles.ORG_ADMIN]), employeeController.offboard);
+router.get('/offboarding-list', verifyToken([roles.HR, roles.MANAGER, roles.ORG_ADMIN]), employeeController.offboardingList);
 
 
 

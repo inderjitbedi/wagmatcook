@@ -196,6 +196,27 @@ const orgController = {
       res.status(400).json(error);
     }
   },
+  async saUpdateOrgAdmin(req, res) {
+    try {
+      const user = await User.findOneAndUpdate({
+        _id: req.params.userid
+      }, { email: req.body.email }, { new: true });
+
+      const org = await Organization.findOneAndUpdate({
+        _id: req.params.organizationid
+      }, { name: req.body.name }, { new: true });
+
+      res.status(200).json({
+        org,
+        message: "Information updated successfully.",
+      });
+    } catch (error) {
+      console.error("organizationController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+
   async update(req, res) {
     try {
 
@@ -239,7 +260,7 @@ const orgController = {
       let users = await User.find({ isActive: true, receivedWelcomeEmail: false });
 
       // for (const user of users) {
-      sendGrid.send("iinderjitbedi@gmail.com", 'welcome', { req });
+      sendGrid.send("lalit.kumar@quantumsystem.in", 'welcome', { req });
       // }
       res.status(200).json({
         message: 'Employee leave request sent successfully'
