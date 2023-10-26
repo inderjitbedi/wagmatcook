@@ -287,7 +287,7 @@ const emailTemplates = {
                       
                       <img  width="284"
                       height="263"
-                     src="http://localhost:4041/api/public/welcome.png" >
+                     src="https://hrapi.chantsit.com/public/welcome.png" >
                             </div>
                             <h2
                               style="
