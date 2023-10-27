@@ -56,6 +56,7 @@ import {
   FlexColumn,
   FlexColumnForm,
   FlexContaierForm,
+  AlignFlex,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -127,6 +128,7 @@ const Applicants = ({ jobid }) => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [applicants, setApplicants] = useState([]);
+  const [isShow, setIsShow] = useState(false);
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -182,7 +184,14 @@ const Applicants = ({ jobid }) => {
       interviewDate: data.interviewDate
         ? new Date(data.interviewDate).toISOString().split("T")[0]
         : null,
+      isEligibile: data.isEligibile,
     });
+    if (data.interviewed === interviewed.YES) {
+      setIsShow(true);
+    } else {
+      setIsShow(false);
+      setValue("isSelected", false);
+    }
     HandleOpen();
   };
 
@@ -191,6 +200,7 @@ const Applicants = ({ jobid }) => {
     HandleOpen();
     reset({});
     clearErrors();
+    setIsShow(false);
     setDetailsLength(500);
   };
   const jobPosting = [
@@ -700,6 +710,15 @@ const Applicants = ({ jobid }) => {
                           value: true,
                           message: "Required",
                         },
+                        onChange: (e) => {
+                          const interviewValue = e.target.value;
+                          if (interviewValue === interviewed.YES) {
+                            setIsShow(true);
+                          } else {
+                            setIsShow(false);
+                            setValue("isSelected", false);
+                          }
+                        },
                       }}
                       render={({ field }) => (
                         <Select {...field}>
@@ -713,6 +732,50 @@ const Applicants = ({ jobid }) => {
                       )}
                     />
                     {<Errors> {errors.role?.message}</Errors>}
+                    <FlexContaierForm style={{ marginBottom: "1rem" }}>
+                      <FlexColumnForm>
+                        <AlignFlex>
+                          <input
+                            type="checkbox"
+                            {...register(`isEligibile`, {})}
+                            id={`isEligibile`}
+                          />
+                          <InputLabel
+                            htmlFor={`isEligibile`}
+                            style={{
+                              marginBottom: "0rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Is Eligible?{" "}
+                          </InputLabel>
+                        </AlignFlex>
+                      </FlexColumnForm>
+
+                      {isShow ? (
+                        <FlexColumnForm>
+                          <AlignFlex>
+                            <input
+                              type="checkbox"
+                              {...register(`isSelected`, {})}
+                              id={`isSelected`}
+                            />
+                            <InputLabel
+                              htmlFor={`isSelected`}
+                              style={{
+                                marginBottom: "0rem",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Is Selected
+                            </InputLabel>
+                          </AlignFlex>
+                        </FlexColumnForm>
+                      ) : (
+                        "  "
+                      )}
+                    </FlexContaierForm>
+
                     <input
                       style={{ width: "50%" }}
                       type="file"
@@ -862,6 +925,14 @@ const Applicants = ({ jobid }) => {
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Meets&nbsp;Eligibility
+                    </TableCell>
+
+                    <TableCell
+                      sx={CellHeadStyles}
                       style={{ minWidth: "10rem" }}
                       align="left"
                     >
@@ -932,40 +1003,33 @@ const Applicants = ({ jobid }) => {
                               {/* <TableCell sx={CellStyle} align="left">
                       {data.phone}
                     </TableCell> */}
-                              <TableCell sx={CellStyle} align="left">
+                              <TableCell sx={CellStyle2} align="left">
                                 {data?.appliedOn
                                   ? moment(data.appliedOn).format("D MMM, YYYY")
                                   : " - "}
                               </TableCell>
-                              <TableCell sx={CellStyle} align="left">
+                              <TableCell sx={CellStyle2} align="left">
                                 {data?.interviewDate
                                   ? moment(data.interviewDate).format(
                                       "D MMM, YYYY"
                                     )
                                   : " - "}
                               </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data?.isEligibile ? "Yes" : "No"}
+                              </TableCell>
 
                               <TableCell sx={CellStyle2} align="left">
-                                {data.interviewed ? (
-                                  data.interviewed === interviewed.NO ? (
-                                    <RejectStyle>
-                                      {data.interviewed}
-                                    </RejectStyle>
-                                  ) : data.interviewed === interviewed.YES ? (
-                                    <ApproveStyle>
-                                      {data.interviewed}
-                                    </ApproveStyle>
-                                  ) : data.interviewed ===
-                                    interviewed.DID_NOT_ATTEND ? (
-                                    <PendingStyle>
-                                      {data.interviewed}
-                                    </PendingStyle>
-                                  ) : (
-                                    " - "
-                                  )
-                                ) : (
-                                  " - "
-                                )}
+                                {data.interviewed
+                                  ? data.interviewed === interviewed.NO
+                                    ? "No"
+                                    : data.interviewed === interviewed.YES
+                                    ? "Yes"
+                                    : data.interviewed ===
+                                      interviewed.DID_NOT_ATTEND
+                                    ? "Did not attend"
+                                    : " - "
+                                  : " - "}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">
                                 {" "}

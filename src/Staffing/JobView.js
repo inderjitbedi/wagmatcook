@@ -153,52 +153,52 @@ const JobView = () => {
             text="Job Post Details"
           />
           <BackGroundWhite>
-              <FlexSpaceBetweenmobile>
-                <FlexContaier>
-                  {/* <BackArrowButton onClick={() => Navigate(-1)}>
+            <FlexSpaceBetweenmobile>
+              <FlexContaier>
+                {/* <BackArrowButton onClick={() => Navigate(-1)}>
                   <IconsEmployee src="/images/icons/ArrowLeft.svg" />
                 </BackArrowButton> */}
-                  <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
-                </FlexContaier>
-              </FlexSpaceBetweenmobile>
-              <FlexSpaceBetween>
-                <FlexColumn>
-                  <TaskLight>Job Title</TaskLight>
-                  <TaskTitle> {result?.job?.title || " - "} </TaskTitle>
-                </FlexColumn>
-                <FlexColumn>
-                  <TaskLight>Department</TaskLight>
-                  <TaskTitle>{result?.job?.department || " - "}</TaskTitle>
-                </FlexColumn>
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <FlexColumn>
-                  <TaskLight>Closing Date</TaskLight>
-                  <TaskDescription>
-                    {" "}
-                    {result?.job?.closingDate
-                      ? moment(result?.job?.closingDate).format("D MMM, YYYY")
-                      : " - "}
-                  </TaskDescription>
-                </FlexColumn>
-                <FlexColumn>
-                  <TaskLight>Posting Date</TaskLight>
-                  <TaskDescription>
-                    {result?.job?.postingDate
-                      ? moment(result?.job?.postingDate).format("D MMM, YYYY")
-                      : " - "}
-                  </TaskDescription>
-                </FlexColumn>
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <FlexColumnNoWidth>
-                  <TaskLight>Board Members</TaskLight>
-                  <TaskDescription>
-                    {result?.job?.boardMembers || " - "}
-                  </TaskDescription>
-                </FlexColumnNoWidth>
-              </FlexSpaceBetween>
-              {/* <FlexSpaceBetween>
+                <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
+              </FlexContaier>
+            </FlexSpaceBetweenmobile>
+            <FlexSpaceBetween>
+              <FlexColumn>
+                <TaskLight>Job Title</TaskLight>
+                <TaskTitle> {result?.job?.title || " - "} </TaskTitle>
+              </FlexColumn>
+              <FlexColumn>
+                <TaskLight>Department</TaskLight>
+                <TaskTitle>{result?.job?.department?.name || " - "}</TaskTitle>
+              </FlexColumn>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumn>
+                <TaskLight>Closing Date</TaskLight>
+                <TaskDescription>
+                  {" "}
+                  {result?.job?.closingDate
+                    ? moment(result?.job?.closingDate).format("D MMM, YYYY")
+                    : " - "}
+                </TaskDescription>
+              </FlexColumn>
+              <FlexColumn>
+                <TaskLight>Posting Date</TaskLight>
+                <TaskDescription>
+                  {result?.job?.postingDate
+                    ? moment(result?.job?.postingDate).format("D MMM, YYYY")
+                    : " - "}
+                </TaskDescription>
+              </FlexColumn>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumnNoWidth>
+                <TaskLight>Board Members</TaskLight>
+                <TaskDescription>
+                  {result?.job?.boardMembers || " - "}
+                </TaskDescription>
+              </FlexColumnNoWidth>
+            </FlexSpaceBetween>
+            {/* <FlexSpaceBetween>
                 <FlexColumnNoWidth>
                   <TaskLight>Description</TaskLight>
                   <TaskDescription>
@@ -218,24 +218,28 @@ const JobView = () => {
                   </TaskDescription>
                 </FlexColumnNoWidth>
               </FlexSpaceBetween> */}
-              <div style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
               <Tabs
                 value={valueTab}
                 onChange={HandleChangeTab}
                 aria-label="basic tabs example"
               >
                 <Tab label="Applicants List" {...a11yProps(0)} />
-                <Tab label="Interviewing List" {...a11yProps(1)} />
-                <Tab label="Selected List" {...a11yProps(2)} />
+                <Tab label="Meets Eligibility" {...a11yProps(1)} />
+                <Tab label="Interviewing List" {...a11yProps(2)} />
+                <Tab label="Selected List" {...a11yProps(3)} />
               </Tabs>
             </div>
             <CustomTabPanel value={valueTab} index={0}>
-                <Applicants jobid={jobid} />
+              <Applicants jobid={jobid} />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={1}>
               <Interviewing />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={2}>
+              <Interviewing />
+            </CustomTabPanel>
+            <CustomTabPanel value={valueTab} index={3}>
               <Selected />
             </CustomTabPanel>
           </BackGroundWhite>

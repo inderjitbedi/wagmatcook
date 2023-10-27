@@ -255,7 +255,7 @@ export const Errors = styled.p`
   font-size: 1rem;
   font-weight: 300;
   line-height: 1.2rem;
-  margin-top: 2px;
+  margin: 2px 0px 0px 0px;
 `;
 export const TabelDarkPara = styled.p`
   color: #222b45;
