@@ -137,6 +137,19 @@ const API_URLS = {
   // offboarding  apis routes
   getOffboardingList: `/employee/offboarding-list`,
   updateOffboarding: `/employee/offboard`,
+  //job posting api
+  createJobs: `/job/create`,
+  updateJobs: `/jobupdate/:id`,
+  deleteJobs: `/job/delete/:id`,
+  listJobs: `/job/list`,
+  detailsJobs: `/job/detail/:id`,
+  // applicants routes
+  createApplicants: `/job/:jobid/applicant/create`,
+  updateApplicants: `/job/:jobid/applicant/update/:id`,
+  deleteApplicants: `/job/:jobid/applicant/delete/:id`,
+  listApplicants: `/job/:jobid/applicant/list`,
+  detailsApplicants: `/job/:jobid/applicant/detail/:id`,
+  reorderApplicants: `/job/:jobid/applicant/reorder`,
 };
 
 export default API_URLS;

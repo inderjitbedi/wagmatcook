@@ -57,8 +57,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
-  height: "55rem",
-  overflowY: "scroll",
+  // height: "55rem",
+  // overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -256,9 +256,9 @@ const JobPosting = () => {
 
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Job Posting"} />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Staffing"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Job Posting</DisciplinaryHeading>
+        <DisciplinaryHeading>All Jobs</DisciplinaryHeading>
         <AddNewButton
           onClick={() => {
             HandleOpenAddNewAction();
@@ -357,93 +357,6 @@ const JobPosting = () => {
                       <Errors>{errors.department?.message}</Errors>
                     )}
                     <InputLabel>
-                      Duration <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("duration", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.duration && (
-                      <Errors>{errors.duration?.message}</Errors>
-                    )}
-                    <InputLabel>
-                    Wage Rate/Salary <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("salary", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
-                        pattern: {
-                          value: /^[+]?\d+(\.\d+)?$/,
-                          message: "Please enter valid cost",
-                        },
-                      })}
-                    />
-                    {errors.salary && <Errors>{errors.salary?.message}</Errors>}
-                    <InputLabel>
-                    Term of Position <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea
-                      type="text"
-                      {...register("postion", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.postion && (
-                      <Errors>{errors.postion?.message}</Errors>
-                    )}
-                    <InputLabel>
-                      Description <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea
-                      type="text"
-                      {...register("description", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        maxLength: {
-                          value: 500,
-                          message: "Details exceeds 500 characters ",
-                        },
-                        // minLength: {
-                        //   value: 10,
-                        //   message: "Atleast write  10 characters ",
-                        // },
-                        onChange: (value) => {
-                          setDetailsLength(500 - value.target.value.length);
-                        },
-                      })}
-                    />
-
-                    <InputPara>
-                      {" "}
-                      {<Errors>{errors.description?.message}</Errors>}{" "}
-                      <span style={{ justifySelf: "flex-end" }}>
-                        {" "}
-                        {detailsLength > -1 ? detailsLength : 0} characters left
-                      </span>
-                    </InputPara>
-
-                    <InputLabel>
                       Posting Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
@@ -456,6 +369,35 @@ const JobPosting = () => {
                       })}
                     />
                     {<Errors>{errors.postingDate?.message}</Errors>}
+                    <InputLabel>
+                      Closing Date <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("closingDate", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+                    {<Errors>{errors.closingDate?.message}</Errors>}
+                    <InputLabel>
+                      Board Members<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("boardMember", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+
+                    {errors.boardMember && (
+                      <Errors>{errors.boardMember?.message}</Errors>
+                    )}
 
                     {!update ? (
                       <AddNewButton
@@ -542,14 +484,14 @@ const JobPosting = () => {
                     style={{ minWidth: "7rem" }}
                     align="left"
                   >
-                    Posting&nbsp;Date
+                    Closing&nbsp;Date
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
-                    Wage&nbsp;Rate/Salary
+                    Interview&nbsp;Date
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -640,12 +582,12 @@ const JobPosting = () => {
                     </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">
-                        {data.isCompleted ? (
-                          <ApproveStyle>Completed</ApproveStyle>
-                        ) : (
-                          <PendingStyle>Pending</PendingStyle>
-                        )}
-                      </TableCell>
+                      {data.isCompleted ? (
+                        <ApproveStyle>Completed</ApproveStyle>
+                      ) : (
+                        <PendingStyle>Pending</PendingStyle>
+                      )}
+                    </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
