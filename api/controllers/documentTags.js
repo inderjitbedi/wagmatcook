@@ -38,7 +38,7 @@ const documentTagController = {
         try {
             let documentTag = await DocumentTags.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
             await documentTag.save();
-            res.status(201).json({ documentTag, message: 'Document Tag created successfully.' });
+            res.status(201).json({ documentTag, message: 'Document Tag fetched successfully.' });
         } catch (error) {
             console.error("documentTagController:detail:error -", error);
             res.status(400).json(error);
