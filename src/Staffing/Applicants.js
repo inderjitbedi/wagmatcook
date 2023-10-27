@@ -19,7 +19,9 @@ import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
 import InputMask from "react-input-mask";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import moment from "moment";
+import interviewed from "../constants/interviewed";
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -42,12 +44,18 @@ import {
   Errors,
   PendingStyle,
   ApproveStyle,
+  RejectStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
   EditButton,
   ButtonIcon,
   LightPara,
+  FlexSpaceBetween,
+  FlexSpaceBetweenmobile,
+  FlexColumn,
+  FlexColumnForm,
+  FlexContaierForm,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -97,8 +105,10 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
+  // height: "55rem",
+  // overflowY: "scroll",
 };
-const Applicants = () => {
+const Applicants = ({ jobid }) => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -116,6 +126,7 @@ const Applicants = () => {
   const [departmentData, setDepartmentData] = useState([]);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [applicants, setApplicants] = useState([]);
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -126,6 +137,7 @@ const Applicants = () => {
     handleSubmit,
     reset,
     setError,
+    getValues,
     setValue,
     formState: { errors },
   } = useForm({
@@ -152,21 +164,23 @@ const Applicants = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      //   HandleSubmit(data);
+      HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      //   HandleUpdate(data);
+      HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
     setId(data?._id);
-    setDetailsLength(500 - data?.description?.length);
     reset({
-      title: data.title,
-      description: data.description,
-      assignedto: data.assignee._id,
-      dueDate: data.dueDate
-        ? new Date(data.dueDate).toISOString().split("T")[0]
+      name: data.name,
+      interviewed: data.interviewed,
+      assignedto: data.assignee?._id,
+      appliedOn: data.appliedOn
+        ? new Date(data.appliedOn).toISOString().split("T")[0]
+        : null,
+      interviewDate: data.interviewDate
+        ? new Date(data.interviewDate).toISOString().split("T")[0]
         : null,
     });
     HandleOpen();
@@ -297,6 +311,182 @@ const Applicants = () => {
     setFile(null);
     setValue("file", null);
   };
+  const HandleSubmit = (data) => {
+    // e.preventDefault();
+    setIsLoading(true);
+    let url = API_URLS.createApplicants.replace(":jobid", jobid);
+
+    setIsLoading(true);
+    let dataCopy = { ...data, selectionOrder: applicants?.length + 1 };
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          });
+          GetApplicants();
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error feteching benefits. Please try again.");
+        HandleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteApplicants
+      .replace(":jobid", jobid)
+      .replace(":id", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          let FilteredArray = applicants.filter((data) => data._id !== Id);
+          let ReorderArray = FilteredArray.map((data) => data._id);
+          HandleReorder(ReorderArray);
+          HandleCloseDelete();
+          setId("");
+          GetApplicants();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Benefit deleted successfully.");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    let dataCopy = data;
+
+    let url = API_URLS.updateApplicants
+      .replace(":jobid", jobid)
+      .replace(":id", Id);
+
+    setIsLoading(true);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetApplicants();
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetApplicants = () => {
+    setIsLoading(true);
+    let url = API_URLS.listApplicants.replace(":jobid", jobid);
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+          setApplicants(result.applicants);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Adding Benefits. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleReorder = (reOrder) => {
+    console.log(reOrder, "this reorder");
+    let url = API_URLS.reorderApplicants.replace(":jobid", jobid);
+
+    httpClient({
+      method: "put",
+      url,
+      data: { applicants: reOrder },
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          GetApplicants();
+        } else {
+          ////toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reorderedData = Array.from(applicants);
+    const [movedItem] = reorderedData.splice(result.source.index, 1);
+    reorderedData.splice(result.destination.index, 0, movedItem);
+    console.log("drag is working ");
+    setApplicants(reorderedData);
+    HandleReorder(reorderedData.map((item) => item._id));
+  };
+
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 1rem 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
+  useEffect(() => {
+    GetApplicants();
+  }, []);
   return (
     <>
       <DisciplinaryDiv>
@@ -375,20 +565,24 @@ const Applicants = () => {
                       })}
                     />
                     {errors.name && <Errors>{errors.name?.message}</Errors>}
-                    <InputLabel>
+                    {/* <InputLabel>
                       Email <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
                       type="text"
                       {...register("email", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                           message: "Please enter a valid email",
                         },
                       })}
                     />
-                    {errors.email && <Errors> {errors.email?.message} </Errors>}
-                    <InputLabel>
+                    {errors.email && <Errors> {errors.email?.message} </Errors>} */}
+                    {/* <InputLabel>
                       Phone No.<InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
@@ -427,8 +621,98 @@ const Applicants = () => {
                         />
                       )}
                     />
+                    {<Errors> {errors.phone?.message} </Errors>} */}
 
-                    {<Errors> {errors.phone?.message} </Errors>}
+                    <FlexContaierForm style={{ alignItems: "flex-start" }}>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Applied On <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register("appliedOn", {
+                            required: {
+                              value: true,
+                              message: "Required",
+                            },
+                            onChange: (e) => {
+                              const endDate = getValues("interviewDate");
+
+                              const startDate = new Date(e.target.value);
+
+                              if (startDate >= new Date(endDate) && endDate) {
+                                setError("expiryDate", {
+                                  type: "custom",
+                                  message:
+                                    "Must not be earlier than  applied on",
+                                });
+                              } else {
+                                setError("interviewDate", {
+                                  type: "custom",
+                                  message: "",
+                                });
+                              }
+                            },
+                          })}
+                        />
+                        {<Errors>{errors.appliedOn?.message}</Errors>}
+                      </FlexColumnForm>
+                      <FlexColumnForm>
+                        <InputLabel>
+                          Interview Date <InputSpan>*</InputSpan>
+                        </InputLabel>
+                        <Input
+                          type="date"
+                          {...register("interviewDate", {
+                            required: {
+                              value: true,
+                              message: "Required",
+                            },
+                            validate: (fieldValue) => {
+                              const startDateValue = getValues("appliedOn");
+
+                              const endDateValue = getValues("interviewDate");
+
+                              if (endDateValue && startDateValue) {
+                                const endDate = new Date(endDateValue);
+                                const startDate = new Date(startDateValue);
+                                if (startDate > endDate) {
+                                  return "Interview date must not be earlier than applied on";
+                                } else {
+                                  return clearErrors("interviewDate");
+                                }
+                              }
+                            },
+                          })}
+                        />
+                        {<Errors>{errors.interviewDate?.message}</Errors>}
+                      </FlexColumnForm>
+                    </FlexContaierForm>
+
+                    <InputLabel>
+                      Interviewed <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Controller
+                      name={`interviewed`}
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option>Select</Option>
+                          <Option value={interviewed.YES}> YES </Option>
+                          <Option value={interviewed.NO}> NO </Option>
+                          <Option value={interviewed.DID_NOT_ATTEND}>
+                            Did not attend
+                          </Option>
+                        </Select>
+                      )}
+                    />
+                    {<Errors> {errors.role?.message}</Errors>}
                     <input
                       style={{ width: "50%" }}
                       type="file"
@@ -524,155 +808,209 @@ const Applicants = () => {
         </div>
       ) : (
         <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "1rem" }}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      background: "#FBFBFB",
+                    }}
                   >
-                    Sr.&nbsp;No.
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
-                    align="left"
-                  >
-                    Name
-                  </TableCell>
-                  {/* <TableCell
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "1rem" }}
+                    >
+                      {/* Sr.&nbsp;No. */}
+                      Order
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "12rem" }}
+                      align="left"
+                    >
+                      Name
+                    </TableCell>
+                    {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
                     Email
                   </TableCell> */}
-                  <TableCell
+                    {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
                     Phone
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Applied&nbsp;on
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Interview&nbsp;Date
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Status
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
-                    align="left"
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {!jobPosting?.length && (
-                  <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No job posting found
+                  </TableCell> */}
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Applied&nbsp;on
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Interview&nbsp;Date
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "10rem" }}
+                      align="left"
+                    >
+                      Interviewed
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "12rem" }}
+                      align="left"
+                    >
+                      Action
                     </TableCell>
                   </TableRow>
-                )}
-                {jobPosting?.map((data, index) => (
-                  <TableRow
-                    sx={{
-                      "&:last-child td, &:last-child th": {
-                        border: 0,
-                      },
-                      background: "#fff",
-                    }}
-                    key={data._id}
-                  >
-                    <TableCell sx={CellStyle2} align="left">
-                      <MenuIconDiv>{index + 1}</MenuIconDiv>
-                    </TableCell>
-                    <TableCell sx={CellStyle} align="left">
-                      {data.title || " - "}
-                    </TableCell>
-                    {/* <TableCell sx={CellStyle2} align="left">
+                </TableHead>
+                <Droppable droppableId="table">
+                  {(provided, snapshot) => (
+                    <TableBody
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {!applicants?.length && (
+                        <TableRow sx={{ height: "20rem" }}>
+                          <TableCell align="center" sx={CellStyle2} colSpan={6}>
+                            No job posting found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {applicants?.map((data, index) => (
+                        <Draggable
+                          key={data._id}
+                          draggableId={data._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <TableRow
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                background: "#fff",
+                              }}
+                              key={data._id}
+                            >
+                              <TableCell sx={CellStyle2} align="left">
+                                <MenuIconDiv>
+                                  <MenuIcon
+                                    {...provided.dragHandleProps}
+                                    src="/images/icons/Menu Dots.svg "
+                                    style={{ cursor: "grab" }}
+                                  />
+                                  {data.selectionOrder}
+                                </MenuIconDiv>
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {data.name || " - "}
+                              </TableCell>
+                              {/* <TableCell sx={CellStyle2} align="left">
                       {data.duration}
                     </TableCell> */}
-                    <TableCell sx={CellStyle} align="left">
-                      {data.department}
-                    </TableCell>
-                    <TableCell sx={CellStyle} align="left">
-                      {data.department}
-                    </TableCell>
-                    <TableCell sx={CellStyle} align="left">
-                      {data.department}
-                    </TableCell>
+                              {/* <TableCell sx={CellStyle} align="left">
+                      {data.phone}
+                    </TableCell> */}
+                              <TableCell sx={CellStyle} align="left">
+                                {data?.appliedOn
+                                  ? moment(data.appliedOn).format("D MMM, YYYY")
+                                  : " - "}
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {data?.interviewDate
+                                  ? moment(data.interviewDate).format(
+                                      "D MMM, YYYY"
+                                    )
+                                  : " - "}
+                              </TableCell>
 
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.isCompleted ? (
-                        <ApproveStyle>Completed</ApproveStyle>
-                      ) : (
-                        <PendingStyle>Pending</PendingStyle>
-                      )}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {" "}
-                      <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleOpenDelete();
-                              setId(data._id);
-                            }}
-                            src="/images/icons/Trash-2.svg"
-                          />
-                        )}
-                        <ActionIcons
-                          onClick={() => {
-                            // HandleOpenDelete();
-                            // setId(data._id);
-                          }}
-                          src="/images/icons/Download.svg"
-                        />
-                      </ActionIconDiv>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data.interviewed ? (
+                                  data.interviewed === interviewed.NO ? (
+                                    <RejectStyle>
+                                      {data.interviewed}
+                                    </RejectStyle>
+                                  ) : data.interviewed === interviewed.YES ? (
+                                    <ApproveStyle>
+                                      {data.interviewed}
+                                    </ApproveStyle>
+                                  ) : data.interviewed ===
+                                    interviewed.DID_NOT_ATTEND ? (
+                                    <PendingStyle>
+                                      {data.interviewed}
+                                    </PendingStyle>
+                                  ) : (
+                                    " - "
+                                  )
+                                ) : (
+                                  " - "
+                                )}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                <ActionIconDiv>
+                                  {userType === ROLES.EMPLOYEE ? (
+                                    " "
+                                  ) : (
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleUpdateAction(data);
+                                      }}
+                                      src="/images/icons/Pendown.svg"
+                                    />
+                                  )}
+                                  {userType === ROLES.EMPLOYEE ? (
+                                    " "
+                                  ) : (
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleOpenDelete();
+                                        setId(data._id);
+                                      }}
+                                      src="/images/icons/Trash-2.svg"
+                                    />
+                                  )}
+                                  <ActionIcons
+                                    onClick={() => {
+                                      // HandleOpenDelete();
+                                      // setId(data._id);
+                                    }}
+                                    src="/images/icons/Download.svg"
+                                  />
+                                </ActionIconDiv>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </Draggable>
+                      ))}
+                    </TableBody>
+                  )}
+                </Droppable>
+              </Table>
+            </TableContainer>
+          </DragDropContext>
+
           {result?.totalPages > 1 && (
             <PaginationDiv>
               <Pagination
@@ -691,7 +1029,7 @@ const Applicants = () => {
         message="Are you sure you want to delete this applicant?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
-        // HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
       />
     </>
   );

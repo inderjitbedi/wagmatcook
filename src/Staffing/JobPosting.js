@@ -57,8 +57,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
-  height: "55rem",
-  overflowY: "scroll",
+  // height: "55rem",
+  // overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -109,6 +109,8 @@ const JobPosting = () => {
     clearErrors,
     handleSubmit,
     reset,
+    getValues,
+    setError,
     formState: { errors },
   } = useForm({
     mode: "all",
@@ -134,22 +136,24 @@ const JobPosting = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      //   HandleSubmit(data);
+      HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      //   HandleUpdate(data);
+      HandleUpdate(data);
     }
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
-    setId(data._id);
-    setDetailsLength(500 - data?.description?.length);
+    setId(data?._id);
     reset({
       title: data.title,
-      description: data.description,
-      assignedto: data.assignee._id,
-      dueDate: data.dueDate
-        ? new Date(data.dueDate).toISOString().split("T")[0]
+      department: data.department,
+      closingDate: data.closingDate
+        ? new Date(data.closingDate).toISOString().split("T")[0]
         : null,
+      postingDate: data.postingDate
+        ? new Date(data.postingDate).toISOString().split("T")[0]
+        : null,
+      boardMembers: data.boardMembers,
     });
     HandleOpen();
   };
@@ -190,8 +194,125 @@ const JobPosting = () => {
         });
     });
   };
+  const GetJobPostings = () => {
+    setIsLoading(true);
+    let url = API_URLS.listJobs;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleSubmit = (data) => {
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.createJobs;
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          GetJobPostings();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Employee disciplinary added successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        toast.error("Error Adding New Disciplinary . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleUpdate = (data) => {
+    console.log("update Data:", data);
+    setIsLoading(true);
+    let dataCopy = data;
+
+    let url = API_URLS.updateJobs.replace(":id", Id);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetJobPostings();
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteJobs.replace(":id", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetJobPostings();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
   useEffect(() => {
     GetDepartments();
+    GetJobPostings();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -200,65 +321,12 @@ const JobPosting = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, [page]);
-  const jobPosting = [
-    {
-      id: 1,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 2,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 3,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-
-    {
-      id: 4,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 5,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-  ];
 
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Job Posting"} />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text={"Staffing"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Job Posting</DisciplinaryHeading>
+        <DisciplinaryHeading>All Jobs</DisciplinaryHeading>
         <AddNewButton
           onClick={() => {
             HandleOpenAddNewAction();
@@ -357,93 +425,6 @@ const JobPosting = () => {
                       <Errors>{errors.department?.message}</Errors>
                     )}
                     <InputLabel>
-                      Duration <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("duration", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.duration && (
-                      <Errors>{errors.duration?.message}</Errors>
-                    )}
-                    <InputLabel>
-                    Wage Rate/Salary <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("salary", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        validate: (fieldValue) => {
-                          return (
-                            (!isNaN(parseFloat(fieldValue)) &&
-                              isFinite(fieldValue)) ||
-                            "Must be a number"
-                          );
-                        },
-                        pattern: {
-                          value: /^[+]?\d+(\.\d+)?$/,
-                          message: "Please enter valid cost",
-                        },
-                      })}
-                    />
-                    {errors.salary && <Errors>{errors.salary?.message}</Errors>}
-                    <InputLabel>
-                    Term of Position <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea
-                      type="text"
-                      {...register("postion", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.postion && (
-                      <Errors>{errors.postion?.message}</Errors>
-                    )}
-                    <InputLabel>
-                      Description <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea
-                      type="text"
-                      {...register("description", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        maxLength: {
-                          value: 500,
-                          message: "Details exceeds 500 characters ",
-                        },
-                        // minLength: {
-                        //   value: 10,
-                        //   message: "Atleast write  10 characters ",
-                        // },
-                        onChange: (value) => {
-                          setDetailsLength(500 - value.target.value.length);
-                        },
-                      })}
-                    />
-
-                    <InputPara>
-                      {" "}
-                      {<Errors>{errors.description?.message}</Errors>}{" "}
-                      <span style={{ justifySelf: "flex-end" }}>
-                        {" "}
-                        {detailsLength > -1 ? detailsLength : 0} characters left
-                      </span>
-                    </InputPara>
-
-                    <InputLabel>
                       Posting Date <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
@@ -453,9 +434,68 @@ const JobPosting = () => {
                           value: true,
                           message: "Required",
                         },
+                        onChange: (e) => {
+                          const endDate = getValues("closingDate");
+
+                          const startDate = new Date(e.target.value);
+
+                          if (startDate >= new Date(endDate) && endDate) {
+                            setError("expiryDate", {
+                              type: "custom",
+                              message: "Must not be earlier than posting date",
+                            });
+                          } else {
+                            setError("closingDate", {
+                              type: "custom",
+                              message: "",
+                            });
+                          }
+                        },
                       })}
                     />
                     {<Errors>{errors.postingDate?.message}</Errors>}
+                    <InputLabel>
+                      Closing Date <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="date"
+                      {...register("closingDate", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                        validate: (fieldValue) => {
+                          const startDateValue = getValues("postingDate");
+
+                          const endDateValue = getValues("closingDate");
+
+                          if (endDateValue && startDateValue) {
+                            const endDate = new Date(endDateValue);
+                            const startDate = new Date(startDateValue);
+                            if (startDate > endDate) {
+                              return "Closing date must not be earlier than posting date";
+                            } else {
+                              return clearErrors("closingDate");
+                            }
+                          }
+                        },
+                      })}
+                    />
+                    {<Errors>{errors.closingDate?.message}</Errors>}
+                    <InputLabel>
+                      Board Members<InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Input
+                      type="text"
+                      {...register("boardMembers", {
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      })}
+                    />
+
+                    {<Errors>{errors.boardMembers?.message}</Errors>}
 
                     {!update ? (
                       <AddNewButton
@@ -539,7 +579,7 @@ const JobPosting = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "7rem" }}
+                    style={{ minWidth: "6rem" }}
                     align="left"
                   >
                     Posting&nbsp;Date
@@ -549,15 +589,23 @@ const JobPosting = () => {
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
-                    Wage&nbsp;Rate/Salary
+                    Closing&nbsp;Date
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "7rem" }}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Board Members
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "2rem" }}
                     align="left"
                   >
                     Applicants
                   </TableCell>
+
                   {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "7rem" }}
@@ -572,13 +620,7 @@ const JobPosting = () => {
                   >
                     Description
                   </TableCell> */}
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Status
-                  </TableCell>
+
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -590,14 +632,14 @@ const JobPosting = () => {
               </TableHead>
 
               <TableBody>
-                {!jobPosting?.length && (
+                {!result?.jobs?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
                       No job posting found
                     </TableCell>
                   </TableRow>
                 )}
-                {jobPosting?.map((data, index) => (
+                {result?.jobs?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {
@@ -611,20 +653,46 @@ const JobPosting = () => {
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.title || " - "}
+                      <MenuIconDiv
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/job-posting/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/job-posting/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(
+                              `/user-management/job-posting/details/${data._id}`
+                            );
+                          } else {
+                            Navigate(
+                              `/organization-admin/job-posting/details/${data._id}`
+                            );
+                          }
+                        }}
+                      >
+                        {data?.title || " - "}
+                      </MenuIconDiv>
                     </TableCell>
                     {/* <TableCell sx={CellStyle2} align="left">
                       {data.duration}
                     </TableCell> */}
                     <TableCell sx={CellStyle} align="left">
-                      {data.department}
+                      {data?.department}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.postingDate}
+                      {data?.postingDate
+                        ? moment(data.postingDate).format("D MMM, YYYY")
+                        : " - "}
                     </TableCell>
-
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.rate || " - "}
+                    <TableCell sx={CellStyle} align="left">
+                      {data?.closingDate
+                        ? moment(data.closingDate).format("D MMM, YYYY")
+                        : " - "}
                     </TableCell>
                     {/* <TableCell sx={CellStyle2} align="left">
                       {data.Position || " - "}
@@ -636,16 +704,12 @@ const JobPosting = () => {
                           : " -"}
                     </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
+                      {data.boardMembers || " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
                       {data.applicants || " 25"}
                     </TableCell>
 
-                    <TableCell sx={CellStyle2} align="left">
-                        {data.isCompleted ? (
-                          <ApproveStyle>Completed</ApproveStyle>
-                        ) : (
-                          <PendingStyle>Pending</PendingStyle>
-                        )}
-                      </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
@@ -663,7 +727,7 @@ const JobPosting = () => {
                           onClick={() => {
                             if (userType === ROLES.HR) {
                               Navigate(
-                                `/hr-management/job-posting/details/job/${data._id}`
+                                `/hr-management/job-posting/details/${data._id}`
                               );
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
@@ -723,7 +787,7 @@ const JobPosting = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        //   HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
         message="Are you sure you want to delete this job posting?"
         isLoading={isDeleting}
       />

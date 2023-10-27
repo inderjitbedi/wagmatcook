@@ -254,7 +254,7 @@ export const Errors = styled.p`
   color: red;
   font-size: 1rem;
   font-weight: 300;
-  line-height: 0rem;
+  line-height: 1.2rem;
   margin-top: 2px;
 `;
 export const TabelDarkPara = styled.p`
@@ -312,6 +312,22 @@ export const ApproveStyle = styled.p`
   border-radius: 10rem;
   background: #c8ffc7;
   color: #0d7d0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 1.4rem;
+  margin: 0;
+  width: max-content;
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.4rem;
+`;
+export const RejectStyle = styled.p`
+  border-radius: 10rem;
+  background: #ffe7e7;
+  color: #ea4335;
   display: flex;
   align-items: center;
   justify-content: center;
