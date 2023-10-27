@@ -475,6 +475,7 @@ export const BackGroundWhite = styled.div`
   border: 1px solid #eff4fa;
   padding: 1rem 2rem;
   box-sizing: border-box;
+  padding-bottom: 11rem;
 `;
 
 export const FlexSpaceBetween = styled.div`

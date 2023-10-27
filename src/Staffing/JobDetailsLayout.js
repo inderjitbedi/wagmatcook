@@ -41,7 +41,7 @@ const JobDetailsLayout = () => {
      }, []);
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text="Job Details" />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Job Post Details" />
       <EmployeeBody>
         <BodyHeaderjob>
           <BackButtonContainer>

@@ -139,7 +139,7 @@ const API_URLS = {
   updateOffboarding: `/employee/offboard`,
   //job posting api
   createJobs: `/job/create`,
-  updateJobs: `/jobupdate/:id`,
+  updateJobs: `/job/update/:id`,
   deleteJobs: `/job/delete/:id`,
   listJobs: `/job/list`,
   detailsJobs: `/job/detail/:id`,

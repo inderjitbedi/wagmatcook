@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
-
 import { useNavigate, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
-import Box from "@mui/material/Box";
-import { useForm, Controller } from "react-hook-form";
 import { RotatingLines } from "react-loader-spinner";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
-import DeleteModal from "../Modals/DeleteModal";
 import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
@@ -17,6 +13,7 @@ import Tab from "@mui/material/Tab";
 import Applicants from "./Applicants";
 import Selected from "./Selected";
 import Interviewing from "./Interviewing";
+import moment from "moment";
 
 import { DisciplinaryHeading } from "../Disciplinary/DisciplinaryStyles";
 import {
@@ -33,24 +30,17 @@ import {
   FlexSpaceBetweenmobile,
   BasicInfoDiv,
   ViewPara,
-  TitlePara
+  TitlePara,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const JobView = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const { jobid } = useParams();
   const Navigate = useNavigate();
-
   const [userType, setUserType] = useState("");
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const HandleOpenDelete = () => setOpenDelete(true);
-  const HandleCloseDelete = () => setOpenDelete(false);
-  const [Id, setId] = useState("");
-  const [update, setUpdate] = useState(false);
-  const [detailsLength, setDetailsLength] = useState(500);
   const [result, setResult] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
@@ -63,66 +53,12 @@ const JobView = () => {
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
-  const {
-    register,
-    control,
-    clearErrors,
-    handleSubmit,
-    setError,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm({
-    mode: "all",
-  });
-  const [open, setOpen] = useState(false);
-  const HandleOpen = () => setOpen(true);
-  const HandleClose = () => {
-    setOpen(false);
-    setDetailsLength(500);
-    clearErrors();
-    reset({});
-  };
+  
+
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  const onSubmit = (data) => {
-    function isEmptyObject(obj) {
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          return false;
-        }
-      }
-      return true;
-    }
-    if (isEmptyObject(errors) && !update) {
-      //   HandleSubmit(data);
-    } else if (update && isEmptyObject(errors)) {
-      //   HandleUpdate(data);
-    }
-  };
-  const HandleUpdateAction = (data) => {
-    setUpdate(true);
-    setId(data._id);
-    setDetailsLength(500 - data?.description?.length);
-    reset({
-      title: data.title,
-      description: data.description,
-      assignedto: data.assignee._id,
-      dueDate: data.dueDate
-        ? new Date(data.dueDate).toISOString().split("T")[0]
-        : null,
-    });
-    HandleOpen();
-  };
 
-  const HandleOpenAddNewAction = () => {
-    setUpdate(false);
-    HandleOpen();
-    reset({});
-    clearErrors();
-    setDetailsLength(500);
-  };
   const BackArrowButton = styled.div`
     display: none;
 
@@ -163,59 +99,33 @@ const JobView = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
-  const jobPosting = [
-    {
-      id: 1,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 2,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 3,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-
-    {
-      id: 4,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 5,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-  ];
+  const GetJobPostings = () => {
+    setIsLoading(true);
+    let url = API_URLS.detailsJobs.replace(":id",jobid);
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    GetJobPostings();
+  },[])
+  
   return (
     <>
       {isLoading ? (
@@ -238,62 +148,77 @@ const JobView = () => {
         </div>
       ) : (
         <>
-          <BasicInfoDiv>
-            <FlexSpaceBetweenmobile>
-              <FlexContaier>
-                {/* <BackArrowButton onClick={() => Navigate(-1)}>
+          <CommenDashHeader
+            onSearch={HandleSearchCahnge}
+            text="Job Post Details"
+          />
+          <BackGroundWhite>
+              <FlexSpaceBetweenmobile>
+                <FlexContaier>
+                  {/* <BackArrowButton onClick={() => Navigate(-1)}>
                   <IconsEmployee src="/images/icons/ArrowLeft.svg" />
                 </BackArrowButton> */}
-                <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
-              </FlexContaier>
-            </FlexSpaceBetweenmobile>
-            <FlexSpaceBetween>
-              <FlexColumn>
-                <TitlePara>Job Title</TitlePara>
-                <ViewPara> {"developer" || " - "} </ViewPara>
-              </FlexColumn>
-              <FlexColumn>
-                <TaskLight>Department</TaskLight>
-                <TaskTitle>Accounts</TaskTitle>
-              </FlexColumn>
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
-              <FlexColumn>
-                <TaskLight>Duration</TaskLight>
-                <TaskDescription>{" 1 Year" || " - "}</TaskDescription>
-              </FlexColumn>
-              <FlexColumn>
-                <TaskLight>Wage Rate/Salary</TaskLight>
-                <TaskDescription>{"Head Accountant" || " - "}</TaskDescription>
-              </FlexColumn>
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
-              <FlexColumnNoWidth>
-                <TaskLight>Posting Date</TaskLight>
-                <TaskDescription>{"22 Nov 2023" || " - "}</TaskDescription>
-              </FlexColumnNoWidth>
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
-              <FlexColumnNoWidth>
-                <TaskLight>Description</TaskLight>
-                <TaskDescription>
-                  {" "}
-                  {"Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You’ve nailed the design and the responsiveness at various breakpoints works really well." ||
-                    " - "}{" "}
-                </TaskDescription>
-              </FlexColumnNoWidth>
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
-              <FlexColumnNoWidth>
-                <TaskLight>Term of Position</TaskLight>
-                <TaskDescription>
-                  {" "}
-                  {"Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You’ve nailed the design and the responsiveness at various breakpoints works really well." ||
-                    " - "}{" "}
-                </TaskDescription>
-              </FlexColumnNoWidth>
-            </FlexSpaceBetween>
-            {/* <div style={{ width: "100%" }}>
+                  <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
+                </FlexContaier>
+              </FlexSpaceBetweenmobile>
+              <FlexSpaceBetween>
+                <FlexColumn>
+                  <TaskLight>Job Title</TaskLight>
+                  <TaskTitle> {result?.job?.title || " - "} </TaskTitle>
+                </FlexColumn>
+                <FlexColumn>
+                  <TaskLight>Department</TaskLight>
+                  <TaskTitle>{result?.job?.department || " - "}</TaskTitle>
+                </FlexColumn>
+              </FlexSpaceBetween>
+              <FlexSpaceBetween>
+                <FlexColumn>
+                  <TaskLight>Closing Date</TaskLight>
+                  <TaskDescription>
+                    {" "}
+                    {result?.job?.closingDate
+                      ? moment(result?.job?.closingDate).format("D MMM, YYYY")
+                      : " - "}
+                  </TaskDescription>
+                </FlexColumn>
+                <FlexColumn>
+                  <TaskLight>Posting Date</TaskLight>
+                  <TaskDescription>
+                    {result?.job?.postingDate
+                      ? moment(result?.job?.postingDate).format("D MMM, YYYY")
+                      : " - "}
+                  </TaskDescription>
+                </FlexColumn>
+              </FlexSpaceBetween>
+              <FlexSpaceBetween>
+                <FlexColumnNoWidth>
+                  <TaskLight>Board Members</TaskLight>
+                  <TaskDescription>
+                    {result?.job?.boardMembers || " - "}
+                  </TaskDescription>
+                </FlexColumnNoWidth>
+              </FlexSpaceBetween>
+              {/* <FlexSpaceBetween>
+                <FlexColumnNoWidth>
+                  <TaskLight>Description</TaskLight>
+                  <TaskDescription>
+                    {" "}
+                    {"Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You’ve nailed the design and the responsiveness at various breakpoints works really well." ||
+                      " - "}{" "}
+                  </TaskDescription>
+                </FlexColumnNoWidth>
+              </FlexSpaceBetween>
+              <FlexSpaceBetween>
+                <FlexColumnNoWidth>
+                  <TaskLight>Term of Position</TaskLight>
+                  <TaskDescription>
+                    {" "}
+                    {"Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You’ve nailed the design and the responsiveness at various breakpoints works really well." ||
+                      " - "}{" "}
+                  </TaskDescription>
+                </FlexColumnNoWidth>
+              </FlexSpaceBetween> */}
+              <div style={{ width: "100%" }}>
               <Tabs
                 value={valueTab}
                 onChange={HandleChangeTab}
@@ -305,24 +230,17 @@ const JobView = () => {
               </Tabs>
             </div>
             <CustomTabPanel value={valueTab} index={0}>
-              <Applicants />
+                <Applicants jobid={jobid} />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={1}>
               <Interviewing />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={2}>
               <Selected />
-            </CustomTabPanel> */}
-          </BasicInfoDiv>
+            </CustomTabPanel>
+          </BackGroundWhite>
         </>
       )}
-      <DeleteModal
-        openDelete={openDelete}
-        message="Are you sure you want to delete this applicant?"
-        HandleCloseDelete={HandleCloseDelete}
-        isLoading={isDeleting}
-        // HandleDelete={HandleDelete}
-      />
     </>
   );
 };
