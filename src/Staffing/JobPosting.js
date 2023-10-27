@@ -146,7 +146,7 @@ const JobPosting = () => {
     setId(data?._id);
     reset({
       title: data.title,
-      department: data.department,
+      department: data.department?._id,
       closingDate: data.closingDate
         ? new Date(data.closingDate).toISOString().split("T")[0]
         : null,
@@ -682,7 +682,7 @@ const JobPosting = () => {
                       {data.duration}
                     </TableCell> */}
                     <TableCell sx={CellStyle} align="left">
-                      {data?.department}
+                      {data?.department?.name}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data?.postingDate
