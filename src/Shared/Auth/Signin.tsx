@@ -8,6 +8,7 @@ import { Box } from "@mui/material";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
 import API_URLS from "../../constants/apiUrls";
+import redirectToDashboard from "./AuthUtils";
 
 const SharedSignin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +63,12 @@ const SharedSignin = () => {
         .then(({ result, error }: any) => {
           if (result) {
             localStorage.setItem("user-email", formData.email);
+
+            // localStorage.setItem("user", JSON.stringify(result?.user));
+            // localStorage.setItem("token", result?.token);
+            // localStorage.setItem("org", JSON.stringify(result?.organization));
+            // redirectToDashboard(result?.user?.role, navigate);
+
             navigate("/verify-otp");
             toast.success(result.message, {
               className: "toast",

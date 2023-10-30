@@ -1,11 +1,13 @@
 const notificationConstants = require("../constants/notificationConstants");
 const leaveStatus = require("../enum/leaveStatus");
 const notificationType = require("../enum/notificationType");
+const roles = require("../enum/roles");
 const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const LeaveType = require("../models/leaveType");
 const Notifications = require("../models/notification");
 const User = require("../models/user");
+const sendGrid = require("../providers/sendGrid");
 
 const leaveController = {
 
@@ -87,8 +89,6 @@ const leaveController = {
                 burnedHours += leave.hours
             }
 
-            console.log(allocation.leaveType.name, allocation?.totalAllocation);
-            console.log(requestedHours, burnedHours);
             if (req.body.isApproved && (requestedHours > (allocation?.totalAllocation - burnedHours))) {
                 return res.status(400).json({ message: 'Insufficent balance' });
             }
@@ -100,9 +100,27 @@ const leaveController = {
                 status: req.body.isApproved ? leaveStatus.APPROVED : leaveStatus.REJECTED
             }
 
-            const request = await EmployeeLeaveHistory.findOneAndUpdate({ _id: req.params.requestid }, payload);
+            let request = await EmployeeLeaveHistory.findOneAndUpdate({ _id: req.params.requestid }, payload);
             await request.save();
-
+            request = await request.populate([{
+                path: 'employee',
+                populate: {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo'
+                    }
+                }
+            }, {
+                path: 'responder',
+                populate: {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo'
+                    }
+                }
+            }, {
+                path: 'leaveType'
+            }])
             let type = req.body.isApproved ? notificationType.LEAVE_APPROVED : notificationType.LEAVE_REJECTED
             const notification = new Notifications({
                 title: notificationConstants[type].title?.replace('{responder}', [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ')).replace('{leavetype}', allocation.leaveType.name) || '',
@@ -112,6 +130,17 @@ const leaveController = {
                 receiver: req.params.id
             });
             await notification.save();
+
+            //
+            if (request.employee.role === roles.EMPLOYEE)
+                request.redirectUrl = `${process.env.FRONTEND_URL}user-management/leaves/${request.employee._id}`
+            else if (request.employee.role === roles.MANAGER)
+                request.redirectUrl = `${process.env.FRONTEND_URL}manager-management/leave/history`
+            else if (request.employee.role === roles.HR)
+                request.redirectUrl = `${process.env.FRONTEND_URL}hr-management/leave/history`
+
+            sendGrid.send(request.employee.email, req.body.isApproved ? "leaveApproved" : "leaveRejected", { request });
+
 
             res.status(200).json({
                 message: `Employee leave request ${req.body.isApproved ? 'approved' : 'rejected'} successfully`

@@ -20,6 +20,7 @@ const sendGrid = {
         await sgMail.send(email).then(() => {
             console.log('sendGrid:send Successfully sent at ' + toEmail);
         }).catch(error => {
+            console.log(error.response.body);
             console.error("sendGrid:send:error - ", error.toString());
         });
     }

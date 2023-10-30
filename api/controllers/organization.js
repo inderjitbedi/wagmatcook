@@ -257,13 +257,10 @@ const orgController = {
   async sendWelcomeEmail(req, res) {
     try {
 
-      let users = await User.find({ isActive: true, receivedWelcomeEmail: false });
-
-      // for (const user of users) {
-      sendGrid.send("lalit.kumar@quantumsystem.in", 'welcome', { req });
-      // }
+      let users = await User.find({ organization: req.organization?._id || null, isActive: true, receivedWelcomeEmail: false }).populate("personalInfo");
+      await processUsers(users);
       res.status(200).json({
-        message: 'Employee leave request sent successfully'
+        message: 'Welcome emails sent successfully'
       });
     } catch (error) {
       console.error("employeeController:update:error -", error);
@@ -272,5 +269,11 @@ const orgController = {
   },
 
 };
-
+async function processUsers(users) {
+  for (const user of users) {
+    console.log(user.email, user.receivedWelcomeEmail);
+    sendGrid.send(user.email, 'welcome', { user });
+    await User.findOneAndUpdate({ _id: user._id }, { receivedWelcomeEmail: true });
+  }
+}
 module.exports = orgController;
