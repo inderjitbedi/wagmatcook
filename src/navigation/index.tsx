@@ -16,8 +16,36 @@ import ScrollToTop from "../auth/pages/scrollTop";
 // import { fetchAccountStorageSpinnerState } from "../reducers/accountStorageSlice";
 // import { useAppSelector } from "../app/hooks";
 // import IntegolfLoader from '../shared/integolf-loader/integolf-loader';
+interface User {
+  role: string;
+  // Add other user properties as needed
+}
+const roleBasedGuard = (allowedRoles: any, userRole: any) => {
+  if (allowedRoles.includes(userRole)) {
+    console.log(
+      "in true condition:",
+      allowedRoles,
+      userRole,
+      allowedRoles.includes(userRole)
+    );
+    return true;
+  } else {
+    console.log("in flase condition:", allowedRoles, userRole);
 
+    return false;
+  }
+};
 const Navigation = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+  }, []);
+
   // const (!!(localStorage.getItem("user") && localStorage.getItem("token"))): any = !!(localStorage.getItem("user") && localStorage.getItem("token"));
   // const location = useLocation();
   // const [(!!(localStorage.getItem("user") && localStorage.getItem("token"))), setIsUser] = useState();
@@ -31,45 +59,56 @@ const Navigation = () => {
   //useAppSelector((!!(localStorage.getItem("user") && localStorage.getItem("token")))LoggedIn);
   // const showSpinner = useAppSelector(fetchAccountStorageSpinnerState);
 
+  const renderNestedRoutes = (routes: any) => {
+    const userRole = user?.role || "user";
 
-  const renderNestedRoutes = (routes:any) => {
+    
     return (
       <>
-        {routes.map(({ component, path, type, to, title, children }:any) => (
-          <React.Fragment key={path}>
-            {type === 'public' && (
-              <Route
-                path={path}
-                element={<PublicLayout component={component} />}
-              />
-            )}
-            {type === 'private' && (
-              <Route
-                path={path}
-                element={<PrivateLayout component={component} />}
-              >
-                {children && children.length && renderNestedRoutes(children)}
-              </Route>
-            )}
-            {((type === 'public') || (type === 'private')) && (
-              <Route path={path} element={<Navigate replace to={to} />} />
-            )}
-          </React.Fragment>
-        ))}
+        {routes.map(
+          ({ component, path, type, to, title, children, meta }: any) => (
+            <React.Fragment key={path}>
+              {type === "public" && (
+                <Route
+                  path={path}
+                  element={<PublicLayout component={component} />}
+                />
+              )}
+              {type === "private" && (
+                <Route
+                  path={path}
+                  element={<PrivateLayout component={component} meta={meta} />}
+                >
+                  {/* {roleBasedGuard(meta.allowedRoles, userRole) ? ( */}
+
+                  {children && children.length && renderNestedRoutes(children)}
+
+                  {/* ) : (
+                  <Route path={path} element={<Navigate replace to="/" />} />
+                  )} */}
+                </Route>
+              )}
+
+              {(type === "public" || type === "private") && (
+                <Route path={path} element={<Navigate replace to={to} />} />
+              )}
+            </React.Fragment>
+          )
+        )}
       </>
     );
   };
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <>  
+      <>
         <Route path="/landing.html" />
 
         {renderNestedRoutes(routes)}
         {/* {routes.map(({ component: Component, path, type, to, title, children }) => (
           <React.Fragment key={Date.now()}> */}
 
-            {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token")))  */}
-            {/* {type === "public" && (
+        {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token")))  */}
+        {/* {type === "public" && (
               <Route
                 path={path}
                 key={Date.now()}
@@ -77,8 +116,8 @@ const Navigation = () => {
                   <PublicLayout component={Component}></PublicLayout>}
               ></Route>
             )} */}
-            {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            {/* {type === "private" && (
+        {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+        {/* {type === "private" && (
               <Route
                 path={path}
                 key={Date.now()}
@@ -91,13 +130,12 @@ const Navigation = () => {
               </Route>
             )} */}
 
-            {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            {/* {((type === "public") || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}> */}
-              {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
-            {/* </Route>} */}
+        {/* && (!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+        {/* {((type === "public") || (type === "private")) && <Route path={path} element={<Navigate replace to={to} />}> */}
+        {/* && !(!!(localStorage.getItem("user") && localStorage.getItem("token"))) */}
+        {/* </Route>} */}
 
-
-          {/* </React.Fragment> */}
+        {/* </React.Fragment> */}
         {/* ))} */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </>

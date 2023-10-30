@@ -7,7 +7,7 @@ import OADashBoard from "../Dashboard/OADashboard/OADashBoard";
 import OADashBoardNext from "../Dashboard/OADashboard/OADashBoardNext";
 import ForgotPassword from "../auth/shared/forgot-password";
 import ResetPassword from "../auth/shared/reset-password";
-
+import ROLES from "../constants/roles";
 // import verify from "../auth/pages/verify"
 import Departments from "../Departments/Departments";
 import Disciplinary from "../Disciplinary/Disciplinary";
@@ -102,6 +102,7 @@ const Routes: any = [
     title: "register-organization",
     to: "/",
     type: "private",
+    meta: { allowedRoles: [ROLES.ORG_ADMIN] },
     children: [],
   },
   {
@@ -109,6 +110,7 @@ const Routes: any = [
     path: "/organization-admin",
     title: "OrganizationAdmin",
     to: "/",
+    meta: { allowedRoles: [ROLES.ORG_ADMIN] },
     type: "private",
     children: [
       {
@@ -117,6 +119,7 @@ const Routes: any = [
         title: "DashBoard",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
         index: true,
       },
       {
@@ -125,6 +128,7 @@ const Routes: any = [
         title: "Benefits",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
         index: true,
       },
       {
@@ -134,6 +138,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: EmployeeTypes,
@@ -142,6 +147,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: Departments,
@@ -150,6 +156,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: Offboarding,
@@ -158,6 +165,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
 
       {
@@ -167,6 +175,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: TaskView,
@@ -175,6 +184,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: Documents,
@@ -183,6 +193,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: DocumentHistory,
@@ -191,6 +202,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
 
       {
@@ -200,6 +212,25 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: JobPosting,
+        path: "job-posting",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: JobView,
+        path: "job-posting/details/:jobid",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
 
       {
@@ -209,6 +240,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
       {
         component: EmployeeLayout,
@@ -216,6 +248,7 @@ const Routes: any = [
         title: "Employee ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
         children: [
           {
             component: EmployeeList,
@@ -223,6 +256,7 @@ const Routes: any = [
             title: "Employee ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
           },
           {
             component: EmployeeDetailLayout,
@@ -230,6 +264,7 @@ const Routes: any = [
             title: "Employee ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
             children: [
               {
                 component: EmployeePersonal,
@@ -238,6 +273,7 @@ const Routes: any = [
                 to: "/",
                 type: "private",
                 index: true,
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
 
               {
@@ -246,6 +282,8 @@ const Routes: any = [
                 title: "EmployeeJobDetails ",
                 to: "/",
                 type: "private",
+                index: true,
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
               {
                 component: EVBenefits,
@@ -253,6 +291,8 @@ const Routes: any = [
                 title: "Benefits ",
                 to: "/",
                 type: "private",
+                index: true,
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
 
               {
@@ -261,6 +301,7 @@ const Routes: any = [
                 title: "EVLeaveHistory ",
                 to: "/",
                 type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
               {
                 component: EVCertificates,
@@ -268,6 +309,7 @@ const Routes: any = [
                 title: "EVCertificates ",
                 to: "/",
                 type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
               {
                 component: EVDiscipline,
@@ -275,12 +317,14 @@ const Routes: any = [
                 title: "EVDiscipline ",
                 to: "/",
                 type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
               {
                 component: EvLeaveAlloacation,
                 path: "leave-alloacation/:employeeid",
                 title: "Leave Alloaction",
                 to: "/",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
                 type: "private",
               },
               {
@@ -289,6 +333,7 @@ const Routes: any = [
                 title: "EVDocuments ",
                 to: "/",
                 type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
               {
                 component: EVPerformance,
@@ -296,6 +341,7 @@ const Routes: any = [
                 title: "EVPerformance ",
                 to: "/",
                 type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
               },
             ],
           },
@@ -305,6 +351,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
           },
           {
             component: CertificatesInfo,
@@ -312,12 +359,14 @@ const Routes: any = [
             title: "CertificatesInfo ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
           },
           {
             component: JobDetails,
             path: "job-details/:employeeid/:edit?",
             title: "JobDetails ",
             to: "/",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
             type: "private",
           },
           {
@@ -326,6 +375,7 @@ const Routes: any = [
             title: "PersonalInfo ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.ORG_ADMIN] },
           },
         ],
       },
@@ -338,6 +388,7 @@ const Routes: any = [
     title: "SAUserList ",
     to: "/",
     type: "public",
+    meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
     children: [],
   },
 
@@ -347,15 +398,7 @@ const Routes: any = [
     title: "SAOrganization ",
     to: "/",
     type: "public",
-    children: [],
-  },
-
-  {
-    component: AddEmployeeLayout,
-    path: "/add-new-employee",
-    title: "AddEmployee",
-    to: "/",
-    type: "private",
+    meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
     children: [],
   },
 
@@ -390,6 +433,7 @@ const Routes: any = [
     title: "SuperAdmin",
     to: "/",
     type: "private",
+    meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
     children: [
       {
         component: SAOrganization,
@@ -397,6 +441,8 @@ const Routes: any = [
         title: "Organizations",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
+
         index: true,
       },
     ],
@@ -406,6 +452,7 @@ const Routes: any = [
     path: "/manager-management",
     title: "Manager",
     to: "/",
+    meta: { allowedRoles: [ROLES.MANAGER] },
     type: "private",
     children: [
       {
@@ -414,6 +461,7 @@ const Routes: any = [
         title: "Manager DashBoard",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
         index: true,
       },
       {
@@ -423,6 +471,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: ManagerLeaveAction,
@@ -431,6 +480,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: Task,
@@ -439,6 +489,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: LeaveHistory,
@@ -447,6 +498,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: TaskView,
@@ -455,6 +507,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: Documents,
@@ -463,6 +516,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: DocumentHistory,
@@ -471,6 +525,25 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
+      },
+      {
+        component: JobPosting,
+        path: "job-posting",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
+      },
+      {
+        component: JobView,
+        path: "job-posting/details/:jobid",
+        title: "tasks",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: EmployeeList,
@@ -479,6 +552,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: ManagerEmployeeLayout,
@@ -486,6 +560,7 @@ const Routes: any = [
         title: "Employee ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
         children: [
           {
             component: EmployeePersonal,
@@ -494,6 +569,7 @@ const Routes: any = [
             to: "/",
             type: "private",
             index: true,
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
 
           {
@@ -502,6 +578,7 @@ const Routes: any = [
             title: "EmployeeJobDetails ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVBenefits,
@@ -509,6 +586,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
 
           {
@@ -517,6 +595,7 @@ const Routes: any = [
             title: "EVLeaveHistory ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVCertificates,
@@ -524,6 +603,7 @@ const Routes: any = [
             title: "EVCertificates ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVDiscipline,
@@ -531,12 +611,14 @@ const Routes: any = [
             title: "EVDiscipline ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EvLeaveAlloacation,
             path: "leave-alloacation/:employeeid",
             title: "Leave Alloaction",
             to: "/",
+            meta: { allowedRoles: [ROLES.MANAGER] },
             type: "private",
           },
           {
@@ -545,6 +627,7 @@ const Routes: any = [
             title: "EVDocuments ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVPerformance,
@@ -552,6 +635,7 @@ const Routes: any = [
             title: "EVPerformance ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
         ],
       },
@@ -561,6 +645,7 @@ const Routes: any = [
         title: "Benefits ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: CertificatesInfo,
@@ -568,12 +653,14 @@ const Routes: any = [
         title: "CertificatesInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: JobDetails,
         path: "job-details/:employeeid/:edit?",
         title: "JobDetails ",
         to: "/",
+        meta: { allowedRoles: [ROLES.MANAGER] },
         type: "private",
       },
       {
@@ -582,6 +669,7 @@ const Routes: any = [
         title: "PersonalInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
         component: ManagerAccountLayout,
@@ -589,6 +677,7 @@ const Routes: any = [
         title: "Employee ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.MANAGER] },
         children: [
           {
             component: EmployeePersonal,
@@ -596,6 +685,7 @@ const Routes: any = [
             title: "EmployeePersonal ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
             index: true,
           },
 
@@ -605,6 +695,7 @@ const Routes: any = [
             title: "EmployeeJobDetails ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVBenefits,
@@ -612,6 +703,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
 
           {
@@ -619,6 +711,7 @@ const Routes: any = [
             path: "leave-history/:employeeid",
             title: "EVLeaveHistory ",
             to: "/",
+            meta: { allowedRoles: [ROLES.MANAGER] },
             type: "private",
           },
           {
@@ -627,12 +720,14 @@ const Routes: any = [
             title: "EVCertificates ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVDiscipline,
             path: "discipline/:employeeid",
             title: "EVDiscipline ",
             to: "/",
+            meta: { allowedRoles: [ROLES.MANAGER] },
             type: "private",
           },
           {
@@ -640,6 +735,7 @@ const Routes: any = [
             path: "leave-alloacation/:employeeid",
             title: "Leave Alloaction",
             to: "/",
+            meta: { allowedRoles: [ROLES.MANAGER] },
             type: "private",
           },
           {
@@ -648,6 +744,7 @@ const Routes: any = [
             title: "EVDocuments ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
             component: EVPerformance,
@@ -655,6 +752,7 @@ const Routes: any = [
             title: "EVPerformance ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
           },
         ],
       },
@@ -665,6 +763,8 @@ const Routes: any = [
     path: "/hr-management",
     title: "HUMAN_RESOURCE",
     to: "/",
+    meta: { allowedRoles: [ROLES.HR] },
+
     type: "private",
     children: [
       {
@@ -786,6 +886,7 @@ const Routes: any = [
         path: "employee-details",
         title: "Employee ",
         to: "/",
+        meta: { allowedRoles: [ROLES.HR] },
         type: "private",
         children: [
           {
@@ -795,6 +896,7 @@ const Routes: any = [
             to: "/",
             type: "private",
             index: true,
+            meta: { allowedRoles: [ROLES.HR] },
           },
 
           {
@@ -803,6 +905,7 @@ const Routes: any = [
             title: "EmployeeJobDetails ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVBenefits,
@@ -810,6 +913,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
 
           {
@@ -818,6 +922,7 @@ const Routes: any = [
             title: "EVLeaveHistory ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVCertificates,
@@ -825,6 +930,7 @@ const Routes: any = [
             title: "EVCertificates ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVDiscipline,
@@ -832,6 +938,7 @@ const Routes: any = [
             title: "EVDiscipline ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EvLeaveAlloacation,
@@ -839,6 +946,7 @@ const Routes: any = [
             title: "Leave Alloaction",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVDocuments,
@@ -846,6 +954,7 @@ const Routes: any = [
             title: "EVDocuments ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVPerformance,
@@ -853,6 +962,7 @@ const Routes: any = [
             title: "EVPerformance ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
         ],
       },
@@ -862,6 +972,7 @@ const Routes: any = [
         title: "Benefits ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: CertificatesInfo,
@@ -869,6 +980,7 @@ const Routes: any = [
         title: "CertificatesInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: JobDetails,
@@ -876,6 +988,7 @@ const Routes: any = [
         title: "JobDetails ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: PersonalInfo,
@@ -883,6 +996,7 @@ const Routes: any = [
         title: "PersonalInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: HRAccountLayout,
@@ -890,6 +1004,7 @@ const Routes: any = [
         title: "Employee ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.HR] },
         children: [
           {
             component: EmployeePersonal,
@@ -898,6 +1013,7 @@ const Routes: any = [
             to: "/",
             type: "private",
             index: true,
+            meta: { allowedRoles: [ROLES.HR] },
           },
 
           {
@@ -906,6 +1022,7 @@ const Routes: any = [
             title: "EmployeeJobDetails ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVBenefits,
@@ -913,6 +1030,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
 
           {
@@ -921,6 +1039,7 @@ const Routes: any = [
             title: "EVLeaveHistory ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVCertificates,
@@ -928,6 +1047,7 @@ const Routes: any = [
             title: "EVCertificates ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVDiscipline,
@@ -935,6 +1055,7 @@ const Routes: any = [
             title: "EVDiscipline ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EvLeaveAlloacation,
@@ -942,6 +1063,7 @@ const Routes: any = [
             title: "Leave Alloaction",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVDocuments,
@@ -949,6 +1071,7 @@ const Routes: any = [
             title: "EVDocuments ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
           {
             component: EVPerformance,
@@ -956,6 +1079,7 @@ const Routes: any = [
             title: "EVPerformance ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
           },
         ],
       },
@@ -966,6 +1090,7 @@ const Routes: any = [
     path: "/user-management",
     title: "HUMAN_RESOURCE",
     to: "/",
+    meta: { allowedRoles: [ROLES.EMPLOYEE] },
     type: "private",
     children: [
       {
@@ -975,6 +1100,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {
         component: EVLeaveHistory,
@@ -983,6 +1109,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
 
       {
@@ -991,6 +1118,7 @@ const Routes: any = [
         title: "Benefits ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {
         component: Task,
@@ -998,6 +1126,7 @@ const Routes: any = [
         title: "tasks",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
         index: true,
       },
       {
@@ -1006,6 +1135,7 @@ const Routes: any = [
         title: "Tasks Details",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
         index: true,
       },
       {
@@ -1014,12 +1144,14 @@ const Routes: any = [
         title: "CertificatesInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {
         component: JobDetails,
         path: "job-details/:employeeid/:edit?",
         title: "JobDetails ",
         to: "/",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
         type: "private",
       },
       {
@@ -1028,6 +1160,7 @@ const Routes: any = [
         title: "PersonalInfo ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {
         component: UserAccountLayout,
@@ -1035,6 +1168,7 @@ const Routes: any = [
         title: "Employee ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
         children: [
           {
             component: EmployeePersonal,
@@ -1042,6 +1176,7 @@ const Routes: any = [
             title: "EmployeePersonal ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
             index: true,
           },
 
@@ -1050,6 +1185,7 @@ const Routes: any = [
             path: "job-details/:employeeid",
             title: "EmployeeJobDetails ",
             to: "/",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
             type: "private",
           },
           {
@@ -1058,6 +1194,7 @@ const Routes: any = [
             title: "Benefits ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
 
           {
@@ -1066,6 +1203,7 @@ const Routes: any = [
             title: "EVLeaveHistory ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
           {
             component: EVCertificates,
@@ -1073,6 +1211,7 @@ const Routes: any = [
             title: "EVCertificates ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
           {
             component: EVDiscipline,
@@ -1080,6 +1219,7 @@ const Routes: any = [
             title: "EVDiscipline ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
           {
             component: EvLeaveAlloacation,
@@ -1087,6 +1227,7 @@ const Routes: any = [
             title: "Leave Alloaction",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
           {
             component: EVDocuments,
@@ -1094,10 +1235,12 @@ const Routes: any = [
             title: "EVDocuments ",
             to: "/",
             type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
           },
           {
             component: EVPerformance,
             path: "performance/:employeeid",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
             title: "EVPerformance ",
             to: "/",
             type: "private",

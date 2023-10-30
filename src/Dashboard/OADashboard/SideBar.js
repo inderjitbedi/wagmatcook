@@ -98,11 +98,12 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
     benefits: false,
     disciplinary: false,
     leavetype: false,
+    staffing: false,
     employeetype: false,
     task: false,
     documenttags: false,
     documents: false,
-    offboarding:false,
+    offboarding: false,
     logout: false,
   });
   const toggleSubMenu = () => {
@@ -384,6 +385,114 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             >
               {" "}
               Document Library
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/organization-admin/job-posting"
+          onMouseEnter={() => handleMouseEnter("staffing")}
+          onMouseLeave={() => handleMouseLeave("staffing")}
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <g clip-path="url(#clip0_1913_11804)">
+                <ellipse
+                  cx="7.06403"
+                  cy="6.75"
+                  rx="1.56989"
+                  ry="1.5"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M10.2034 11.25C10.2034 12.0784 10.2034 12.75 7.06361 12.75C3.92383 12.75 3.92383 12.0784 3.92383 11.25C3.92383 10.4216 5.32956 9.75 7.06361 9.75C8.79767 9.75 10.2034 10.4216 10.2034 11.25Z"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M1.57031 9C1.57031 6.17157 1.57031 4.75736 2.48993 3.87868C3.40956 3 4.88966 3 7.84988 3H10.9897C13.9499 3 15.43 3 16.3496 3.87868C17.2692 4.75736 17.2692 6.17157 17.2692 9C17.2692 11.8284 17.2692 13.2426 16.3496 14.1213C15.43 15 13.9499 15 10.9897 15H7.84988C4.88966 15 3.40956 15 2.48993 14.1213C1.57031 13.2426 1.57031 11.8284 1.57031 9Z"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M14.9141 9H11.7743"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M14.9141 6.75H10.9893"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M14.9141 11.25H12.5592"
+                  stroke={
+                    location.pathname.indexOf("posting") > -1 ||
+                    isHovering.staffing
+                      ? "#279AF1"
+                      : "#5C5C5C"
+                  }
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_1913_11804">
+                  <rect width="18.8387" height="18" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+            {/* <BsFilePost
+              style={
+                location.pathname === "/hr-management/job-posting" ||
+                isHovering.staffing
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            /> */}
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("posting") > -1 || isHovering.staffing
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Staffing
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
