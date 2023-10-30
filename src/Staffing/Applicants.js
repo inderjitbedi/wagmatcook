@@ -109,7 +109,7 @@ const style = {
   // height: "55rem",
   // overflowY: "scroll",
 };
-const Applicants = ({ jobid }) => {
+const Applicants = ({ jobid,Tabvalue }) => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -435,7 +435,17 @@ const Applicants = ({ jobid }) => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          setApplicants(result.applicants);
+          if (Tabvalue === 0) {
+            setApplicants(result.applicants);
+          } else if (Tabvalue === 1) {
+            const eligibleApplicants = result.applicants.filter(
+              (applicant) => applicant.isEligibile
+            );
+            console.log("eligible candidates ", eligibleApplicants);
+              setApplicants(eligibleApplicants);
+          } else if (Tabvalue === 2) {
+          } else if (Tabvalue === 3) {
+          }
         } else {
           //toast.warn("something went wrong ");
         }

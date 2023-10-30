@@ -231,16 +231,16 @@ const JobView = () => {
               </Tabs>
             </div>
             <CustomTabPanel value={valueTab} index={0}>
-              <Applicants jobid={jobid} />
+              <Applicants jobid={jobid} Tabvalue={valueTab} />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={1}>
-              <Interviewing />
+              <Applicants jobid={jobid} Tabvalue={valueTab} />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={2}>
-              <Interviewing />
+              <Applicants jobid={jobid} Tabvalue={valueTab} />
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={3}>
-              <Selected />
+              <Applicants jobid={jobid} Tabvalue={valueTab} />
             </CustomTabPanel>
           </BackGroundWhite>
         </>

@@ -753,7 +753,8 @@ const JobPosting = () => {
                             color: "#279AF1",
                           }}
                         />
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
                           " "
                         ) : (
                           <ActionIcons
