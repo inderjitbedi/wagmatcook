@@ -231,6 +231,42 @@ const authController = {
             res.status(400).json(error);
         }
     },
+    async loginWithOtpBypass(req, res) {
+        try {
+            const { email, otp } = req.body;
+            let user = await User.findOne({ email }).populate({
+                path: 'personalInfo',
+                populate: {
+                    path: 'photo',
+                },
+            });
+            if (!user) {
+                return res.status(400).json({ message: 'Invalid or expired One Time Password(OTP)' });
+            }
+            // user.otp = undefined;
+            // user.otpExpiry = undefined;
+            // await user.save();
+
+            const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+            user = user.toObject();
+            delete user.password
+            let relation = {};
+            if (user.role != roles.SUPER_ADMIN) {
+                relation = await UserOrganization.findOne({ user: user._id }).populate(
+                    [{
+                        path: 'organization',
+                        populate: {
+                            path: 'logo',
+                        },
+
+                    }]);
+            }
+            res.status(200).json({ user, organization: relation?.organization || {}, token, message: 'User signed in successfully' });
+        } catch (error) {
+            console.error("authController:register:error -", error);
+            res.status(400).json(error);
+        }
+    },
     async completeOrgAdminSignup(req, res) {
         try {
 

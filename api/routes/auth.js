@@ -53,6 +53,7 @@ router.post('/verify-user/:email/:tempPassword', authController.verifyUser);
  *         description: Internal Server Error
  */
 router.post('/login-with-otp', authController.sendOtpForLogin);
+// router.post('/login-with-otp', authController.loginWithOtpBypass);
 
 /**
  * @swagger

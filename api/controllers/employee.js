@@ -1350,8 +1350,28 @@ const employeeController = {
                 return res.status(400).json({ message: 'Insufficent balance' });
             }
 
-            const request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id, status: leaveStatus.PENDING });
+            let request = new EmployeeLeaveHistory({ ...req.body, employee: req.params.id, status: leaveStatus.PENDING });
             await request.save();
+            request = await request.populate([{
+                path: 'employee',
+                populate: {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo'
+                    }
+                }
+            }, {
+                path: 'responder',
+                populate: {
+                    path: 'personalInfo',
+                    populate: {
+                        path: 'photo'
+                    }
+                }
+            }, {
+                path: 'leaveType'
+            }])
+
 
             const notification = new Notifications({
                 title: notificationConstants[notificationType.LEAVE_REQUEST].title?.replace('{sender}', [user.personalInfo.firstName, user.personalInfo.lastName].join(' ')).replace('{leavetype}', allocation.leaveType.name) || '',
@@ -1361,6 +1381,11 @@ const employeeController = {
                 receiver: req.body.responder
             });
             await notification.save();
+
+
+            sendGrid.send(request.responder.email, "leaveRequest", { request });
+
+
             res.status(200).json({
                 message: 'Employee leave request sent successfully'
             });
