@@ -2497,7 +2497,7 @@ height: 152px;" />
                 <td align="center">
                   <center style="width: 152px;
 height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/commentBg.png" style="margin: 20px;" />
+                    <img src="https://hrapi.chantsit.com/public/commentbg.png" style="margin: 20px;" />
                   </center>
                 </td>
               </tr>
