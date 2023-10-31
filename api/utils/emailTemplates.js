@@ -165,10 +165,13 @@ const emailTemplates = {
                                   ">
                                       Wagmatcook Admin has invited you to use Wagmatcook
                                     </p>
-                                    <button style="
+                                    <a style="
                                     border-radius: 8px;
                                     background: #fff;
                                     color: #050505;
+                                       display: inline-block;
+                                      cursor: pointer;
+                                      text-decoration: none;
                                     text-align: center;
                                     font-family: 'Inter', sans-serif;
                                     font-size: 16px;
@@ -177,14 +180,14 @@ const emailTemplates = {
                                     line-height: 16px;
                                     padding: 0.8em 1.25em;
                                     border: none;
-                                  ">
-                                      <a href="${
-                                        process.env.FRONTEND_URL
-                                      }organization-admin/complete-signup/${
+                                  " href="${
+                                    process.env.FRONTEND_URL
+                                  }organization-admin/complete-signup/${
         data.user.email
       }/${data.user.invitationToken}"
-                                     target="_blank">Join Now</a>
-                                    </button>
+                                     target="_blank">
+                                    Join Now
+                                    </a>
                                   </td>
                                 </tr>
                 
@@ -201,7 +204,7 @@ const emailTemplates = {
                           </table>
                           <table class="body-sub" role="presentation">
                           <tr>
-                              <td>
+                              <td style=" padding: 20px 50px 0px 50px;">
                                   <p class="f-fallback sub">If you’re having trouble with the
                                       button above, copy and paste the URL below into your web
                                       browser.</p>
@@ -244,7 +247,7 @@ const emailTemplates = {
                 
                 </html>
                 
-            `,
+           `,
     };
   },
   sendOtp(data) {
