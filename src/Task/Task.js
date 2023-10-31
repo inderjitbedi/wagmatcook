@@ -150,7 +150,7 @@ const Task = () => {
     reset({
       title: data.title,
       description: data.description,
-      assignedto: data.assignee._id,
+      assignee: data.assignee._id,
       dueDate: data.dueDate
         ? new Date(data.dueDate).toISOString().split("T")[0]
         : null,
@@ -672,7 +672,7 @@ const Task = () => {
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell>
                     <TableCell
-                      sx={{...CellStyle , cursor:"pointer"}}
+                      sx={{ ...CellStyle, cursor: "pointer" }}
                       align="left"
                       onClick={() => {
                         if (userType === ROLES.HR) {
