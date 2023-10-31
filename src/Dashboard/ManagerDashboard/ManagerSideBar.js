@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import httpClient from "../../api/httpClient";
+import { useHeaderInfoContext } from "../../Context/ContextProvider";
 import {
   SidebarTitle,
   SideBarListTitle,
@@ -19,6 +20,8 @@ import { BiTask } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
 
 const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
+  const { headerData } = useHeaderInfoContext();
+
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
@@ -69,26 +72,6 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
     textDecoration: "none",
     color: "#279AF1",
   };
-  const [headerData, setHeaderData] = useState([]);
-
-  const GetHeadersData = (id) => {
-    // setIsLoading(true);
-
-    let url = `/employee/header-info/${id}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
   const [isHovering, setIsHovering] = useState({
     dashbord: false,
     employee: false,
@@ -124,7 +107,6 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUserData(parsedUser);
-      GetHeadersData(parsedUser._id);
     }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);

@@ -6,7 +6,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import styled, { keyframes } from "styled-components";
-
+import { useHeaderInfoContext } from "../../Context/ContextProvider";
+import CommenHeader from "./CommenHeader";
 import {
   Dashboard,
   DashNav,
@@ -100,6 +101,8 @@ const EmployeeDetailLayout = () => {
           )}
 
           <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
+            {/* <CommenHeader employeeid={employeeid} /> */}
+
             <Outlet />
           </div>
         </BodyContainer>
