@@ -5,7 +5,7 @@ import { Grid, Box } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import httpClient from "../../api/httpClient";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URLS from "../../constants/apiUrls";
 import redirectToDashboard from "./AuthUtils";
@@ -13,13 +13,21 @@ import { RotatingLines } from "react-loader-spinner";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isUrl, setUrl] = useState("");
+  console.log("this the locaton: ", location.pathname);
   const [isLoading, setIsLoading] = useState(false);
 
   const [user, setUser] = useState({});
   useEffect(() => {
     let email = localStorage.getItem("user-email") || "";
+    let returnUrl = localStorage.getItem("returnUrl") || "";
     if (!email) {
       navigate("/");
+    }
+    if (returnUrl) {
+      // let parsedReturnUrl = JSON.parse(returnUrl);
+      setUrl(returnUrl);
     }
     setFormData({ ...formData, email });
   }, []);
@@ -67,7 +75,11 @@ const VerifyOTP = () => {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem("token", result?.token);
             localStorage.setItem("org", JSON.stringify(result?.organization));
-            redirectToDashboard(result?.user?.role, navigate);
+            if (isUrl) {
+              navigate(String(isUrl));
+            } else {
+              redirectToDashboard(result?.user?.role, navigate);
+            }
           }
           setIsLoading(false);
         })

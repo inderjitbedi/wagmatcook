@@ -682,19 +682,19 @@ const LeaveHistory = () => {
                                 value: true,
                                 message: "Required",
                               },
-                              validate: (fieldValue) => {
-                                const selectedDate = Date.parse(fieldValue);
-                                const currentDate = new Date().setHours(
-                                  0,
-                                  0,
-                                  0,
-                                  0
-                                );
-                                if (selectedDate < currentDate) {
-                                  return "From must not be smaller  than today's date";
-                                }
-                                return true;
-                              },
+                              // validate: (fieldValue) => {
+                              //   const selectedDate = Date.parse(fieldValue);
+                              //   const currentDate = new Date().setHours(
+                              //     0,
+                              //     0,
+                              //     0,
+                              //     0
+                              //   );
+                              //   if (selectedDate < currentDate) {
+                              //     return "From must not be smaller  than today's date";
+                              //   }
+                              //   return true;
+                              // },
                               onChange: (e) => {
                                 const endDate = getValues("to");
                                 const startDate = new Date(e.target.value);

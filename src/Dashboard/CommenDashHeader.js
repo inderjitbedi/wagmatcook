@@ -400,7 +400,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
           {screenWidth < 1200
             ? " "
             : (location.pathname.indexOf("details") > -1 ||
-                location.pathname.indexOf("leaves-request") > -1 ||
+                location.pathname.indexOf("request") > -1 ||
                 location.pathname.indexOf("personal-info") > -1 ||
                 location.pathname.indexOf("employee/benefits") > -1 ||
                 location.pathname.indexOf("tasks/details") > -1 ||
@@ -418,7 +418,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
         <DashHeaderSearch>
           {location.pathname.indexOf("details") > -1 ||
-          location.pathname.indexOf("leaves-request") > -1 ||
+          location.pathname.indexOf("request") > -1 ||
           location.pathname.indexOf("personal-info") > -1 ||
           location.pathname.indexOf("employee/benefits") > -1 ||
           location.pathname.indexOf("tasks/details") > -1 ||

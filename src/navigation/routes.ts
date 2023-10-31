@@ -475,7 +475,7 @@ const Routes: any = [
       },
       {
         component: ManagerLeaveAction,
-        path: "leaves-request/:employeeid/:requestid",
+        path: "request/:employeeid/:requestid",
         title: "Leaves",
         to: "/",
         type: "private",
@@ -785,7 +785,7 @@ const Routes: any = [
       },
       {
         component: ManagerLeaveAction,
-        path: "leaves-request/:employeeid/:requestid",
+        path: "request/:employeeid/:requestid",
         title: "Leaves",
         to: "/",
         type: "private",

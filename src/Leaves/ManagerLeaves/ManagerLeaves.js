@@ -83,6 +83,8 @@ const style = {
   padding: "2rem 0rem",
 
   borderRadius: "8px",
+  height: "52rem",
+  overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -258,7 +260,7 @@ const ManagerLeaves = () => {
               }
             });
             const filteredArray = extractedDataArray.filter(
-              (obj) => obj._id !== user._id
+              (obj) => obj.user !== user._id
             );
             setReportList(filteredArray);
             console.log("ideal data :", filteredArray);
@@ -552,11 +554,11 @@ const ManagerLeaves = () => {
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
                             Navigate(
-                              `/manager-management/leaves-request/${data.employee._id}/${data._id}`
+                              `/manager-management/request/${data.employee._id}/${data._id}`
                             );
                           } else if (userType === ROLES.HR) {
                             Navigate(
-                              `/hr-management/leaves-request/${data.employee._id}/${data._id}`
+                              `/hr-management/request/${data.employee._id}/${data._id}`
                             );
                           }
                         }}
@@ -705,14 +707,14 @@ const ManagerLeaves = () => {
                             value: true,
                             message: "Required",
                           },
-                          validate: (fieldValue) => {
-                            const selectedDate = Date.parse(fieldValue);
-                            const currentDate = new Date().setHours(0, 0, 0, 0);
-                            if (selectedDate < currentDate) {
-                              return "From must not be smaller  than today's date";
-                            }
-                            return true;
-                          },
+                          // validate: (fieldValue) => {
+                          //   const selectedDate = Date.parse(fieldValue);
+                          //   const currentDate = new Date().setHours(0, 0, 0, 0);
+                          //   if (selectedDate < currentDate) {
+                          //     return "From must not be smaller  than today's date";
+                          //   }
+                          //   return true;
+                          // },
                           onChange: (e) => {
                             const endDate = getValues("to");
                             const startDate = new Date(e.target.value);

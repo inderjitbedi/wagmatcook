@@ -506,6 +506,13 @@ const Applicants = ({ jobid,Tabvalue }) => {
   });
   useEffect(() => {
     GetApplicants();
+       if (location.pathname.indexOf("manager") > -1) {
+         setUserType(ROLES.MANAGER);
+       } else if (location.pathname.indexOf("hr") > -1) {
+         setUserType(ROLES.HR);
+       } else if (location.pathname.indexOf("user") > -1) {
+         setUserType(ROLES.EMPLOYEE);
+       }
   }, []);
   return (
     <>
@@ -1054,7 +1061,7 @@ const Applicants = ({ jobid,Tabvalue }) => {
                                       src="/images/icons/Pendown.svg"
                                     />
                                   )}
-                                  {userType === ROLES.EMPLOYEE ? (
+                                  {userType === ROLES.EMPLOYEE || userType === ROLES.MANAGER ? (
                                     " "
                                   ) : (
                                     <ActionIcons

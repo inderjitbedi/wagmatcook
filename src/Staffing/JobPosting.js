@@ -327,13 +327,18 @@ const JobPosting = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Staffing"} />
       <DisciplinaryDiv>
         <DisciplinaryHeading>All Jobs</DisciplinaryHeading>
-        <AddNewButton
-          onClick={() => {
-            HandleOpenAddNewAction();
-          }}
-        >
-          Add New
-        </AddNewButton>
+        {userType === ROLES.MANAGER ? (
+          " "
+        ) : (
+          <AddNewButton
+            onClick={() => {
+              HandleOpenAddNewAction();
+            }}
+          >
+            Add New
+          </AddNewButton>
+        )}
+
         <Modal
           open={open}
           sx={{
@@ -713,7 +718,7 @@ const JobPosting = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE || userType === ROLES.MANAGER ? (
                           " "
                         ) : (
                           <ActionIcons

@@ -127,8 +127,6 @@ const SAOrganization = () => {
     reset({});
     clearErrors();
     setOpen(false);
-
-    setOpen(false);
   };
   // const [organizationData, setOrganization] = useState([]);
   const [result, setResult] = useState([]);
