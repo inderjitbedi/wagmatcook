@@ -39,6 +39,8 @@ const PrivateLayout = ({ component: Component, meta }: any) => {
       setUser(parsedUser);
     } else {
       navigate("/");
+      localStorage.setItem("returnUrl", pathname);
+      console.log("the pathname is stored in local storage :", pathname);
     }
   }, [navigate]);
   const userRole = user?.role;
@@ -63,6 +65,8 @@ const PrivateLayout = ({ component: Component, meta }: any) => {
         <Navigate to="/hr-management/dashboard" />
       ) : userRole === ROLES.EMPLOYEE ? (
         <Navigate to="/user-management/dashboard" />
+      ) : userRole === ROLES.SUPER_ADMIN ? (
+        <Navigate to="/super-admin/organizations" />
       ) : (
         <Navigate to="/" />
       )}

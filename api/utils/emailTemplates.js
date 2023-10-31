@@ -1,12 +1,10 @@
 const moment = require("moment/moment");
 
 const emailTemplates = {
-   
-    invite(data) {
-        return {
-            subject: "Wagmatcook | Invitation to Sign Up",
-            html:
-                `<!DOCTYPE html>
+  invite(data) {
+    return {
+      subject: "Wagmatcook | Invitation to Sign Up",
+      html: `<!DOCTYPE html>
                 <html lang="en">
                 
                 <head>
@@ -128,7 +126,12 @@ const emailTemplates = {
                                 line-height: 32px;
                                 margin: 0;
                               ">
-                              Hi ${data.user.name || data.user.personalInfo?.firstName || data.user.email || ''}
+                              Hi ${
+                                data.user.name ||
+                                data.user.personalInfo?.firstName ||
+                                data.user.email ||
+                                ""
+                              }
                                 </h1>
                                 <p style="
                                 color: #222b45;
@@ -162,10 +165,13 @@ const emailTemplates = {
                                   ">
                                       Wagmatcook Admin has invited you to use Wagmatcook
                                     </p>
-                                    <button style="
+                                    <a style="
                                     border-radius: 8px;
                                     background: #fff;
                                     color: #050505;
+                                       display: inline-block;
+                                      cursor: pointer;
+                                      text-decoration: none;
                                     text-align: center;
                                     font-family: 'Inter', sans-serif;
                                     font-size: 16px;
@@ -174,10 +180,14 @@ const emailTemplates = {
                                     line-height: 16px;
                                     padding: 0.8em 1.25em;
                                     border: none;
-                                  ">
-                                      <a href="${process.env.FRONTEND_URL}organization-admin/complete-signup/${data.user.email}/${data.user.invitationToken}"
-                                     target="_blank">Join Now</a>
-                                    </button>
+                                  " href="${
+                                    process.env.FRONTEND_URL
+                                  }organization-admin/complete-signup/${
+        data.user.email
+      }/${data.user.invitationToken}"
+                                     target="_blank">
+                                    Join Now
+                                    </a>
                                   </td>
                                 </tr>
                 
@@ -194,12 +204,16 @@ const emailTemplates = {
                           </table>
                           <table class="body-sub" role="presentation">
                           <tr>
-                              <td>
+                              <td style=" padding: 20px 50px 0px 50px;">
                                   <p class="f-fallback sub">If you’re having trouble with the
                                       button above, copy and paste the URL below into your web
                                       browser.</p>
                                   <p class="f-fallback sub">
-                                      ${process.env.FRONTEND_URL}organization-admin/complete-signup/${data.user.email}/${data.user.invitationToken}
+                                      ${
+                                        process.env.FRONTEND_URL
+                                      }organization-admin/complete-signup/${
+        data.user.email
+      }/${data.user.invitationToken}
                                   </p>
                               </td>
                           </tr>
@@ -233,15 +247,13 @@ const emailTemplates = {
                 
                 </html>
                 
-            `
-      
-    }
-    },
-    sendOtp(data) {
-        return {
-            subject: "Wagmatcook | One Time Password",
-            html:
-                `
+           `,
+    };
+  },
+  sendOtp(data) {
+    return {
+      subject: "Wagmatcook | One Time Password",
+      html: `
 
                 <!DOCTYPE html>
 <html lang="en">
@@ -359,7 +371,12 @@ const emailTemplates = {
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${data.req.user.name || data.req.user.personalInfo?.firstName || data.req.user.email || ''}
+                  Hi ${
+                    data.req.user.name ||
+                    data.req.user.personalInfo?.firstName ||
+                    data.req.user.email ||
+                    ""
+                  }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -441,13 +458,13 @@ const emailTemplates = {
 
 </html>
                 
-            `
-        };
-    },
-    welcome(data) {
-        return {
-            subject: "Wagmatcook | Welcome",
-            html: `<!DOCTYPE html>
+            `,
+    };
+  },
+  welcome(data) {
+    return {
+      subject: "Wagmatcook | Welcome",
+      html: `<!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
@@ -586,7 +603,7 @@ const emailTemplates = {
                               line-height: 32px;
                             "
                           >
-                            Hi ${data.user.personalInfo?.firstName || ''}
+                            Hi ${data.user.personalInfo?.firstName || ""}
                           </h1>
                           <p
                             style="
@@ -891,12 +908,12 @@ const emailTemplates = {
         </body>
       </html>
       `,
-        };
-    },
-    leaveRejected(data){
-      return {
-        subject: "Wagmatcook | Leave Rejected",
-        html:`
+    };
+  },
+  leaveRejected(data) {
+    return {
+      subject: "Wagmatcook | Leave Rejected",
+      html: `
       <!DOCTYPE html>
 <html lang="en">
 
@@ -1017,7 +1034,10 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-              Hi ${data.request.employee.name||data.request.employee.personalInfo?.firstName},
+              Hi ${
+                data.request.employee.name ||
+                data.request.employee.personalInfo?.firstName
+              },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1082,7 +1102,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.from||'').format('MMM DD yyyy')}</span>
+            ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1104,7 +1124,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.to||'').format('MMM DD yyyy')}</span>
+            ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1152,6 +1172,9 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   border: none;
   border-radius: 8px;
   background: #279af1;
@@ -1193,12 +1216,13 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
 
 </html>
       
-      `}
-    },
-    leaveApproved(data){
-      return {
-        subject: "Wagmatcook | Leave Approved",
-        html:`
+      `,
+    };
+  },
+  leaveApproved(data) {
+    return {
+      subject: "Wagmatcook | Leave Approved",
+      html: `
       <!DOCTYPE html>
 <html lang="en">
 
@@ -1319,7 +1343,10 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                 Hi ${data.request.employee.name||data.request.employee.personalInfo?.firstName},
+                 Hi ${
+                   data.request.employee.name ||
+                   data.request.employee.personalInfo?.firstName
+                 },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1385,7 +1412,7 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.from||'').format('MMM DD yyyy')}</span>
+            ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1407,7 +1434,7 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.to||'').format('MMM DD yyyy')}</span>
+            ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1449,6 +1476,9 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
     margin-top: 35px;
   color: #fff;
   text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1495,12 +1525,13 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
 
 </html>
       
-      `}
-    },
-    leaveRequest(data){
-      return {
-        subject: "Wagmatcook | New Leave Request",
-        html:`
+      `,
+    };
+  },
+  leaveRequest(data) {
+    return {
+      subject: "Wagmatcook | New Leave Request",
+      html: `
       <!DOCTYPE html>
 <html lang="en">
 
@@ -1621,7 +1652,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${data.request.responder.name||data.request.responder.personalInfo?.firstName},
+                  Hi ${
+                    data.request.responder.name ||
+                    data.request.responder.personalInfo?.firstName
+                  },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1631,7 +1665,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 font-weight: 400;
                 line-height: 28px;
               ">
-                 You have received a leave request from ${data.request.employee.name||data.request.employee.personalInfo?.firstName} which requires your action.
+                 You have received a leave request from ${
+                   data.request.employee.name ||
+                   data.request.employee.personalInfo?.firstName
+                 } which requires your action.
                 </p>
 
                 <p style="
@@ -1686,7 +1723,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.request.from||'').format('MMM DD yyyy')}</span>
+                ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -1708,7 +1745,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.request.to||'').format('MMM DD yyyy')}</span>
+                ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -1750,6 +1787,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
     margin-top: 35px;
   color: #fff;
   text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1758,7 +1798,11 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
   border: none;
   border-radius: 8px;
   background: #279af1;
-  padding: 0.75em 1.25em;" href="${process.env.FRONTEND_URL}manager-management/leaves-request/${data.request.employee._id}/${data.request._id}">View Details</a>
+  padding: 0.75em 1.25em;" href="${
+    process.env.FRONTEND_URL
+  }manager-management/leaves-request/${data.request.employee._id}/${
+        data.request._id
+      }">View Details</a>
 
               </td>
             </tr>
@@ -1796,12 +1840,13 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 
 </html>
       
-      `}
-    },
-    taskAssigned(data){
-      return {
-        subject: "Wagmatcook | New Task Assigned",
-        html:`
+      `,
+    };
+  },
+  taskAssigned(data) {
+    return {
+      subject: "Wagmatcook | New Task Assigned",
+      html: `
         <!DOCTYPE html>
 <html lang="en">
 
@@ -1877,9 +1922,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 </td>
               <tr>
                 <td align="center">
-                  <center style="width: 152px;
-height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/request.png" style="margin: 25px;" />
+                   <center>
+                    <img src="https://hrapi.chantsit.com/public/task.png" style=" width: 152px;
+height: 152px;" />
                   </center>
                 </td>
               </tr>
@@ -1920,7 +1965,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-              Hi ${data.task.assignee.name||data.task.assignee.personalInfo?.firstName},
+              Hi ${
+                data.task.assignee.name ||
+                data.task.assignee.personalInfo?.firstName
+              },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1930,7 +1978,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 font-weight: 400;
                 line-height: 28px;
               ">
-                  You have assigned a new task by ${data.task.assigner.name||data.task.assigner.personalInfo?.firstName}.
+                  You have assigned a new task by ${
+                    data.task.assigner.name ||
+                    data.task.assigner.personalInfo?.firstName
+                  }.
                 </p>
 
                 <p style="
@@ -1985,7 +2036,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate||'').format('MMM DD yyyy')} </span>
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2031,6 +2082,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   border: none;
   border-radius: 8px;
   background: #279af1;
@@ -2071,13 +2125,13 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 </body>
 
 </html>
-        `
-      }
-    },
-    taskStatusUpdate(data){
-      return{
-        subject: "Wagmatcook | Task Status Updated",
-        html:`
+        `,
+    };
+  },
+  taskStatusUpdate(data) {
+    return {
+      subject: "Wagmatcook | Task Status Updated",
+      html: `
         <!DOCTYPE html>
 <html lang="en">
 
@@ -2153,9 +2207,8 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 </td>
               <tr>
                 <td align="center">
-                  <center style="width: 152px;
-height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/request.png" style="margin: 25px;" />
+                  <center style="">
+                    <img src="https://hrapi.chantsit.com/public/status.png" style=" width: 152px; height: 152px;" />
                   </center>
                 </td>
               </tr>
@@ -2196,7 +2249,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${data.task.sentTo.name||data.task.sentTo.personalInfo?.firstName}
+                  Hi ${
+                    data.task.sentTo.name ||
+                    data.task.sentTo.personalInfo?.firstName
+                  }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -2250,7 +2306,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate||'').format('MMM DD yyyy')} </span>
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2294,7 +2350,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${data.task.isCompleted?'Completed':'In-progress'} </span>
+                ${data.task.isCompleted ? "Completed" : "In-progress"} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2312,6 +2368,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
     margin-top: 35px;
   color: #fff;
   text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -2357,13 +2416,13 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 </body>
 
 </html>
-        `
-      }
-    },
-    taskComment(data){
-      return{
-        subject: "Wagmatcook | New Comment on Task",
-        html:`
+        `,
+    };
+  },
+  taskComment(data) {
+    return {
+      subject: "Wagmatcook | New Comment on Task",
+      html: `
         <!DOCTYPE html>
 <html lang="en">
 
@@ -2441,7 +2500,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 <td align="center">
                   <center style="width: 152px;
 height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/request.png" style="margin: 25px;" />
+                    <img src="https://hrapi.chantsit.com/public/commentbg.png" style="margin: 20px;" />
                   </center>
                 </td>
               </tr>
@@ -2482,7 +2541,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${data.task.sentTo.name||data.task.sentTo.personalInfo?.firstName}
+                  Hi ${
+                    data.task.sentTo.name ||
+                    data.task.sentTo.personalInfo?.firstName
+                  }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -2492,7 +2554,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 font-weight: 400;
                 line-height: 28px;
               ">
-              ${data.comment.commenter.name||data.comment.commenter.personalInfo?.firstName} commented on the following task.
+              ${
+                data.comment.commenter.name ||
+                data.comment.commenter.personalInfo?.firstName
+              } commented on the following task.
                 </p>
 
                 <p style="
@@ -2536,7 +2601,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate||'').format('MMM DD yyyy')} </span>
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2577,6 +2642,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
     margin-top: 35px;
   color: #fff;
   text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -2622,156 +2690,155 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 </body>
 
 </html>
-        `
-      }
-    }
+        `,
+    };
+  },
 };
 
-
 module.exports = emailTemplates;
- // forgotPassword(data) {
-    //     return {
-    //         subject: "Wagmatcook | Password Reset",
-    //         html: getFullTemplate(
-    //             data,
-    //             `
-    //             <div class="f-fallback">
-    //                 <h1>Hi ${data.req.body.email},</h1>
-    //                 <p>You are receiving this email because you (or someone else) has requested
-    //                     the reset of the password for your account.
+// forgotPassword(data) {
+//     return {
+//         subject: "Wagmatcook | Password Reset",
+//         html: getFullTemplate(
+//             data,
+//             `
+//             <div class="f-fallback">
+//                 <h1>Hi ${data.req.body.email},</h1>
+//                 <p>You are receiving this email because you (or someone else) has requested
+//                     the reset of the password for your account.
 
-    //                 </p>
-    //                 <table class="body-action" align="center" width="100%" cellpadding="0"
-    //                     cellspacing="0" role="presentation">
-    //                     <tr>
-    //                         <td align="center">
-    //                             <table width="100%" border="0" cellspacing="0" cellpadding="0"
-    //                                 role="presentation">
-    //                                 <tr>
-    //                                     <td align="center">
-    //                                         <a href="${process.env.FRONTEND_URL}reset-password/${data.token}"
-    //                                             class="f-fallback button " target="_blank">Reset
-    //                                             your password</a>
-    //                                     </td>
-    //                                 </tr>
-    //                             </table>
-    //                         </td>
-    //                     </tr>
-    //                 </table>
-    //                 <p>If you did not request this, please ignore this email and your password
-    //                     will remain unchanged.</p>
-    //                 <p>Thanks,
-    //                     <br>The Wagmatcook Team
-    //                 </p>
-    //                 <!-- Sub copy -->
-    //                 <table class="body-sub" role="presentation">
-    //                     <tr>
-    //                         <td>
-    //                             <p class="f-fallback sub">If you’re having trouble with the
-    //                                 button above, copy and paste the URL below into your web
-    //                                 browser.</p>
-    //                             <p class="f-fallback sub">
-    //                                 ${process.env.FRONTEND_URL}reset-password/${data.token}
-    //                             </p>
-    //                         </td>
-    //                     </tr>
-    //                 </table>
-    //             </div>
-    //         `
-    //         ),
-    //     };
-    // },
+//                 </p>
+//                 <table class="body-action" align="center" width="100%" cellpadding="0"
+//                     cellspacing="0" role="presentation">
+//                     <tr>
+//                         <td align="center">
+//                             <table width="100%" border="0" cellspacing="0" cellpadding="0"
+//                                 role="presentation">
+//                                 <tr>
+//                                     <td align="center">
+//                                         <a href="${process.env.FRONTEND_URL}reset-password/${data.token}"
+//                                             class="f-fallback button " target="_blank">Reset
+//                                             your password</a>
+//                                     </td>
+//                                 </tr>
+//                             </table>
+//                         </td>
+//                     </tr>
+//                 </table>
+//                 <p>If you did not request this, please ignore this email and your password
+//                     will remain unchanged.</p>
+//                 <p>Thanks,
+//                     <br>The Wagmatcook Team
+//                 </p>
+//                 <!-- Sub copy -->
+//                 <table class="body-sub" role="presentation">
+//                     <tr>
+//                         <td>
+//                             <p class="f-fallback sub">If you’re having trouble with the
+//                                 button above, copy and paste the URL below into your web
+//                                 browser.</p>
+//                             <p class="f-fallback sub">
+//                                 ${process.env.FRONTEND_URL}reset-password/${data.token}
+//                             </p>
+//                         </td>
+//                     </tr>
+//                 </table>
+//             </div>
+//         `
+//         ),
+//     };
+// },
 
-    // inviteUser(data) {
-    //     return {
-    //         subject: "Wagmatcook | Invitation to signup",
-    //         html: getFullTemplate(
-    //             data,
-    //             `
-    //                 <div class="f-fallback">
-    //                     <h1>Hi ${data.req.body.email},</h1>
-    //                     <p>We are excited to invite you to join our online portal! Our portal offers
-    //                         a convenient way to access our services and stay up-to-date with
-    //                         important information.
+// inviteUser(data) {
+//     return {
+//         subject: "Wagmatcook | Invitation to signup",
+//         html: getFullTemplate(
+//             data,
+//             `
+//                 <div class="f-fallback">
+//                     <h1>Hi ${data.req.body.email},</h1>
+//                     <p>We are excited to invite you to join our online portal! Our portal offers
+//                         a convenient way to access our services and stay up-to-date with
+//                         important information.
 
-    //                     </p>
-    //                     <p>We look forward to having you as a member of our online community! 
-    //                         <!-- <strong>This invitation link is only valid for the next 24
-    //                             hours.</strong> -->
-    //                             </p>
-    //                     <table class="body-action" align="center" width="100%" cellpadding="0"
-    //                         cellspacing="0" role="presentation">
-    //                         <tr>
-    //                             <td align="center">
-    //                                 <table width="100%" border="0" cellspacing="0" cellpadding="0"
-    //                                     role="presentation">
-    //                                     <tr>
-    //                                         <td align="center">
-    //                                             <a href="${process.env.FRONTEND_URL}auth/complete-signup/${data.email}/${data.token}"
-    //                                                 class="f-fallback button "
-    //                                                 target="_blank">Accept the Invitation</a>
-    //                                         </td>
-    //                                     </tr>
-    //                                 </table>
-    //                             </td>
-    //                         </tr>
-    //                     </table>
-    //                     <!-- <p>For security, this request was received from a {{operating_system}} device using {{browser_name}}. If you do not want to join, please ignore this email or <a href="{{support_url}}">contact support</a> if you have questions.</p> -->
-    //                     <p>Thanks,
-    //                         <br>The Wagmatcook Team
-    //                     </p>
-    //                     <!-- Sub copy -->
-    //                     <table class="body-sub" role="presentation">
-    //                         <tr>
-    //                             <td>
-    //                                 <p class="f-fallback sub">If you’re having trouble with the
-    //                                     button above, copy and paste the URL below into your web
-    //                                     browser.</p>
-    //                                 <p class="f-fallback sub">
-    //                                 ${process.env.FRONTEND_URL}auth/complete-signup/${data.email}/${data.token}
-    //                                 </p>
-    //                             </td>
-    //                         </tr>
-    //                     </table>
-    //                 </div>
-    //             `
-    //         ),
-    //     };
-    // },
-    // tempPassword(data) {
-    //     return {
-    //         subject: "Wagmatcook | Temporary Password",
-    //         html: getFullTemplate(
-    //             data,
-    //             `
-    //             <div class="f-fallback">
-    //                 <h1>Hi ${data.req.user.name},</h1>
-    //                 <p>We received a request to verify your account. To complete the verification process, please use the following temporary password:
+//                     </p>
+//                     <p>We look forward to having you as a member of our online community!
+//                         <!-- <strong>This invitation link is only valid for the next 24
+//                             hours.</strong> -->
+//                             </p>
+//                     <table class="body-action" align="center" width="100%" cellpadding="0"
+//                         cellspacing="0" role="presentation">
+//                         <tr>
+//                             <td align="center">
+//                                 <table width="100%" border="0" cellspacing="0" cellpadding="0"
+//                                     role="presentation">
+//                                     <tr>
+//                                         <td align="center">
+//                                             <a href="${process.env.FRONTEND_URL}auth/complete-signup/${data.email}/${data.token}"
+//                                                 class="f-fallback button "
+//                                                 target="_blank">Accept the Invitation</a>
+//                                         </td>
+//                                     </tr>
+//                                 </table>
+//                             </td>
+//                         </tr>
+//                     </table>
+//                     <!-- <p>For security, this request was received from a {{operating_system}} device using {{browser_name}}. If you do not want to join, please ignore this email or <a href="{{support_url}}">contact support</a> if you have questions.</p> -->
+//                     <p>Thanks,
+//                         <br>The Wagmatcook Team
+//                     </p>
+//                     <!-- Sub copy -->
+//                     <table class="body-sub" role="presentation">
+//                         <tr>
+//                             <td>
+//                                 <p class="f-fallback sub">If you’re having trouble with the
+//                                     button above, copy and paste the URL below into your web
+//                                     browser.</p>
+//                                 <p class="f-fallback sub">
+//                                 ${process.env.FRONTEND_URL}auth/complete-signup/${data.email}/${data.token}
+//                                 </p>
+//                             </td>
+//                         </tr>
+//                     </table>
+//                 </div>
+//             `
+//         ),
+//     };
+// },
+// tempPassword(data) {
+//     return {
+//         subject: "Wagmatcook | Temporary Password",
+//         html: getFullTemplate(
+//             data,
+//             `
+//             <div class="f-fallback">
+//                 <h1>Hi ${data.req.user.name},</h1>
+//                 <p>We received a request to verify your account. To complete the verification process, please use the following temporary password:
 
-    //                 </p>
-    //                 <table class="body-action" align="center" width="100%" cellpadding="0"
-    //                     cellspacing="0" role="presentation">
-    //                     <tr>
-    //                         <td align="center">
-    //                             <table width="100%" border="0" cellspacing="0" cellpadding="0"
-    //                                 role="presentation">
-    //                                 <tr>
-    //                                     <td align="center">
-    //                                     Temporary Password: <strong>${data.token}</strong>
-    //                                          </td>
-    //                                 </tr>
-    //                             </table>
-    //                         </td>
-    //                     </tr>
-    //                 </table>
-    //                 <p>This temporary password is valid for a limited time and should be used within 24 hours.</p>
-    //                 <p> Do not share this temporary password with anyone.</p>
-    //                 <p>Thanks,
-    //                     <br>The Wagmatcook Team
-    //                 </p>
-                 
-    //             </div>
-    //         `
-    //         ),
-    //     };
-    // },
+//                 </p>
+//                 <table class="body-action" align="center" width="100%" cellpadding="0"
+//                     cellspacing="0" role="presentation">
+//                     <tr>
+//                         <td align="center">
+//                             <table width="100%" border="0" cellspacing="0" cellpadding="0"
+//                                 role="presentation">
+//                                 <tr>
+//                                     <td align="center">
+//                                     Temporary Password: <strong>${data.token}</strong>
+//                                          </td>
+//                                 </tr>
+//                             </table>
+//                         </td>
+//                     </tr>
+//                 </table>
+//                 <p>This temporary password is valid for a limited time and should be used within 24 hours.</p>
+//                 <p> Do not share this temporary password with anyone.</p>
+//                 <p>Thanks,
+//                     <br>The Wagmatcook Team
+//                 </p>
+
+//             </div>
+//         `
+//         ),
+//     };
+// },

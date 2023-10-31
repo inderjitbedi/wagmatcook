@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ScrollToTop from "../../auth/pages/scrollTop";
+import { RotatingLines } from "react-loader-spinner";
+
 import {
   AuthLayout,
   PrimaryDiv,
   SecondaryDIv,
 } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
-
+interface User {
+  role: string;
+  // Add other user properties as needed
+}
 const PublicLayout = ({ component: Component }: any) => {
   const componentImageMap: any = {
     CompleteSignup: "./../../../assets/solar-bg.png",
@@ -22,10 +27,41 @@ const PublicLayout = ({ component: Component }: any) => {
       : "/images/image 4.svg";
   // console.log(Component.name, imageUrl);
   const { pathname } = useLocation();
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top of the page on route change
   }, [pathname]);
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+      navigate(-1);
+    }
+  }, []);
+  if (user) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          height: "70vh",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <RotatingLines
+          strokeColor="#279AF1"
+          strokeWidth="3"
+          animationDuration="0.75"
+          width="52"
+          visible={true}
+        />
+      </div>
+    );
+  }
   return (
     <>
       <main role="main">
@@ -43,7 +79,10 @@ const PublicLayout = ({ component: Component }: any) => {
                   the experiences we are willing to share with you.
                 </p>
               </div>
-              <div className="ImageContainer" style={{ backgroundColor: "#093FE1" }}>
+              <div
+                className="ImageContainer"
+                style={{ backgroundColor: "#093FE1" }}
+              >
                 <img
                   src="/images/image 4.svg"
                   alt="background-img"

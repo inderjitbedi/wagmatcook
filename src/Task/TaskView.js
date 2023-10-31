@@ -139,7 +139,9 @@ const TaskView = () => {
             className: "toast",
           }); //Employee proformance added successfully");
         } else {
-          //toast.warn("something went wrong ");
+          toast.warn("something went wrong ", {
+            className: "toast",
+          });
           setIsUploading(false);
         }
       })
@@ -240,12 +242,16 @@ const TaskView = () => {
           });
           setIsUpdating(false);
         } else {
-          //toast.warn("something went wrong ");
+          toast.warn("something went wrong ", {
+            className: "toast",
+          });
         }
       })
       .catch((error) => {
         //console.error("Error:", error);
-        toast.error("Error Updating Benefits . Please try again.");
+        toast.warn("something went wrong ", {
+          className: "toast",
+        });
         setIsUpdating(false);
       })
       .finally(() => {
@@ -352,7 +358,7 @@ const TaskView = () => {
     const millisecondsInMonth = millisecondsInDay * 30; // An approximate value
     const millisecondsInYear = millisecondsInDay * 365; // An approximate value
     if (timeDifference < millisecondsInSecond) {
-      return "Just now";
+      return "just now";
     } else if (timeDifference < millisecondsInMinute) {
       const seconds = Math.floor(timeDifference / millisecondsInSecond);
       return `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
@@ -654,7 +660,9 @@ const TaskView = () => {
                           data?.commenter?.personalInfo?.lastName,
                         ].join(" ")}
                         &nbsp;&nbsp;
-                        <span>{formatDateDifference(data?.createdAt)}</span>
+                        <span style={{ textTransform: "none" }}>
+                          {formatDateDifference(data?.createdAt)}
+                        </span>
                       </TitlePara>
 
                       <FlexContaier>

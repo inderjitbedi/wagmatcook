@@ -104,8 +104,8 @@ const Offboarding = () => {
   const [open, setOpen] = useState(false);
   const HandleOpen = (data) => {
     const Name = [
-      data.personalInfo[0]?.firstName,
-      data.personalInfo[0]?.lastName,
+      data.fromPersonalInfo?.firstName,
+      data.fromPersonalInfo?.lastName,
     ].join(" ");
     setSelectedName(Name);
     setId(data._id);
@@ -125,7 +125,6 @@ const Offboarding = () => {
     clearErrors();
     reset({});
     setId("");
-    setSelectedName("");
   };
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -165,6 +164,7 @@ const Offboarding = () => {
   };
   const handleCancelUpdate = () => {
     setIsConfirmationModalOpen(false);
+    setSelectedName("");
   };
   const GetOffboardList = () => {
     setIsLoading(true);
@@ -198,7 +198,7 @@ const Offboarding = () => {
   const GetEmployeesList = (userid) => {
     setIsLoading(true);
 
-    let url = API_URLS.getEmployeeList.replace("Page", page);
+    let url = API_URLS.getReporttoList;
     httpClient({
       method: "get",
       url,
@@ -206,11 +206,8 @@ const Offboarding = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          const filteredEmployees = result.employees.filter((employee) => {
-            if (employee.role === "EMPLOYEE") {
-              return false;
-            }
-            return employee._id !== userid;
+          const filteredEmployees = result.users.filter((employee) => {
+            return employee.user !== userid;
           });
 
           setEmployeeList(filteredEmployees);
@@ -263,6 +260,8 @@ const Offboarding = () => {
         setIsLoading(false);
       });
   };
+  console.log("the selected user transfer name:", transferTo);
+
   useEffect(() => {
     GetOffboardList();
   }, []);
@@ -335,6 +334,17 @@ const Offboarding = () => {
                         required: {
                           value: true,
                           message: "Required",
+                        },
+                        onChange: (e) => {
+                          const userId = e.target.value;
+                          const userName = employeeList.find(
+                            (user) => user._id === userId
+                          );
+                          const fullName = [
+                            userName?.personalInfo[0]?.firstName,
+                            userName?.personalInfo[0]?.lastName,
+                          ].join(" ");
+                          setTransferTo(fullName);
                         },
                       }}
                       render={({ field }) => (
@@ -559,6 +569,8 @@ const Offboarding = () => {
         isLoading={isLoading}
         HandleDelete={handleUpdateConfirmed}
         Option={true}
+        selectedName={selectedName}
+        transferTo={transferTo}
       />
     </>
   );

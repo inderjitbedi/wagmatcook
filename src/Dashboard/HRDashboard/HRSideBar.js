@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHeaderInfoContext } from "../../Context/ContextProvider";
 import {
   SidebarTitle,
   SideBarListTitle,
@@ -19,6 +20,8 @@ import { MdWorkHistory } from "react-icons/md";
 import { BsFilePost } from "react-icons/bs";
 
 const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
+  const { headerData } = useHeaderInfoContext();
+
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
@@ -43,30 +46,10 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUserData(parsedUser);
-      GetHeadersData(parsedUser._id);
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-  const [headerData, setHeaderData] = useState([]);
 
-  const GetHeadersData = (id) => {
-    // setIsLoading(true);
-
-    let url = `/employee/header-info/${id}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
   const [isHovering, setIsHovering] = useState({
     dashbord: false,
     employee: false,

@@ -359,218 +359,224 @@ const EmployeeJobDetails = () => {
                   </FlexSpaceBetween>
 
                   <BasicDetailsDiv>
-                    {/* {result?.positions?.length === 0 ? (
-                      <NoDocumentfound message="No job details to show" />
-                    ) : (
-                      <>
-                        {result?.positions?.map((data) => (
-                          <CertificateContainer>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Employee Type</TitlePara>
-                                <ViewPara>
-                                  {data?.employeeType.name || " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Role </TitlePara>
-                                <ViewPara>{data?.role || " - "}</ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Department</TitlePara>
-                                <ViewPara>
-                                  {data?.department?.name || " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Position </TitlePara>
-                                <ViewPara>{data?.title || " - "}</ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Position Start Date</TitlePara>
-                                <ViewPara>
-                                  {data?.startDate
-                                    ? moment(data?.startDate).format(
-                                        "DD/MM/YYYY"
-                                      )
-                                    : "-"}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Position End Date</TitlePara>
-                                <ViewPara>
-                                  {data?.endDate
-                                    ? moment(data?.endDate).format("D MMM, YYYY")
-                                    : "Present"}
-                                </ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Salary Scale From</TitlePara>
-                                <ViewPara>
-                                  {" "}
-                                  {data?.salaryScaleFrom
-                                    ? "$" + data?.salaryScaleFrom
-                                    : " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Salary Scale To</TitlePara>
-                                <ViewPara>
-                                  {" "}
-                                  {data?.salaryScaleTo
-                                    ? "$" + data?.salaryScaleTo
-                                    : " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Actual Salary amounts</TitlePara>
-                                <ViewPara>
-                                  {" "}
-                                  {data?.salary ? "$" + data?.salary : " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Salary rate per</TitlePara>
-                                <ViewPara>
-                                  {data?.ratePer === 1
-                                    ? "Hour"
-                                    : data?.ratePer === 2
-                                    ? "Day"
-                                    : data?.ratePer === 3
-                                    ? "Week"
-                                    : data?.ratePer === 4
-                                    ? "Biweekly "
-                                    : data?.ratePer === 5
-                                    ? "Annual "
-                                    : " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
-                            <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Hours per week</TitlePara>
-                                <ViewPara>
-                                  {data?.hoursPerWeek || " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Reports to</TitlePara>
-                                <ViewPara>
-                                  {" "}
-                                  {data?.reportsTo.name || " - "}{" "}
-                                </ViewPara>
-                              </FlexColumn>
-                            </FlexSpaceBetween>
+                    {isAccount ? (
+                      result?.positions?.length === 0 ? (
+                        <NoDocumentfound message="No job details to show" />
+                      ) : (
+                        <>
+                          {result?.positions?.map((data) => (
+                            <CertificateContainer>
                               <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Hours per week</TitlePara>
+                                <FlexColumn>
+                                  <TitlePara>Employee Type</TitlePara>
+                                  <ViewPara>
+                                    {data?.employeeType.name || " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Role </TitlePara>
+                                  <ViewPara>{data?.role || " - "}</ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Department</TitlePara>
+                                  <ViewPara>
+                                    {data?.department?.name || " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Position </TitlePara>
+                                  <ViewPara>{data?.title || " - "}</ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Position Start Date</TitlePara>
+                                  <ViewPara>
+                                    {data?.startDate
+                                      ? moment(data?.startDate).format(
+                                          "DD/MM/YYYY"
+                                        )
+                                      : "-"}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Position End Date</TitlePara>
+                                  <ViewPara>
+                                    {data?.endDate
+                                      ? moment(data?.endDate).format(
+                                          "D MMM, YYYY"
+                                        )
+                                      : "Present"}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Salary Scale From</TitlePara>
+                                  <ViewPara>
+                                    {" "}
+                                    {data?.salaryScaleFrom
+                                      ? "$" + data?.salaryScaleFrom
+                                      : " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Salary Scale To</TitlePara>
+                                  <ViewPara>
+                                    {" "}
+                                    {data?.salaryScaleTo
+                                      ? "$" + data?.salaryScaleTo
+                                      : " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Actual Salary amounts</TitlePara>
+                                  <ViewPara>
+                                    {" "}
+                                    {data?.salary ? "$" + data?.salary : " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Salary rate per</TitlePara>
+                                  <ViewPara>
+                                    {data?.ratePer === 1
+                                      ? "Hour"
+                                      : data?.ratePer === 2
+                                      ? "Day"
+                                      : data?.ratePer === 3
+                                      ? "Week"
+                                      : data?.ratePer === 4
+                                      ? "Biweekly "
+                                      : data?.ratePer === 5
+                                      ? "Annual "
+                                      : " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Hours per week</TitlePara>
+                                  <ViewPara>
+                                    {data?.hoursPerWeek || " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Reports to</TitlePara>
+                                  <ViewPara>
+                                    {" "}
+                                    {data?.reportsTo.name || " - "}{" "}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Hours per week</TitlePara>
+                                  <ViewPara>
+                                    {data?.jurisdiction || " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Is BEB Eligible?</TitlePara>
+                                  <ViewPara>
+                                    {data?.isBebEligible ? "Yes" : "No"}
+                                  </ViewPara>
+                                </FlexColumn>
+                                <FlexColumn>
+                                  <TitlePara>Is Primary</TitlePara>
+                                  <ViewPara>
+                                    {data?.isPrimary ? "Yes" : "No"}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+
+                              <FlexSpaceBetween>
+                                <FlexColumn>
+                                  <TitlePara>Jurisdiction</TitlePara>
+                                  <ViewPara>
+                                    {data?.jurisdiction || " - "}
+                                  </ViewPara>
+                                </FlexColumn>
+                              </FlexSpaceBetween>
+                            </CertificateContainer>
+                          ))}
+                        </>
+                      )
+                    ) : (
+                      <VerticalTimeline
+                        layout={"1-column-left"}
+                        lineColor={"#EFF4FA"}
+                        style={{
+                          padding: "0rem",
+                          margin: "0rem",
+                          maxWidth: "100%",
+                        }}
+                      >
+                        {result?.positions?.map((data) => (
+                          <VerticalTimelineElement
+                            className="vertical-timeline-element--work"
+                            contentStyle={{
+                              outine: "none",
+                              boxShadow: "none",
+                              border: "none",
+                            }}
+                            iconStyle={{
+                              width: "1.8rem",
+                              height: "1.8rem",
+                              background: "#fff",
+                              border: "1.5px solid #8F9BB3",
+                              borderRadius: "50%",
+                              boxShadow: "none",
+                              outine: "none",
+                              marginLeft: "1rem",
+                            }}
+                            intersectionObserverProps={{
+                              margin: "0rem 0rem 0rem 0rem",
+                            }}
+                            style={{ margin: "0rem" }}
+                          >
+                            <TimelineDiv>
+                              <FlexColumn style={{ gap: "4px" }}>
+                                <TitlePara>{data.title || " - "}</TitlePara>
                                 <ViewPara>
-                                  {data?.jurisdiction || " - "}
+                                  {data.department?.name || " - "}
                                 </ViewPara>
                               </FlexColumn>
-                            
-                            </FlexSpaceBetween>
-                         
-                            <FlexSpaceBetween>
                               <FlexColumn>
-                                <TitlePara>Is BEB Eligible?</TitlePara>
-                                <ViewPara>
-                                  {data?.isBebEligible ? "Yes" : "No"}
-                                </ViewPara>
+                                <TitlePara>
+                                  From:{" "}
+                                  {data.startDate
+                                    ? moment(data.startDate).format(
+                                        "D MMM, YYYY"
+                                      )
+                                    : " - "}
+                                  <span style={{ marginLeft: "14px" }}>
+                                    {" "}
+                                    To:
+                                    {data.endDate
+                                      ? moment(data.endDate).format(
+                                          "D MMM, YYYY"
+                                        )
+                                      : " Present "}
+                                  </span>{" "}
+                                </TitlePara>
+                                <TitlePara>
+                                  {data?.isPrimary && (
+                                    <span style={ApprovedStyles}> Primary</span>
+                                  )}
+                                </TitlePara>
                               </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>Is Primary</TitlePara>
-                                <ViewPara>
-                                  {data?.isPrimary ? "Yes" : "No"}
-                                </ViewPara>
-                              </FlexColumn>
-                             
-                            </FlexSpaceBetween>
-                           
-                               <FlexSpaceBetween>
-                              <FlexColumn>
-                                <TitlePara>Jurisdiction</TitlePara>
-                                <ViewPara>
-                                  {data?.jurisdiction || " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                             
-                            </FlexSpaceBetween>
-                          </CertificateContainer>
+                            </TimelineDiv>
+                          </VerticalTimelineElement>
                         ))}
-                      </>
-                    )} */}
-                    <VerticalTimeline
-                      layout={"1-column-left"}
-                      lineColor={"#EFF4FA"}
-                      style={{
-                        padding: "0rem",
-                        margin: "0rem",
-                        maxWidth: "100%",
-                      }}
-                    >
-                      {result?.positions?.map((data) => (
-                        <VerticalTimelineElement
-                          className="vertical-timeline-element--work"
-                          contentStyle={{
-                            outine: "none",
-                            boxShadow: "none",
-                            border: "none",
-                          }}
-                          iconStyle={{
-                            width: "1.8rem",
-                            height: "1.8rem",
-                            background: "#fff",
-                            border: "1.5px solid #8F9BB3",
-                            borderRadius: "50%",
-                            boxShadow: "none",
-                            outine: "none",
-                            marginLeft: "1rem",
-                          }}
-                          intersectionObserverProps={{
-                            margin: "0rem 0rem 0rem 0rem",
-                          }}
-                          style={{ margin: "0rem" }}
-                        >
-                          <TimelineDiv>
-                            <FlexColumn style={{ gap: "4px" }}>
-                              <TitlePara>{data.title || " - "}</TitlePara>
-                              <ViewPara>
-                                {data.department?.name || " - "}
-                              </ViewPara>
-                            </FlexColumn>
-                            <FlexColumn>
-                              <TitlePara>
-                                From:{" "}
-                                {data.startDate
-                                  ? moment(data.startDate).format("D MMM, YYYY")
-                                  : " - "}
-                                <span style={{ marginLeft: "14px" }}>
-                                  {" "}
-                                  To:
-                                  {data.endDate
-                                    ? moment(data.endDate).format("D MMM, YYYY")
-                                    : " Present "}
-                                </span>{" "}
-                              </TitlePara>
-                              <TitlePara>
-                                {data?.isPrimary && (
-                                  <span style={ApprovedStyles}> Primary</span>
-                                )}
-                              </TitlePara>
-                            </FlexColumn>
-                          </TimelineDiv>
-                        </VerticalTimelineElement>
-                      ))}
-                    </VerticalTimeline>
+                      </VerticalTimeline>
+                    )}
 
                     {/* add new modal  */}
 
