@@ -1169,7 +1169,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
   font-style: normal;
   font-weight: 600;
   line-height: 16px;
-   display: inline-block;
+    display: inline-block;
   cursor: pointer;
    text-decoration: none;
   border: none;
@@ -1472,10 +1472,10 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
                 <a style="border-radius: 8px;
     margin-top: 35px;
   color: #fff;
-   display: inline-block;
+  text-align: center;
+    display: inline-block;
   cursor: pointer;
    text-decoration: none;
-  text-align: center;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1783,10 +1783,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 <a style="border-radius: 8px;
     margin-top: 35px;
   color: #fff;
-   display: inline-block;
+  text-align: center;
+    display: inline-block;
   cursor: pointer;
    text-decoration: none;
-  text-align: center;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1797,7 +1797,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
   background: #279af1;
   padding: 0.75em 1.25em;" href="${
     process.env.FRONTEND_URL
-  }manager-management/request/${data.request.employee._id}/${
+  }manager-management/leaves-request/${data.request.employee._id}/${
         data.request._id
       }">View Details</a>
 
@@ -1837,10 +1837,861 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 
 </html>
       
-      `}
-    }
-};
+      `,
+    };
+  },
+  taskAssigned(data) {
+    return {
+      subject: "Wagmatcook | New Task Assigned",
+      html: `
+        <!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+    body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      font-family: "Inter", sans-serif;
+    }
+
+    table,
+    td {
+      mso-table-lspace: 0px !important;
+      mso-table-rspace: 0px !important;
+    }
+
+    table {
+      border-spacing: 0 !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+      margin: 0 auto !important;
+    }
+
+    @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+      u~div .email-container {
+        min-width: 320px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+      u~div .email-container {
+        min-width: 375px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 414px) {
+      u~div .email-container {
+        min-width: 414px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <center style="width: 100%">
+    <div style="max-width: 700px; margin: 0 auto" class="email-container">
+      <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+        style="margin: auto">
+        <tr>
+          <td valign="top">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="text-align: left; padding: 36px 50px 0px 50px">
+                  <p style="
+                        color:#093FE1;
+                        font-family: 'Inter', sans-serif;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 700;
+                        line-height: normal;
+                        letter-spacing: -0.48px;
+                        width: 100%;
+                      ">
+                    Wagmatcook
+                  </p>
+                </td>
+              <tr>
+                <td align="center">
+                  <center style="width: 152px;
+height: 152px; background-color: #EDF1FF; border-radius: 50%;">
+                    <img src="https://hrapi.chantsit.com/public/task.png" style="margin: 25px;" />
+                  </center>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p style="
+              color: #222B45;
+              text-align: center;
+              font-family: 'Inter', sans-serif;
+              font-size: 32px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 48px; /* 150% */
+              letter-spacing: -0.64px;
+              width: 80%;
+              margin: 20px auto;
+            ">
+                    New Task Assigned !
+                  </p>
+                </td>
+              </tr>
+        </tr>
+      </table>
+      </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td style="text-align: left; padding: 40px 50px 0px 50px;">
+                <h1 style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 32px;
+                margin: 0;
+              ">
+              Hi ${
+                data.task.assignee.name ||
+                data.task.assignee.personalInfo?.firstName
+              },
+                </h1>
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+                  You have assigned a new task by ${
+                    data.task.assigner.name ||
+                    data.task.assigner.personalInfo?.firstName
+                  }.
+                </p>
+
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+                  Following are the task details:
+                </p>
+
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Title :<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.title}
+                  </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Due Date:<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Description :
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.description} </span>
+                </p>
+
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 25px 0px 35px 0px;
+              ">
+                  Please view details for more information.
+                </p>
+                <a style="border-radius: 8px;
+    margin-top: 35px;
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  background: #279af1;
+  padding: 0.75em 1.25em;" href="">View Details</a>
+
+              </td>
+            </tr>
+
+
+
+          </table>
+
+        </td>
+
+      </tr>
+      </table>
+      <table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="left" style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 24px;
+                margin-bottom: 90px;
+                padding: 60px 50px 40px 50px;
+              ">
+            <p style="margin: 0px">Best regards,</p>
+            <p style="margin: 0px">The Wagmatcook Team</p>
+            <p style="margin: 0px">www.wagmatcook.com</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </center>
+</body>
+
+</html>
+        `,
+    };
+  },
+  taskStatusUpdate(data) {
+    return {
+      subject: "Wagmatcook | Task Status Updated",
+      html: `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+    body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      font-family: "Inter", sans-serif;
+    }
+
+    table,
+    td {
+      mso-table-lspace: 0px !important;
+      mso-table-rspace: 0px !important;
+    }
+
+    table {
+      border-spacing: 0 !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+      margin: 0 auto !important;
+    }
+
+    @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+      u~div .email-container {
+        min-width: 320px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+      u~div .email-container {
+        min-width: 375px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 414px) {
+      u~div .email-container {
+        min-width: 414px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <center style="width: 100%">
+    <div style="max-width: 700px; margin: 0 auto" class="email-container">
+      <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+        style="margin: auto">
+        <tr>
+          <td valign="top">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="text-align: left; padding: 36px 50px 0px 50px">
+                  <p style="
+                        color:#093FE1;
+                        font-family: 'Inter', sans-serif;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 700;
+                        line-height: normal;
+                        letter-spacing: -0.48px;
+                        width: 100%;
+                      ">
+                    Wagmatcook
+                  </p>
+                </td>
+              <tr>
+                <td align="center">
+                  <center style="width: 152px;
+height: 152px; background-color: #EDF1FF; border-radius: 50%;">
+                    <img src="https://hrapi.chantsit.com/public/status.png" style="margin: 25px;" />
+                  </center>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p style="
+              color: #222B45;
+              text-align: center;
+              font-family: 'Inter', sans-serif;
+              font-size: 32px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 48px; /* 150% */
+              letter-spacing: -0.64px;
+              width: 80%;
+              margin: 20px auto;
+            ">
+                    Task Status Updated !
+                  </p>
+                </td>
+              </tr>
+        </tr>
+      </table>
+      </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td style="text-align: left; padding: 40px 50px 0px 50px;">
+                <h1 style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 32px;
+                margin: 0;
+              ">
+                  Hi ${
+                    data.task.sentTo.name ||
+                    data.task.sentTo.personalInfo?.firstName
+                  }
+                </h1>
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+                 The status of the following task was updated.
+                </p>
+
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Title :<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.title}
+                  </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Due Date:<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Description :
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.description} </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Status :
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.isCompleted ? "Completed" : "In-progress"} </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin:25px 0px 35px 0px;
+              ">
+                  Please view details for more information.
+                </p>
+                <a style="border-radius: 8px;
+    margin-top: 35px;
+  color: #fff;
+  text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #279af1;
+  padding: 0.75em 1.25em;" href="${data.task.redirectUrl}">View Details</a>
+
+              </td>
+            </tr>
+
+
+
+          </table>
+
+        </td>
+
+      </tr>
+      </table>
+      <table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="left" style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 24px;
+                margin-bottom: 90px;
+                padding: 60px 50px 40px 50px;
+              ">
+            <p style="margin: 0px">Best regards,</p>
+            <p style="margin: 0px">The Wagmatcook Team</p>
+            <p style="margin: 0px">www.wagmatcook.com</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </center>
+</body>
+
+</html>
+        `,
+    };
+  },
+  taskComment(data) {
+    return {
+      subject: "Wagmatcook | New Comment on Task",
+      html: `
+        <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+    body {
+      margin: 0 auto !important;
+      padding: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
+      font-family: "Inter", sans-serif;
+    }
+
+    table,
+    td {
+      mso-table-lspace: 0px !important;
+      mso-table-rspace: 0px !important;
+    }
+
+    table {
+      border-spacing: 0 !important;
+      border-collapse: collapse !important;
+      table-layout: fixed !important;
+      margin: 0 auto !important;
+    }
+
+    @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+      u~div .email-container {
+        min-width: 320px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+      u~div .email-container {
+        min-width: 375px !important;
+      }
+    }
+
+    @media only screen and (min-device-width: 414px) {
+      u~div .email-container {
+        min-width: 414px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <center style="width: 100%">
+    <div style="max-width: 700px; margin: 0 auto" class="email-container">
+      <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+        style="margin: auto">
+        <tr>
+          <td valign="top">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td style="text-align: left; padding: 36px 50px 0px 50px">
+                  <p style="
+                        color:#093FE1;
+                        font-family: 'Inter', sans-serif;
+                        font-size: 24px;
+                        font-style: normal;
+                        font-weight: 700;
+                        line-height: normal;
+                        letter-spacing: -0.48px;
+                        width: 100%;
+                      ">
+                    Wagmatcook
+                  </p>
+                </td>
+              <tr>
+                <td align="center">
+                  <center style="width: 152px;
+height: 152px; background-color: #EDF1FF; border-radius: 50%;">
+                    <img src="https://hrapi.chantsit.com/public/comment.png" style="margin: 25px;" />
+                  </center>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p style="
+              color: #222B45;
+              text-align: center;
+              font-family: 'Inter', sans-serif;
+              font-size: 32px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: 48px; /* 150% */
+              letter-spacing: -0.64px;
+              width: 80%;
+              margin: 20px auto;
+            ">
+            New Comment on Task !
+                  </p>
+                </td>
+              </tr>
+        </tr>
+      </table>
+      </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td style="text-align: left; padding: 40px 50px 0px 50px;">
+                <h1 style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 32px;
+                margin: 0;
+              ">
+                  Hi ${
+                    data.task.sentTo.name ||
+                    data.task.sentTo.personalInfo?.firstName
+                  }
+                </h1>
+                <p style="
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 28px;
+              ">
+              ${
+                data.comment.commenter.name ||
+                data.comment.commenter.personalInfo?.firstName
+              } commented on the following task.
+                </p>
+
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Title :<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.title}
+                  </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Due Date:<span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                </p>
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin: 0px;
+              ">
+                  Description :
+                  <span style="
+                  color: #222b45;
+                  font-family: 'Inter', sans-serif;
+                  font-size: 16px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: 32px;
+                  margin: 0px;
+                ">
+                ${data.task.description} </span>
+                </p>
+               
+                <p style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 28px;
+                margin:25px 0px 35px 0px;
+              ">
+                  Please view details for more information.
+                </p>
+                <a style="border-radius: 8px;
+    margin-top: 35px;
+  color: #fff;
+  text-align: center;
+    display: inline-block;
+  cursor: pointer;
+   text-decoration: none;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #279af1;
+  padding: 0.75em 1.25em;" href="${data.task.redirectUrl}">View Details</a>
+
+              </td>
+            </tr>
+
+
+
+          </table>
+
+        </td>
+
+      </tr>
+      </table>
+      <table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="left" style="
+                width: 100%;
+                color: #222b45;
+                font-family: 'Inter', sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 24px;
+                margin-bottom: 90px;
+                padding: 60px 50px 40px 50px;
+              ">
+            <p style="margin: 0px">Best regards,</p>
+            <p style="margin: 0px">The Wagmatcook Team</p>
+            <p style="margin: 0px">www.wagmatcook.com</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </center>
+</body>
+
+</html>
+        `,
+    };
+  },
+};
 
 module.exports = emailTemplates;
 // forgotPassword(data) {
