@@ -1837,10 +1837,10 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
 
 </html>
       
-      `,
-    };
-  },
+      `}
+    }
 };
+
 
 module.exports = emailTemplates;
 // forgotPassword(data) {

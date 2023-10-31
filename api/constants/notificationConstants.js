@@ -31,5 +31,9 @@ module.exports = Object.freeze({
         title: "{assigner} has assigned you a new task.",
         description: ""
     },
+    TASK_COMMENT: {
+        title: "{commenter} has commented on the task '{taskName}'.",
+        description: ""
+    },
 
 });
