@@ -672,7 +672,7 @@ const Task = () => {
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell>
                     <TableCell
-                      sx={{...CellStyle , cursor:"pointer"}}
+                      sx={{ ...CellStyle, cursor: "pointer" }}
                       align="left"
                       onClick={() => {
                         if (userType === ROLES.HR) {

@@ -108,7 +108,7 @@ a.link {
   background-color: #093fe1;
   color: #fff;
   height: 100vh;
-  
+
   @media only screen and (max-width: 1100px) {
     height: max-content;
     padding-bottom: 2rem;
@@ -706,15 +706,15 @@ input[type="checkbox"] {
   box-sizing: border-box;
 }
 .css-cgl6zv-MuiAutocomplete-root .MuiAutocomplete-tag {
-  border-radius: 10rem;
-  background: #c8ffc7;
-  padding: 2px 1.2rem;
-  color: #0d7d0b;
-  text-align: center;
-  font-size: 1.4rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 2.4rem;
+  border-radius: 10rem !important;
+  background: #c8ffc7 !important;
+  padding: 2px 1.2rem !important;
+  color: #0d7d0b !important;
+  text-align: center !important;
+  font-size: 1.4rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important ;
+  line-height: 2.4rem !important;
 }
 .css-1q60rmi-MuiAutocomplete-endAdornment {
   right: 15px !important;

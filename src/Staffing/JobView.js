@@ -224,10 +224,10 @@ const JobView = () => {
                 onChange={HandleChangeTab}
                 aria-label="basic tabs example"
               >
-                <Tab label="Applicants List" {...a11yProps(0)} />
+                <Tab label="Applicant List" {...a11yProps(0)} />
                 <Tab label="Meets Eligibility" {...a11yProps(1)} />
-                <Tab label="Interviewing List" {...a11yProps(2)} />
-                <Tab label="Selected List" {...a11yProps(3)} />
+                <Tab label="Interviewed" {...a11yProps(2)} />
+                <Tab label="Selections" {...a11yProps(3)} />
               </Tabs>
             </div>
             <CustomTabPanel value={valueTab} index={0}>

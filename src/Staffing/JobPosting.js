@@ -639,7 +639,7 @@ const JobPosting = () => {
               <TableBody>
                 {!result?.jobs?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={8}>
                       No job posting found
                     </TableCell>
                   </TableRow>

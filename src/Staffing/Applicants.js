@@ -517,7 +517,7 @@ const Applicants = ({ jobid,Tabvalue }) => {
   return (
     <>
       <DisciplinaryDiv>
-        <DisciplinaryHeading>Applicants List</DisciplinaryHeading>
+        <DisciplinaryHeading>Applicant List</DisciplinaryHeading>
 
         <AddNewButton
           onClick={() => {
@@ -973,7 +973,7 @@ const Applicants = ({ jobid,Tabvalue }) => {
                     >
                       {!applicants?.length && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" sx={CellStyle2} colSpan={6}>
+                          <TableCell align="center" sx={CellStyle2} colSpan={7}>
                             No job posting found
                           </TableCell>
                         </TableRow>
