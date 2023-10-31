@@ -32,6 +32,10 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    isSelected: {
+        type: Boolean,
+        default: false
+    },
     isDeleted: {
         type: Boolean,
         default: false

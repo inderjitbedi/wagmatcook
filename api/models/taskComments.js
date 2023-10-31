@@ -7,7 +7,7 @@ const taskSchema = new mongoose.Schema({
     },
     task: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task',
+        ref: 'Tasks',
         default: null,
     },
     commenter: {

@@ -4,15 +4,19 @@ const Tasks = require("../models/tasks");
 const roles = require("../enum/roles");
 const User = require("../models/user");
 const TaskComments = require("../models/taskComments");
+const sendGrid = require("../providers/sendGrid");
 
 const taskController = {
     async create(req, res) {
 
         try {
             req.body.assigner = req.user?._id;
-            const task = new Tasks(req.body);
+            let task = new Tasks(req.body);
             await task.save();
-
+            task = await task.populate([
+                { path: 'assignee', populate: { path: 'personalInfo' } },
+                { path: 'assigner', populate: { path: 'personalInfo' } }
+            ])
             let type = "TASK_ASSIGNED"
             const notification = new Notifications({
                 title: notificationConstants[type].title?.replace('{assigner}', req.user?.personalInfo ? [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ') : 'Someone'),
@@ -21,6 +25,10 @@ const taskController = {
                 receiver: req.body.assignee
             });
             await notification.save();
+
+            sendGrid.send(task.assignee.email, "taskAssigned", { task });
+
+
             res.status(201).json({ task, message: 'Task created successfully.' });
         } catch (error) {
             console.error("taskController:create:error -", error);
@@ -53,9 +61,35 @@ const taskController = {
     },
     async markComplete(req, res) {
         try {
-            const task = await Tasks.findOneAndUpdate({
+
+            let task = await Tasks.findOneAndUpdate({
                 _id: req.params.id,
             }, { isCompleted: !!req.body.isCompleted }, { new: true })
+            task = await task.populate([
+                { path: 'assignee', populate: { path: 'personalInfo' } },
+                { path: 'assigner', populate: { path: 'personalInfo' } }
+            ])
+            if (task.assignee._id.equals(req.user._id)) {
+                task.sentTo = task.assigner
+                if (task.assigner.role === roles.MANAGER)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`
+                else if (task.assigner.role === roles.HR)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
+                else //| obvious OA
+                    task.redirectUrl = `${process.env.FRONTEND_URL}organization-admin/tasks/details/${task._id}`
+            } else {
+                task.sentTo = task.assignee
+
+                if (task.assignee.role === roles.EMPLOYEE)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`
+                else if (task.assignee.role === roles.MANAGER)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`
+                else // if (task.assignee.role === roles.HR) | obvious HR
+                    task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
+            }
+
+            sendGrid.send(task.sentTo?.email, "taskStatusUpdate", { task });
+
             res.status(200).json({ message: 'Task marked as ' + (req.body.isCompleted ? 'completed' : 'in-progress') + ' successfully' });
         } catch (error) {
             console.error("taskController:update:error -", error);
@@ -168,17 +202,44 @@ const taskController = {
         try {
             req.body.task = req.params?.taskid;
             req.body.commenter = req.user?._id;
-            const comment = new TaskComments(req.body);
+            let comment = new TaskComments(req.body);
             await comment.save();
-            await comment.populate({ path: 'commenter', populate: { path: 'personalInfo', populate: { path: 'photo' } } });
-            // let type = "TASK_ASSIGNED"
-            // const notification = new Notifications({
-            //     title: notificationConstants[type].title?.replace('{assigner}', req.user?.personalInfo ? [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ') : 'Someone'),
-            //     type,
-            //     sender: req.user._id,
-            //     receiver: req.body.assignee
-            // });
-            // await notification.save();
+            await comment.populate([
+                { path: 'commenter', populate: { path: 'personalInfo', populate: { path: 'photo' } } },
+                { path: 'task', populate: [{ path: 'assignee', populate: { path: 'personalInfo' } }, { path: 'assigner', populate: { path: 'personalInfo' } }] }
+            ])
+
+
+            let type = "TASK_COMMENT"
+            const notification = new Notifications({
+                title: notificationConstants[type].title?.replace('{commenter}', comment.commenter?.name || [comment.commenter?.personalInfo?.firstName, comment.commenter?.personalInfo?.lastName].join(' ')),
+                type,
+                sender: req.user._id,
+                receiver: req.user._id.equals(req.body.assignee) ? req.body.assigner : req.body.assignee
+            });
+            await notification.save();
+
+            let task = comment.task;
+            if (task.assignee._id.equals(req.user._id)) {
+                task.sentTo = task.assigner
+                if (task.assigner.role === roles.MANAGER)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`
+                else if (task.assigner.role === roles.HR)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
+                else //| obvious OA
+                    task.redirectUrl = `${process.env.FRONTEND_URL}organization-admin/tasks/details/${task._id}`
+            } else {
+                task.sentTo = task.assignee
+
+                if (task.assignee.role === roles.EMPLOYEE)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`
+                else if (task.assignee.role === roles.MANAGER)
+                    task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`
+                else // if (task.assignee.role === roles.HR) | obvious HR
+                    task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
+            }
+
+            sendGrid.send(task.sentTo?.email, "taskComment", { comment, task });
             res.status(201).json({ comment, message: 'Comment added successfully.' });
         } catch (error) {
             console.error("taskController:create:error -", error);
