@@ -475,7 +475,7 @@ const Routes: any = [
       },
       {
         component: ManagerLeaveAction,
-        path: "leaves-request/:employeeid/:requestid",
+        path: "request/:employeeid/:requestid",
         title: "Leaves",
         to: "/",
         type: "private",
@@ -774,6 +774,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: ManagerLeaves,
@@ -782,14 +783,16 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: ManagerLeaveAction,
-        path: "leaves-request/:employeeid/:requestid",
+        path: "request/:employeeid/:requestid",
         title: "Leaves",
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: Task,
@@ -798,6 +801,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: TaskView,
@@ -806,6 +810,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: LeaveHistory,
@@ -814,6 +819,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: JobPosting,
@@ -822,6 +828,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: JobView,
@@ -830,6 +837,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       // {
       //   component: JobDetailsLayout,
@@ -864,6 +872,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: DocumentHistory,
@@ -872,6 +881,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: EmployeeList,
@@ -880,6 +890,7 @@ const Routes: any = [
         to: "/",
         type: "private",
         index: true,
+        meta: { allowedRoles: [ROLES.HR] },
       },
       {
         component: HREmployeeLayout,

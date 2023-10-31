@@ -39,6 +39,8 @@ const PrivateLayout = ({ component: Component, meta }: any) => {
       setUser(parsedUser);
     } else {
       navigate("/");
+      localStorage.setItem("returnUrl", pathname);
+      console.log("the pathname is stored in local storage :",pathname)
     }
   }, [navigate]);
   const userRole = user?.role;
