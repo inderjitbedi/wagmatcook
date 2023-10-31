@@ -14,8 +14,8 @@ export const ContextProvider = ({ children }) => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
       GetHeadersData(parsedUser._id);
+      GetNotificationCount();
     }
-    GetNotificationCount();
   }, []);
 
   const GetHeadersData = (id) => {

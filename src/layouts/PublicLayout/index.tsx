@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import ScrollToTop from "../../auth/pages/scrollTop";
 import { RotatingLines } from "react-loader-spinner";
-
+import ROLES from "../../constants/roles";
 import {
   AuthLayout,
   PrimaryDiv,
@@ -38,7 +38,17 @@ const PublicLayout = ({ component: Component }: any) => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
-      navigate(-1);
+      if (ROLES.SUPER_ADMIN === parsedUser.role) {
+        navigate("/super-admin/organizations");
+      } else if (ROLES.ORG_ADMIN === parsedUser.role) {
+        navigate("/organization-admin/dashboard");
+      } else if (ROLES.HR === parsedUser.role) {
+        navigate("/hr-management/dashboard");
+      } else if (ROLES.MANAGER === parsedUser.role) {
+        navigate("/manager-management/dashboard");
+      } else if (ROLES.EMPLOYEE === parsedUser.role) {
+        navigate("/user-management/dashboard");
+      }
     }
   }, []);
   if (user) {

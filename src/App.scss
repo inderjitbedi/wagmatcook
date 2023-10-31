@@ -705,7 +705,7 @@ input[type="checkbox"] {
     6px 0px 0px 0px #2bc128 inset;
   box-sizing: border-box;
 }
-.css-cgl6zv-MuiAutocomplete-root .MuiAutocomplete-tag {
+.MuiAutocomplete-tag {
   border-radius: 10rem !important;
   background: #c8ffc7 !important;
   padding: 2px 1.2rem !important;
@@ -747,7 +747,7 @@ input[type="checkbox"] {
 //     }
 //   }
 // }
-.css-1h9z7r5-MuiButtonBase-root-MuiTab-root {
+.MuiTab-root {
   color: #8f9bb3 !important;
   font-family: Inter !important;
   font-size: 1.6rem !important;
@@ -756,6 +756,6 @@ input[type="checkbox"] {
   line-height: 1.6rem !important;
   margin: 0rem !important;
 }
-.css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+.MuiTab-root.Mui-selected {
   color: #279af1 !important;
 }
