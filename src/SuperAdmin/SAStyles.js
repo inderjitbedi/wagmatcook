@@ -141,7 +141,7 @@ export const Dashboard = styled.div`
   height: 100vh;
 `;
 export const DashNav = styled.div`
-  width: 18%;
+  width: 20%;
   background-color: #ffffff;
   /* padding: 3.2rem; */
 `;

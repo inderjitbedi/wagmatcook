@@ -16,6 +16,8 @@ import SideBar from "./OADashboard/SideBar";
 import UserSideBar from "./UserDashboard/UserSideBar";
 import ManagerSideBar from "./ManagerDashboard/ManagerSideBar";
 import HRSideBar from "./HRDashboard/HRSideBar";
+import { useHeaderInfoContext } from "../Context/ContextProvider";
+
 import {
   DashHeader,
   DashHeaderTitle,
@@ -62,7 +64,8 @@ export const newStyle = styled.p`
 `;
 const CommenDashHeader = ({ onSearch, text }) => {
   let API_URL = process.env.REACT_APP_API_URL;
-
+  const { headerData, globalNotificationCount, setGlobalNotificationCount } =
+    useHeaderInfoContext();
   const Navigate = useNavigate();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
@@ -247,6 +250,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       .then(({ result, error }) => {
         if (result) {
           setNotificationCount(result);
+          setGlobalNotificationCount(result)
         } else {
           //toast.warn("something went wrong ");
         }
@@ -322,26 +326,26 @@ const CommenDashHeader = ({ onSearch, text }) => {
         setIsLoading(false);
       });
   };
-  const [headerData, setHeaderData] = useState([]);
+  // const [headerData, setHeaderData] = useState([]);
 
-  const GetHeadersData = (id) => {
-    // setIsLoading(true);
+  // const GetHeadersData = (id) => {
+  //   // setIsLoading(true);
 
-    let url = `/employee/header-info/${id}`;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setHeaderData(result);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error in fetching Personal info. Please try again.");
-      });
-  };
+  //   let url = `/employee/header-info/${id}`;
+  //   httpClient({
+  //     method: "get",
+  //     url,
+  //   })
+  //     .then(({ result, error }) => {
+  //       if (result) {
+  //         setHeaderData(result);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       toast.error("Error in fetching Personal info. Please try again.");
+  //     });
+  // };
   const GetOrgProfile = () => {
     setIsProfile(true);
     let url = API_URLS.getOrgProfile;
@@ -367,14 +371,12 @@ const CommenDashHeader = ({ onSearch, text }) => {
   };
 
   useEffect(() => {
-    // GetNotificationList()
-    GetNotificationCount();
 
     let user = localStorage.getItem("user");
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
-      GetHeadersData(parsedUser._id);
+      // GetHeadersData(parsedUser._id);
     }
     let org = localStorage.getItem("org");
     if (org) {
@@ -453,7 +455,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
             </SearchBox>
           )}
           <Badge
-            badgeContent={notificationCount?.count}
+            badgeContent={globalNotificationCount?.count}
             color="primary"
             size="small"
           >
@@ -613,15 +615,11 @@ const CommenDashHeader = ({ onSearch, text }) => {
                   <NotificationIcon src="/svg/outline.svg" />
                 </FlexNotificationContainer>
               </NotificationsHeader>
-              {!limitedData?.length && 
+              {!limitedData?.length && (
                 <LoadMore>
-                  <span
-                  
-                  >
-                    no notification found
-                  </span>
+                  <span>no notification found</span>
                 </LoadMore>
-              }
+              )}
               {limitedData?.map((data) => (
                 <>
                   <NotificationList>
