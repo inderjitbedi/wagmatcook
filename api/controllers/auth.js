@@ -159,7 +159,7 @@ const authController = {
     async sendOtpForLogin(req, res) {
         try {
             const { email } = req.body;
-            let user = await User.findOne({ email });
+            let user = await User.findOne({ email }).populate("personalInfo");
             if (!user) {
                 return res.status(400).json({ message: 'User not registered.' });
             }
@@ -180,7 +180,7 @@ const authController = {
     async resendOtpForLogin(req, res, next) {
         try {
             const { email } = req.params;
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email }).populate("personalInfo");
             if (!user) {
                 return res.status(400).json({ message: 'User not found.' });
             }

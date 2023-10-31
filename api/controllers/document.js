@@ -201,7 +201,7 @@ const documentController = {
                 })
                 .skip(startIndex)
                 .limit(limit)
-                .sort({ order: 1 });
+                .sort({ createdAt: -1 });
 
             const totalDocuments = await Document.countDocuments(filters);
             const totalPages = Math.ceil(totalDocuments / req.query.limit);
