@@ -1919,9 +1919,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 </td>
               <tr>
                 <td align="center">
-                  <center style="width: 152px;
-height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/task.png" style="margin: 25px;" />
+                   <center>
+                    <img src="https://hrapi.chantsit.com/public/task.png" style=" width: 152px;
+height: 152px;" />
                   </center>
                 </td>
               </tr>
@@ -2204,9 +2204,8 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 </td>
               <tr>
                 <td align="center">
-                  <center style="width: 152px;
-height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/status.png" style="margin: 25px;" />
+                  <center style="">
+                    <img src="https://hrapi.chantsit.com/public/status.png" style=" width: 152px; height: 152px;" />
                   </center>
                 </td>
               </tr>
@@ -2498,7 +2497,7 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 <td align="center">
                   <center style="width: 152px;
 height: 152px; background-color: #EDF1FF; border-radius: 50%;">
-                    <img src="https://hrapi.chantsit.com/public/comment.png" style="margin: 25px;" />
+                    <img src="https://hrapi.chantsit.com/public/commentBg.png" style="margin: 20px;" />
                   </center>
                 </td>
               </tr>
