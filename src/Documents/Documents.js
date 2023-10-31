@@ -198,8 +198,9 @@ const Documents = () => {
         text: data?.name,
       })),
       file: data?.versions[data?.versions?.length - 1]?.file?._id,
+      
     });
-    // setValue("departments",data.departments)
+    // setValue("departments;",data.departments)
     setFile(data?.versions[data?.versions?.length - 1]?.file);
     HandleOpen();
   };
@@ -727,7 +728,7 @@ const Documents = () => {
                       type="file"
                       {...register(`file`, {
                         required: {
-                          value: update ? false : true,
+                          value: true,
                           message: "Required",
                         },
                         onChange: (e) => {
