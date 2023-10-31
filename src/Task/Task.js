@@ -150,7 +150,7 @@ const Task = () => {
     reset({
       title: data.title,
       description: data.description,
-      assignedto: data.assignee._id,
+      assignee: data.assignee._id,
       dueDate: data.dueDate
         ? new Date(data.dueDate).toISOString().split("T")[0]
         : null,
