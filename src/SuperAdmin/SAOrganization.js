@@ -112,14 +112,10 @@ const SAOrganization = () => {
   };
   const {
     register,
-    control,
-    handleSubmit,
-    formState: { errors },
-    getValues,
-    reset,
     clearErrors,
-    setValue,
-    setError,
+    handleSubmit,
+    reset,
+    formState: { errors },
   } = useForm({
     mode: "all",
   });
@@ -244,11 +240,11 @@ const SAOrganization = () => {
 
   const HandleUpdateAction = (data) => {
     setUpdate(true);
-    setId(data._id);
-    setUserId(data.primaryUser._id);
+    setId(data?._id);
+    setUserId(data?.primaryUser?._id);
     reset({
-      name: data.name,
-      email: data.primaryUser.email,
+      name: data?.name,
+      email: data?.primaryUser?.email,
     });
     HandleOpen();
   };
@@ -484,8 +480,8 @@ const SAOrganization = () => {
                   <ModalUpperDiv>
                     <ModalHeading>
                       {update
-                        ? "Update Organization Admin  "
-                        : "Invite Organization Admin"}
+                        ? "Update Organization Admin "
+                        : "Invite Organization Admin "}
                     </ModalHeading>
                     <ModalIcon
                       onClick={() => {
@@ -510,7 +506,7 @@ const SAOrganization = () => {
                         placeholder="Organization Name"
                       />
                       {errors.name && (
-                        <span className="error">{errors.name}</span>
+                        <span className="error">{errors.name.message}</span>
                       )}
                       <InputLabel>
                         Email <InputSpan>*</InputSpan>
@@ -530,8 +526,8 @@ const SAOrganization = () => {
                         placeholder="email@gmail.com"
                       />
                       {errors.email && (
-                        <span className="error">{errors.email}</span>
-                      )}
+                        <span className="error">{errors.email.message}</span>
+                      )} 
                       <AddNewButton>
                         {update ? "Update" : "Invite"}
                       </AddNewButton>
@@ -595,7 +591,7 @@ const SAOrganization = () => {
                     <TableCell rowSpan={5}>No organizations found</TableCell>
                   </TableRow>
                 )}
-                {result.organizations?.map((data, index) => (
+                {result?.organizations?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": { border: 0 },

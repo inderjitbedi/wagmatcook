@@ -65,6 +65,8 @@ const DeleteModal = ({
   isLoading,
   message,
   Option,
+  selectedName,
+  transferTo,
 }) => {
   return (
     <Modal
@@ -104,7 +106,12 @@ const DeleteModal = ({
               src="/images/icons/Alert-Circle.svg"
             />
             <ModalThanksImg src="/images/Danger Circle.jpg" />
-            <ModalThanksHeading>{message}</ModalThanksHeading>
+            <ModalThanksHeading>
+              {Option
+                ? "Are you sure you want to transfer the responsibilities of " +
+                  selectedName + " to " + transferTo
+                : message}
+            </ModalThanksHeading>
             <DeleteButton
               onClick={() => {
                 // HandleCloseDelete();
@@ -113,8 +120,7 @@ const DeleteModal = ({
               }}
               disabled={isLoading}
             >
-              
-             {Option ? "YES "  : "Delete"}
+              {Option ? "YES " : "Delete"}
             </DeleteButton>
           </ModalThanks>
         )}

@@ -383,26 +383,6 @@ const Routes: any = [
   },
 
   {
-    component: SAUserList,
-    path: "/SAUserList",
-    title: "SAUserList ",
-    to: "/",
-    type: "public",
-    meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
-    children: [],
-  },
-
-  {
-    component: SAOrganization,
-    path: "/SAOrganization",
-    title: "SAOrganization ",
-    to: "/",
-    type: "public",
-    meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
-    children: [],
-  },
-
-  {
     component: SharedSignin,
     path: "/",
     title: "Signin",
@@ -442,7 +422,6 @@ const Routes: any = [
         to: "/",
         type: "private",
         meta: { allowedRoles: [ROLES.SUPER_ADMIN] },
-
         index: true,
       },
     ],
