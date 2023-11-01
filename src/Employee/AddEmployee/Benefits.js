@@ -32,6 +32,7 @@ import {
   TextArea,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
+import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
 const Benefits = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
   const location = useLocation();
@@ -194,8 +195,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           setValue("description", description);
         } else {
           //toast.warn("something went wrong ");
-        setIsLoading(false);
-
+          setIsLoading(false);
         }
       })
       .catch((error) => {
@@ -273,7 +273,7 @@ const Benefits = ({ isEdit, setIsEdit }) => {
           />
         </div>
       ) : (
-        <EmployeeBody style={{ height: "75%" }}>
+        <EmployeeBody style={{ height: "75%" }} isEdit={isEdit}>
           {!isEdit && (
             <BodyHeader>
               <BodyHeaderTitle>
@@ -310,9 +310,21 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             </BodyHeader>
           )}
           <BodyMain>
-            <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
-              Benefits
-            </BodyMainHeading>
+            <FlexSpaceBetween>
+              <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
+                {" "}
+                Benefits
+              </BodyMainHeading>
+
+              {isEdit && (
+                <IconsEmployee
+                  src="/images/icons/Alert-Circle.svg"
+                  onClick={() => setIsEdit(false)}
+                  style={{ cursor: "pointer" }}
+                />
+              )}
+            </FlexSpaceBetween>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 {/* first name and last name  */}

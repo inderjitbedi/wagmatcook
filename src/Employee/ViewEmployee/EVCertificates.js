@@ -393,7 +393,7 @@ const EVCertificates = () => {
       ) : (
         <MainBodyContainer>
           <FlexSpaceBetween style={{ alignItems: "center" }}>
-            <CommenHeader employeeid={employeeid} />
+            {/* <CommenHeader employeeid={employeeid} /> */}
 
             {/* {userType === ROLES.EMPLOYEE || isAccount ? (
               ""
@@ -707,21 +707,21 @@ const EVCertificates = () => {
                           {data.title || " - "}
                         </CertificateTitle>
                         <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
-                          <FlexColumn style={{ gap: "0rem" }}>
+                          <FlexColumn>
                             <TitlePara>Provider</TitlePara>
                             <ViewPara>{data.provider || " - "}</ViewPara>
                           </FlexColumn>
-                          <FlexColumn style={{ gap: "0rem" }}>
+                          <FlexColumn style={{ gap: "0.8rem" }}>
                             <TitlePara>Completion Date</TitlePara>
                             <ViewPara>
                               {data.completionDate
                                 ? moment(data.completionDate).format(
-                                    "DD/MM/YYYY"
+                                    "D MMM, YYYY"
                                   )
                                 : " - "}
                             </ViewPara>
                           </FlexColumn>
-                          <FlexColumn style={{ gap: "0rem" }}>
+                          <FlexColumn>
                             <TitlePara>Expriry </TitlePara>
                             <ViewPara>
                               {data.expiryDate

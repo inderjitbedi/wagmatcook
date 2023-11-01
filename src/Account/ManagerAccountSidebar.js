@@ -6,6 +6,15 @@ const SideBarList = styled.div`
   flex-direction: column;
   padding: 0rem 2.4rem;
   gap: 1.2rem;
+  @media only screen and (max-width: 600px) {
+    flex-direction: row;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 0 1.8rem 0;
+
+    overflow: hidden;
+    overflow-x: scroll;
+  }
 `;
 const SideBarListContainer = styled.div`
   display: flex;
@@ -24,8 +33,13 @@ const SideBarListTitle = styled.p`
   color: #5c5c5c;
   font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0rem;
+  line-height: 1.6rem;
   cursor: pointer;
+  margin: 0rem;
+  @media only screen and (max-width: 600px) {
+    width: max-content;
+    /* text-decoration-line: underline; */
+  }
 `;
 const ManagerAccountSidebar = (props) => {
   const location = useLocation();

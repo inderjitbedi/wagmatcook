@@ -39,6 +39,7 @@ import {
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 import { FlexColContainer } from "../../Dashboard/ManagerDashboard/ManagerStyles";
+import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
 
 const JobDetails = ({ isEdit, setIsEdit }) => {
   const Navigate = useNavigate();
@@ -406,9 +407,20 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
           )}
 
           <BodyMain>
-            <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
-              Job Details
-            </BodyMainHeading>
+            <FlexSpaceBetween>
+              <BodyMainHeading style={{ marginBottom: "2.5rem" }}>
+                Job Details
+              </BodyMainHeading>
+
+              {isEdit && (
+                <IconsEmployee
+                  src="/images/icons/Alert-Circle.svg"
+                  onClick={() => setIsEdit(false)}
+                  style={{ cursor: "pointer" }}
+                />
+              )}
+            </FlexSpaceBetween>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               {fields.map((field, index) => (
                 <FormContainer key={field.id}>

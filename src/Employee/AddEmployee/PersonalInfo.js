@@ -40,6 +40,7 @@ import {
   FlexColumnForm50,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
+import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
 
 const PersonalInfo = ({ isEdit, setIsEdit }) => {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -334,7 +335,17 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
           )}
 
           <BodyMain>
-            <BodyMainHeading>Basic Information</BodyMainHeading>
+            <FlexSpaceBetween>
+              <BodyMainHeading>Basic Information</BodyMainHeading>
+
+              {isEdit && (
+                <IconsEmployee
+                  src="/images/icons/Alert-Circle.svg"
+                  onClick={() => setIsEdit(false)}
+                  style={{ cursor: "pointer" }}
+                />
+              )}
+            </FlexSpaceBetween>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormContainer>
                 <ImgUpload>

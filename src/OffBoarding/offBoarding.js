@@ -110,6 +110,7 @@ const Offboarding = () => {
     setSelectedName(Name);
     setId(data._id);
     setOpen(true);
+
     GetEmployeesList(data._id);
   };
   const HandleUpdateAction = (data) => {
@@ -118,6 +119,7 @@ const Offboarding = () => {
       to: data.offboardingData.to._id,
       notes: data.offboardingData.notes,
     });
+
     HandleOpen(data);
   };
   const HandleClose = () => {
@@ -351,7 +353,7 @@ const Offboarding = () => {
                         <Select {...field} disabled={update}>
                           <Option value="">Select</Option>
                           {employeeList?.map((data) => (
-                            <Option value={data._id}>
+                            <Option value={data.user}>
                               {" "}
                               {[
                                 data.personalInfo[0]?.firstName,

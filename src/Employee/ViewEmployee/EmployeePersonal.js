@@ -108,7 +108,7 @@ const EmployeePersonal = () => {
             <PersonalInfo isEdit={isEdit} setIsEdit={setIsEdit} />
           ) : (
             <MainBodyContainer>
-              <CommenHeader employeeid={employeeid} />
+              {/* <CommenHeader employeeid={employeeid} /> */}
 
               <BasicInfoContainer>
                 <BasicInfoDiv>

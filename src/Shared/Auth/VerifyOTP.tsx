@@ -10,15 +10,16 @@ import { toast } from "react-toastify";
 import API_URLS from "../../constants/apiUrls";
 import redirectToDashboard from "./AuthUtils";
 import { RotatingLines } from "react-loader-spinner";
+import { useHeaderInfoContext } from "../../Context/ContextProvider";
 
 const VerifyOTP = () => {
+  const { setRefresh, setUser } = useHeaderInfoContext();
   const navigate = useNavigate();
   const location = useLocation();
   const [isUrl, setUrl] = useState("");
   console.log("this the locaton: ", location.pathname);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [user, setUser] = useState({});
   useEffect(() => {
     let email = localStorage.getItem("user-email") || "";
     let returnUrl = localStorage.getItem("returnUrl") || "";
@@ -75,10 +76,12 @@ const VerifyOTP = () => {
             localStorage.setItem("user", JSON.stringify(result?.user));
             localStorage.setItem("token", result?.token);
             localStorage.setItem("org", JSON.stringify(result?.organization));
+            setUser(result?.user);
             if (isUrl) {
               navigate(String(isUrl));
             } else {
               redirectToDashboard(result?.user?.role, navigate);
+              setRefresh(true);
             }
           }
           setIsLoading(false);
