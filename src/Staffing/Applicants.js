@@ -517,7 +517,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, []);
+  }, [Tabvalue]);
   return (
     <>
       <DisciplinaryDiv>

@@ -32,6 +32,11 @@ import {
   BasicInfoDiv,
   ViewPara,
   TitlePara,
+  StepperContainer,
+  FlexStep,
+  StepCircle,
+  StepHr,
+  StepText,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const JobView = () => {
@@ -50,10 +55,13 @@ const JobView = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
-    { title: "Applicant List" },
-    { title: "Meets Eligibility" },
-    { title: "Interviewed" },
-    { title: "Selections" },
+    {
+      title: "Applicant List",
+      onClick: () => setActiveStep(0),
+    },
+    { title: "Meets Eligibility", onClick: () => setActiveStep(1) },
+    { title: "Interviewed", onClick: () => setActiveStep(2) },
+    { title: "Selections", onClick: () => setActiveStep(3) },
   ];
   console.log("this the active step: ", activeStep);
   const HandleChangeTab = (event, newValue) => {
@@ -237,9 +245,25 @@ const JobView = () => {
               ></Step>
               <Step onClick={() => setActiveStep(2)} label="Interviewed"></Step>
               <Step onClick={() => setActiveStep(3)} label="Selections"></Step>
-            </Stepper>
-            <Applicants jobid={jobid} Tabvalue={activeStep} /> */}
-            <div style={{ width: "100%" }}>
+            </Stepper> */}
+            <StepperContainer>
+              {steps.map((step, index) => (
+                <>
+                  <FlexStep onClick={step.onClick}>
+                    <StepCircle isActive={index === activeStep}></StepCircle>
+                    <StepText isActive={index === activeStep}>
+                      {step.title}
+                    </StepText>
+                  </FlexStep>
+                  {index !== steps.length - 1 && (
+                    <StepHr isActive={index < activeStep} />
+                  )}
+                </>
+              ))}
+            </StepperContainer>
+
+            <Applicants jobid={jobid} Tabvalue={activeStep} />
+            {/* <div style={{ width: "100%" }}>
               <Tabs
                 value={valueTab}
                 onChange={HandleChangeTab}
@@ -262,7 +286,7 @@ const JobView = () => {
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={3}>
               <Applicants jobid={jobid} Tabvalue={valueTab} />
-            </CustomTabPanel>
+            </CustomTabPanel> */}
           </BackGroundWhite>
         </>
       )}
