@@ -42,7 +42,7 @@ const schema = new mongoose.Schema({
     },
     documents: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'file',
+        ref: 'File',
     }],
 }, {
     timestamps: true,
