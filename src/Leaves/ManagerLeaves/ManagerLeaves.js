@@ -25,6 +25,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import LeaveActionModal from "./LeaveActionModal";
+import Pagination from "@mui/material/Pagination";
 
 import {
   DashHeader,
@@ -48,6 +49,7 @@ import {
   TabelLightPara,
   TabelDiv,
   TabelImg,
+  PaginationDiv,
 } from "../../Disciplinary/DisciplinaryStyles";
 import { PendingStyle, ApproveStyle, RejectedStyle } from "./ActionsStyles";
 import {
@@ -117,7 +119,10 @@ const ManagerLeaves = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loading, setOptionLoading] = useState(false);
   const [result, setResult] = useState([]);
-
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [searchValue, setSearchValue] = useState("");
 
   const HandleSearchCahnge = (data) => {
@@ -308,7 +313,7 @@ const ManagerLeaves = () => {
   const GetLeavesHistory = () => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
-      let url = API_URLS.getLeaves;
+      let url = API_URLS.getLeaves.replace("Page", page);
       httpClient({
         method: "get",
         url,
@@ -374,7 +379,7 @@ const ManagerLeaves = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
-  }, [searchValue]);
+  }, [searchValue, page]);
 
   useEffect(() => {
     // if (!openAuto) {
@@ -429,148 +434,168 @@ const ManagerLeaves = () => {
           />
         </div>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow
-                sx={{
-                  background: "#FBFBFB",
-                }}
-              >
-                <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
-                  Sr.No
-                </TableCell>
-                <TableCell
-                  sx={{ ...CellStyle, maxWidth: "188px" }}
-                  align="left"
-                >
-                  Name
-                </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "84px" }} align="left">
-                  Department
-                </TableCell>
-                <TableCell
-                  sx={{ ...CellStyle, maxWidth: "11.4rem" }}
-                  align="left"
-                >
-                  From
-                </TableCell>
-                <TableCell sx={{ ...CellStyle, maxWidth: "88px" }} align="left">
-                  To
-                </TableCell>
-                <TableCell
-                  sx={{ ...CellStyle, maxWidth: "105px" }}
-                  align="left"
-                >
-                  Leave&nbsp;Type
-                </TableCell>
-                <TableCell sx={{ ...CellStyle }} align="left">
-                  Hours
-                </TableCell>
-                <TableCell sx={{ ...CellStyle }} align="left">
-                  Status
-                </TableCell>
-                <TableCell sx={{ ...CellStyle }} align="left">
-                  Action
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {result?.leaves?.length == 0 && (
-                <TableRow sx={{ height: "20rem" }}>
-                  <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                    No Leaves found
-                  </TableCell>
-                </TableRow>
-              )}
-              {result?.leaves?.map((data, index) => (
+        <>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
                 <TableRow
-                  key={data.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  style={{ background: "#fff" }}
+                  sx={{
+                    background: "#FBFBFB",
+                  }}
                 >
-                  <TableCell align="center" sx={CellStyle2}>
-                    {index + 1}
+                  <TableCell sx={{ ...CellStyle, maxWidth: "25px" }}>
+                    Sr.No
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    <TabelDiv>
-                      <TabelImg
-                        src={
-                          data.employee?.personalInfo?.photo
-                            ? API_URL + data.employee?.personalInfo?.photo?.path
-                            : "/images/User.jpg"
-                        }
-                      />
-                      <div>
-                        <TabelDarkPara>
-                          {data.employee?.personalInfo?.firstName +
-                            (data.employee?.personalInfo?.lastName
-                              ? data.employee?.personalInfo?.lastName
-                              : " ")}
-                        </TabelDarkPara>
-                        <TabelLightPara style={{ textTransform: "none" }}>
-                          {data.employee?.email}
-                        </TabelLightPara>
-                      </div>
-                    </TabelDiv>
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "188px" }}
+                    align="left"
+                  >
+                    Name
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    Design
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "84px" }}
+                    align="left"
+                  >
+                    Department
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    {data.from
-                      ? moment(data.from).format("D MMM, YYYY")
-                      : " - "}
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "11.4rem" }}
+                    align="left"
+                  >
+                    From
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "88px" }}
+                    align="left"
+                  >
+                    To
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    {data.leaveType?.name}
+                  <TableCell
+                    sx={{ ...CellStyle, maxWidth: "105px" }}
+                    align="left"
+                  >
+                    Leave&nbsp;Type
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    {data.hours}
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Hours
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    {data.status === "PENDING" ? (
-                      <PendingStyle style={{ padding: "4px 0rem" }}>
-                        {data.status}
-                      </PendingStyle>
-                    ) : data.status === "APPROVED" ? (
-                      <ApproveStyle style={{ padding: "4px 0rem" }}>
-                        {data.status}
-                      </ApproveStyle>
-                    ) : data.status === "REJECTED" ? (
-                      <RejectedStyle style={{ padding: "4px 0rem" }}>
-                        {data.status}
-                      </RejectedStyle>
-                    ) : (
-                      " - "
-                    )}
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Status
                   </TableCell>
-                  <TableCell align="left" sx={CellStyle2}>
-                    <ActionIconDiv style={{ justifyContent: "center" }}>
-                      <ActionIcons
-                        onClick={() => {
-                          if (userType === ROLES.MANAGER) {
-                            Navigate(
-                              `/manager-management/request/${data.employee._id}/${data._id}`
-                            );
-                          } else if (userType === ROLES.HR) {
-                            Navigate(
-                              `/hr-management/request/${data.employee._id}/${data._id}`
-                            );
-                          }
-                        }}
-                        src="/images/icons/eye.svg"
-                      />
-                    </ActionIconDiv>
+                  <TableCell sx={{ ...CellStyle }} align="left">
+                    Action
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {result?.leaves?.length == 0 && (
+                  <TableRow sx={{ height: "20rem" }}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                      No Leaves found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {result?.leaves?.map((data, index) => (
+                  <TableRow
+                    key={data.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    style={{ background: "#fff" }}
+                  >
+                    <TableCell align="center" sx={CellStyle2}>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      <TabelDiv>
+                        <TabelImg
+                          src={
+                            data.employee?.personalInfo?.photo
+                              ? API_URL +
+                                data.employee?.personalInfo?.photo?.path
+                              : "/images/User.jpg"
+                          }
+                        />
+                        <div>
+                          <TabelDarkPara>
+                            {data.employee?.personalInfo?.firstName +
+                              (data.employee?.personalInfo?.lastName
+                                ? data.employee?.personalInfo?.lastName
+                                : " ")}
+                          </TabelDarkPara>
+                          <TabelLightPara style={{ textTransform: "none" }}>
+                            {data.employee?.email}
+                          </TabelLightPara>
+                        </div>
+                      </TabelDiv>
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      Design
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      {data.from
+                        ? moment(data.from).format("D MMM, YYYY")
+                        : " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      {data.leaveType?.name}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      {data.hours}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      {data.status === "PENDING" ? (
+                        <PendingStyle style={{ padding: "4px 0rem" }}>
+                          {data.status}
+                        </PendingStyle>
+                      ) : data.status === "APPROVED" ? (
+                        <ApproveStyle style={{ padding: "4px 0rem" }}>
+                          {data.status}
+                        </ApproveStyle>
+                      ) : data.status === "REJECTED" ? (
+                        <RejectedStyle style={{ padding: "4px 0rem" }}>
+                          {data.status}
+                        </RejectedStyle>
+                      ) : (
+                        " - "
+                      )}
+                    </TableCell>
+                    <TableCell align="left" sx={CellStyle2}>
+                      <ActionIconDiv style={{ justifyContent: "center" }}>
+                        <ActionIcons
+                          onClick={() => {
+                            if (userType === ROLES.MANAGER) {
+                              Navigate(
+                                `/manager-management/request/${data.employee._id}/${data._id}`
+                              );
+                            } else if (userType === ROLES.HR) {
+                              Navigate(
+                                `/hr-management/request/${data.employee._id}/${data._id}`
+                              );
+                            }
+                          }}
+                          src="/images/icons/eye.svg"
+                        />
+                      </ActionIconDiv>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
+        </>
       )}
       {/* modal applying leaves  */}
       <Modal

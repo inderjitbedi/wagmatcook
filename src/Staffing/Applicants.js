@@ -521,7 +521,17 @@ const Applicants = ({ jobid, Tabvalue }) => {
   return (
     <>
       <DisciplinaryDiv>
-        <DisciplinaryHeading>Applicant List</DisciplinaryHeading>
+        <DisciplinaryHeading>
+          {Tabvalue === 0
+            ? " Applicant List "
+            : Tabvalue === 1
+            ? "Meets Eligibility "
+            : Tabvalue === 2
+            ? " Interviewed"
+            : Tabvalue === 3
+            ? "Selections "
+            : " - "}
+        </DisciplinaryHeading>
 
         <AddNewButton
           onClick={() => {

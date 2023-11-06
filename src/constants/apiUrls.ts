@@ -90,7 +90,7 @@ const API_URLS = {
   getEmployeeDocuments: `/employee/documents/:employeeid`,
   deleteEmployeeDocument: `/employee/documents/:employeeid/delete/:id`,
   // leaves api
-  getLeaves: `/leave/history`,
+  getLeaves: `/leave/history?page=Page&limit=10`,
   getLeaveDetails: `/leave/history/:employeeid/:requestid`,
   respondLeave: `/leave/history/:employeeid/:requestid/respond`,
   //notification api
