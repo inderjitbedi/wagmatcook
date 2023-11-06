@@ -30,7 +30,6 @@ const schema = new mongoose.Schema({
     },
     selectionOrder: {
         type: Number,
-        required: true,
     },
     isSelected: {
         type: Boolean,
