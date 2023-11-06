@@ -57,6 +57,7 @@ import {
   FlexColumnForm,
   FlexContaierForm,
   AlignFlex,
+  UploadFile,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -106,8 +107,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
-  // height: "55rem",
-  // overflowY: "scroll",
+  maxHeight: "55rem",
+  overflowY: "scroll",
 };
 const Selection = ({ jobid, Tabvalue }) => {
   const Navigate = useNavigate();
@@ -126,9 +127,14 @@ const Selection = ({ jobid, Tabvalue }) => {
   const [userType, setUserType] = useState("");
   const [departmentData, setDepartmentData] = useState([]);
   const [file, setFile] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [selectedApplicants, setSelectedApplicants] = useState([]);
+
   const [isUploading, setIsUploading] = useState(false);
   const [applicants, setApplicants] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSelect, setIsSelect] = useState(false);
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -144,6 +150,9 @@ const Selection = ({ jobid, Tabvalue }) => {
     formState: { errors },
   } = useForm({
     mode: "all",
+    defaultValues: {
+      file: [],
+    },
   });
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -166,8 +175,16 @@ const Selection = ({ jobid, Tabvalue }) => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
+      if (uploadedFiles) {
+        const documentIds = uploadedFiles.map((file) => file._id);
+        data.documents = documentIds;
+      }
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
+      if (uploadedFiles) {
+        const documentIds = uploadedFiles.map((file) => file._id);
+        data.documents = documentIds;
+      }
       HandleUpdate(data);
     }
   };
@@ -185,13 +202,25 @@ const Selection = ({ jobid, Tabvalue }) => {
         ? new Date(data.interviewDate).toISOString().split("T")[0]
         : null,
       isEligibile: data.isEligibile,
+      isSelected: data.isSelected,
+      selectionOrder: data?.selectionOrder,
+      // file: data.documents.map((file) => file._id),
     });
+    setUploadedFiles(data.documents);
     if (data.interviewed === interviewed.YES) {
       setIsShow(true);
     } else {
       setIsShow(false);
       setValue("isSelected", false);
     }
+    if (data.isEligibile) {
+      setIsVisible(true);
+    }
+    if (data.isSelected) {
+      setIsSelect(true);
+    }
+    setValue("file", data.documents[0]);
+
     HandleOpen();
   };
 
@@ -202,60 +231,9 @@ const Selection = ({ jobid, Tabvalue }) => {
     clearErrors();
     setIsShow(false);
     setDetailsLength(500);
+    setUploadedFiles([]);
   };
-  const jobPosting = [
-    {
-      id: 1,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 2,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 3,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
 
-    {
-      id: 4,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 5,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-  ];
   const getFileType = (file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -305,6 +283,7 @@ const Selection = ({ jobid, Tabvalue }) => {
           if (data?.result) {
             //console.log(data?.result);
             setFile(data?.result?.file);
+            setUploadedFiles([...uploadedFiles, data?.result?.file]);
 
             setIsUploading(false);
           } else {
@@ -320,6 +299,13 @@ const Selection = ({ jobid, Tabvalue }) => {
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
+  };
+  const handleDeleteFile = (index, fileId) => {
+    const updatedFiles = [...uploadedFiles];
+    updatedFiles.splice(index, 1);
+    setUploadedFiles(updatedFiles);
+    const updatedDocuments = getValues("file").filter((id) => id !== fileId);
+    setValue("file", updatedDocuments);
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -390,7 +376,7 @@ const Selection = ({ jobid, Tabvalue }) => {
   };
   const HandleUpdate = (data) => {
     let dataCopy = data;
-
+  
     let url = API_URLS.updateApplicants
       .replace(":jobid", jobid)
       .replace(":id", Id);
@@ -404,8 +390,18 @@ const Selection = ({ jobid, Tabvalue }) => {
     })
       .then(({ result, error }) => {
         if (result) {
+          const currentIndex = selectedApplicants.findIndex(
+            (applicant) => applicant._id === data._id
+          );
+          const Target = data.selectionOrder - 1;
+          if (currentIndex !== -1) {
+            selectedApplicants.splice(currentIndex, 1);
+            selectedApplicants.splice(Target, 0,data);
+          }
+          const ids = selectedApplicants.map((applicant) => applicant._id);
+          HandleReorder(ids);
           setId("");
-          GetApplicants();
+          // GetApplicants();
           setUpdate(false);
           HandleClose();
           reset();
@@ -435,6 +431,10 @@ const Selection = ({ jobid, Tabvalue }) => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          const SelectedApplicants = result.applicants.filter(
+            (applicant) => applicant.isSelected
+          );
+          setSelectedApplicants(SelectedApplicants);
           if (Tabvalue === 0) {
             setApplicants(result.applicants);
           } else if (Tabvalue === 1) {
@@ -448,10 +448,10 @@ const Selection = ({ jobid, Tabvalue }) => {
             );
             setApplicants(eligibleApplicants);
           } else if (Tabvalue === 3) {
-             const eligibleApplicants = result.applicants.filter(
-               (applicant) => applicant.isSelected
-             );
-             setApplicants(eligibleApplicants);
+            const eligibleApplicants = result.applicants.filter(
+              (applicant) => applicant.isSelected
+            );
+            setApplicants(eligibleApplicants);
           }
         } else {
           //toast.warn("something went wrong ");
@@ -476,6 +476,7 @@ const Selection = ({ jobid, Tabvalue }) => {
     })
       .then(({ result, error }) => {
         if (result) {
+          // setApplicants(result.applicants);
           GetApplicants();
         } else {
           ////toast.warn("something went wrong ");
@@ -594,19 +595,22 @@ const Selection = ({ jobid, Tabvalue }) => {
                 </ModalUpperDiv>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
-                    <InputLabel>
-                      Name <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("name", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Name <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("name", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        })}
+                      />
+                      {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    </FlexColumnForm>
+
                     {/* <InputLabel>
                       Email <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -699,129 +703,193 @@ const Selection = ({ jobid, Tabvalue }) => {
                         />
                         {<Errors>{errors.appliedOn?.message}</Errors>}
                       </FlexColumnForm>
-                      <FlexColumnForm>
-                        <InputLabel>
-                          Interview Date <InputSpan>*</InputSpan>
-                        </InputLabel>
-                        <Input
-                          type="date"
-                          {...register("interviewDate", {
-                            required: {
-                              value: true,
-                              message: "Required",
-                            },
-                            validate: (fieldValue) => {
-                              const startDateValue = getValues("appliedOn");
-
-                              const endDateValue = getValues("interviewDate");
-
-                              if (endDateValue && startDateValue) {
-                                const endDate = new Date(endDateValue);
-                                const startDate = new Date(startDateValue);
-                                if (startDate > endDate) {
-                                  return "Interview date must not be earlier than applied on";
-                                } else {
-                                  return clearErrors("interviewDate");
-                                }
+                    </FlexContaierForm>
+                    <FlexColumnForm
+                      style={{ margin: " 0.6rem 0rem 1rem 0rem" }}
+                    >
+                      <AlignFlex>
+                        <input
+                          type="checkbox"
+                          {...register(`isEligibile`, {
+                            onChange: (e) => {
+                              const Value = e.target.checked;
+                              if (Value) {
+                                setIsVisible(true);
+                              } else {
+                                setIsVisible(false);
+                                setValue("interviewed", null);
+                                setValue("interviewDate", null);
                               }
                             },
                           })}
+                          id={`isEligibile`}
                         />
-                        {<Errors>{errors.interviewDate?.message}</Errors>}
-                      </FlexColumnForm>
-                    </FlexContaierForm>
+                        <InputLabel
+                          htmlFor={`isEligibile`}
+                          style={{
+                            marginBottom: "0rem",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Is Eligible?{" "}
+                        </InputLabel>
+                      </AlignFlex>
+                    </FlexColumnForm>
 
-                    <InputLabel>
-                      Interviewed <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Controller
-                      name={`interviewed`}
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        onChange: (e) => {
-                          const interviewValue = e.target.value;
-                          if (interviewValue === interviewed.YES) {
-                            setIsShow(true);
-                          } else {
-                            setIsShow(false);
-                            setValue("isSelected", false);
-                          }
-                        },
-                      }}
-                      render={({ field }) => (
-                        <Select {...field}>
-                          <Option>Select</Option>
-                          <Option value={interviewed.YES}> YES </Option>
-                          <Option value={interviewed.NO}> NO </Option>
-                          <Option value={interviewed.DID_NOT_ATTEND}>
-                            Did not attend
-                          </Option>
-                        </Select>
-                      )}
-                    />
-                    {<Errors> {errors.role?.message}</Errors>}
-                    <FlexContaierForm style={{ marginBottom: "1rem" }}>
-                      <FlexColumnForm>
-                        <AlignFlex>
-                          <input
-                            type="checkbox"
-                            {...register(`isEligibile`, {})}
-                            id={`isEligibile`}
-                          />
-                          <InputLabel
-                            htmlFor={`isEligibile`}
-                            style={{
-                              marginBottom: "0rem",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Is Eligible?{" "}
-                          </InputLabel>
-                        </AlignFlex>
-                      </FlexColumnForm>
+                    <FlexColumnForm>
+                      <InputLabel>Interview Date</InputLabel>
+                      <Input
+                        type="date"
+                        {...register("interviewDate", {
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
+                          validate: (fieldValue) => {
+                            const startDateValue = getValues("appliedOn");
 
-                      {isShow ? (
+                            const endDateValue = getValues("interviewDate");
+
+                            if (endDateValue && startDateValue) {
+                              const endDate = new Date(endDateValue);
+                              const startDate = new Date(startDateValue);
+                              if (startDate > endDate) {
+                                return "Interview date must not be earlier than applied on";
+                              } else {
+                                return clearErrors("interviewDate");
+                              }
+                            }
+                          },
+                        })}
+                      />
+                      {<Errors>{errors.interviewDate?.message}</Errors>}
+                    </FlexColumnForm>
+
+                    {isVisible && (
+                      <>
                         <FlexColumnForm>
-                          <AlignFlex>
-                            <input
-                              type="checkbox"
-                              {...register(`isSelected`, {})}
-                              id={`isSelected`}
-                            />
-                            <InputLabel
-                              htmlFor={`isSelected`}
-                              style={{
-                                marginBottom: "0rem",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Is Selected
-                            </InputLabel>
-                          </AlignFlex>
+                          <InputLabel>Interviewed</InputLabel>
+                          <Controller
+                            name={`interviewed`}
+                            control={control}
+                            rules={{
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
+                              onChange: (e) => {
+                                const interviewValue = e.target.value;
+                                if (interviewValue === interviewed.YES) {
+                                  setIsShow(true);
+                                } else {
+                                  setIsShow(false);
+                                  setValue("isSelected", false);
+                                }
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field}>
+                                <Option>Select</Option>
+                                <Option value={interviewed.YES}> YES </Option>
+                                <Option value={interviewed.NO}> NO </Option>
+                                <Option value={interviewed.DID_NOT_ATTEND}>
+                                  Did not attend
+                                </Option>
+                              </Select>
+                            )}
+                          />
+                          {<Errors> {errors.interviewed?.message}</Errors>}
                         </FlexColumnForm>
-                      ) : (
-                        "  "
-                      )}
-                    </FlexContaierForm>
+
+                        <FlexContaierForm style={{ marginBottom: "1rem" }}>
+                          {isShow ? (
+                            <FlexColumnForm>
+                              <AlignFlex>
+                                <input
+                                  type="checkbox"
+                                  {...register(`isSelected`, {
+                                    onChange: (e) => {
+                                      const Value = e.target.checked;
+                                      if (Value) {
+                                        setIsSelect(true);
+                                      } else {
+                                        setIsSelect(false);
+                                      }
+                                    },
+                                  })}
+                                  id={`isSelected`}
+                                />
+                                <InputLabel
+                                  htmlFor={`isSelected`}
+                                  style={{
+                                    marginBottom: "0rem",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Is Selected
+                                </InputLabel>
+                              </AlignFlex>
+                            </FlexColumnForm>
+                          ) : (
+                            "  "
+                          )}
+                        </FlexContaierForm>
+
+                        {isSelect && (
+                          <FlexColumnForm>
+                            <InputLabel>Select Order</InputLabel>
+                            <Controller
+                              name="selectionOrder"
+                              control={control}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option value={0}>Select</Option>
+                                  {selectedApplicants.length === 0 && (
+                                    <Option value={1}>1</Option>
+                                  )}
+                                  {update
+                                    ? selectedApplicants.map((data, index) => (
+                                        <Option key={index} value={index + 1}>
+                                          {index + 1}
+                                        </Option>
+                                      ))
+                                    : selectedApplicants.length > 0 &&
+                                      Array.from(
+                                        {
+                                          length: selectedApplicants.length + 1,
+                                        },
+                                        (_, index) => (
+                                          <Option key={index} value={index + 1}>
+                                            {index + 1}
+                                          </Option>
+                                        )
+                                      )}
+                                </Select>
+                              )}
+                            />
+                            {errors.selectionOrder && (
+                              <Errors>{errors.selectionOrder?.message}</Errors>
+                            )}
+                          </FlexColumnForm>
+                        )}
+                      </>
+                    )}
 
                     <input
                       style={{ width: "50%" }}
                       type="file"
                       {...register(`file`, {
-                        // required: {
-                        //   value: update ? false : true,
-                        //   message: "Required",
-                        // },
+                        required: {
+                          value: uploadedFiles.length === 0 ? true : false,
+                          message: "Required",
+                        },
                         onChange: (e) => {
                           handleFileChange(e);
                         },
                       })}
                       id="upload"
                       className="custom"
+                      disabled={isUploading}
                     />
                     <div
                       style={{
@@ -829,6 +897,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                         gap: "1.6rem",
                         alignItems: "center",
                         marginBottom: "2rem",
+                        marginTop: "2rem",
                       }}
                     >
                       <EditButton
@@ -846,19 +915,29 @@ const Selection = ({ jobid, Tabvalue }) => {
                             ariaLabel="three-dots-loading"
                             visible={true}
                           />
-                        ) : !file ? (
-                          "Upload Document "
-                        ) : file?.originalName.length <= 32 ? (
-                          file?.originalName
                         ) : (
-                          file?.originalName?.substring(0, 30) + "..."
+                          "Upload Document "
                         )}
                       </EditButton>
+
                       {file && (
                         <LightPara onClick={removeFile}>Remove</LightPara>
                       )}
                     </div>
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
+
+                    {uploadedFiles &&
+                      uploadedFiles.map((data, index) => (
+                        <UploadFile>
+                          <span>{data?.originalName}</span>
+                          <ActionIcons
+                            onClick={() => {
+                              handleDeleteFile(data._id);
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        </UploadFile>
+                      ))}
                     {!update ? (
                       <AddNewButton
                         type="submit"
@@ -918,7 +997,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                       style={{ width: "1rem" }}
                     >
                       {/* Sr.&nbsp;No. */}
-                      Order
+                      Selection&nbsp;Order
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
@@ -969,6 +1048,13 @@ const Selection = ({ jobid, Tabvalue }) => {
                       align="left"
                     >
                       Interviewed
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "8rem" }}
+                      align="left"
+                    >
+                      Selected
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
@@ -1062,6 +1148,9 @@ const Selection = ({ jobid, Tabvalue }) => {
                                     ? "Did not attend"
                                     : " - "
                                   : " - "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data?.isSelected ? "Yes" : "No"}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">
                                 {" "}
