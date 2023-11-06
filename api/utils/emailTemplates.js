@@ -2088,7 +2088,7 @@ height: 152px;" />
   border: none;
   border-radius: 8px;
   background: #279af1;
-  padding: 0.75em 1.25em;" href="">View Details</a>
+  padding: 0.75em 1.25em;" href="${data.task.redirectUrl}">View Details</a>
 
               </td>
             </tr>

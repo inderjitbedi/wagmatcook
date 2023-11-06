@@ -26,6 +26,16 @@ const taskController = {
             });
             await notification.save();
 
+            if (task.assignee.role === roles.EMPLOYEE)
+                task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`
+            else if (task.assignee.role === roles.MANAGER)
+                task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`
+            else // if (task.assignee.role === roles.HR) | obvious HR
+                task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
+
+
+            // sendGrid.send(task.sentTo?.email, "taskStatusUpdate", { task });
+
             sendGrid.send(task.assignee.email, "taskAssigned", { task });
 
 
