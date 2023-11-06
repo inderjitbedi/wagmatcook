@@ -149,6 +149,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
     formState: { errors },
   } = useForm({
     mode: "all",
+    defaultValues: {
+      file: [],
+    },
   });
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -175,7 +178,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
         const documentIds = uploadedFiles.map((file) => file._id);
         data.documents = documentIds;
       }
-
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
       if (uploadedFiles) {
@@ -200,9 +202,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
         : null,
       isEligibile: data.isEligibile,
       isSelected: data.isSelected,
-      file: data.documents.map((file) => file._id),
+      file: data.documents,
+      selectionOrder: data?.selectionOrder,
     });
-    setUploadedFiles(data.documents)
+    setUploadedFiles(data.documents);
     if (data.interviewed === interviewed.YES) {
       setIsShow(true);
     } else {
@@ -215,6 +218,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
     if (data.isSelected) {
       setIsSelect(true);
     }
+    // setValue(
+    //   "file",
+    //   data.documents.map((file) => file._id)
+    // );
 
     HandleOpen();
   };
@@ -226,6 +233,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
     clearErrors();
     setIsShow(false);
     setDetailsLength(500);
+    setUploadedFiles([]);
+    setIsShow(false);
+    setIsVisible(false);
+    setIsSelect(false);
   };
 
   const getFileType = (file) => {
@@ -294,15 +305,12 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setFile(null);
     setValue("file", null);
   };
-  const handleDeleteFile = (index,fileId) => {
+  const handleDeleteFile = (index, fileId) => {
     const updatedFiles = [...uploadedFiles];
     updatedFiles.splice(index, 1);
     setUploadedFiles(updatedFiles);
-    const updatedDocuments = getValues("file").filter(
-      (id) => id !== fileId
-    );
+    const updatedDocuments = getValues("file").filter((id) => id !== fileId);
     setValue("file", updatedDocuments);
-
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -727,6 +735,35 @@ const Applicants = ({ jobid, Tabvalue }) => {
 
                     {isVisible && (
                       <>
+                        {" "}
+                        <FlexColumnForm>
+                          <InputLabel>Interview Date</InputLabel>
+                          <Input
+                            type="date"
+                            {...register("interviewDate", {
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
+                              validate: (fieldValue) => {
+                                const startDateValue = getValues("appliedOn");
+
+                                const endDateValue = getValues("interviewDate");
+
+                                if (endDateValue && startDateValue) {
+                                  const endDate = new Date(endDateValue);
+                                  const startDate = new Date(startDateValue);
+                                  if (startDate > endDate) {
+                                    return "Interview date must not be earlier than applied on";
+                                  } else {
+                                    return clearErrors("interviewDate");
+                                  }
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.interviewDate?.message}</Errors>}
+                        </FlexColumnForm>
                         <FlexColumnForm>
                           <InputLabel>Interviewed</InputLabel>
                           <Controller
@@ -760,7 +797,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
                           />
                           {<Errors> {errors.interviewed?.message}</Errors>}
                         </FlexColumnForm>
-
                         <FlexContaierForm style={{ marginBottom: "1rem" }}>
                           {isShow ? (
                             <FlexColumnForm>
@@ -794,60 +830,43 @@ const Applicants = ({ jobid, Tabvalue }) => {
                             "  "
                           )}
                         </FlexContaierForm>
-
                         {isSelect && (
                           <FlexColumnForm>
                             <InputLabel>Select Order</InputLabel>
                             <Controller
-                              name="selectOrder"
+                              name="selectionOrder"
                               control={control}
                               render={({ field }) => (
                                 <Select {...field}>
                                   <Option value={0}>Select</Option>
-                                  {selectedApplicants.map(
-                                    (applicant, index) => (
-                                      <Option key={index + 1} value={index + 1}>
-                                        {index + 1}
-                                      </Option>
-                                    )
+                                  {selectedApplicants.length === 0 && (
+                                    <Option value={1}>1</Option>
                                   )}
+                                  {update
+                                    ? selectedApplicants.map((data, index) => (
+                                        <Option key={index} value={index + 1}>
+                                          {index + 1}
+                                        </Option>
+                                      ))
+                                    : selectedApplicants.length > 0 &&
+                                      Array.from(
+                                        {
+                                          length: selectedApplicants.length + 1,
+                                        },
+                                        (_, index) => (
+                                          <Option key={index} value={index + 1}>
+                                            {index + 1}
+                                          </Option>
+                                        )
+                                      )}
                                 </Select>
                               )}
                             />
-                            {errors.selectOrder && (
-                              <Errors>{errors.selectOrder?.message}</Errors>
+                            {errors.selectionOrder && (
+                              <Errors>{errors.selectionOrder?.message}</Errors>
                             )}
                           </FlexColumnForm>
                         )}
-
-                        <FlexColumnForm>
-                          <InputLabel>Interview Date</InputLabel>
-                          <Input
-                            type="date"
-                            {...register("interviewDate", {
-                              // required: {
-                              //   value: true,
-                              //   message: "Required",
-                              // },
-                              validate: (fieldValue) => {
-                                const startDateValue = getValues("appliedOn");
-
-                                const endDateValue = getValues("interviewDate");
-
-                                if (endDateValue && startDateValue) {
-                                  const endDate = new Date(endDateValue);
-                                  const startDate = new Date(startDateValue);
-                                  if (startDate > endDate) {
-                                    return "Interview date must not be earlier than applied on";
-                                  } else {
-                                    return clearErrors("interviewDate");
-                                  }
-                                }
-                              },
-                            })}
-                          />
-                          {<Errors>{errors.interviewDate?.message}</Errors>}
-                        </FlexColumnForm>
                       </>
                     )}
 
@@ -855,10 +874,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
                       style={{ width: "50%" }}
                       type="file"
                       {...register(`file`, {
-                        // required: {
-                        //   value: update ? false : true,
-                        //   message: "Required",
-                        // },
+                        required: {
+                          value: uploadedFiles.length === 0 ? true : false,
+                          message: "Required",
+                        },
                         onChange: (e) => {
                           handleFileChange(e);
                         },
@@ -1025,6 +1044,13 @@ const Applicants = ({ jobid, Tabvalue }) => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "8rem" }}
+                    align="left"
+                  >
+                    Selected
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
@@ -1036,8 +1062,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
               <TableBody>
                 {!applicants?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No job posting found
+                    <TableCell align="center" sx={CellStyle2} colSpan={8}>
+                      No job  applicants found
                     </TableCell>
                   </TableRow>
                 )}
@@ -1093,6 +1119,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
                           ? "Did not attend"
                           : " - "
                         : " - "}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.isSelected ? "Yes" : "No"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
