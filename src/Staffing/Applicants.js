@@ -57,6 +57,7 @@ import {
   FlexColumnForm,
   FlexContaierForm,
   AlignFlex,
+  UploadFile,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -126,6 +127,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
   const [userType, setUserType] = useState("");
   const [departmentData, setDepartmentData] = useState([]);
   const [file, setFile] = useState(null);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [applicants, setApplicants] = useState([]);
   const [isShow, setIsShow] = useState(false);
@@ -169,8 +171,17 @@ const Applicants = ({ jobid, Tabvalue }) => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
+      if (uploadedFiles) {
+        const documentIds = uploadedFiles.map((file) => file._id);
+        data.documents = documentIds;
+      }
+
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
+      if (uploadedFiles) {
+        const documentIds = uploadedFiles.map((file) => file._id);
+        data.documents = documentIds;
+      }
       HandleUpdate(data);
     }
   };
@@ -188,8 +199,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
         ? new Date(data.interviewDate).toISOString().split("T")[0]
         : null,
       isEligibile: data.isEligibile,
-      isSelected:data.isSelected,
+      isSelected: data.isSelected,
+      file: data.documents.map((file) => file._id),
     });
+    setUploadedFiles(data.documents)
     if (data.interviewed === interviewed.YES) {
       setIsShow(true);
     } else {
@@ -198,11 +211,11 @@ const Applicants = ({ jobid, Tabvalue }) => {
     }
     if (data.isEligibile) {
       setIsVisible(true);
-    } 
+    }
     if (data.isSelected) {
       setIsSelect(true);
     }
-    
+
     HandleOpen();
   };
 
@@ -214,59 +227,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setIsShow(false);
     setDetailsLength(500);
   };
-  const jobPosting = [
-    {
-      id: 1,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 2,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 3,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
 
-    {
-      id: 4,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-    {
-      id: 5,
-      title: "Developer",
-      description: "works in js and react ",
-      duration: "5 months",
-      rate: "500",
-      department: "IT",
-      position: "head",
-      postingDate: "22,Nov 2023",
-    },
-  ];
   const getFileType = (file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -314,8 +275,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
           //console.log(data);
 
           if (data?.result) {
-            //console.log(data?.result);
-            setFile(data?.result?.file);
+            setUploadedFiles([...uploadedFiles, data?.result?.file]);
+            setFile(null);
 
             setIsUploading(false);
           } else {
@@ -328,9 +289,20 @@ const Applicants = ({ jobid, Tabvalue }) => {
         });
     }
   };
+  console.log("this is array of files :", uploadedFiles);
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
+  };
+  const handleDeleteFile = (index,fileId) => {
+    const updatedFiles = [...uploadedFiles];
+    updatedFiles.splice(index, 1);
+    setUploadedFiles(updatedFiles);
+    const updatedDocuments = getValues("file").filter(
+      (id) => id !== fileId
+    );
+    setValue("file", updatedDocuments);
+
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -893,6 +865,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                       })}
                       id="upload"
                       className="custom"
+                      disabled={isUploading}
                     />
                     <div
                       style={{
@@ -900,6 +873,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                         gap: "1.6rem",
                         alignItems: "center",
                         marginBottom: "2rem",
+                        marginTop: "2rem",
                       }}
                     >
                       <EditButton
@@ -917,19 +891,29 @@ const Applicants = ({ jobid, Tabvalue }) => {
                             ariaLabel="three-dots-loading"
                             visible={true}
                           />
-                        ) : !file ? (
-                          "Upload Document "
-                        ) : file?.originalName.length <= 32 ? (
-                          file?.originalName
                         ) : (
-                          file?.originalName?.substring(0, 30) + "..."
+                          "Upload Document "
                         )}
                       </EditButton>
+
                       {file && (
                         <LightPara onClick={removeFile}>Remove</LightPara>
                       )}
                     </div>
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
+
+                    {uploadedFiles &&
+                      uploadedFiles.map((data, index) => (
+                        <UploadFile>
+                          <span>{data?.originalName}</span>
+                          <ActionIcons
+                            onClick={() => {
+                              handleDeleteFile(data._id);
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        </UploadFile>
+                      ))}
                     {!update ? (
                       <AddNewButton
                         type="submit"

@@ -1064,3 +1064,18 @@ export const StepHr = styled.span`
   margin-top: 5px;
   transition: background-color 0.5s;
 `;
+export const UploadFile = styled.div`
+  border-radius: 8px;
+  border: 1.5px solid #eff4fa;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem;
+  font-family: Inter;
+  font-size: 1.3rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6rem;
+  margin: 8px 0px;
+`;
