@@ -50,7 +50,10 @@ import {
   Select,
   Option,
   CertificateContainer,
+  FlexContaier,
   AlignFlex,
+  IconContainer,
+  Icons,
 } from "./ViewEmployeeStyle";
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
@@ -101,6 +104,8 @@ const EmployeeJobDetails = () => {
   const [departmentData, setDepartmentData] = useState([]);
   const [reportsToList, setReportsToList] = useState([]);
   const [employeeTypes, setEmployeeTypes] = useState([]);
+  const [update, setUpdate] = useState(false);
+  const [Id, setId] = useState("");
 
   const {
     register,
@@ -128,6 +133,40 @@ const EmployeeJobDetails = () => {
       AddNewPosition(data);
     }
     console.log("form submmited", data);
+  };
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data?._id);
+    reset({
+      employeeType: data.employeeType?._id,
+      role: data.role,
+      department: data.department?._id,
+      title: data.title,
+      reportsTo: data.reportsTo?._id,
+      startDate: data.startDate
+        ? new Date(data.startDate).toISOString().split("T")[0]
+        : null,
+      endDate: data.endDate
+        ? new Date(data.endDate).toISOString().split("T")[0]
+        : null,
+      salaryScaleFrom: data.salaryScaleFrom,
+      salaryScaleTo: data.salaryScaleTo,
+      salary: data.salary,
+      ratePer: data.ratePer,
+      hoursPerWeek: data.hoursPerWeek,
+      jurisdiction: data.jurisdiction,
+      isBebEligible: data.isBebEligible,
+      isPrimary: data.isPrimary,
+    });
+
+    //console.log(addTags, ":these are the tags ");
+    handleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
+    handleOpen();
+    reset({});
+    clearErrors();
   };
   const GetEmployeesJobDetails = () => {
     return new Promise((resolve, reject) => {
@@ -318,9 +357,9 @@ const EmployeeJobDetails = () => {
           ) : (
             <MainBodyContainer>
               <FlexSpaceBetween style={{ alignItems: "center" }}>
-                <CommenHeader employeeid={employeeid} />
+                {/* <CommenHeader employeeid={employeeid} /> */}
 
-                {userType === ROLES.MANAGER ||
+                {/* {userType === ROLES.MANAGER ||
                 userType === ROLES.EMPLOYEE ||
                 isAccount ? (
                   " "
@@ -340,7 +379,7 @@ const EmployeeJobDetails = () => {
                     <ButtonIcon src="/images/icons/Pen 2.svg" />
                     Edit
                   </EditButton>
-                )}
+                )} */}
               </FlexSpaceBetween>
 
               <BasicInfoContainer>
@@ -352,14 +391,18 @@ const EmployeeJobDetails = () => {
                     isAccount ? (
                       " "
                     ) : userType === ROLES.HR ? (
-                      <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                      <AddNewButton onClick={HandleOpenAddNewAction}>
+                        Add New
+                      </AddNewButton>
                     ) : (
-                      <AddNewButton onClick={handleOpen}>Add New</AddNewButton>
+                      <AddNewButton onClick={HandleOpenAddNewAction}>
+                        Add New
+                      </AddNewButton>
                     )}
                   </FlexSpaceBetween>
 
                   <BasicDetailsDiv>
-                    {isAccount ? (
+                    {/* {
                       result?.positions?.length === 0 ? (
                         <NoDocumentfound message="No job details to show" />
                       ) : (
@@ -508,75 +551,98 @@ const EmployeeJobDetails = () => {
                           ))}
                         </>
                       )
-                    ) : (
-                      <VerticalTimeline
-                        layout={"1-column-left"}
-                        lineColor={"#EFF4FA"}
-                        style={{
-                          padding: "0rem",
-                          margin: "0rem",
-                          maxWidth: "100%",
-                        }}
-                      >
-                        {result?.positions?.map((data) => (
-                          <VerticalTimelineElement
-                            className="vertical-timeline-element--work"
-                            contentStyle={{
-                              outine: "none",
-                              boxShadow: "none",
-                              border: "none",
-                            }}
-                            iconStyle={{
-                              width: "1.8rem",
-                              height: "1.8rem",
-                              background: "#fff",
-                              border: "1.5px solid #8F9BB3",
-                              borderRadius: "50%",
-                              boxShadow: "none",
-                              outine: "none",
-                              marginLeft: "1rem",
-                            }}
-                            intersectionObserverProps={{
-                              margin: "0rem 0rem 0rem 0rem",
-                            }}
-                            style={{ margin: "0rem" }}
-                          >
-                            <TimelineDiv>
-                              <FlexColumn style={{ gap: "4px" }}>
-                                <TitlePara>{data.title || " - "}</TitlePara>
-                                <ViewPara>
-                                  {data.department?.name || " - "}
-                                </ViewPara>
-                              </FlexColumn>
-                              <FlexColumn>
-                                <TitlePara>
-                                  From:{" "}
-                                  {data.startDate
-                                    ? moment(data.startDate).format(
-                                        "D MMM, YYYY"
-                                      )
-                                    : " - "}
-                                  <span style={{ marginLeft: "14px" }}>
-                                    {" "}
-                                    To:
-                                    {data.endDate
-                                      ? moment(data.endDate).format(
-                                          "D MMM, YYYY"
-                                        )
-                                      : " Present "}
-                                  </span>{" "}
-                                </TitlePara>
-                                <TitlePara>
-                                  {data?.isPrimary && (
-                                    <span style={ApprovedStyles}> Primary</span>
+          } */}
+                    <VerticalTimeline
+                      layout={"1-column-left"}
+                      lineColor={"#EFF4FA"}
+                      style={{
+                        padding: "0rem",
+                        margin: "0rem",
+                        maxWidth: "100%",
+                      }}
+                    >
+                      {result?.positions?.map((data) => (
+                        <VerticalTimelineElement
+                          className="vertical-timeline-element--work"
+                          contentStyle={{
+                            outine: "none",
+                            boxShadow: "none",
+                            border: "none",
+                          }}
+                          iconStyle={{
+                            width: "1.8rem",
+                            height: "1.8rem",
+                            background: "#fff",
+                            border: "1.5px solid #8F9BB3",
+                            borderRadius: "50%",
+                            boxShadow: "none",
+                            outine: "none",
+                            marginLeft: "1rem",
+                          }}
+                          intersectionObserverProps={{
+                            margin: "0rem 0rem 0rem 0rem",
+                          }}
+                          style={{ margin: "0rem" }}
+                        >
+                          <TimelineDiv>
+                            <FlexColumn style={{ gap: "4px" }}>
+                              <TitlePara>{data.title || " - "}</TitlePara>
+                              <ViewPara>
+                                {data.department?.name || " - "}
+                              </ViewPara>
+                            </FlexColumn>
+                            <FlexColumn>
+                              <TitlePara>
+                                From:{" "}
+                                {data.startDate
+                                  ? moment(data.startDate).format("D MMM, YYYY")
+                                  : " - "}
+                                <span style={{ marginLeft: "14px" }}>
+                                  {" "}
+                                  To:
+                                  {data.endDate
+                                    ? moment(data.endDate).format("D MMM, YYYY")
+                                    : " Present "}
+                                </span>{" "}
+                              </TitlePara>
+                              <FlexContaier
+                                style={{
+                                  alignItems: "center",
+                                  marginTop: "10px",
+                                }}
+                              >
+                                <IconContainer>
+                                  <Icons
+                                    src="/images/icons/eye.svg"
+                                    onClick={() => HandleUpdateAction(data)}
+                                  />
+                                  {userType === ROLES.MANAGER ||
+                                  userType === ROLES.EMPLOYEE ||
+                                  isAccount ? (
+                                    " "
+                                  ) : (
+                                    <Icons
+                                      onClick={() => setIsEdit(true)}
+                                      src="/images/icons/Pendown.svg"
+                                    />
                                   )}
-                                </TitlePara>
-                              </FlexColumn>
-                            </TimelineDiv>
-                          </VerticalTimelineElement>
-                        ))}
-                      </VerticalTimeline>
-                    )}
+                                </IconContainer>
+                                {data?.isPrimary && (
+                                  <TitlePara style={{ margin: "0px" }}>
+                                    {data?.isPrimary && (
+                                      <span style={ApprovedStyles}>
+                                        {" "}
+                                        Primary
+                                      </span>
+                                    )}
+                                  </TitlePara>
+                                )}
+                              </FlexContaier>
+                            </FlexColumn>
+                          </TimelineDiv>
+                        </VerticalTimelineElement>
+                      ))}
+                    </VerticalTimeline>
 
                     {/* add new modal  */}
 
@@ -617,7 +683,9 @@ const EmployeeJobDetails = () => {
                         ) : (
                           <form onSubmit={handleSubmit(onSubmit)}>
                             <ModalContainer>
-                              <ModalHeading>Add Position</ModalHeading>
+                              <ModalHeading>
+                                {update ? "View Position " : "Add Position "}
+                              </ModalHeading>
                               <ModalIcon
                                 onClick={() => {
                                   handleClose();
@@ -633,7 +701,8 @@ const EmployeeJobDetails = () => {
                               >
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Employee Type <InputSpan>*</InputSpan>
+                                    Employee Type{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name={`employeeType`}
@@ -645,7 +714,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option value="">Select</Option>
                                         {employeeTypes?.employeeTypes?.map(
                                           (data) => (
@@ -666,7 +735,8 @@ const EmployeeJobDetails = () => {
                                 </FlexColumnForm>
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Role <InputSpan>*</InputSpan>
+                                    Role{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name={`role`}
@@ -678,7 +748,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option>Select</Option>
                                         <Option value="EMPLOYEE"> User </Option>
                                         <Option value="MANAGER">
@@ -700,7 +770,8 @@ const EmployeeJobDetails = () => {
                               >
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Department <InputSpan>*</InputSpan>
+                                    Department{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name="department"
@@ -712,7 +783,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option>Select</Option>
                                         {departmentData?.map((data) => (
                                           <Option value={data._id}>
@@ -731,9 +802,11 @@ const EmployeeJobDetails = () => {
                                 </FlexColumnForm>
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Position Title <InputSpan>*</InputSpan>
+                                    Position Title{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Input
+                                    readOnly={update}
                                     type="text"
                                     {...register("title", {
                                       required: {
@@ -751,7 +824,8 @@ const EmployeeJobDetails = () => {
                               >
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Reports to <InputSpan>*</InputSpan>
+                                    Reports to{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name={`reportsTo`}
@@ -763,7 +837,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option value="">Select</Option>
                                         {reportsToList?.map((user) => (
                                           <Option value={user?.userData?._id}>
@@ -787,9 +861,11 @@ const EmployeeJobDetails = () => {
                                 >
                                   <FlexColumnForm>
                                     <InputLabel>
-                                      Start Date <InputSpan>*</InputSpan>
+                                      Start Date{" "}
+                                      {update ? " " : <InputSpan>*</InputSpan>}
                                     </InputLabel>
                                     <Input
+                                      readOnly={update}
                                       type="date"
                                       {...register("startDate", {
                                         required: {
@@ -828,6 +904,7 @@ const EmployeeJobDetails = () => {
                                   <FlexColumnForm>
                                     <InputLabel>End Date</InputLabel>
                                     <Input
+                                      readOnly={update}
                                       type="date"
                                       {...register("endDate", {
                                         // required: {
@@ -875,6 +952,7 @@ const EmployeeJobDetails = () => {
                                   <FlexColumnForm>
                                     <InputLabel>Salary Scale From</InputLabel>
                                     <Input
+                                      readOnly={update}
                                       type="text"
                                       {...register(`salaryScaleFrom`, {
                                         pattern: {
@@ -927,6 +1005,7 @@ const EmployeeJobDetails = () => {
                                   >
                                     <InputLabel>Salary Scale To</InputLabel>
                                     <Input
+                                      readOnly={update}
                                       type="text"
                                       {...register(`salaryScaleTo`, {
                                         pattern: {
@@ -965,9 +1044,10 @@ const EmployeeJobDetails = () => {
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Actual Salary amounts{" "}
-                                    <InputSpan>*</InputSpan>
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Input
+                                    readOnly={update}
                                     type="text"
                                     {...register(`salary`, {
                                       required: {
@@ -1054,7 +1134,7 @@ const EmployeeJobDetails = () => {
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Salary rate per&nbsp;
-                                    <InputSpan>*</InputSpan>
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name={`ratePer`}
@@ -1066,7 +1146,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option>Select</Option>
                                         <Option value={1}>Hour</Option>
                                         <Option value={2}>Day</Option>
@@ -1080,9 +1160,11 @@ const EmployeeJobDetails = () => {
                                 </FlexColumnForm>
                                 <FlexColumnForm>
                                   <InputLabel>
-                                    Hours per week <InputSpan>*</InputSpan>
+                                    Hours per week{" "}
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Input
+                                    readOnly={update}
                                     type="text"
                                     {...register(`hoursPerWeek`, {
                                       required: {
@@ -1115,7 +1197,7 @@ const EmployeeJobDetails = () => {
                                 <FlexColumnForm>
                                   <InputLabel>
                                     Jurisdiction&nbsp;
-                                    <InputSpan>*</InputSpan>
+                                    {update ? " " : <InputSpan>*</InputSpan>}
                                   </InputLabel>
                                   <Controller
                                     name={`jurisdiction`}
@@ -1127,7 +1209,7 @@ const EmployeeJobDetails = () => {
                                       },
                                     }}
                                     render={({ field }) => (
-                                      <Select {...field}>
+                                      <Select {...field} disabled={update}>
                                         <Option>Select</Option>
                                         <Option value="Federal">Federal</Option>
                                         <Option value="Provincial">
@@ -1145,6 +1227,7 @@ const EmployeeJobDetails = () => {
                                     <AlignFlex>
                                       <input
                                         type="checkbox"
+                                        readOnly={update}
                                         {...register(`isBebEligible`, {})}
                                         id={`isBebEligible`}
                                       />
@@ -1162,6 +1245,7 @@ const EmployeeJobDetails = () => {
                                   <FlexColumnForm>
                                     <AlignFlex>
                                       <input
+                                        readOnly={update}
                                         type="checkbox"
                                         {...register(`isPrimary`, {})}
                                         id={`isPrimary`}
@@ -1192,21 +1276,21 @@ const EmployeeJobDetails = () => {
                                 htmlFor="isActive"
                                 style={{ marginBottom: "0rem" }}
                               >
-                                Is Active <InputSpan>*</InputSpan>
+                                Is Active {update ? " " : <InputSpan>*</InputSpan>}
                               </InputLabel>
                             </AlignFlex>
                           </FlexColumnForm>
                         </FlexContaierForm> */}
-                              <ButtonBlue
-                                type="submit"
-                                style={{ marginTop: "2.5rem" }}
-                                // disabled={!isDirty}
-                                // onClick={() => {
-                                //   handleSubmit(onSubmit);
-                                // }}
-                              >
-                                Submit
-                              </ButtonBlue>
+                              {update ? (
+                                " "
+                              ) : (
+                                <ButtonBlue
+                                  type="submit"
+                                  style={{ marginTop: "2.5rem" }}
+                                >
+                                  Submit
+                                </ButtonBlue>
+                              )}
                             </ModalFormContainer>
                           </form>
                         )}

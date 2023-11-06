@@ -14,6 +14,7 @@ import Applicants from "./Applicants";
 import Selected from "./Selected";
 import Interviewing from "./Interviewing";
 import moment from "moment";
+import { Stepper, Step } from "react-form-stepper";
 
 import { DisciplinaryHeading } from "../Disciplinary/DisciplinaryStyles";
 import {
@@ -31,6 +32,11 @@ import {
   BasicInfoDiv,
   ViewPara,
   TitlePara,
+  StepperContainer,
+  FlexStep,
+  StepCircle,
+  StepHr,
+  StepText,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const JobView = () => {
@@ -46,14 +52,24 @@ const JobView = () => {
   const [page, setPage] = useState(1);
   const [departmentData, setDepartmentData] = useState([]);
   const [valueTab, setValueTab] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
+  const steps = [
+    {
+      title: "Applicant List",
+      onClick: () => setActiveStep(0),
+    },
+    { title: "Meets Eligibility", onClick: () => setActiveStep(1) },
+    { title: "Interviewed", onClick: () => setActiveStep(2) },
+    { title: "Selections", onClick: () => setActiveStep(3) },
+  ];
+  console.log("this the active step: ", activeStep);
   const HandleChangeTab = (event, newValue) => {
     setValueTab(newValue);
   };
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
-  
 
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -101,7 +117,7 @@ const JobView = () => {
   }
   const GetJobPostings = () => {
     setIsLoading(true);
-    let url = API_URLS.detailsJobs.replace(":id",jobid);
+    let url = API_URLS.detailsJobs.replace(":id", jobid);
     httpClient({
       method: "get",
       url,
@@ -124,8 +140,8 @@ const JobView = () => {
   };
   useEffect(() => {
     GetJobPostings();
-  },[])
-  
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -218,7 +234,36 @@ const JobView = () => {
                   </TaskDescription>
                 </FlexColumnNoWidth>
               </FlexSpaceBetween> */}
-            <div style={{ width: "100%" }}>
+            {/* <Stepper activeStep={activeStep}>
+              <Step
+                onClick={() => setActiveStep(0)}
+                label="Applicant List"
+              ></Step>
+              <Step
+                onClick={() => setActiveStep(1)}
+                label="Meets Eligibility"
+              ></Step>
+              <Step onClick={() => setActiveStep(2)} label="Interviewed"></Step>
+              <Step onClick={() => setActiveStep(3)} label="Selections"></Step>
+            </Stepper> */}
+            <StepperContainer>
+              {steps.map((step, index) => (
+                <>
+                  <FlexStep onClick={step.onClick}>
+                    <StepCircle isActive={index === activeStep}></StepCircle>
+                    <StepText isActive={index === activeStep}>
+                      {step.title}
+                    </StepText>
+                  </FlexStep>
+                  {index !== steps.length - 1 && (
+                    <StepHr isActive={index < activeStep} />
+                  )}
+                </>
+              ))}
+            </StepperContainer>
+
+            <Applicants jobid={jobid} Tabvalue={activeStep} />
+            {/* <div style={{ width: "100%" }}>
               <Tabs
                 value={valueTab}
                 onChange={HandleChangeTab}
@@ -241,7 +286,7 @@ const JobView = () => {
             </CustomTabPanel>
             <CustomTabPanel value={valueTab} index={3}>
               <Applicants jobid={jobid} Tabvalue={valueTab} />
-            </CustomTabPanel>
+            </CustomTabPanel> */}
           </BackGroundWhite>
         </>
       )}

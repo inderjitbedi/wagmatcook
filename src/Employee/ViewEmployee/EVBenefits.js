@@ -105,35 +105,34 @@ const EVBenefits = () => {
           ) : (
             <MainBodyContainer>
               <FlexSpaceBetween style={{ alignItems: "center" }}>
-                <CommenHeader employeeid={employeeid} />
-
-                {userType === ROLES.MANAGER ||
-                userType === ROLES.EMPLOYEE ||
-                isAccount ? (
-                  " "
-                ) : userType === ROLES.HR ? (
-                  <EditButton
-                    style={{ marginRight: "5.4rem" }}
-                    onClick={() => setIsEdit(true)}
-                  >
-                    <ButtonIcon src="/images/icons/Pen 2.svg" />
-                    Edit
-                  </EditButton>
-                ) : (
-                  <EditButton
-                    onClick={() => setIsEdit(true)}
-                    style={{ marginRight: "5.4rem" }}
-                  >
-                    <ButtonIcon src="/images/icons/Pen 2.svg" />
-                    Edit
-                  </EditButton>
-                )}
+                {/* <CommenHeader employeeid={employeeid} /> */}
               </FlexSpaceBetween>
 
               <BasicInfoContainer>
                 <BasicInfoDiv>
                   <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Employee Benefit</BasicHeading>
+                    {userType === ROLES.MANAGER ||
+                    userType === ROLES.EMPLOYEE ||
+                    isAccount ? (
+                      " "
+                    ) : userType === ROLES.HR ? (
+                      <EditButton
+                        style={{ marginRight: "5.4rem" }}
+                        onClick={() => setIsEdit(true)}
+                      >
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
+                    ) : (
+                      <EditButton
+                        onClick={() => setIsEdit(true)}
+                        style={{ marginRight: "5.4rem" }}
+                      >
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
+                    )}
                   </FlexSpaceBetween>
                   <BasicDetailsDiv>
                     <FlexSpaceBetween>

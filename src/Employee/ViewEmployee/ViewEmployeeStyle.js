@@ -952,18 +952,17 @@ export const TaskStatus = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
 `;
 export const TaskSelect = styled.div`
   color: #9ea0aa;
   border: none;
   background: transparent;
   display: flex;
-  gap:8px;
+  gap: 8px;
   align-items: center;
   outline: none;
   color: #222b45;
-position: relative;
+  position: relative;
   text-align: center;
   font-family: Inter;
   font-size: 1.4rem;
@@ -980,7 +979,7 @@ position: relative;
 export const TaskOption = styled.ul`
   list-style: none;
   margin-top: 8px;
-width: max-content;
+  width: max-content;
   padding: 0px;
   position: absolute;
   top: 100%;
@@ -1015,4 +1014,53 @@ export const TextAreaContaier = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0.8rem;
+`;
+export const StepperContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 0px 6rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  @media only screen and (max-width: 600px) {
+    padding: 0px 0rem;
+  }
+`;
+export const FlexStep = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+export const StepText = styled.p`
+  margin: 0;
+  color: ${(props) => (props.isActive ? "#279AF1" : "#8f9bb3")};
+  font-family: Inter;
+  font-size: 1.8rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.2rem;
+  transition: color 0.5s;
+  @media only screen and (max-width: 600px) {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+  }
+`;
+export const StepCircle = styled.span`
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: ${(props) => (props.isActive ? "#279AF1" : "#8f9bb3")};
+  transition: background-color 0.5s;
+`;
+export const StepHr = styled.span`
+  display: inline-block;
+  flex: 1;
+  height: 2px;
+  color: #8f9bb3;
+  background-color: ${(props) => (props.isActive ? "#279AF1" : "#8f9bb3")};
+  margin-top: 5px;
+  transition: background-color 0.5s;
 `;

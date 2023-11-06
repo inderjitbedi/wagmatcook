@@ -64,8 +64,12 @@ export const newStyle = styled.p`
 `;
 const CommenDashHeader = ({ onSearch, text }) => {
   let API_URL = process.env.REACT_APP_API_URL;
-  const { headerData, globalNotificationCount, setGlobalNotificationCount } =
-    useHeaderInfoContext();
+  const {
+    headerData,
+    globalNotificationCount,
+    setGlobalNotificationCount,
+    clearContextData,
+  } = useHeaderInfoContext();
   const Navigate = useNavigate();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
@@ -123,6 +127,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
     localStorage.clear();
     handleCloseMenu();
     Navigate("/");
+    clearContextData();
   };
   const HandleChange = (e) => {
     const newValue = e.target.value;
@@ -148,7 +153,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   const SidebarWrapper = styled.div`
-  display:none;
+    display: none;
     @media only screen and (max-width: 1200px) {
       display: block;
       width: 25rem;
@@ -250,7 +255,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       .then(({ result, error }) => {
         if (result) {
           setNotificationCount(result);
-          setGlobalNotificationCount(result)
+          setGlobalNotificationCount(result);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -371,7 +376,6 @@ const CommenDashHeader = ({ onSearch, text }) => {
   };
 
   useEffect(() => {
-
     let user = localStorage.getItem("user");
     if (user) {
       let parsedUser = JSON.parse(user);

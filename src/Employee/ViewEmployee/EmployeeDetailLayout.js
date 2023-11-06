@@ -101,8 +101,7 @@ const EmployeeDetailLayout = () => {
           )}
 
           <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
-            {/* <CommenHeader employeeid={employeeid} /> */}
-
+            <CommenHeader employeeid={employeeid} />
             <Outlet />
           </div>
         </BodyContainer>

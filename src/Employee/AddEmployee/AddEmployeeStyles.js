@@ -143,7 +143,7 @@ export const IconsEmployee = styled.img`
 `;
 export const EmployeeBody = styled.div`
   border-radius: 0.8rem;
-  border: 1px solid #eff4fa;
+  border: : ${(props) => (props.isEdit ? "none" : "1px solid #eff4fa")};
   background: #fff;
   margin-bottom: 8rem;
 `;

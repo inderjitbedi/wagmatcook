@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import httpClient from "../api/httpClient";
 import API_URLS from "../constants/apiUrls";
+import { useLoaderData } from "react-router-dom";
 const HeaderInfoContext = createContext();
 
 export const ContextProvider = ({ children }) => {
@@ -8,16 +9,27 @@ export const ContextProvider = ({ children }) => {
   const [globalNotificationCount, setGlobalNotificationCount] = useState([]);
   const [user, setUser] = useState();
   const [employeeId, setEmployeeId] = useState(null);
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
-    let user = localStorage.getItem("user");
-    if (user) {
-      let parsedUser = JSON.parse(user);
+    let userData = localStorage.getItem("user");
+    if (userData) {
+      let parsedUser = JSON.parse(userData);
       setUser(parsedUser);
-      GetHeadersData(parsedUser._id);
+    }
+  }, [refresh]);
+
+  useEffect(() => {
+    if (user) {
+      GetHeadersData(user._id);
       GetNotificationCount();
     }
-  }, []);
+  }, [user]);
 
+  const clearContextData = () => {
+    setHeaderData([]);
+    setGlobalNotificationCount([]);
+    setUser(null);
+  };
   const GetHeadersData = (id) => {
     // setIsLoading(true);
 
@@ -63,6 +75,9 @@ export const ContextProvider = ({ children }) => {
         globalNotificationCount,
         setGlobalNotificationCount,
         setEmployeeId,
+        clearContextData,
+        setRefresh,
+        setUser,
       }}
     >
       {children}
