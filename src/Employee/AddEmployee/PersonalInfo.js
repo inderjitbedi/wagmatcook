@@ -138,7 +138,6 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
           setValue("workEmail", result.personalInfo.employee.email);
           setValue("isActive", result.personalInfo.employee.isActive);
 
-          console.log("workemail", result.personalInfo.employee.email);
           if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
           //toast.warn("something went wrong ");
@@ -226,7 +225,6 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
       return true;
     }
     if (isEmptyObject(errors)) {
-      console.log(file);
       if (file) {
         data.photo = file._id;
       } else {
@@ -235,7 +233,6 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
 
       HandleSubmitPersonalInfo(data);
     }
-    console.log("form submmited", data);
   };
   const inputStyles = {
     fontSize: "1.3rem",

@@ -127,7 +127,6 @@ const EvLeaveAlloacation = () => {
     if (isEmptyObject(errors) && !update) {
       HandleSubmit(data);
     } else if (update) {
-      console.log("form submmited :", data);
       HandleUpdate(data);
     }
   };
@@ -257,7 +256,6 @@ const EvLeaveAlloacation = () => {
       });
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -323,7 +321,6 @@ const EvLeaveAlloacation = () => {
     reset({});
     clearErrors();
   };
-  console.log("update bollean :", update);
 
   return (
     <>

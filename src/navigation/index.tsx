@@ -22,15 +22,9 @@ interface User {
 }
 const roleBasedGuard = (allowedRoles: any, userRole: any) => {
   if (allowedRoles.includes(userRole)) {
-    console.log(
-      "in true condition:",
-      allowedRoles,
-      userRole,
-      allowedRoles.includes(userRole)
-    );
+ 
     return true;
   } else {
-    console.log("in flase condition:", allowedRoles, userRole);
 
     return false;
   }

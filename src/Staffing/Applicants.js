@@ -106,8 +106,8 @@ const style = {
   boxShadow: 45,
   padding: "2rem 0rem",
   borderRadius: "8px",
-  // height: "55rem",
-  // overflowY: "scroll",
+  maxHeight: "55rem",
+  overflowY: "scroll",
 };
 const Applicants = ({ jobid, Tabvalue }) => {
   const Navigate = useNavigate();
@@ -129,6 +129,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [applicants, setApplicants] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSelect, setIsSelect] = useState(false);
+  const [selectedApplicants, setSelectedApplicants] = useState([]);
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -185,6 +188,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         ? new Date(data.interviewDate).toISOString().split("T")[0]
         : null,
       isEligibile: data.isEligibile,
+      isSelected:data.isSelected,
     });
     if (data.interviewed === interviewed.YES) {
       setIsShow(true);
@@ -192,6 +196,13 @@ const Applicants = ({ jobid, Tabvalue }) => {
       setIsShow(false);
       setValue("isSelected", false);
     }
+    if (data.isEligibile) {
+      setIsVisible(true);
+    } 
+    if (data.isSelected) {
+      setIsSelect(true);
+    }
+    
     HandleOpen();
   };
 
@@ -325,9 +336,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
     // e.preventDefault();
     setIsLoading(true);
     let url = API_URLS.createApplicants.replace(":jobid", jobid);
-
     setIsLoading(true);
-    let dataCopy = { ...data, selectionOrder: applicants?.length + 1 };
+    let dataCopy = data;
     httpClient({
       method: "post",
       url,
@@ -368,7 +378,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         if (result) {
           let FilteredArray = applicants.filter((data) => data._id !== Id);
           let ReorderArray = FilteredArray.map((data) => data._id);
-          HandleReorder(ReorderArray);
+          // HandleReorder(ReorderArray);
           HandleCloseDelete();
           setId("");
           GetApplicants();
@@ -435,6 +445,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          const SelectedApplicants = result.applicants.filter(
+            (applicant) => applicant.isSelected
+          );
+          setSelectedApplicants(SelectedApplicants);
           if (Tabvalue === 0) {
             setApplicants(result.applicants);
           } else if (Tabvalue === 1) {
@@ -468,7 +482,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
       });
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
     let url = API_URLS.reorderApplicants.replace(":jobid", jobid);
 
     httpClient({
@@ -494,7 +507,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
     const reorderedData = Array.from(applicants);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
     setApplicants(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id));
   };
@@ -512,6 +524,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     background: isDraggingOver ? "#fff" : "#fff",
     padding: "2px",
   });
+
   useEffect(() => {
     GetApplicants();
     if (location.pathname.indexOf("manager") > -1) {
@@ -599,19 +612,22 @@ const Applicants = ({ jobid, Tabvalue }) => {
                 </ModalUpperDiv>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
-                    <InputLabel>
-                      Name <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("name", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      })}
-                    />
-                    {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    <FlexColumnForm>
+                      <InputLabel>
+                        Name <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("name", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        })}
+                      />
+                      {errors.name && <Errors>{errors.name?.message}</Errors>}
+                    </FlexColumnForm>
+
                     {/* <InputLabel>
                       Email <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -704,114 +720,164 @@ const Applicants = ({ jobid, Tabvalue }) => {
                         />
                         {<Errors>{errors.appliedOn?.message}</Errors>}
                       </FlexColumnForm>
-                      <FlexColumnForm>
-                        <InputLabel>
-                          Interview Date <InputSpan>*</InputSpan>
-                        </InputLabel>
-                        <Input
-                          type="date"
-                          {...register("interviewDate", {
-                            required: {
-                              value: true,
-                              message: "Required",
-                            },
-                            validate: (fieldValue) => {
-                              const startDateValue = getValues("appliedOn");
-
-                              const endDateValue = getValues("interviewDate");
-
-                              if (endDateValue && startDateValue) {
-                                const endDate = new Date(endDateValue);
-                                const startDate = new Date(startDateValue);
-                                if (startDate > endDate) {
-                                  return "Interview date must not be earlier than applied on";
-                                } else {
-                                  return clearErrors("interviewDate");
-                                }
+                    </FlexContaierForm>
+                    <FlexColumnForm
+                      style={{ margin: " 0.6rem 0rem 1rem 0rem" }}
+                    >
+                      <AlignFlex>
+                        <input
+                          type="checkbox"
+                          {...register(`isEligibile`, {
+                            onChange: (e) => {
+                              const Value = e.target.checked;
+                              if (Value) {
+                                setIsVisible(true);
+                              } else {
+                                setIsVisible(false);
+                                setValue("interviewed", null);
+                                setValue("interviewDate", null);
                               }
                             },
                           })}
+                          id={`isEligibile`}
                         />
-                        {<Errors>{errors.interviewDate?.message}</Errors>}
-                      </FlexColumnForm>
-                    </FlexContaierForm>
+                        <InputLabel
+                          htmlFor={`isEligibile`}
+                          style={{
+                            marginBottom: "0rem",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Is Eligible?{" "}
+                        </InputLabel>
+                      </AlignFlex>
+                    </FlexColumnForm>
 
-                    <InputLabel>
-                      Interviewed <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Controller
-                      name={`interviewed`}
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        onChange: (e) => {
-                          const interviewValue = e.target.value;
-                          if (interviewValue === interviewed.YES) {
-                            setIsShow(true);
-                          } else {
-                            setIsShow(false);
-                            setValue("isSelected", false);
-                          }
-                        },
-                      }}
-                      render={({ field }) => (
-                        <Select {...field}>
-                          <Option>Select</Option>
-                          <Option value={interviewed.YES}> YES </Option>
-                          <Option value={interviewed.NO}> NO </Option>
-                          <Option value={interviewed.DID_NOT_ATTEND}>
-                            Did not attend
-                          </Option>
-                        </Select>
-                      )}
-                    />
-                    {<Errors> {errors.role?.message}</Errors>}
-                    <FlexContaierForm style={{ marginBottom: "1rem" }}>
-                      <FlexColumnForm>
-                        <AlignFlex>
-                          <input
-                            type="checkbox"
-                            {...register(`isEligibile`, {})}
-                            id={`isEligibile`}
-                          />
-                          <InputLabel
-                            htmlFor={`isEligibile`}
-                            style={{
-                              marginBottom: "0rem",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Is Eligible?{" "}
-                          </InputLabel>
-                        </AlignFlex>
-                      </FlexColumnForm>
-
-                      {isShow ? (
+                    {isVisible && (
+                      <>
                         <FlexColumnForm>
-                          <AlignFlex>
-                            <input
-                              type="checkbox"
-                              {...register(`isSelected`, {})}
-                              id={`isSelected`}
-                            />
-                            <InputLabel
-                              htmlFor={`isSelected`}
-                              style={{
-                                marginBottom: "0rem",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Is Selected
-                            </InputLabel>
-                          </AlignFlex>
+                          <InputLabel>Interviewed</InputLabel>
+                          <Controller
+                            name={`interviewed`}
+                            control={control}
+                            rules={{
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
+                              onChange: (e) => {
+                                const interviewValue = e.target.value;
+                                if (interviewValue === interviewed.YES) {
+                                  setIsShow(true);
+                                } else {
+                                  setIsShow(false);
+                                  setValue("isSelected", false);
+                                }
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field}>
+                                <Option>Select</Option>
+                                <Option value={interviewed.YES}> YES </Option>
+                                <Option value={interviewed.NO}> NO </Option>
+                                <Option value={interviewed.DID_NOT_ATTEND}>
+                                  Did not attend
+                                </Option>
+                              </Select>
+                            )}
+                          />
+                          {<Errors> {errors.interviewed?.message}</Errors>}
                         </FlexColumnForm>
-                      ) : (
-                        "  "
-                      )}
-                    </FlexContaierForm>
+
+                        <FlexContaierForm style={{ marginBottom: "1rem" }}>
+                          {isShow ? (
+                            <FlexColumnForm>
+                              <AlignFlex>
+                                <input
+                                  type="checkbox"
+                                  {...register(`isSelected`, {
+                                    onChange: (e) => {
+                                      const Value = e.target.checked;
+                                      if (Value) {
+                                        setIsSelect(true);
+                                      } else {
+                                        setIsSelect(false);
+                                      }
+                                    },
+                                  })}
+                                  id={`isSelected`}
+                                />
+                                <InputLabel
+                                  htmlFor={`isSelected`}
+                                  style={{
+                                    marginBottom: "0rem",
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Is Selected
+                                </InputLabel>
+                              </AlignFlex>
+                            </FlexColumnForm>
+                          ) : (
+                            "  "
+                          )}
+                        </FlexContaierForm>
+
+                        {isSelect && (
+                          <FlexColumnForm>
+                            <InputLabel>Select Order</InputLabel>
+                            <Controller
+                              name="selectOrder"
+                              control={control}
+                              render={({ field }) => (
+                                <Select {...field}>
+                                  <Option value={0}>Select</Option>
+                                  {selectedApplicants.map(
+                                    (applicant, index) => (
+                                      <Option key={index + 1} value={index + 1}>
+                                        {index + 1}
+                                      </Option>
+                                    )
+                                  )}
+                                </Select>
+                              )}
+                            />
+                            {errors.selectOrder && (
+                              <Errors>{errors.selectOrder?.message}</Errors>
+                            )}
+                          </FlexColumnForm>
+                        )}
+
+                        <FlexColumnForm>
+                          <InputLabel>Interview Date</InputLabel>
+                          <Input
+                            type="date"
+                            {...register("interviewDate", {
+                              // required: {
+                              //   value: true,
+                              //   message: "Required",
+                              // },
+                              validate: (fieldValue) => {
+                                const startDateValue = getValues("appliedOn");
+
+                                const endDateValue = getValues("interviewDate");
+
+                                if (endDateValue && startDateValue) {
+                                  const endDate = new Date(endDateValue);
+                                  const startDate = new Date(startDateValue);
+                                  if (startDate > endDate) {
+                                    return "Interview date must not be earlier than applied on";
+                                  } else {
+                                    return clearErrors("interviewDate");
+                                  }
+                                }
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.interviewDate?.message}</Errors>}
+                        </FlexColumnForm>
+                      </>
+                    )}
 
                     <input
                       style={{ width: "50%" }}

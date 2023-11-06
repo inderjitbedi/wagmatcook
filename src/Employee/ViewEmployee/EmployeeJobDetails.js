@@ -119,7 +119,6 @@ const EmployeeJobDetails = () => {
   } = useForm({ mode: "all" });
 
   const onSubmit = (data) => {
-    console.log(data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -129,10 +128,8 @@ const EmployeeJobDetails = () => {
       return true;
     }
     if (isEmptyObject(errors)) {
-      console.log(data);
       AddNewPosition(data);
     }
-    console.log("form submmited", data);
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
@@ -159,7 +156,6 @@ const EmployeeJobDetails = () => {
       isPrimary: data.isPrimary,
     });
 
-    //console.log(addTags, ":these are the tags ");
     handleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -212,7 +208,6 @@ const EmployeeJobDetails = () => {
         .then(({ result, error }) => {
           if (result) {
             setDepartmentData(result.departments);
-            // console.log(result.departments, "result.departments ");
             resolve(result);
           } else {
             //toast.warn("something went wrong ");

@@ -274,7 +274,6 @@ const EVLeaveHistory = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("form submmited", data);
 
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -347,7 +346,6 @@ const EVLeaveHistory = () => {
               (obj) => obj._id !== employeeid
             );
             setReportList(filteredArray);
-            console.log("ideal data :", extractedDataArray);
           } else {
             //toast.warn("something went wrong ");
           }
@@ -520,7 +518,6 @@ const EVLeaveHistory = () => {
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
-  console.log("this is account:", isAccount, userType);
   const userstyle = {
     padding: "1.6rem 2.0rem",
     background: "#fff",

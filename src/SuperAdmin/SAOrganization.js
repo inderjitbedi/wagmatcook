@@ -142,13 +142,11 @@ const SAOrganization = () => {
     } else if (update) {
       HandleUpdate(data);
     }
-    console.log("form submmited :", data);
   };
 
   const GetOrganizationList = () => {
     setIsLoading(true);
 
-    console.log("called");
     let url = `${API_URLS.adminOrganizationList}?page=1&limit=10`;
     httpClient({
       method: "get",
@@ -170,7 +168,6 @@ const SAOrganization = () => {
       });
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 

@@ -174,7 +174,6 @@ const OALeaves = () => {
     const reorderedData = Array.from(leaves);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
     setLeaves(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };
@@ -224,7 +223,6 @@ const OALeaves = () => {
     } else if (update && isEmptyObject(errors)) {
       HandleUpdate(data);
     }
-    console.log("form submmited", data);
   };
   const GetLeavesType = () => {
     setIsLoading(true);

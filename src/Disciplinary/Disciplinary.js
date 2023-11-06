@@ -428,7 +428,7 @@ const Disciplinary = () => {
     const reorderedData = Array.from(disciplinaryData);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
+    // console.log("drag is working ");
     setDisciplinaryData(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };

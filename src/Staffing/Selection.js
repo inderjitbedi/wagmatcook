@@ -441,7 +441,6 @@ const Selection = ({ jobid, Tabvalue }) => {
             const eligibleApplicants = result.applicants.filter(
               (applicant) => applicant.isEligibile
             );
-            console.log("eligible candidates ", eligibleApplicants);
             setApplicants(eligibleApplicants);
           } else if (Tabvalue === 2) {
             const eligibleApplicants = result.applicants.filter(
@@ -449,10 +448,10 @@ const Selection = ({ jobid, Tabvalue }) => {
             );
             setApplicants(eligibleApplicants);
           } else if (Tabvalue === 3) {
-            const eligibleApplicants = result.applicants.filter(
-              (applicant) => applicant.isSelected
-            );
-            setApplicants(eligibleApplicants);
+             const eligibleApplicants = result.applicants.filter(
+               (applicant) => applicant.isSelected
+             );
+             setApplicants(eligibleApplicants);
           }
         } else {
           //toast.warn("something went wrong ");
@@ -468,7 +467,6 @@ const Selection = ({ jobid, Tabvalue }) => {
       });
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
     let url = API_URLS.reorderApplicants.replace(":jobid", jobid);
 
     httpClient({
@@ -494,7 +492,6 @@ const Selection = ({ jobid, Tabvalue }) => {
     const reorderedData = Array.from(applicants);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
     setApplicants(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id));
   };

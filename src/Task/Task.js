@@ -280,7 +280,6 @@ const Task = () => {
       });
   };
   const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 

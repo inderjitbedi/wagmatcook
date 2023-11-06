@@ -20,7 +20,6 @@ export default function RegisterOrganization() {
     if (orgStr) {
       let org = JSON.parse(orgStr);
       setFormData({ ...formData, name: org.name });
-      console.log(org.name);
     }
   }, []);
   const [formData, setFormData] = useState<any>({

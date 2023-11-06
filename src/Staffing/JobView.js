@@ -64,7 +64,6 @@ const JobView = () => {
     { title: "Interviewed", onClick: () => setActiveStep(2) },
     { title: "Selections", onClick: () => setActiveStep(3) },
   ];
-  console.log("this the active step: ", activeStep);
   const HandleChangeTab = (event, newValue) => {
     setValueTab(newValue);
   };

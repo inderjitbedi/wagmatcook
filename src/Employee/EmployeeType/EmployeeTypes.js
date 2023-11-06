@@ -174,7 +174,6 @@ const EmployeeTypes = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
-    console.log("working");
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
@@ -291,7 +290,7 @@ const EmployeeTypes = () => {
       });
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
+    
     let url = API_URLS.reorderEmployeeType;
 
     httpClient({
@@ -320,7 +319,6 @@ const EmployeeTypes = () => {
     const reorderedData = Array.from(employeeTypes);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
     setEmployeeType(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };

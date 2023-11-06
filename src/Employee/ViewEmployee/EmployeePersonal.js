@@ -53,7 +53,6 @@ const EmployeePersonal = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          console.log(result, "we are getting the persnal information ");
         } else {
           //toast.warn("something went wrong ");
         }
@@ -81,7 +80,6 @@ const EmployeePersonal = () => {
       setIsAccount(true);
     }
   }, [isEdit]);
-  console.log(result);
   return (
     <>
       {isLoading ? (

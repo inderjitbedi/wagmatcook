@@ -146,7 +146,6 @@ const Employee = () => {
           const filterData = result?.employees.filter(
             (data) => data._id !== user?._id
           );
-          console.log("filtered data:", filterData);
           setEmployeeList(filterData);
         } else {
           //toast.warn("something went wrong ");
@@ -182,7 +181,6 @@ const Employee = () => {
       setUser(parsedUser);
     }
   }, []);
-  console.log("user type", userType);
   const HandleSubmitData = (data) => {
     return data;
   };

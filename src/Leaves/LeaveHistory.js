@@ -190,8 +190,6 @@ const LeaveHistory = () => {
     },
   });
   const onSubmit = (data) => {
-    console.log("form submmited", data);
-
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -263,7 +261,6 @@ const LeaveHistory = () => {
               (obj) => obj._id !== user?._id
             );
             setReportList(filteredArray);
-            console.log("ideal data :", extractedDataArray);
           } else {
             //toast.warn("something went wrong ");
           }
@@ -400,7 +397,6 @@ const LeaveHistory = () => {
   };
 
   let API_URL = process.env.REACT_APP_API_URL;
-  console.log("this is account:", isAccount, userType);
   const userstyle = {
     padding: "1.6rem 2.0rem",
     background: "#fff",
@@ -421,8 +417,10 @@ const LeaveHistory = () => {
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
+      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetLeaveAlloactionBalance();

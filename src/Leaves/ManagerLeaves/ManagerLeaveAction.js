@@ -148,7 +148,6 @@ const ManagerLeaveAction = () => {
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;
   const HandleSubmitLeave = (isApproved) => {
-    console.log("hitting submit api");
     // if (!commentError) {
     //   return;
     // }

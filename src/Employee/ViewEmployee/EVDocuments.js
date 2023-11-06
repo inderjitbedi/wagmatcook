@@ -269,10 +269,8 @@ const EVDocuments = () => {
         },
       })
         .then((data) => {
-          console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
@@ -296,7 +294,6 @@ const EVDocuments = () => {
       return;
     }
     let type = await getFileType(e.target.files[0]);
-    console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
       setFile(file);

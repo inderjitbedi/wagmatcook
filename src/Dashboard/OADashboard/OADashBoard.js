@@ -167,7 +167,7 @@ const OADashBoard = ({ screenWidth }) => {
   const openMenuNotification = Boolean(anchorElNotification);
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
-    console.log("working menu for notification");
+    // console.log("working menu for notification");
   };
   const handleCloseMenuNotification = () => {
     setAnchorElNotification(null);

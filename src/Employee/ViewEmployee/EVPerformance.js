@@ -125,7 +125,7 @@ const EVPerformance = () => {
 
   const [byError, setByError] = useState(null);
   const onSubmit = (data) => {
-    //console.log("form submmited", data);
+  
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -161,7 +161,7 @@ const EVPerformance = () => {
   //   if (!errors) {
   //     setFormData(data); // chnage the sate when you use it
   //   }
-  //   //console.log("form submmited", data);
+  //   //
   // };
   const getFileType = (file) => {
     const fileExtension = file.name.split(".").pop().toLowerCase();
@@ -637,6 +637,7 @@ const EVPerformance = () => {
                               <ReactTags
                                 name="completedBy"
                                 tags={tags}
+                                autofocus={false}
                                 suggestions={suggestions}
                                 delimiters={delimiters}
                                 handleDelete={handleDelete}

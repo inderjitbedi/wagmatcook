@@ -142,7 +142,6 @@ const EVCertificates = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      console.log(file);
 
       if (file) {
         data.file = file._id;
@@ -158,7 +157,6 @@ const EVCertificates = () => {
       }
       HandleUpdate(data);
     }
-    console.log("form submmited :", data);
   };
 
   const GetEmployeesCertificates = () => {
@@ -223,7 +221,6 @@ const EVCertificates = () => {
       });
   };
   const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -310,7 +307,6 @@ const EVCertificates = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -333,10 +329,8 @@ const EVCertificates = () => {
         },
       })
         .then((data) => {
-          console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
@@ -355,7 +349,6 @@ const EVCertificates = () => {
     setFile(null);
     setValue("file", null);
   };
-  console.log(result);
   useEffect(() => {
     GetEmployeesCertificates();
     if (location.pathname.indexOf("manager") > -1) {

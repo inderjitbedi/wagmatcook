@@ -215,7 +215,6 @@ const CertificatesInfo = () => {
       return updatedFiles;
     });
   };
-  console.log(file, "values in files array ");
   const GetEmployeesCertificates = () => {
     setIsLoading(true);
     const trimid = employeeid.trim();
@@ -249,7 +248,6 @@ const CertificatesInfo = () => {
           }
 
           const resetData = { certificates: result.certificates };
-          console.log("result of get :", result.certificates);
           if (result.certificates?.length) {
             reset(resetData);
           }

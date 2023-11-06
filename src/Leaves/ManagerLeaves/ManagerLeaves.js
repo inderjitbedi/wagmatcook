@@ -180,7 +180,6 @@ const ManagerLeaves = () => {
     },
   });
   const onSubmit = (data) => {
-    console.log("form submmited", data);
 
     function isEmptyObject(obj) {
       for (let key in obj) {
@@ -194,7 +193,6 @@ const ManagerLeaves = () => {
     if (isEmptyObject(errors)) {
       HandleSubmit(data);
     }
-    console.log("this our data :", data);
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -268,7 +266,6 @@ const ManagerLeaves = () => {
               (obj) => obj.user !== user._id
             );
             setReportList(filteredArray);
-            console.log("ideal data :", filteredArray);
           } else {
             //toast.warn("something went wrong ");
           }

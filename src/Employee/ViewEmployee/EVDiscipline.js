@@ -147,7 +147,6 @@ const EVDiscipline = () => {
       }
       HandleUpdate(data);
     }
-    console.log("form submmited", data);
   };
   const GetDisciplinary = () => {
     setIsLoading(true);
@@ -230,13 +229,11 @@ const EVDiscipline = () => {
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    // console.log(e.target.files[0]);
     // const inputString = e.target.files[0].type;
     // const parts = inputString?.split("/");
     // const type = parts[parts?.length - 1];
 
     let type = await getFileType(e.target.files[0]);
-    console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -259,10 +256,8 @@ const EVDiscipline = () => {
         },
       })
         .then((data) => {
-          console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
@@ -347,7 +342,6 @@ const EVDiscipline = () => {
     setFile(null);
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 

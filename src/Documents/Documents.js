@@ -167,7 +167,7 @@ const Documents = () => {
       } else {
         data.file = null;
       }
-      console.log("form data", data);
+      // console.log("form data", data);
 
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
@@ -415,7 +415,7 @@ const Documents = () => {
     GetDocumentTagsList();
     GetDocuments();
   }, [page, searchValue]);
-  console.log("this is our suggestions :", suggestions);
+  // console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
     comma: 188,
     enter: 13,
@@ -644,6 +644,7 @@ const Documents = () => {
                       render={({ field: { onChange, value, ref } }) => (
                         <ReactTags
                           inputRef={ref}
+                          autofocus={false}
                           tags={value}
                           suggestions={suggestions}
                           delimiters={delimiters}

@@ -182,7 +182,7 @@ const SettingsModal = ({
   const [file, setFile] = useState(null);
   const [orgData, setOrgData] = useState([]);
   const onSubmit = (data) => {
-    //console.log("form submmited", data);
+    //
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -193,7 +193,6 @@ const SettingsModal = ({
     }
 
     if (isEmptyObject(errors)) {
-      //console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
       } else {
@@ -281,7 +280,6 @@ const SettingsModal = ({
     setOrgData(orgData);
 
   }, [orgProfile]);
-  console.log("this our file ", file);
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (

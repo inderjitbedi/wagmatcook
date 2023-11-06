@@ -156,7 +156,6 @@ const Offboarding = () => {
       HandleClose();
       setIsConfirmationModalOpen(true);
       setFormData(data);
-      console.log("modal open", isConfirmationModalOpen);
     }
   };
   const handleUpdateConfirmed = () => {
@@ -227,7 +226,6 @@ const Offboarding = () => {
       });
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -262,7 +260,6 @@ const Offboarding = () => {
         setIsLoading(false);
       });
   };
-  console.log("the selected user transfer name:", transferTo);
 
   useEffect(() => {
     GetOffboardList();

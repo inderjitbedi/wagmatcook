@@ -292,7 +292,6 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     });
   };
   const onSubmit = (data) => {
-    console.log("this is form data:", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -304,7 +303,6 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     const atLeastOnePrimary = data.positions.some(
       (position) => position.isPrimary
     );
-    console.log("is primary value:", atLeastOnePrimary);
     if (!atLeastOnePrimary) {
       data.positions.forEach((position, index) => {
         setError(`positions.${index}.isPrimary`, {
@@ -320,7 +318,6 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     if (isEmptyObject(errors)) {
       HandleSubmitJobDetails(data);
     }
-    // console.log("form submmited", data);
   };
   const [headerData, setHeaderData] = useState([]);
 
@@ -527,6 +524,7 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
                             message: "Required",
                           },
                         })}
+                        autoFocus={false}
                       />
                       <ErrorMessage
                         as={<Errors />}
