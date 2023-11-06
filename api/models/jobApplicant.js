@@ -40,6 +40,10 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    documents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'file',
+    }],
 }, {
     timestamps: true,
 });

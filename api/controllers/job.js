@@ -111,7 +111,7 @@ const jobController = {
     },
     async applicantDetail(req, res) {
         try {
-            let applicant = await JobApplicant.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
+            let applicant = await JobApplicant.findOne({ _id: req.params.id, isDeleted: false }).populate('documents');
             await applicant.save();
             res.status(201).json({ applicant, message: 'Job applicant detail fetched successfully.' });
         } catch (error) {
@@ -134,7 +134,7 @@ const jobController = {
                     { name: { $regex: req.query.searchKey, $options: 'i' } },
                 ];
             }
-            const applicants = await JobApplicant.find(filters)
+            const applicants = await JobApplicant.find(filters).populate('documents')
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ 'selectionOrder': 1 });
