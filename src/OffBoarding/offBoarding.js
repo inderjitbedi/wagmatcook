@@ -326,7 +326,9 @@ const Offboarding = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <InputLabel>
-                      Assign the responsibilities of {selectedName} to
+                      {update
+                        ? ` The responsibilities of ${selectedName} assigned to`
+                        : ` Assign the responsibilities of ${selectedName} to`}
                       {update ? " " : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <Controller

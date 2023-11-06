@@ -109,7 +109,7 @@ const style = {
   // height: "55rem",
   // overflowY: "scroll",
 };
-const Applicants = ({ jobid, Tabvalue }) => {
+const Selection = ({ jobid, Tabvalue }) => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -441,6 +441,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
             const eligibleApplicants = result.applicants.filter(
               (applicant) => applicant.isEligibile
             );
+            console.log("eligible candidates ", eligibleApplicants);
             setApplicants(eligibleApplicants);
           } else if (Tabvalue === 2) {
             const eligibleApplicants = result.applicants.filter(
@@ -448,7 +449,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
             );
             setApplicants(eligibleApplicants);
           } else if (Tabvalue === 3) {
-            // isSelected
             const eligibleApplicants = result.applicants.filter(
               (applicant) => applicant.isSelected
             );
@@ -527,7 +527,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
       <DisciplinaryDiv>
         <DisciplinaryHeading>
           {Tabvalue === 0
-            ? "Applicant List"
+            ? " Applicant List "
             : Tabvalue === 1
             ? "Meets Eligibility "
             : Tabvalue === 2
@@ -537,15 +537,13 @@ const Applicants = ({ jobid, Tabvalue }) => {
             : " - "}
         </DisciplinaryHeading>
 
-        {Tabvalue === 0 && (
-          <AddNewButton
-            onClick={() => {
-              HandleOpenAddNewAction();
-            }}
-          >
-            Add New
-          </AddNewButton>
-        )}
+        {/* <AddNewButton
+          onClick={() => {
+            HandleOpenAddNewAction();
+          }}
+        >
+          Add New
+        </AddNewButton> */}
         <Modal
           open={open}
           sx={{
@@ -908,181 +906,210 @@ const Applicants = ({ jobid, Tabvalue }) => {
         </div>
       ) : (
         <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell
-                    sx={CellHeadStyles}
-                    align="left"
-                    style={{ width: "1rem" }}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      background: "#FBFBFB",
+                    }}
                   >
-                    Sr.&nbsp;No.
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
-                    align="left"
-                  >
-                    Name
-                  </TableCell>
-                  {/* <TableCell
+                    <TableCell
+                      sx={CellHeadStyles}
+                      align="left"
+                      style={{ width: "1rem" }}
+                    >
+                      {/* Sr.&nbsp;No. */}
+                      Order
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "12rem" }}
+                      align="left"
+                    >
+                      Name
+                    </TableCell>
+                    {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "6rem" }}
                     align="left"
                   >
                     Email
                   </TableCell> */}
-                  {/* <TableCell
+                    {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
                     Phone
                   </TableCell> */}
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Applied&nbsp;on
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Interview&nbsp;Date
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
-                    align="left"
-                  >
-                    Meets&nbsp;Eligibility
-                  </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Applied&nbsp;on
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Interview&nbsp;Date
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "9rem" }}
+                      align="left"
+                    >
+                      Meets&nbsp;Eligibility
+                    </TableCell>
 
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "10rem" }}
-                    align="left"
-                  >
-                    Interviewed
-                  </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
-                    align="left"
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {!applicants?.length && (
-                  <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
-                      No job posting found
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "10rem" }}
+                      align="left"
+                    >
+                      Interviewed
+                    </TableCell>
+                    <TableCell
+                      sx={CellHeadStyles}
+                      style={{ minWidth: "12rem" }}
+                      align="left"
+                    >
+                      Action
                     </TableCell>
                   </TableRow>
-                )}
-                {applicants?.map((data, index) => (
-                  <TableRow
-                    sx={{
-                      "&:last-child td, &:last-child th": {
-                        border: 0,
-                      },
-                      background: "#fff",
-                    }}
-                    key={data._id}
-                  >
-                    <TableCell sx={CellStyle2} align="left">
-                      <MenuIconDiv>
-                        {/* <MenuIcon
-                          src="/images/icons/Menu Dots.svg "
-                          style={{ cursor: "grab" }}
-                        /> */}
-                        {index + 1}
-                      </MenuIconDiv>
-                    </TableCell>
-                    <TableCell sx={CellStyle} align="left">
-                      {data.name || " - "}
-                    </TableCell>
-                    {/* <TableCell sx={CellStyle2} align="left">
+                </TableHead>
+                <Droppable droppableId="table">
+                  {(provided, snapshot) => (
+                    <TableBody
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                      {!applicants?.length && (
+                        <TableRow sx={{ height: "20rem" }}>
+                          <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                            No job posting found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      {applicants?.map((data, index) => (
+                        <Draggable
+                          key={data._id}
+                          draggableId={data._id}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <TableRow
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                snapshot.isDragging,
+                                provided.draggableProps.style
+                              )}
+                              sx={{
+                                "&:last-child td, &:last-child th": {
+                                  border: 0,
+                                },
+                                background: "#fff",
+                              }}
+                              key={data._id}
+                            >
+                              <TableCell sx={CellStyle2} align="left">
+                                <MenuIconDiv>
+                                  <MenuIcon
+                                    {...provided.dragHandleProps}
+                                    src="/images/icons/Menu Dots.svg "
+                                    style={{ cursor: "grab" }}
+                                  />
+                                  {data.selectionOrder}
+                                </MenuIconDiv>
+                              </TableCell>
+                              <TableCell sx={CellStyle} align="left">
+                                {data.name || " - "}
+                              </TableCell>
+                              {/* <TableCell sx={CellStyle2} align="left">
                       {data.duration}
                     </TableCell> */}
-                    {/* <TableCell sx={CellStyle} align="left">
+                              {/* <TableCell sx={CellStyle} align="left">
                       {data.phone}
                     </TableCell> */}
-                    <TableCell sx={CellStyle2} align="left">
-                      {data?.appliedOn
-                        ? moment(data.appliedOn).format("D MMM, YYYY")
-                        : " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data?.interviewDate
-                        ? moment(data.interviewDate).format("D MMM, YYYY")
-                        : " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data?.isEligibile ? "Yes" : "No"}
-                    </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data?.appliedOn
+                                  ? moment(data.appliedOn).format("D MMM, YYYY")
+                                  : " - "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data?.interviewDate
+                                  ? moment(data.interviewDate).format(
+                                      "D MMM, YYYY"
+                                    )
+                                  : " - "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data?.isEligibile ? "Yes" : "No"}
+                              </TableCell>
 
-                    <TableCell sx={CellStyle2} align="left">
-                      {data.interviewed
-                        ? data.interviewed === interviewed.NO
-                          ? "No"
-                          : data.interviewed === interviewed.YES
-                          ? "Yes"
-                          : data.interviewed === interviewed.DID_NOT_ATTEND
-                          ? "Did not attend"
-                          : " - "
-                        : " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {" "}
-                      <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
-                        {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleOpenDelete();
-                              setId(data._id);
-                            }}
-                            src="/images/icons/Trash-2.svg"
-                          />
-                        )}
-                        <ActionIcons
-                          onClick={() => {
-                            // HandleOpenDelete();
-                            // setId(data._id);
-                          }}
-                          src="/images/icons/Download.svg"
-                        />
-                      </ActionIconDiv>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                              <TableCell sx={CellStyle2} align="left">
+                                {data.interviewed
+                                  ? data.interviewed === interviewed.NO
+                                    ? "No"
+                                    : data.interviewed === interviewed.YES
+                                    ? "Yes"
+                                    : data.interviewed ===
+                                      interviewed.DID_NOT_ATTEND
+                                    ? "Did not attend"
+                                    : " - "
+                                  : " - "}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
+                                {" "}
+                                <ActionIconDiv>
+                                  {userType === ROLES.EMPLOYEE ? (
+                                    " "
+                                  ) : (
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleUpdateAction(data);
+                                      }}
+                                      src="/images/icons/Pendown.svg"
+                                    />
+                                  )}
+                                  {userType === ROLES.EMPLOYEE ||
+                                  userType === ROLES.MANAGER ? (
+                                    " "
+                                  ) : (
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleOpenDelete();
+                                        setId(data._id);
+                                      }}
+                                      src="/images/icons/Trash-2.svg"
+                                    />
+                                  )}
+                                  <ActionIcons
+                                    onClick={() => {
+                                      // HandleOpenDelete();
+                                      // setId(data._id);
+                                    }}
+                                    src="/images/icons/Download.svg"
+                                  />
+                                </ActionIconDiv>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </Draggable>
+                      ))}
+                    </TableBody>
+                  )}
+                </Droppable>
+              </Table>
+            </TableContainer>
+          </DragDropContext>
 
           {result?.totalPages > 1 && (
             <PaginationDiv>
@@ -1108,4 +1135,4 @@ const Applicants = ({ jobid, Tabvalue }) => {
   );
 };
 
-export default Applicants;
+export default Selection;

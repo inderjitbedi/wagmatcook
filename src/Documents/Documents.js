@@ -198,7 +198,6 @@ const Documents = () => {
         text: data?.name,
       })),
       file: data?.versions[data?.versions?.length - 1]?.file?._id,
-      
     });
     // setValue("departments;",data.departments)
     setFile(data?.versions[data?.versions?.length - 1]?.file);
@@ -915,7 +914,7 @@ const Documents = () => {
                       <MenuIconDiv>{index + 1}</MenuIconDiv>
                     </TableCell> */}
                     <TableCell
-                      sx={{...CellStyle,cursor:"pointer"}}
+                      sx={{ ...CellStyle, cursor: "pointer" }}
                       align="left"
                       onClick={() => {
                         if (userType === ROLES.HR) {
@@ -972,17 +971,6 @@ const Documents = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
                         <ActionIcons
                           onClick={() => {
                             if (userType === ROLES.HR) {
@@ -1007,6 +995,18 @@ const Documents = () => {
                         ) : (
                           <ActionIcons
                             onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
+
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
                               HandleOpenDelete();
                               setId(data._id);
                             }}
@@ -1017,12 +1017,9 @@ const Documents = () => {
                           to={API_URL + data?.versions[0]?.file?.path}
                           target="_blank"
                           download
-                          style={{ textDecoration: "none" ,marginTop:".6rem"}}
+                          style={{ textDecoration: "none", marginTop: ".6rem" }}
                         >
-                          <ActionIcons
-                          
-                            src="/images/icons/Download.svg"
-                          />
+                          <ActionIcons src="/images/icons/Download.svg" />
                         </Link>
                       </ActionIconDiv>
                     </TableCell>

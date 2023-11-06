@@ -750,14 +750,14 @@ const JobPosting = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
-                        <AiOutlinePrinter
+                        {/* <AiOutlinePrinter
                           style={{
                             width: "2rem",
                             height: "2rem",
                             cursor: "pointer",
                             color: "#279AF1",
                           }}
-                        />
+                        /> */}
                         {userType === ROLES.EMPLOYEE ||
                         userType === ROLES.MANAGER ? (
                           " "
