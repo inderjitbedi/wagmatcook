@@ -17,7 +17,7 @@ const schema = new mongoose.Schema({
     },
     interviewDate: {
         type: Date,
-        required: true,
+        default: null,
     },
     isEligibile: {
         type: Boolean,
@@ -30,6 +30,7 @@ const schema = new mongoose.Schema({
     },
     selectionOrder: {
         type: Number,
+        default: 0,
     },
     isSelected: {
         type: Boolean,
