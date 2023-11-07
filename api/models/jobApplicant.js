@@ -26,7 +26,6 @@ const schema = new mongoose.Schema({
     interviewed: {
         type: String,
         default: null,
-        enum: Object.values(interviewed),
     },
     selectionOrder: {
         type: Number,
