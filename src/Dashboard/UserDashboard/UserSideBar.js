@@ -256,7 +256,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/user-management/events"
           onMouseEnter={() => handleMouseEnter("events")}
@@ -314,7 +314,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               Events
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           style={{ textDecoration: "none" }}
           to={`/user-management/account/personal-info/${userData?._id}`}

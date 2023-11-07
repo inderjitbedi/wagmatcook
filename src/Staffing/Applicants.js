@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Table from "@mui/material/Table";
+import { DevTool } from "@hookform/devtools";
+
 import Modal from "@mui/material/Modal";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -111,6 +113,7 @@ const style = {
   overflowY: "scroll",
 };
 const Applicants = ({ jobid, Tabvalue }) => {
+  const anchorRef = useRef(null);
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -149,9 +152,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
     formState: { errors },
   } = useForm({
     mode: "all",
-    defaultValues: {
-      file: [],
-    },
   });
   const [open, setOpen] = useState(false);
   const HandleOpen = () => setOpen(true);
@@ -165,6 +165,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setSearchValue(data);
   };
   const onSubmit = (data) => {
+    console.log("on submit data:", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -229,7 +230,11 @@ const Applicants = ({ jobid, Tabvalue }) => {
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
     HandleOpen();
-    reset({});
+    reset({
+      isEligibile: false,
+      interviewDate: "",
+      interviewed: "",
+    });
     clearErrors();
     setIsShow(false);
     setDetailsLength(500);
@@ -300,7 +305,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         });
     }
   };
-  console.log("this is array of files :", uploadedFiles);
+  // console.log("this is array of files :", uploadedFiles);
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
@@ -316,6 +321,21 @@ const Applicants = ({ jobid, Tabvalue }) => {
     // e.preventDefault();
     setIsLoading(true);
     let url = API_URLS.createApplicants.replace(":jobid", jobid);
+    if (data.selectionOrder) {
+      // const currentIndex = selectedApplicants.findIndex(
+      //   (applicant) => applicant._id === data._id
+      // );
+      const Target = data.selectionOrder - 1;
+      // if (currentIndex !== -1) {
+      // selectedApplicants.splice(currentIndex, 1);
+      selectedApplicants.splice(Target, 0, data);
+      // }
+      const ids = selectedApplicants.map((applicant) => applicant._id);
+      HandleReorder(ids);
+    } else {
+      data.selectionOrder = selectedApplicants.length + 1;
+    }
+
     setIsLoading(true);
     let dataCopy = data;
     httpClient({
@@ -394,6 +414,16 @@ const Applicants = ({ jobid, Tabvalue }) => {
     })
       .then(({ result, error }) => {
         if (result) {
+          const currentIndex = selectedApplicants.findIndex(
+            (applicant) => applicant._id === result.applicant._id
+          );
+          const Target = data.selectionOrder - 1;
+          if (currentIndex !== -1) {
+            selectedApplicants.splice(currentIndex, 1);
+            selectedApplicants.splice(Target, 0, result.applicant);
+          }
+          const ids = selectedApplicants.map((applicant) => applicant._id);
+          HandleReorder(ids);
           setId("");
           GetApplicants();
           setUpdate(false);
@@ -471,7 +501,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetApplicants();
+          // GetApplicants();
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -515,6 +545,21 @@ const Applicants = ({ jobid, Tabvalue }) => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, [Tabvalue]);
+
+  const handleDownload = (documents) => {
+    let API_URL = process.env.REACT_APP_API_URL;
+    // Create an anchor element
+    documents.forEach((document) => {
+      const fileUrl = API_URL + document?.path;
+      console.log(fileUrl,document);
+      anchorRef.current.href = fileUrl;
+      anchorRef.current.target = "_blank";
+      anchorRef.current.download = document.originalName;
+
+      anchorRef.current.click();
+    });
+  };
+
   return (
     <>
       <DisciplinaryDiv>
@@ -607,65 +652,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
                       />
                       {errors.name && <Errors>{errors.name?.message}</Errors>}
                     </FlexColumnForm>
-
-                    {/* <InputLabel>
-                      Email <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      {...register("email", {
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Please enter a valid email",
-                        },
-                      })}
-                    />
-                    {errors.email && <Errors> {errors.email?.message} </Errors>} */}
-                    {/* <InputLabel>
-                      Phone No.<InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Controller
-                      name="phone"
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <InputMask
-                          {...field}
-                          style={{ ...inputStyles }}
-                          mask="(999) 999-9999"
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const numericPhoneNumber = value.replace(/\D/g, "");
-                            const numericValue = parseInt(
-                              numericPhoneNumber,
-                              10
-                            );
-                            const Length = numericValue.toString().length;
-                            if (Length !== 10) {
-                              setError("phone", {
-                                type: "custom",
-                                message: "Phone number must be 10 digits long",
-                              });
-                            } else clearErrors("phone");
-                            setValue("phone", numericValue);
-                          }}
-                          id="phone"
-                          type="text"
-                          name="emergencyContactNumber"
-                        />
-                      )}
-                    />
-                    {<Errors> {errors.phone?.message} </Errors>} */}
-
                     <FlexContaierForm style={{ alignItems: "flex-start" }}>
                       <FlexColumnForm>
                         <InputLabel>
@@ -698,7 +684,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
                             },
                           })}
                         />
-                        {<Errors>{errors.appliedOn?.message}</Errors>}
+                        {errors.appliedOn && (
+                          <Errors>{errors.appliedOn?.message}</Errors>
+                        )}
                       </FlexColumnForm>
                     </FlexContaierForm>
                     <FlexColumnForm
@@ -707,15 +695,14 @@ const Applicants = ({ jobid, Tabvalue }) => {
                       <AlignFlex>
                         <input
                           type="checkbox"
+                          defaultChecked={false}
                           {...register(`isEligibile`, {
                             onChange: (e) => {
-                              const Value = e.target.checked;
+                              let Value = e.target.checked;
                               if (Value) {
                                 setIsVisible(true);
                               } else {
                                 setIsVisible(false);
-                                setValue("interviewed", null);
-                                setValue("interviewDate", null);
                               }
                             },
                           })}
@@ -733,7 +720,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                       </AlignFlex>
                     </FlexColumnForm>
 
-                    {isVisible && (
+                    {isVisible ? (
                       <>
                         {" "}
                         <FlexColumnForm>
@@ -762,7 +749,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               },
                             })}
                           />
-                          {<Errors>{errors.interviewDate?.message}</Errors>}
+                          {errors.interviewDate && (
+                            <Errors>{errors.interviewDate?.message}</Errors>
+                          )}
                         </FlexColumnForm>
                         <FlexColumnForm>
                           <InputLabel>Interviewed</InputLabel>
@@ -775,7 +764,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               //   message: "Required",
                               // },
                               onChange: (e) => {
-                                const interviewValue = e.target.value;
+                                let interviewValue = e.target.value;
                                 if (interviewValue === interviewed.YES) {
                                   setIsShow(true);
                                 } else {
@@ -795,7 +784,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               </Select>
                             )}
                           />
-                          {<Errors> {errors.interviewed?.message}</Errors>}
+                          {errors.interviewed && (
+                            <Errors> {errors.interviewed?.message}</Errors>
+                          )}
                         </FlexColumnForm>
                         <FlexContaierForm style={{ marginBottom: "1rem" }}>
                           {isShow ? (
@@ -805,7 +796,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                   type="checkbox"
                                   {...register(`isSelected`, {
                                     onChange: (e) => {
-                                      const Value = e.target.checked;
+                                      let Value = e.target.checked;
                                       if (Value) {
                                         setIsSelect(true);
                                       } else {
@@ -868,6 +859,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
                           </FlexColumnForm>
                         )}
                       </>
+                    ) : (
+                      " "
                     )}
 
                     <input
@@ -936,7 +929,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     {!update ? (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Submit
@@ -944,7 +937,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     ) : (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Update
@@ -1063,7 +1056,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                 {!applicants?.length && (
                   <TableRow sx={{ height: "20rem" }}>
                     <TableCell align="center" sx={CellStyle2} colSpan={8}>
-                      No job  applicants found
+                      No job applicants found
                     </TableCell>
                   </TableRow>
                 )}
@@ -1148,13 +1141,15 @@ const Applicants = ({ jobid, Tabvalue }) => {
                             src="/images/icons/Trash-2.svg"
                           />
                         )}
-                        <ActionIcons
-                          onClick={() => {
-                            // HandleOpenDelete();
-                            // setId(data._id);
-                          }}
-                          src="/images/icons/Download.svg"
-                        />
+                        <>
+                          <ActionIcons
+                            onClick={() => {
+                              handleDownload(data.documents);
+                            }}
+                            src="/images/icons/Download.svg"
+                          />
+                          <a ref={anchorRef} style={{ display: 'none' }}></a> 
+                        </>
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>
@@ -1183,6 +1178,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
+      <DevTool control={control} />
     </>
   );
 };

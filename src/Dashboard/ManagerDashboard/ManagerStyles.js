@@ -16,12 +16,19 @@ export const CardContainer = styled.div`
   gap: 1.3rem;
   width: 100%;
   align-items: flex-start;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 export const FlexColContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.3rem;
   flex: 1 1 37.2rem;
+  @media only screen and (max-width: 600px) {
+   flex: 1;
+   width: 100%;
+  }
 `;
 export const CardBody = styled.div`
   padding: 2.4rem;
@@ -91,7 +98,7 @@ export const FlexContainer = styled.div`
 export const FlexColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: .8rem;
+  gap: 0.8rem;
 `;
 export const PendingStyle = styled.p`
   border-radius: 1rem;

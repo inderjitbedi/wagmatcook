@@ -10,6 +10,14 @@ export const SidebarTitle = styled.p`
   padding: 0rem 3.2rem;
 
 `;
+export const SidebarArrow = styled.img``;
+export const FlexContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: -3rem;
+`;
 export const SearchBarWrapper = styled.div`
   position: absolute;
   border-radius: 50px;
@@ -131,7 +139,8 @@ export const SideBarListTitle = styled.p`
   color: #5c5c5c;
   font-size: 1.4rem;
   font-weight: 600;
-  line-height: 0rem;
+  line-height: 1.8rem;
+  margin: 0;
   cursor: pointer;
 `;
 
