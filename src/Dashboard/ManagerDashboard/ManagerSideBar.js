@@ -114,7 +114,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-    } else if (location.pathname.indexOf("organization") > -1) {
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
     }
   }, []);

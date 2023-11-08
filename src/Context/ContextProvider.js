@@ -20,6 +20,9 @@ export const ContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
+      if (user.role === "SUPER_ADMIN") {
+        return;
+      }
       GetHeadersData(user._id);
       GetNotificationCount();
     }

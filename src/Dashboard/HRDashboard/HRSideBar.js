@@ -377,44 +377,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
-        <Link
-          style={{ textDecoration: "none" }}
-          to={`/hr-management/account/personal-info/${userData?._id}`}
-          onMouseEnter={() => handleMouseEnter("account")}
-          onMouseLeave={() => handleMouseLeave("account")}
-        >
-          <SideBarListContainer style={{ zIndex: "1" }}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="18"
-              viewBox="0 0 19 18"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M14.9141 15C14.9141 15.414 14.5632 15.75 14.1291 15.75C13.695 15.75 13.3442 15.414 13.3442 15C13.3442 12.9323 11.5835 11.25 9.41943 11.25C7.25533 11.25 5.4947 12.9323 5.4947 15C5.4947 15.414 5.14383 15.75 4.70975 15.75C4.27568 15.75 3.9248 15.414 3.9248 15C3.9248 12.105 6.39032 9.75 9.41943 9.75C12.4485 9.75 14.9141 12.105 14.9141 15ZM9.41943 3.75C10.2852 3.75 10.9893 4.42275 10.9893 5.25C10.9893 6.07725 10.2852 6.75 9.41943 6.75C8.55363 6.75 7.84954 6.07725 7.84954 5.25C7.84954 4.42275 8.55363 3.75 9.41943 3.75ZM9.41943 8.25C11.151 8.25 12.5592 6.9045 12.5592 5.25C12.5592 3.5955 11.151 2.25 9.41943 2.25C7.68784 2.25 6.27964 3.5955 6.27964 5.25C6.27964 6.9045 7.68784 8.25 9.41943 8.25Z"
-                fill={
-                  location.pathname.indexOf("account") > -1 ||
-                  isHovering.account
-                    ? "#279AF1"
-                    : "#5C5C5C"
-                }
-              />
-            </svg>
-            <SideBarListTitle
-              style={
-                location.pathname.indexOf("account") > -1 || isHovering.account
-                  ? style
-                  : { color: "#5C5C5C" }
-              }
-            >
-              {" "}
-              My Account
-            </SideBarListTitle>
-          </SideBarListContainer>
-        </Link>
+
         <Link
           style={{ textDecoration: "none" }}
           to="/hr-management/documents"
@@ -594,6 +557,45 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+
+        <Link
+          style={{ textDecoration: "none" }}
+          to={`/hr-management/account/personal-info/${userData?._id}`}
+          onMouseEnter={() => handleMouseEnter("account")}
+          onMouseLeave={() => handleMouseLeave("account")}
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M14.9141 15C14.9141 15.414 14.5632 15.75 14.1291 15.75C13.695 15.75 13.3442 15.414 13.3442 15C13.3442 12.9323 11.5835 11.25 9.41943 11.25C7.25533 11.25 5.4947 12.9323 5.4947 15C5.4947 15.414 5.14383 15.75 4.70975 15.75C4.27568 15.75 3.9248 15.414 3.9248 15C3.9248 12.105 6.39032 9.75 9.41943 9.75C12.4485 9.75 14.9141 12.105 14.9141 15ZM9.41943 3.75C10.2852 3.75 10.9893 4.42275 10.9893 5.25C10.9893 6.07725 10.2852 6.75 9.41943 6.75C8.55363 6.75 7.84954 6.07725 7.84954 5.25C7.84954 4.42275 8.55363 3.75 9.41943 3.75ZM9.41943 8.25C11.151 8.25 12.5592 6.9045 12.5592 5.25C12.5592 3.5955 11.151 2.25 9.41943 2.25C7.68784 2.25 6.27964 3.5955 6.27964 5.25C6.27964 6.9045 7.68784 8.25 9.41943 8.25Z"
+                fill={
+                  location.pathname.indexOf("account") > -1 ||
+                  isHovering.account
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+              />
+            </svg>
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("account") > -1 || isHovering.account
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              My Account
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
         {/* <Link style={{ textDecoration: "none" }} to="/hr-management/helpdesk">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
@@ -647,43 +649,43 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>  */}
+        {screenWidth < 1200 && (
+          <SideBarListContainer
+            style={{ zIndex: "1", marginTop: "-1rem" }}
+            onClick={HandleLogout}
+            onMouseEnter={() => handleMouseEnter("logout")}
+            onMouseLeave={() => handleMouseLeave("logout")}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 31 32"
+              fill="none"
+            >
+              <path
+                d="M15.5 26.5208C9.79306 26.5208 5.16667 21.8944 5.16667 16.1875C5.16667 10.4805 9.79306 5.85413 15.5 5.85413"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12.9173 16.1875H25.834M25.834 16.1875L21.959 12.3125M25.834 16.1875L21.959 20.0625"
+                stroke="#5C5C5C"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <SideBarListTitle
+              style={isHovering.logout ? style : { color: "#5C5C5C" }}
+            >
+              {" "}
+              Logout
+            </SideBarListTitle>
+          </SideBarListContainer>
+        )}
       </SideBarList>
-      {screenWidth < 1200 && (
-        <SideBarListContainer
-          style={{ zIndex: "1", marginTop: "-1rem" }}
-          onClick={HandleLogout}
-          onMouseEnter={() => handleMouseEnter("logout")}
-          onMouseLeave={() => handleMouseLeave("logout")}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="19"
-            height="18"
-            viewBox="0 0 31 32"
-            fill="none"
-          >
-            <path
-              d="M15.5 26.5208C9.79306 26.5208 5.16667 21.8944 5.16667 16.1875C5.16667 10.4805 9.79306 5.85413 15.5 5.85413"
-              stroke="#5C5C5C"
-              stroke-width="2.5"
-              stroke-linecap="round"
-            />
-            <path
-              d="M12.9173 16.1875H25.834M25.834 16.1875L21.959 12.3125M25.834 16.1875L21.959 20.0625"
-              stroke="#5C5C5C"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <SideBarListTitle
-            style={isHovering.logout ? style : { color: "#5C5C5C" }}
-          >
-            {" "}
-            Logout
-          </SideBarListTitle>
-        </SideBarListContainer>
-      )}
     </div>
   );
 };

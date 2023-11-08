@@ -150,6 +150,8 @@ const API_URLS = {
   listApplicants: `/job/:jobid/applicant/list`,
   detailsApplicants: `/job/:jobid/applicant/detail/:id`,
   reorderApplicants: `/job/:jobid/applicant/reorder`,
+  // manager Dashboard apis
+  getDashboardData : `/dashboard/data`,
 };
 
 export default API_URLS;

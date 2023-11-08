@@ -131,7 +131,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
 
     Navigate("/");
   };
-  console.log(orgData, "this is orgdata");
+  // console.log(orgData, "this is orgdata");
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (

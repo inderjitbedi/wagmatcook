@@ -387,14 +387,17 @@ const CommenDashHeader = ({ onSearch, text }) => {
       let parsedUser = JSON.parse(org);
       setOrgData(parsedUser);
     }
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-    } else if (location.pathname.indexOf("organization") > -1) {
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
     }
   }, []);
 
@@ -458,22 +461,26 @@ const CommenDashHeader = ({ onSearch, text }) => {
               <SearchIcon src="/images/icons/searchIcon.svg" />
             </SearchBox>
           )}
-          <Badge
-            badgeContent={globalNotificationCount?.count}
-            color="primary"
-            size="small"
-          >
-            <div
-              style={{ cursor: "pointer", paddingTop: ".4rem" }}
-              onClick={(event) => {
-                handleClickMenuNotification(event);
-                GetNotificationList();
-              }}
-            >
-              <DashNotification src="/images/icons/Notifications.svg" />
-            </div>
-          </Badge>
 
+          {userType === ROLES.SUPER_ADMIN ? (
+            " "
+          ) : (
+            <Badge
+              badgeContent={globalNotificationCount?.count}
+              color="primary"
+              size="small"
+            >
+              <div
+                style={{ cursor: "pointer", paddingTop: ".4rem" }}
+                onClick={(event) => {
+                  handleClickMenuNotification(event);
+                  GetNotificationList();
+                }}
+              >
+                <DashNotification src="/images/icons/Notifications.svg" />
+              </div>
+            </Badge>
+          )}
           {screenWidth < 1200 ? (
             ""
           ) : (

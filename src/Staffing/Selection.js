@@ -376,7 +376,7 @@ const Selection = ({ jobid, Tabvalue }) => {
   };
   const HandleUpdate = (data) => {
     let dataCopy = data;
-  
+
     let url = API_URLS.updateApplicants
       .replace(":jobid", jobid)
       .replace(":id", Id);
@@ -391,12 +391,12 @@ const Selection = ({ jobid, Tabvalue }) => {
       .then(({ result, error }) => {
         if (result) {
           const currentIndex = selectedApplicants.findIndex(
-            (applicant) => applicant._id === data._id
+            (applicant) => applicant._id === result.applicant._id
           );
           const Target = data.selectionOrder - 1;
           if (currentIndex !== -1) {
             selectedApplicants.splice(currentIndex, 1);
-            selectedApplicants.splice(Target, 0,data);
+            selectedApplicants.splice(Target, 0, result.applicant);
           }
           const ids = selectedApplicants.map((applicant) => applicant._id);
           HandleReorder(ids);
@@ -710,6 +710,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                       <AlignFlex>
                         <input
                           type="checkbox"
+                          defaultChecked={false}
                           {...register(`isEligibile`, {
                             onChange: (e) => {
                               const Value = e.target.checked;
@@ -717,8 +718,8 @@ const Selection = ({ jobid, Tabvalue }) => {
                                 setIsVisible(true);
                               } else {
                                 setIsVisible(false);
-                                setValue("interviewed", null);
-                                setValue("interviewDate", null);
+                                // setValue("interviewed", null);
+                                // setValue("interviewDate", null);
                               }
                             },
                           })}
@@ -941,7 +942,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                     {!update ? (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Submit
@@ -949,7 +950,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                     ) : (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Update
