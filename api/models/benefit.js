@@ -9,7 +9,8 @@ const benefitSchema = new mongoose.Schema({
     description: {
         type: String,
         default: null,
-    }, order: {
+    },
+    order: {
         type: Number,
         default: null,
     },

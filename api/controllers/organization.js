@@ -9,6 +9,12 @@ const UserOrganization = require("../models/userOrganization");
 const crypto = require("crypto");
 const fileController = require("./file");
 const EmployeePersonalInfo = require("../models/employeePersonalInfo");
+const Benefit = require("../models/benefit");
+const Department = require("../models/department");
+const EmployeeType = require("../models/employeeType");
+const LeaveType = require("../models/leaveType");
+const Disciplinary = require("../models/disciplinary");
+const DocumentTags = require("../models/documentTags");
 
 // Function to create a directory if it doesn't exist
 const createDirectoryIfNotExists = (directory) => {
@@ -172,6 +178,95 @@ const orgController = {
       await org.save();
 
       const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
+
+
+      const benefits = await Benefit.find({ isDefault: true, isDeleted: false });
+      let order = 1;
+      for (const benefit of benefits) {
+        const newBenefit = new Benefit({
+          name: benefit.name,
+          organization: org._id,
+          description: benefit.description,
+          isDefault: false,
+          createdBy: req.user._id,
+          order
+        });
+        await newBenefit.save();
+        order++;
+      }
+
+      const departments = await Department.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const department of departments) {
+        const newDepartment = new Department({
+          name: department.name,
+          organization: org._id,
+          description: department.description,
+          isDefault: false,
+          createdBy: req.user._id,
+          order
+        });
+        await newDepartment.save();
+        order++;
+      }
+
+
+      const employeeTypes = await EmployeeType.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const employeeType of employeeTypes) {
+        const newEmployeeType = new EmployeeType({
+          name: employeeType.name,
+          organization: org._id,
+          createdBy: req.user._id,
+          order
+        });
+        await newEmployeeType.save();
+        order++;
+      }
+
+      const leaveTypes = await LeaveType.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const leaveType of leaveTypes) {
+        const newLeaveType = new LeaveType({
+          name: leaveType.name,
+          organization: org._id,
+          description: leaveType.description,
+          createdBy: req.user._id,
+          order
+        });
+        await newLeaveType.save();
+        order++;
+      }
+
+
+      const disciplinaries = await Disciplinary.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const disciplinary of disciplinaries) {
+        const newDisciplinary = new Disciplinary({
+          name: disciplinary.name,
+          organization: org._id,
+          description: disciplinary.description,
+          createdBy: req.user._id,
+          order
+        });
+        await newDisciplinary.save();
+        order++;
+      }
+
+      const documentTags = await DocumentTags.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const documentTag of documentTags) {
+        const newDocumentTag = new DocumentTags({
+          name: documentTag.name,
+          organization: org._id,
+          createdBy: req.user._id,
+          order
+        });
+        await newDocumentTag.save();
+        order++;
+      }
+
+
       const token = crypto.randomBytes(20).toString("hex");
       user.invitationToken = token;
       user.invitationTokenExpiry = Date.now() + 3600000 * 24;
