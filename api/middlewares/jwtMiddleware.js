@@ -48,7 +48,7 @@ function verifyToken(roles = []) {
 
       const relation = await UserOrganization.findOne({ user: user._id }).populate('organization');
       req.user = user;
-      req.organization = relation.organization;
+      req.organization = relation ? relation.organization : null;
       next();
     });
   };
