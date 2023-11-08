@@ -13,7 +13,7 @@ const API_URLS = {
   uploadDocuments: `/employee/file/upload/:type`,
   uploadImage: `/organization/file/upload/image`,
   // Oa Benefits routes
-  getOaBenefits: `/benefit/list?page=Page&limit=10&searchKey=searchValue`,
+  getOaBenefits: `/benefit/list/defaults?page=Page&limit=10&searchKey=searchValue`,
   createBenefits: `/benefit/create`,
   deleteBenefits: `/benefit/delete/:id`,
   updateBenefits: `/benefit/update/:id`,
