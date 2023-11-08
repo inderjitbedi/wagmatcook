@@ -17,7 +17,7 @@ const schema = new mongoose.Schema({
     },
     interviewDate: {
         type: Date,
-        required: true,
+        default: null,
     },
     isEligibile: {
         type: Boolean,
@@ -26,11 +26,10 @@ const schema = new mongoose.Schema({
     interviewed: {
         type: String,
         default: null,
-        enum: Object.values(interviewed),
     },
     selectionOrder: {
         type: Number,
-        required: true,
+        default: 0,
     },
     isSelected: {
         type: Boolean,
@@ -42,7 +41,7 @@ const schema = new mongoose.Schema({
     },
     documents: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'file',
+        ref: 'File',
     }],
 }, {
     timestamps: true,
