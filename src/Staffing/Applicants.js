@@ -400,7 +400,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
   };
   const HandleUpdate = (data) => {
     let dataCopy = data;
-
+    if (data.selectionOrder) {
+      data.selectionOrder = selectedApplicants.length;
+    }
     let url = API_URLS.updateApplicants
       .replace(":jobid", jobid)
       .replace(":id", Id);
@@ -551,7 +553,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     // Create an anchor element
     documents.forEach((document) => {
       const fileUrl = API_URL + document?.path;
-      console.log(fileUrl,document);
+      console.log(fileUrl, document);
       anchorRef.current.href = fileUrl;
       anchorRef.current.target = "_blank";
       anchorRef.current.download = document.originalName;
@@ -770,6 +772,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                 } else {
                                   setIsShow(false);
                                   setValue("isSelected", false);
+                                  setIsSelect(false);
+                                  setValue("selectionOrder", " ");
                                 }
                               },
                             }}
@@ -1148,7 +1152,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                             }}
                             src="/images/icons/Download.svg"
                           />
-                          <a ref={anchorRef} style={{ display: 'none' }}></a> 
+                          <a ref={anchorRef} style={{ display: "none" }}></a>
                         </>
                       </ActionIconDiv>
                     </TableCell>
