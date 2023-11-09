@@ -13,11 +13,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
+import ROLES from "../constants/roles";
 
 import {
   AddNewButton,
@@ -82,7 +83,8 @@ const CellStyle2 = {
 
 const Disciplinary = () => {
   const Navigate = useNavigate();
-
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
     setFormData({
@@ -178,11 +180,18 @@ const Disciplinary = () => {
       });
   };
   // get disciplinary
-  const GetDisciplinary = () => {
+  const GetDisciplinary = (role) => {
     setIsLoading(true);
-    let url = API_URLS.getDisciplinary
-      .replace("Page", page)
-      .replace("searchValue", searchValue);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSADisciplinary.replace("Page", page)
+        .replace("searchValue", searchValue);
+    } else {
+      url = API_URLS.getDisciplinary
+        .replace("Page", page)
+        .replace("searchValue", searchValue);
+    }
+
     httpClient({
       method: "get",
       url,
@@ -206,7 +215,22 @@ const Disciplinary = () => {
       });
   };
   useEffect(() => {
-    GetDisciplinary();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetDisciplinary(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetDisciplinary(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetDisciplinary(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetDisciplinary(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetDisciplinary(ROLES.SUPER_ADMIN);
+    }
   }, [searchValue, page]);
 
   //create new enter in table
@@ -244,6 +268,14 @@ const Disciplinary = () => {
         ...formData,
         order: disciplinaryData?.length + 1,
       };
+      if (userType === ROLES.SUPER_ADMIN) {
+        dataCopy = {
+          ...formData,
+          isDefault: true,
+          order: disciplinaryData?.length + 1,
+        };
+      }
+
       httpClient({
         method: "post",
         url,
@@ -252,7 +284,7 @@ const Disciplinary = () => {
         .then(({ result, error }) => {
           if (result) {
             HandleClose();
-            GetDisciplinary();
+            GetDisciplinary(userType);
             setFormData("");
             setErrors("");
             toast.success(result.message, {
@@ -276,7 +308,9 @@ const Disciplinary = () => {
   // handel updates
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
-
+     if (userType === ROLES.SUPER_ADMIN) {
+       dataCopy = { ...upDateData, isDefault: true };
+     }
     let url = API_URLS.updateDisciplinary.replace(":id", Id);
     if (!upDateData.name) {
       setErrors((prevState) => {
@@ -314,7 +348,7 @@ const Disciplinary = () => {
       })
         .then(({ result, error }) => {
           if (result) {
-            GetDisciplinary();
+            GetDisciplinary(userType);
             setId("");
             HandleCloseEdit();
             setupDateData("");
@@ -408,7 +442,7 @@ const Disciplinary = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetDisciplinary();
+          GetDisciplinary(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -642,7 +676,11 @@ const Disciplinary = () => {
                       >
                         {disciplinaryData?.length == 0 && (
                           <TableRow sx={{ height: "20rem" }}>
-                            <TableCell align="center" colSpan={5}>
+                            <TableCell
+                              align="center"
+                              sx={CellStyle2}
+                              colSpan={5}
+                            >
                               No disciplinary types found
                             </TableCell>
                           </TableRow>

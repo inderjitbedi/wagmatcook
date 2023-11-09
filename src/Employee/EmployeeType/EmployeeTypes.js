@@ -11,7 +11,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,7 +19,7 @@ import DeleteModal from "../../Modals/DeleteModal";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
-
+import ROLES from "../../constants/roles";
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -83,6 +83,8 @@ const CellStyle2 = {
 };
 const EmployeeTypes = () => {
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
@@ -103,7 +105,7 @@ const EmployeeTypes = () => {
   const [employeeTypes, setEmployeeType] = useState([]);
   const [anchorEl, setAnchorEl] = useState(false);
   const openMenu = Boolean(anchorEl);
- 
+
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
@@ -140,11 +142,19 @@ const EmployeeTypes = () => {
       HandleUpdate(data);
     }
   };
-  const GetEmployeeTypes = () => {
+  const GetEmployeeTypes = (role) => {
     setIsLoading(true);
-    let url = API_URLS.getEmployeeTypes
-      .replace("searchValue", searchValue)
-      .replace("Page", page);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSAEmployeeTypes
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    } else {
+      url = API_URLS.getEmployeeTypes
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    }
+
     httpClient({
       method: "get",
       url,
@@ -190,6 +200,9 @@ const EmployeeTypes = () => {
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     let dataCopy = { ...data, order: employeeTypes?.length + 1 };
     setIsLoading(true);
     let url = API_URLS.createEmployeeTypes;
@@ -207,7 +220,7 @@ const EmployeeTypes = () => {
           toast.success(result.message, {
             className: "toast",
           });
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -237,7 +250,7 @@ const EmployeeTypes = () => {
 
           HandleCloseDelete();
           setId("");
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");
@@ -255,6 +268,9 @@ const EmployeeTypes = () => {
       });
   };
   const HandleUpdate = (data) => {
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     let dataCopy = data;
 
     let url = API_URLS.updateEmployeeTypes.replace(":id", Id);
@@ -269,7 +285,7 @@ const EmployeeTypes = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
           setUpdate(false);
           HandleClose();
           reset();
@@ -290,7 +306,6 @@ const EmployeeTypes = () => {
       });
   };
   const HandleReorder = (reOrder) => {
-    
     let url = API_URLS.reorderEmployeeType;
 
     httpClient({
@@ -300,7 +315,7 @@ const EmployeeTypes = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -311,7 +326,22 @@ const EmployeeTypes = () => {
       });
   };
   useEffect(() => {
-    GetEmployeeTypes();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetEmployeeTypes(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetEmployeeTypes(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetEmployeeTypes(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetEmployeeTypes(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetEmployeeTypes(ROLES.SUPER_ADMIN);
+    }
   }, [searchValue, page]);
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -537,7 +567,7 @@ const EmployeeTypes = () => {
                     >
                       {!result.employeeTypes?.length && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" colSpan={3}>
+                          <TableCell align="center" colSpan={3} sx={CellStyle2}>
                             No Employee Types Found
                           </TableCell>
                         </TableRow>

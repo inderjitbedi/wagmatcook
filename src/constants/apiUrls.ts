@@ -5,7 +5,7 @@ const API_URLS = {
   verifyOtp: `/auth/verify-otp`,
   // super admin routes apis
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
-  adminOrganizationList: `/super-admin/organization-list`,
+  adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10`,
   adminInviteOrganizationAdmin: `/super-admin/invite`,
 
   orgAdminCompleteSignup: `/organization-admin/complete-signup/:token`,
@@ -13,24 +13,29 @@ const API_URLS = {
   uploadDocuments: `/employee/file/upload/:type`,
   uploadImage: `/organization/file/upload/image`,
   // Oa Benefits routes
-  getOaBenefits: `/benefit/list/defaults?page=Page&limit=10&searchKey=searchValue`,
+  getOaBenefits: `/benefit/list?page=Page&limit=10&searchKey=searchValue`,
+  getSABenefits: `/benefit/list/defaults?page=Page&limit=10&searchKey=searchValue`,
   createBenefits: `/benefit/create`,
   deleteBenefits: `/benefit/delete/:id`,
   updateBenefits: `/benefit/update/:id`,
   reorderBenefits: `/benefit/reorder`,
   //Oa Departmnets
   getDpartments: `/department/list?page=Page&limit=10&searchKey=searchValue`,
+  getSADpartments: `/department/list/defaults?page=Page&limit=10&searchKey=searchValue`,
   createDepartments: `/department/create`,
   updateDepartments: `/department/update/:id`,
   deleteDepartments: `/department/delete/:id`,
   // Oa disciplinary
   getDisciplinary: `/disciplinary/list?page=Page&limit=10&searchKey=searchValue`,
-  createDisciplinary: `/disciplinary/create/`,
+  getSADisciplinary: `/disciplinary/list/defaults?page=Page&limit=10&searchKey=searchValue`,
+  createDisciplinary: `/disciplinary/create`,
   updateDisciplinary: `/disciplinary/update/:id`,
   deleteDisciplinary: `/disciplinary/delete/:id`,
   reorderDisciplinary: `/disciplinary/reorder`,
   // Leave Type oa route
   getLeaveType: `/leave-type/list?page=Page&limit=10&searchKey=searchValue`,
+  getSALeaveType: `/leave-type/list/defaults?page=Page&limit=10&searchKey=searchValue`,
+
   createLeaveType: `/leave-type/create`,
   updateLeaveType: `/leave-type/update/:id`,
   deleteLeaveType: `/leave-type/delete/:id`,
@@ -57,6 +62,8 @@ const API_URLS = {
   submitEmployeePersonalInfo: `/employee/personal-info/:employeeid`,
   // employee types
   getEmployeeTypes: `/employee-type/list?page=Page&limit=10&searchKey=searchValue`,
+  getSAEmployeeTypes: `/employee-type/list/defaults?page=Page&limit=10&searchKey=searchValue`,
+
   deleteEmployeeTypes: `/employee-type/delete/:id`,
   createEmployeeTypes: `/employee-type/create`,
   updateEmployeeTypes: `/employee-type/update/:id`,
@@ -123,6 +130,8 @@ const API_URLS = {
   deleteTaskComments: `/task/:taskid/comment/:id/delete`,
   //documents tags api urls
   getDocumentTags: `/document-tag/list?page=Page&limit=10&searchKey=searchValue`,
+  getSADocumentTags: `/document-tag/list/defaults?page=Page&limit=10&searchKey=searchValue`,
+
   deleteDocumentTags: `/document-tag/delete/:id`,
   createDocumentTags: `/document-tag/create`,
   updateDocumentTags: `/document-tag/update/:id`,
@@ -151,7 +160,7 @@ const API_URLS = {
   detailsApplicants: `/job/:jobid/applicant/detail/:id`,
   reorderApplicants: `/job/:jobid/applicant/reorder`,
   // manager Dashboard apis
-  getDashboardData : `/dashboard/data`,
+  getDashboardData: `/dashboard/data`,
 };
 
 export default API_URLS;

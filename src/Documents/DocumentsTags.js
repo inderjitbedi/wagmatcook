@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 import Pagination from "@mui/material/Pagination";
 import httpClient from "../api/httpClient";
@@ -18,7 +18,7 @@ import API_URLS from "../constants/apiUrls";
 import DeleteModal from "../Modals/DeleteModal";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
+import ROLES from "../constants/roles";
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -81,6 +81,9 @@ const CellStyle2 = {
   lineHeight: "1.5rem",
 };
 const DocumentsTags = () => {
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [update, setUpdate] = useState(false);
   const [page, setPage] = useState(1);
@@ -148,13 +151,36 @@ const DocumentsTags = () => {
     }
   };
   useEffect(() => {
-    GetDocumentTags();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetDocumentTags(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetDocumentTags(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetDocumentTags(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetDocumentTags(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetDocumentTags(ROLES.SUPER_ADMIN);
+    }
   }, [searchValue, page]);
-  const GetDocumentTags = () => {
+  const GetDocumentTags = (role) => {
     setIsLoading(true);
-    let url = API_URLS.getDocumentTags
-      .replace("searchValue", searchValue)
-      .replace("Page", page);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSADocumentTags
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    } else {
+      url = API_URLS.getDocumentTags
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    }
+
     httpClient({
       method: "get",
       url,
@@ -178,6 +204,9 @@ const DocumentsTags = () => {
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
+     if (userType === ROLES.SUPER_ADMIN) {
+       data.isDefault = true;
+     }
     let dataCopy = { ...data, order: documentTags?.length + 1 };
     setIsLoading(true);
     let url = API_URLS.createDocumentTags;
@@ -195,7 +224,7 @@ const DocumentsTags = () => {
           toast.success(result.message, {
             className: "toast",
           });
-          GetDocumentTags();
+          GetDocumentTags(userType);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -225,7 +254,7 @@ const DocumentsTags = () => {
 
           HandleCloseDelete();
           setId("");
-          GetDocumentTags();
+          GetDocumentTags(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");
@@ -243,6 +272,9 @@ const DocumentsTags = () => {
       });
   };
   const HandleUpdate = (data) => {
+     if (userType === ROLES.SUPER_ADMIN) {
+       data.isDefault = true;
+     }
     let dataCopy = data;
 
     let url = API_URLS.updateDocumentTags.replace(":id", Id);
@@ -257,7 +289,7 @@ const DocumentsTags = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetDocumentTags();
+          GetDocumentTags(userType);
           setUpdate(false);
           HandleClose();
           reset();
@@ -288,7 +320,7 @@ const DocumentsTags = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetDocumentTags();
+          GetDocumentTags(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -298,29 +330,29 @@ const DocumentsTags = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-   const onDragEnd = (result) => {
-     if (!result.destination) return;
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
-     const reorderedData = Array.from(documentTags);
-     const [movedItem] = reorderedData.splice(result.source.index, 1);
-     reorderedData.splice(result.destination.index, 0, movedItem);
-     setDocumentTags(reorderedData);
-     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
-   };
+    const reorderedData = Array.from(documentTags);
+    const [movedItem] = reorderedData.splice(result.source.index, 1);
+    reorderedData.splice(result.destination.index, 0, movedItem);
+    setDocumentTags(reorderedData);
+    HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
+  };
 
-   const getItemStyle = (isDragging, draggableStyle) => ({
-     // some basic styles to make the items look a bit nicer
-     userSelect: "none",
-     margin: "0 1rem 0 0 ",
-     background: isDragging ? "#279AF1" : "#fff",
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    // some basic styles to make the items look a bit nicer
+    userSelect: "none",
+    margin: "0 1rem 0 0 ",
+    background: isDragging ? "#279AF1" : "#fff",
 
-     // styles we need to apply on draggables
-     ...draggableStyle,
-   });
-   const getListStyle = (isDraggingOver) => ({
-     background: isDraggingOver ? "#fff" : "#fff",
-     padding: "2px",
-   });
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
+  const getListStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "#fff" : "#fff",
+    padding: "2px",
+  });
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Document Tags" />

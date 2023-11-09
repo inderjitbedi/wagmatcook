@@ -10,6 +10,12 @@ export const SidebarTitle = styled.p`
   padding: 0rem 3.2rem;
 
 `;
+export const PaginationDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 1.6rem 0rem;
+`;
 export const SidebarArrow = styled.img``;
 export const FlexContainer = styled.div`
   display: flex;
@@ -157,9 +163,12 @@ export const DashNav = styled.div`
 
 export const DashMain = styled.div`
   width: 82%;
-  padding: 0rem 3rem 0rem 2rem;
-  box-sizing: border-box;
+  padding: 0rem 3rem 8rem 2rem;
   background: #f3f3f5;
+  height: max-content;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
 `;
 export const DashHeader = styled.div`
   display: flex;

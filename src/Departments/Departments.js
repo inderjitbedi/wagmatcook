@@ -7,12 +7,12 @@ import DeleteModal from "../Modals/DeleteModal";
 import { RotatingLines } from "react-loader-spinner";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import ReactPaginate from "react-paginate";
 import API_URLS from "../constants/apiUrls";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
-
+import ROLES from "../constants/roles";
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
@@ -55,7 +55,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "37.4rem",
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -65,7 +65,8 @@ const style = {
 
 const Departments = () => {
   const Navigate = useNavigate();
-
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
     setFormData({
@@ -195,12 +196,18 @@ const Departments = () => {
     }
     setUpDateData({ ...upDateData, [name]: value });
   };
-  const GetDepartments = () => {
+  const GetDepartments = (role) => {
     setIsLoading(true);
-
-    let url = API_URLS.getDpartments
-      .replace("Page", page)
-      .replace("searchValue", searchValue);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSADpartments
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    } else {
+      url = API_URLS.getDpartments
+        .replace("Page", page)
+        .replace("searchValue", searchValue);
+    }
 
     httpClient({
       method: "get",
@@ -224,12 +231,31 @@ const Departments = () => {
       });
   };
   useEffect(() => {
-    GetDepartments();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetDepartments(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetDepartments(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetDepartments(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetDepartments(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetDepartments(ROLES.SUPER_ADMIN);
+    }
   }, [page, searchValue]);
 
   const HandleSubmit = (e) => {
     e.preventDefault();
     let dataCopy = { ...formData };
+    if (userType === ROLES.SUPER_ADMIN) {
+      dataCopy = { ...formData, isDefault: true };
+    }
+
     let url = API_URLS.createDepartments;
 
     if (!formData.name) {
@@ -268,7 +294,7 @@ const Departments = () => {
           if (result?.department) {
             HandleClose();
             HandleOpenThanks();
-            GetDepartments();
+            GetDepartments(userType);
             setFormData("");
             setErrors("");
           } else {
@@ -287,6 +313,10 @@ const Departments = () => {
   };
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
+
+    if (userType === ROLES.SUPER_ADMIN) {
+      dataCopy = { ...upDateData, isDefault: true };
+    }
 
     let url = API_URLS.updateDepartments.replace(":id", Id);
     if (!upDateData.name) {
@@ -323,16 +353,16 @@ const Departments = () => {
       })
         .then(({ result, error }) => {
           if (result?.department) {
-            const indexToReplace = departmentData.findIndex(
-              (obj) => (obj._id = result.department._id)
-            );
-            if (indexToReplace !== -1) {
-              const UpdatedData = departmentData;
-              UpdatedData[indexToReplace] = result.department;
-              setDepartmentData(UpdatedData);
-            }
+              // const indexToReplace = departmentData.findIndex(
+              //   (obj) => (obj._id = result.department._id)
+              // );
+              // if (indexToReplace !== -1) {
+              //   const UpdatedData = departmentData;
+              //   UpdatedData[indexToReplace] = result.department;
+              //   setDepartmentData(UpdatedData);
+              // }
             HandleCloseEdit();
-            // GetDepartments();
+            GetDepartments(userType);
             setId("");
             setUpDateData("");
             setErrors("");
@@ -363,7 +393,7 @@ const Departments = () => {
       .then(({ result, error }) => {
         if (result) {
           // HandleOpenThanks();
-          GetDepartments();
+          GetDepartments(userType);
           setId("");
           HandleCloseDelete();
 
@@ -394,7 +424,6 @@ const Departments = () => {
     HandleOpenEdit();
   };
 
-  
   return (
     <div style={{ height: "100%" }}>
       <>

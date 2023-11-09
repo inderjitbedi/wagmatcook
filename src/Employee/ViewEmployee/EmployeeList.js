@@ -132,7 +132,7 @@ const Employee = () => {
   const [employeeList, setEmployeeList] = useState([]);
 
   // get employees
-  const GetEmployees = () => {
+  const GetEmployees = (user) => {
     setIsLoading(true);
 
     let url = API_URLS.getEmployeeList.replace("Page", page);
@@ -170,17 +170,14 @@ const Employee = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-
-    GetEmployees();
-  }, [page, user]);
-  useEffect(() => {
     let user = localStorage.getItem("user");
 
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
+      GetEmployees(parsedUser);
     }
-  }, []);
+  }, [page]);
   const HandleSubmitData = (data) => {
     return data;
   };
@@ -500,8 +497,8 @@ const Employee = () => {
                       {/* <Moment format="YYYY/MM/DD"> */}{" "}
                       {data.positions[0]?.startDate
                         ? moment(data.positions[0]?.startDate).format(
-                          "DD/MM/YYYY"
-                        )
+                            "DD/MM/YYYY"
+                          )
                         : " - "}
                       {/* </Moment> */}
                     </TableCell>
@@ -509,8 +506,8 @@ const Employee = () => {
                       {(data.role === ROLES.EMPLOYEE
                         ? "USER"
                         : data.role === ROLES.HR
-                          ? " HR"
-                          : data.role) || " - "}
+                        ? " HR"
+                        : data.role) || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <IconContainer>

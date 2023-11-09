@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
@@ -31,6 +32,8 @@ const EVBenefits = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const [isEdit, setIsEdit] = useState(false);
   const [isAccount, setIsAccount] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+
 
   const Navigate = useNavigate();
   const location = useLocation();
@@ -75,7 +78,7 @@ const EVBenefits = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, [isEdit]);
+  }, [refresh]);
 
   return (
     <>
@@ -100,7 +103,12 @@ const EVBenefits = () => {
       ) : (
         <>
           {isEdit ? (
-            <Benefits isEdit={isEdit} setIsEdit={setIsEdit} />
+            <Benefits
+              isEdit={isEdit}
+              setIsEdit={setIsEdit}
+              setRefresh={setRefresh}
+              refresh={refresh}
+            />
           ) : (
             <MainBodyContainer>
               <FlexSpaceBetween style={{ alignItems: "center" }}>

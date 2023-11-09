@@ -33,7 +33,7 @@ import {
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
-const Benefits = ({ isEdit, setIsEdit }) => {
+const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
@@ -100,6 +100,8 @@ const Benefits = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
+            setRefresh(refresh + 1);
+
             toast.success(result.message, {
               className: "toast",
             });
@@ -209,7 +211,9 @@ const Benefits = ({ isEdit, setIsEdit }) => {
   };
 
   useEffect(() => {
-    GetHeadersData();
+    if (!isEdit) {
+      GetHeadersData();
+    }
     GetBenefits();
 
     if (location.pathname.indexOf("manager") > -1) {

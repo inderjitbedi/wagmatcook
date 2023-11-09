@@ -216,7 +216,7 @@ export default function RegisterOrganization() {
                     <button
                       type="button"
                       aria-label="Remove button"
-                      className="mx-1 mt-2 Remove-button"
+                      className="mx-1 mt-2 remove-button"
                       onClick={RemoveFile}
                     >
                       Remove
