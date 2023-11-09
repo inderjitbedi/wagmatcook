@@ -133,6 +133,7 @@ const orgController = {
             isActive: { $first: "$isActive" },
             isDeleted: { $first: "$isDeleted" },
             primaryUser: { $first: "$users.user" },
+            createdAt: { $first: "$createdAt" }
           },
         },
         {
@@ -146,9 +147,12 @@ const orgController = {
         {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
+        {
+          $sort: { createdAt: -1 }, // Add the $sort stage to sort by createdAt in descending order
+        },
       ]).skip(startIndex)
         .limit(limit)
-        .sort({ createdAt: -1 });
+      // .sort({ createdAt: -1 });
 
       // const totalOrganizations = await Organization.countDocuments(filters);
 
@@ -423,7 +427,7 @@ const orgController = {
 async function processUsers(users) {
   for (const user of users) {
     console.log(user.email, user.receivedWelcomeEmail);
-    sendGrid.send(user.email, 'welcome', { user });
+    // sendGrid.send(user.email, 'welcome', { user });
     await User.findOneAndUpdate({ _id: user._id }, { receivedWelcomeEmail: true });
   }
 }

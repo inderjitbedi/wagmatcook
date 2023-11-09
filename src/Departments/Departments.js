@@ -353,14 +353,14 @@ const Departments = () => {
       })
         .then(({ result, error }) => {
           if (result?.department) {
-              // const indexToReplace = departmentData.findIndex(
-              //   (obj) => (obj._id = result.department._id)
-              // );
-              // if (indexToReplace !== -1) {
-              //   const UpdatedData = departmentData;
-              //   UpdatedData[indexToReplace] = result.department;
-              //   setDepartmentData(UpdatedData);
-              // }
+            // const indexToReplace = departmentData.findIndex(
+            //   (obj) => (obj._id = result.department._id)
+            // );
+            // if (indexToReplace !== -1) {
+            //   const UpdatedData = departmentData;
+            //   UpdatedData[indexToReplace] = result.department;
+            //   setDepartmentData(UpdatedData);
+            // }
             HandleCloseEdit();
             GetDepartments(userType);
             setId("");
@@ -702,7 +702,7 @@ const Departments = () => {
                 <InputPara>
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? 500 - descriptionLength : 0}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
                   characters left
                 </InputPara>
               </ModalUpperMid>
