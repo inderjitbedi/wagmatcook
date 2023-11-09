@@ -5,7 +5,7 @@ const API_URLS = {
   verifyOtp: `/auth/verify-otp`,
   // super admin routes apis
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
-  adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10`,
+  adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10&searchKey=searchValue`,
   adminInviteOrganizationAdmin: `/super-admin/invite`,
 
   orgAdminCompleteSignup: `/organization-admin/complete-signup/:token`,
@@ -85,7 +85,7 @@ const API_URLS = {
   // employee leave hsitory
   getLeaveTypeList: `/leave-type/list`,
   submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request`,
-  getLeaveHistory: `/employee/leave-history/:employeeid`,
+  getLeaveHistory: `/employee/leave-history/:employeeid?page=Page&limit=10&searchKey=searchValue`,
   //employee allocation
   submitEmployeeAllocation: `/employee/leave-allocation/:employeeid`,
   getEmployeeLeaveList: `/leave-type/employee-list/:employeeid`,
@@ -116,7 +116,7 @@ const API_URLS = {
   getEmployeeList: `/employee/list?page=Page&limit=10`,
   deleteEmployeeList: `/employee/delete/Id`,
   //task apis
-  getTaskList: `/task/list?page=Page&limit=10`,
+  getTaskList: `/task/list?page=Page&limit=10&searchKey=searchValue`,
   updateTask: `/task/update/:id`,
   deleteTask: `/task/delete/:id`,
   createTask: `/task/create`,
@@ -144,13 +144,13 @@ const API_URLS = {
   getDocuments: `/document/list?page=Page&limit=10&searchKey=searchValue`,
   getDocumentDetails: `/document/detail/:id`,
   // offboarding  apis routes
-  getOffboardingList: `/employee/offboarding-list`,
+  getOffboardingList: `/employee/offboarding-list?page=Page&limit=10&searchKey=searchValue`,
   updateOffboarding: `/employee/offboard`,
   //job posting api
   createJobs: `/job/create`,
   updateJobs: `/job/update/:id`,
   deleteJobs: `/job/delete/:id`,
-  listJobs: `/job/list`,
+  listJobs: `/job/list?page=Page&limit=10&searchKey=searchValue`,
   detailsJobs: `/job/detail/:id`,
   // applicants routes
   createApplicants: `/job/:jobid/applicant/create`,

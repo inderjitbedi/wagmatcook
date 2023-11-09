@@ -222,7 +222,9 @@ const Task = () => {
   };
   const GetTaskList = () => {
     setIsLoading(true);
-    let url = API_URLS.getTaskList.replace("Page", page);
+    let url = API_URLS.getTaskList
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
 
     httpClient({
       method: "get",
@@ -364,9 +366,7 @@ const Task = () => {
 
   useEffect(() => {
     GetTaskList();
-    if (!(location.pathname.indexOf("user") > -1)) {
-      GetAssignees();
-    }
+
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -374,7 +374,12 @@ const Task = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, [page]);
+  }, [page, searchValue]);
+  useEffect(() => {
+    if (!(location.pathname.indexOf("user") > -1)) {
+      GetAssignees();
+    }
+  }, []);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />

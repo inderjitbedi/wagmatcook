@@ -196,7 +196,7 @@ const JobPosting = () => {
   };
   const GetJobPostings = () => {
     setIsLoading(true);
-    let url = API_URLS.listJobs;
+    let url = API_URLS.listJobs.replace("Page",page).replace("searchValue",searchValue);
     httpClient({
       method: "get",
       url,
@@ -310,16 +310,20 @@ const JobPosting = () => {
       });
   };
   useEffect(() => {
-    GetDepartments();
     GetJobPostings();
-    if (location.pathname.indexOf("manager") > -1) {
-      setUserType(ROLES.MANAGER);
-    } else if (location.pathname.indexOf("hr") > -1) {
-      setUserType(ROLES.HR);
-    } else if (location.pathname.indexOf("user") > -1) {
-      setUserType(ROLES.EMPLOYEE);
-    }
-  }, [page]);
+  
+  }, [page, searchValue]);
+  useEffect(() => {
+    GetDepartments();
+
+  if (location.pathname.indexOf("manager") > -1) {
+    setUserType(ROLES.MANAGER);
+  } else if (location.pathname.indexOf("hr") > -1) {
+    setUserType(ROLES.HR);
+  } else if (location.pathname.indexOf("user") > -1) {
+    setUserType(ROLES.EMPLOYEE);
+  }
+  } ,[])
 
   return (
     <>

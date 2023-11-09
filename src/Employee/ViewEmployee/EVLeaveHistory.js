@@ -21,6 +21,8 @@ import ROLES from "../../constants/roles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+import Pagination from "@mui/material/Pagination";
+
 import {
   DashHeader,
   DashHeaderSearch,
@@ -71,6 +73,8 @@ import {
   ShowMore,
   FlexColumn100,
 } from "./ViewEmployeeStyle";
+import { PaginationDiv } from "../../Disciplinary/DisciplinaryStyles";
+
 import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
 const CellStyle = {
@@ -225,7 +229,10 @@ const EVLeaveHistory = () => {
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
-
+ const [page, setPage] = useState(1);
+ const HandleChangePage = (event, value) => {
+   setPage(value);
+ };
   const [open, setOpen] = useState(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -478,7 +485,9 @@ const EVLeaveHistory = () => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       // const trimid = employeeid?.trim();
-      let url = API_URLS.getLeaveHistory.replace(":employeeid", employeeid);
+      let url = API_URLS.getLeaveHistory
+        .replace(":employeeid", employeeid)
+        .replace("Page", page);
       httpClient({
         method: "get",
         url,
@@ -516,7 +525,7 @@ const EVLeaveHistory = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, []);
+  }, [page]);
   let API_URL = process.env.REACT_APP_API_URL;
   const userstyle = {
     padding: "1.6rem 2.0rem",
@@ -726,6 +735,17 @@ const EVLeaveHistory = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
           {/* modal applying leaves  */}
           <Modal
             open={open}
