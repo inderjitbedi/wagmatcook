@@ -170,7 +170,9 @@ const Offboarding = () => {
   const GetOffboardList = () => {
     setIsLoading(true);
     return new Promise((resolve, reject) => {
-      let url = API_URLS.getOffboardingList;
+      let url = API_URLS.getOffboardingList
+        .replace("Page", page)
+        .replace("searchValue", searchValue);
 
       httpClient({
         method: "get",
@@ -263,7 +265,7 @@ const Offboarding = () => {
 
   useEffect(() => {
     GetOffboardList();
-  }, []);
+  }, [page, searchValue]);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Offboarding"} />

@@ -149,7 +149,7 @@ const SAOrganization = () => {
   const GetOrganizationList = () => {
     setIsLoading(true);
 
-    let url = API_URLS.adminOrganizationList.replace("Page", page);
+    let url = API_URLS.adminOrganizationList.replace("Page", page).replace("searchValue",searchValue);
     httpClient({
       method: "get",
       url,

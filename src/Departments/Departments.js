@@ -183,7 +183,7 @@ const Departments = () => {
       }
     }
     if (name === "description") {
-      setdescriptionLength(500 - value.length);
+      setdescriptionLength(value.length);
 
       if (!value) {
         setErrors({
@@ -420,7 +420,6 @@ const Departments = () => {
       // requiredBcr: data.requiredBcr,
     });
     setdescriptionLength(data.description.length);
-
     HandleOpenEdit();
   };
 
@@ -695,7 +694,6 @@ const Departments = () => {
                   Description <InputSpan>*</InputSpan>
                 </InputLabel>
                 <TextArea
-                  // placeholder={descriptionEdit}
                   onChange={HandleChangeEdit}
                   value={upDateData.description}
                   type="text"
@@ -704,7 +702,7 @@ const Departments = () => {
                 <InputPara>
                   {" "}
                   <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? 500 - descriptionLength : 0}{" "}
+                  {descriptionLength > -1 ? 500 - descriptionLength : 0}
                   characters left
                 </InputPara>
               </ModalUpperMid>
