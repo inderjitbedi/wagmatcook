@@ -101,9 +101,13 @@ const orgController = {
 
   async listOrganizationsWithPrimaryUsers(req, res) {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+      let filters = { isDeleted: false, isActive: true }
       const organizations = await Organization.aggregate([
         {
-          $match: { isDeleted: false, isActive: true }, // Match active and non-deleted organizations
+          $match: filters, // Match active and non-deleted organizations
         },
         {
           $lookup: {
@@ -142,11 +146,19 @@ const orgController = {
         {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
-      ]);
+      ]).skip(startIndex)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+      const totalOrganizations = await Organization.countDocuments(filters);
+      const totalPages = Math.ceil(totalOrganizations / req.query.limit);
 
       res.status(200).json({
         organizations,
-        message: "Organizations with primary users fetched successfully",
+        totalOrganizations,
+        currentPage: page,
+        totalPages,
+        message: "Organizations fetched successfully",
       });
     } catch (error) {
       console.error("listOrganizationsWithPrimaryUsers:error -", error);
