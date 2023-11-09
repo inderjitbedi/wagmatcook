@@ -35,6 +35,7 @@ import {
   WorkAnniversary,
   CardIcons,
 } from "./ManagerStyles";
+import moment from "moment";
 const ManagerDashBoard = () => {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState([]);
@@ -121,6 +122,17 @@ const ManagerDashBoard = () => {
             <FlexColContainer>
               <CardBody>
                 <CardHeading>Leave Request</CardHeading>
+                {!dashboardData?.leaves?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No pending leave request</CardSubHeading>
+                  </div>
+                )}
                 {dashboardData?.leaves?.map((data) => (
                   <CardList>
                     <FlexContainer>
@@ -202,20 +214,38 @@ const ManagerDashBoard = () => {
                   </FlexColumn>
                 </CardList>
               </CardBody>
+
               <CardBody>
                 <CardHeading>Credential Expiry</CardHeading>
-                <CardList>
-                  <FlexContainer style={{ alignItems: "flex-start" }}>
-                    <CardIcons src="/images/icons/Bell Off.svg" />
-                    <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading>
-                        Hurry! Your IT declaration is awaiting. Please submit it
-                        before the window gets closed.{" "}
-                      </CardSubHeading>
-                      <CardSubGrey>12-05-2023</CardSubGrey>
-                    </FlexColumn>
-                  </FlexContainer>
-                </CardList>
+                {!dashboardData?.certificates?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No expiries to show</CardSubHeading>
+                  </div>
+                )}
+                {dashboardData?.certificates?.map((data) => (
+                  <CardList>
+                    <FlexContainer style={{ alignItems: "flex-start" }}>
+                      <CardIcons src="/images/icons/Bell Off.svg" />
+                      <FlexColumn style={{ gap: "8px" }}>
+                        <CardSubHeading>
+                          Hurry! Your {data.title} certificate is expirying
+                          soon.{" "}
+                        </CardSubHeading>
+                        <CardSubGrey>
+                          {data.expiryDate
+                            ? moment(data.expiryDate).format("D MMM, YYYY")
+                            : " - "}
+                        </CardSubGrey>
+                      </FlexColumn>
+                    </FlexContainer>
+                  </CardList>
+                ))}
               </CardBody>
             </FlexColContainer>
           </CardContainer>

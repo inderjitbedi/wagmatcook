@@ -12,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { RotatingLines } from "react-loader-spinner";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,7 +21,7 @@ import API_URLS from "../constants/apiUrls";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
-
+import ROLES from "../constants/roles";
 import {
   AddNewButton,
   DisciplinaryDiv,
@@ -47,6 +47,9 @@ import {
 } from "../Disciplinary/DisciplinaryStyles";
 const OABenefits = () => {
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [Id, setId] = useState("");
@@ -138,11 +141,19 @@ const OABenefits = () => {
         toast.error("Error creating department. Please try again.");
       });
   };
-  const GetBenefits = () => {
+  const GetBenefits = (role) => {
     setIsLoading(true);
-    let url = API_URLS.getOaBenefits
-      .replace("searchValue", searchValue)
-      .replace("Page", page);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSABenefits
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    } else {
+      url = API_URLS.getOaBenefits
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    }
+
     httpClient({
       method: "get",
       url,
@@ -166,14 +177,31 @@ const OABenefits = () => {
   };
 
   useEffect(() => {
-    GetBenefits();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetBenefits(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetBenefits(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetBenefits(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetBenefits(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetBenefits(ROLES.SUPER_ADMIN);
+    }
   }, [searchValue, page]);
 
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
     let url = API_URLS.createBenefits;
-
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     setIsLoading(true);
     let dataCopy = { ...data, order: benefits?.length + 1 };
     httpClient({
@@ -235,9 +263,12 @@ const OABenefits = () => {
       });
   };
   const HandleUpdate = (data) => {
-    console.log("update Data:", data);
-    let dataCopy = data;
+    // console.log("update Data:", data);
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
 
+    let dataCopy = data;
     let url = API_URLS.updateBenefits.replace(":id", Id);
 
     setIsLoading(true);
@@ -270,7 +301,7 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
-
+  console.log("user type nin benefits page ", userType);
   const style = {
     position: "absolute",
     top: "50%",
@@ -550,7 +581,7 @@ const OABenefits = () => {
                     >
                       {!result.benefits?.length && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" colSpan={3}>
+                          <TableCell align="center" colSpan={4} sx={CellStyle2}>
                             No benefits found
                           </TableCell>
                         </TableRow>

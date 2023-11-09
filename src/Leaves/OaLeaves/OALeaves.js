@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import DeleteModal from "../../Modals/DeleteModal";
 import { RotatingLines } from "react-loader-spinner";
@@ -19,6 +19,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useForm, Controller } from "react-hook-form";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
+import ROLES from "../../constants/roles";
 
 import {
   DashHeaderDepartment,
@@ -118,6 +119,8 @@ const ApprovedStyles = {
 };
 const OALeaves = () => {
   const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [open, setOpen] = useState(false);
   const HandleOpen = () => {
     setOpen(true);
@@ -224,11 +227,19 @@ const OALeaves = () => {
       HandleUpdate(data);
     }
   };
-  const GetLeavesType = () => {
+  const GetLeavesType = (role) => {
     setIsLoading(true);
-    let url = API_URLS.getLeaveType
-      .replace("searchValue", searchValue)
-      .replace("Page", page);
+    var url = "";
+    if (role === ROLES.SUPER_ADMIN) {
+      url = API_URLS.getSALeaveType
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    } else {
+      url = API_URLS.getLeaveType
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+    }
+
     httpClient({
       method: "get",
       url,
@@ -251,6 +262,10 @@ const OALeaves = () => {
       });
   };
   const HandleSubmitLeavesType = (data) => {
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
+
     let dataCopy = { ...data, order: leaves?.length + 1 };
     let url = API_URLS.createLeaveType;
 
@@ -282,6 +297,9 @@ const OALeaves = () => {
       });
   };
   const HandleUpdate = (data) => {
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     let dataCopy = data;
 
     let url = API_URLS.updateLeaveType.replace(":id", Id);
@@ -388,7 +406,22 @@ const OALeaves = () => {
     setdescriptionLength(500);
   };
   useEffect(() => {
-    GetLeavesType();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+      GetLeavesType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+      GetLeavesType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+      GetLeavesType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetLeavesType(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+      GetLeavesType(ROLES.SUPER_ADMIN);
+    }
   }, [searchValue, page]);
   return (
     <div>
@@ -529,52 +562,59 @@ const OALeaves = () => {
                     {descriptionLength > -1 ? descriptionLength : 0} characters
                     left
                   </InputPara>
-                  <InputLabel>
-                    Max carry-over(Hrs) <InputSpan>*</InputSpan>
-                  </InputLabel>
-                  <Input
-                    {...register("maxCarryOver", {
-                      required: {
-                        value: true,
-                        message: "Required",
-                      },
-                      pattern: {
-                        value: /^[+]?\d+(\.\d+)?$/,
-                        message: "Please enter valid carry over",
-                      },
-                      validate: (fieldValue) => {
-                        return (
-                          (!isNaN(parseFloat(fieldValue)) &&
-                            isFinite(fieldValue)) ||
-                          "Must be a number "
-                        );
-                      },
-                    })}
-                    type="text"
-                  />
-                  <Errors>{errors.maxCarryOver?.message}</Errors>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1rem",
-                      marginBottom: "25px",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      {...register("isActive", {})}
-                      id="isEligible"
-                      defaultChecked={true}
-                    />
-                    <InputLabel
-                      htmlFor="isEligible"
-                      style={{ marginBottom: "0rem" }}
-                    >
-                      Is Active
-                    </InputLabel>
-                  </div>
+                  {userType === ROLES.SUPER_ADMIN ? (
+                    " "
+                  ) : (
+                    <>
+                      <InputLabel>
+                        Max carry-over(Hrs) <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        {...register("maxCarryOver", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                          pattern: {
+                            value: /^[+]?\d+(\.\d+)?$/,
+                            message: "Please enter valid carry over",
+                          },
+                          validate: (fieldValue) => {
+                            return (
+                              (!isNaN(parseFloat(fieldValue)) &&
+                                isFinite(fieldValue)) ||
+                              "Must be a number "
+                            );
+                          },
+                        })}
+                        type="text"
+                      />
+                      <Errors>{errors.maxCarryOver?.message}</Errors>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "1rem",
+                          marginBottom: "25px",
+                          marginTop: "1rem",
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          {...register("isActive", {})}
+                          id="isEligible"
+                          defaultChecked={true}
+                        />
+                        <InputLabel
+                          htmlFor="isEligible"
+                          style={{ marginBottom: "0rem" }}
+                        >
+                          Is Active
+                        </InputLabel>
+                      </div>
+                    </>
+                  )}
 
                   {!update ? (
                     <AddNewButton
@@ -662,7 +702,7 @@ const OALeaves = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ minwidth: "8rem" }}
+                      style={{ minwidth: "1rem" }}
                     >
                       Order&nbsp;No.
                     </TableCell>
@@ -680,20 +720,28 @@ const OALeaves = () => {
                     >
                       Description
                     </TableCell>
-                    <TableCell
-                      sx={CellHeadStyles}
-                      align="left"
-                      style={{ width: "9rem" }}
-                    >
-                      Max&nbsp;Carry&nbsp;Over
-                    </TableCell>
-                    <TableCell
-                      sx={CellHeadStyles}
-                      align="left"
-                      style={{ width: "3rem" }}
-                    >
-                      Status
-                    </TableCell>
+                    {userType === ROLES.SUPER_ADMIN ? (
+                      " "
+                    ) : (
+                      <TableCell
+                        sx={CellHeadStyles}
+                        align="left"
+                        style={{ width: "9rem" }}
+                      >
+                        Max&nbsp;Carry&nbsp;Over
+                      </TableCell>
+                    )}
+                    {userType === ROLES.SUPER_ADMIN ? (
+                      " "
+                    ) : (
+                      <TableCell
+                        sx={CellHeadStyles}
+                        align="left"
+                        style={{ width: "3rem" }}
+                      >
+                        Status
+                      </TableCell>
+                    )}
                     <TableCell
                       sx={CellHeadStyles}
                       align="center"
@@ -713,7 +761,11 @@ const OALeaves = () => {
                     >
                       {leaves?.length === 0 && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" sx={CellStyle2} colSpan={6}>
+                          <TableCell
+                            align="center"
+                            sx={CellStyle2}
+                            colSpan={userType === ROLES.SUPER_ADMIN ? 4 : 6}
+                          >
                             No leaves found
                           </TableCell>
                         </TableRow>
@@ -758,22 +810,30 @@ const OALeaves = () => {
                                 {" "}
                                 {data.description}{" "}
                               </TableCell>
-                              <TableCell sx={CellStyle} align="left">
-                                {" "}
-                                {data.maxCarryOver}{" "}
-                              </TableCell>
-                              <TableCell sx={CellStyle2} align="left">
-                                {" "}
-                                <span
-                                  style={
-                                    data.isActive
-                                      ? ApprovedStyles
-                                      : PendingStyle
-                                  }
-                                >
-                                  {data.isActive ? "Active" : "Inactive"}
-                                </span>{" "}
-                              </TableCell>
+                              {userType === ROLES.SUPER_ADMIN ? (
+                                " "
+                              ) : (
+                                <TableCell sx={CellStyle} align="left">
+                                  {" "}
+                                  {data.maxCarryOver}{" "}
+                                </TableCell>
+                              )}
+                              {userType === ROLES.SUPER_ADMIN ? (
+                                " "
+                              ) : (
+                                <TableCell sx={CellStyle2} align="left">
+                                  {" "}
+                                  <span
+                                    style={
+                                      data.isActive
+                                        ? ApprovedStyles
+                                        : PendingStyle
+                                    }
+                                  >
+                                    {data.isActive ? "Active" : "Inactive"}
+                                  </span>{" "}
+                                </TableCell>
+                              )}
                               <TableCell
                                 sx={CellStyle2}
                                 align="center"

@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import DeleteModal from "../Modals/DeleteModal";
 import styled from "styled-components";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import Pagination from "@mui/material/Pagination";
 
 import {
   Dashboard,
@@ -48,10 +49,10 @@ import {
   SearchBarWrapper,
   SearchInputMobile,
   SearchButton,
+  PaginationDiv,
 } from "./SAStyles";
 import API_URLS from "../constants/apiUrls";
 import { useNavigate } from "react-router-dom";
-
 
 const style = {
   position: "absolute",
@@ -100,11 +101,11 @@ const SAOrganization = () => {
   const [Id, setId] = useState("");
   const [expanded, setExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-
-  const toggleSearchBar = () => {
-    setExpanded(!expanded);
-    setSearchValue("");
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
   };
+
   const HandleOpen = () => {
     setOpen(true);
   };
@@ -141,14 +142,14 @@ const SAOrganization = () => {
       HandleUpdate(data);
     }
   };
-   const HandleSearchCahnge = (data) => {
-     setSearchValue(data);
-   };
+  const HandleSearchCahnge = (data) => {
+    setSearchValue(data);
+  };
 
   const GetOrganizationList = () => {
     setIsLoading(true);
 
-    let url = `${API_URLS.adminOrganizationList}?page=1&limit=10`;
+    let url = API_URLS.adminOrganizationList.replace("Page",page);
     httpClient({
       method: "get",
       url,
@@ -255,13 +256,9 @@ const SAOrganization = () => {
     setUserId("");
   };
 
-  
- 
-  
-
   useEffect(() => {
     GetOrganizationList();
-  }, []);
+  }, [page, searchValue]);
 
   return (
     <>
@@ -489,6 +486,17 @@ const SAOrganization = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
           {/* <AddNewButton onClick={HandleLoadMore} style={{ marginTop: "10rem" }}>
           Load More
         </AddNewButton> */}
