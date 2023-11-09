@@ -33,7 +33,26 @@ const employeeController = {
             const startIndex = (page - 1) * limit;
 
             let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN }, }
-
+            if (req.query.searchKey) {
+                filters.$or = [
+                    { name: { $regex: req.query.searchKey, $options: 'i' } },
+                    { email: { $regex: req.query.searchKey, $options: 'i' } },
+                    { role: { $regex: req.query.searchKey, $options: 'i' } },
+                    // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+                    // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+                ];
+            }
             const employees = await User.aggregate([
                 {
                     $match: filters,
@@ -49,7 +68,6 @@ const employeeController = {
                 {
                     $match: {
                         'userOrganizations.organization': req.organization?._id || null,
-
                     },
                 },
                 {
@@ -60,6 +78,28 @@ const employeeController = {
                         as: 'personalInfo',
                     },
                 },
+                {
+                    $unwind: '$personalInfo',
+                },
+                // {
+                //     $match: {
+                //         $or: [
+                //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+                //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+                //         ],
+                //     },
+                // },
 
                 {
                     $lookup: {
@@ -1270,7 +1310,12 @@ const employeeController = {
             if (!user) {
                 return res.status(400).json({ message: 'Provided invalid employee id.' });
             }
-            const history = await EmployeeLeaveHistory.find({ employee: req.params.id, isDeleted: false })
+
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 9999;
+            const startIndex = (page - 1) * limit;
+            let filters = { employee: req.params.id, isDeleted: false };
+            const history = await EmployeeLeaveHistory.find(filters)
                 .populate({
                     path: 'responder',
                     populate: {
@@ -1279,10 +1324,15 @@ const employeeController = {
                             path: 'photo',
                         },
                     },
-                }).populate('leaveType').sort({ createdAt: -1 });
-
+                }).populate('leaveType').sort({ createdAt: -1 }).skip(startIndex)
+                .limit(limit);
+            const totalLeaveHistory = await EmployeeLeaveHistory.countDocuments(filters);
+            const totalPages = Math.ceil(totalDocumentTagss / req.query.limit);
             res.status(200).json({
                 history,
+                totalLeaveHistory,
+                currentPage: page,
+                totalPages,
                 message: 'Employee leave history fetched successfully'
             });
         } catch (error) {

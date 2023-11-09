@@ -174,14 +174,24 @@ const documentController = {
                 organization: req.organization?._id || null,
             };
 
-            // if (req.query.searchKey) {
-            //     filters.$or = [
-            //         { name: { $regex: req.query.searchKey, $options: 'i' } },
-            //     ];
-            // }
+            if (req.query.searchKey) {
+                filters.$or = [
+                    { title: { $regex: req.query.searchKey, $options: 'i' } },
+                    { 'tags.name': { $regex: req.query.searchKey, $options: 'i' } },
+
+                ];
+            }
             const document = await Document.find(filters)
                 .populate([
-                    // { path: "tags" },
+                    {
+                        path: "tags",
+                        match: {
+                            $and: [
+                                { isDeleted: false },
+                                { name: { $regex: req.query.searchKey, $options: 'i' }, },
+                            ],
+                        },
+                    },
                     { path: "departments" },
                     { path: "lastUpdatedBy", populate: "personalInfo" },
                     {
@@ -195,10 +205,6 @@ const documentController = {
                         ],
                     },
                 ])
-                .populate({
-                    path: "tags",
-                    match: { isDeleted: false }, // Filter tags with isDeleted: false
-                })
                 .skip(startIndex)
                 .limit(limit)
                 .sort({ createdAt: -1 });
