@@ -254,7 +254,7 @@ const DocumentsTags = () => {
 
           HandleCloseDelete();
           setId("");
-          GetDocumentTags();
+          GetDocumentTags(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");

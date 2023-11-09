@@ -220,7 +220,7 @@ const EmployeeTypes = () => {
           toast.success(result.message, {
             className: "toast",
           });
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -250,7 +250,7 @@ const EmployeeTypes = () => {
 
           HandleCloseDelete();
           setId("");
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");
@@ -285,7 +285,7 @@ const EmployeeTypes = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
           setUpdate(false);
           HandleClose();
           reset();
@@ -315,7 +315,7 @@ const EmployeeTypes = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetEmployeeTypes();
+          GetEmployeeTypes(userType);
         } else {
           ////toast.warn("something went wrong ");
         }

@@ -42,7 +42,7 @@ import {
 import API_URLS from "../../constants/apiUrls";
 import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
 
-const PersonalInfo = ({ isEdit, setIsEdit }) => {
+const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const Navigate = useNavigate();
@@ -153,8 +153,9 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
       });
   };
   useEffect(() => {
-    GetHeadersData();
-
+    if (!isEdit) {
+      GetHeadersData();
+    }
     GetEmployeesPersonalInfo();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -188,6 +189,7 @@ const PersonalInfo = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
+            setRefresh(refresh + 1);
             toast.success(result.message, {
               className: "toast",
             });

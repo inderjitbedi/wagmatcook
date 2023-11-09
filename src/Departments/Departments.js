@@ -315,7 +315,7 @@ const Departments = () => {
     let dataCopy = { ...upDateData };
 
     if (userType === ROLES.SUPER_ADMIN) {
-      dataCopy = { ...formData, isDefault: true };
+      dataCopy = { ...upDateData, isDefault: true };
     }
 
     let url = API_URLS.updateDepartments.replace(":id", Id);
@@ -353,16 +353,16 @@ const Departments = () => {
       })
         .then(({ result, error }) => {
           if (result?.department) {
-            const indexToReplace = departmentData.findIndex(
-              (obj) => (obj._id = result.department._id)
-            );
-            if (indexToReplace !== -1) {
-              const UpdatedData = departmentData;
-              UpdatedData[indexToReplace] = result.department;
-              setDepartmentData(UpdatedData);
-            }
+              // const indexToReplace = departmentData.findIndex(
+              //   (obj) => (obj._id = result.department._id)
+              // );
+              // if (indexToReplace !== -1) {
+              //   const UpdatedData = departmentData;
+              //   UpdatedData[indexToReplace] = result.department;
+              //   setDepartmentData(UpdatedData);
+              // }
             HandleCloseEdit();
-            // GetDepartments();
+            GetDepartments(userType);
             setId("");
             setUpDateData("");
             setErrors("");
@@ -393,7 +393,7 @@ const Departments = () => {
       .then(({ result, error }) => {
         if (result) {
           // HandleOpenThanks();
-          GetDepartments();
+          GetDepartments(userType);
           setId("");
           HandleCloseDelete();
 

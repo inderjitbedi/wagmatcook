@@ -41,7 +41,7 @@ import API_URLS from "../../constants/apiUrls";
 import { FlexColContainer } from "../../Dashboard/ManagerDashboard/ManagerStyles";
 import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
 
-const JobDetails = ({ isEdit, setIsEdit }) => {
+const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const Navigate = useNavigate();
   const { employeeid, edit } = useParams();
   const location = useLocation();
@@ -177,10 +177,13 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
     Promise.all([
       GetDepartments(),
       GetEmployeeTypes(),
-      GetHeadersData(),
+
       GetReportsToList(),
       GetEmployeesJobDetails(),
     ]);
+    if (!isEdit) {
+      GetHeadersData();
+    }
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -213,6 +216,8 @@ const JobDetails = ({ isEdit, setIsEdit }) => {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
+            setRefresh(refresh + 1);
+
             toast.success(result.message, {
               className: "toast",
             });

@@ -279,7 +279,7 @@ const OALeaves = () => {
       .then(({ result, error }) => {
         if (result) {
           HandleClose();
-          GetLeavesType();
+          GetLeavesType(userType);
           toast.success(result.message, {
             className: "toast",
           });
@@ -314,7 +314,7 @@ const OALeaves = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetLeavesType();
+          GetLeavesType(userType);
           setUpdate(false);
           HandleClose();
           reset();
@@ -348,7 +348,7 @@ const OALeaves = () => {
           HandleReorder(ReorderArray);
           HandleCloseDelete();
           setId("");
-          GetLeavesType();
+          GetLeavesType(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");
@@ -376,7 +376,7 @@ const OALeaves = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetLeavesType();
+          GetLeavesType(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -702,7 +702,7 @@ const OALeaves = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ minwidth: "1rem" }}
+                      style={{ minWidth: "1rem" }}
                     >
                       Order&nbsp;No.
                     </TableCell>
@@ -716,7 +716,7 @@ const OALeaves = () => {
                     <TableCell
                       sx={CellHeadStyles}
                       align="left"
-                      style={{ minwidth: "35rem" }}
+                      style={{ minWidth: "35rem" }}
                     >
                       Description
                     </TableCell>

@@ -34,6 +34,7 @@ const EmployeePersonal = () => {
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
+  const [refresh, setRefresh] = useState(0);
 
   const { employeeid } = useParams();
   const [result, setResult] = useState([]);
@@ -79,7 +80,7 @@ const EmployeePersonal = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, [isEdit]);
+  }, [refresh]);
   return (
     <>
       {isLoading ? (
@@ -103,7 +104,12 @@ const EmployeePersonal = () => {
       ) : (
         <>
           {isEdit ? (
-            <PersonalInfo isEdit={isEdit} setIsEdit={setIsEdit} />
+            <PersonalInfo
+              isEdit={isEdit}
+              setIsEdit={setIsEdit}
+              setRefresh={setRefresh}
+              refresh={refresh}
+            />
           ) : (
             <MainBodyContainer>
               {/* <CommenHeader employeeid={employeeid} /> */}

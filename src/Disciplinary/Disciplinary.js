@@ -309,7 +309,7 @@ const Disciplinary = () => {
   const HandleUpdate = () => {
     let dataCopy = { ...upDateData };
      if (userType === ROLES.SUPER_ADMIN) {
-       dataCopy = { ...formData, isDefault: true };
+       dataCopy = { ...upDateData, isDefault: true };
      }
     let url = API_URLS.updateDisciplinary.replace(":id", Id);
     if (!upDateData.name) {

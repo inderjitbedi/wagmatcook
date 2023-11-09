@@ -149,7 +149,7 @@ const SAOrganization = () => {
   const GetOrganizationList = () => {
     setIsLoading(true);
 
-    let url = API_URLS.adminOrganizationList.replace("Page",page);
+    let url = API_URLS.adminOrganizationList.replace("Page", page);
     httpClient({
       method: "get",
       url,
@@ -440,7 +440,9 @@ const SAOrganization = () => {
               <TableBody>
                 {result?.organizations?.length === 0 && (
                   <TableRow>
-                    <TableCell rowSpan={5}>No organizations found</TableCell>
+                    <TableCell colSpan={5} align="center" sx={CellStyle2}>
+                      No organizations found
+                    </TableCell>
                   </TableRow>
                 )}
                 {result?.organizations?.map((data, index) => (

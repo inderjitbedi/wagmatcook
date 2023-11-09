@@ -131,7 +131,7 @@ const OABenefits = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetBenefits();
+          GetBenefits(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
@@ -245,7 +245,7 @@ const OABenefits = () => {
           HandleReorder(ReorderArray);
           HandleCloseDelete();
           setId("");
-          GetBenefits();
+          // GetBenefits(userType);
           toast.success(result.message, {
             className: "toast",
           }); //Benefit deleted successfully.");

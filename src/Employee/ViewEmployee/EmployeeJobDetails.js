@@ -106,6 +106,7 @@ const EmployeeJobDetails = () => {
   const [employeeTypes, setEmployeeTypes] = useState([]);
   const [update, setUpdate] = useState(false);
   const [Id, setId] = useState("");
+  const [refresh, setRefresh] = useState(0);
 
   const {
     register,
@@ -323,7 +324,7 @@ const EmployeeJobDetails = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, [isEdit]);
+  }, [refresh]);
 
   return (
     <>
@@ -348,7 +349,12 @@ const EmployeeJobDetails = () => {
       ) : (
         <>
           {isEdit ? (
-            <JobDetails isEdit={isEdit} setIsEdit={setIsEdit} />
+            <JobDetails
+              isEdit={isEdit}
+              setIsEdit={setIsEdit}
+              setRefresh={setRefresh}
+              refresh={refresh}
+            />
           ) : (
             <MainBodyContainer>
               <FlexSpaceBetween style={{ alignItems: "center" }}>
