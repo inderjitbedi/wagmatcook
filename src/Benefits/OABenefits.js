@@ -216,7 +216,7 @@ const OABenefits = () => {
           toast.success(result.message, {
             className: "toast",
           });
-          GetBenefits();
+          GetBenefits(userType);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -281,7 +281,7 @@ const OABenefits = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetBenefits();
+          GetBenefits(userType);
           setUpdate(false);
           HandleClose();
           reset();

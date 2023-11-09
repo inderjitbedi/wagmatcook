@@ -224,7 +224,7 @@ const DocumentsTags = () => {
           toast.success(result.message, {
             className: "toast",
           });
-          GetDocumentTags();
+          GetDocumentTags(userType);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -289,7 +289,7 @@ const DocumentsTags = () => {
       .then(({ result, error }) => {
         if (result) {
           setId("");
-          GetDocumentTags();
+          GetDocumentTags(userType);
           setUpdate(false);
           HandleClose();
           reset();
@@ -320,7 +320,7 @@ const DocumentsTags = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetDocumentTags();
+          GetDocumentTags(userType);
         } else {
           ////toast.warn("something went wrong ");
         }

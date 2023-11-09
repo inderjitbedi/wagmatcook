@@ -55,7 +55,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "37.4rem",
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
@@ -294,7 +294,7 @@ const Departments = () => {
           if (result?.department) {
             HandleClose();
             HandleOpenThanks();
-            GetDepartments();
+            GetDepartments(userType);
             setFormData("");
             setErrors("");
           } else {

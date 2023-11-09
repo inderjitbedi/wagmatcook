@@ -223,7 +223,9 @@ const Documents = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, [page]);
+    GetDepartments();
+    GetDocumentTagsList();
+  }, []);
   const GetDepartments = () => {
     setIsLoading(true);
     return new Promise((resolve, reject) => {
@@ -411,8 +413,6 @@ const Documents = () => {
       });
   };
   useEffect(() => {
-    GetDepartments();
-    GetDocumentTagsList();
     GetDocuments();
   }, [page, searchValue]);
   // console.log("this is our suggestions :", suggestions);

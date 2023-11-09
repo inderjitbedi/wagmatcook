@@ -284,7 +284,7 @@ const Disciplinary = () => {
         .then(({ result, error }) => {
           if (result) {
             HandleClose();
-            GetDisciplinary();
+            GetDisciplinary(userType);
             setFormData("");
             setErrors("");
             toast.success(result.message, {
@@ -348,7 +348,7 @@ const Disciplinary = () => {
       })
         .then(({ result, error }) => {
           if (result) {
-            GetDisciplinary();
+            GetDisciplinary(userType);
             setId("");
             HandleCloseEdit();
             setupDateData("");
@@ -442,7 +442,7 @@ const Disciplinary = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          GetDisciplinary();
+          GetDisciplinary(userType);
         } else {
           ////toast.warn("something went wrong ");
         }
