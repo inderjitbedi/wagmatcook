@@ -15,7 +15,8 @@ const schema = new mongoose.Schema({
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
-        required: true,
+        required: false,
+        default: null
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
