@@ -120,7 +120,6 @@ const taskController = {
     },
     async list(req, res) {
         try {
-            console.log(JSON.stringify(req.user));
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 10;
             const startIndex = (page - 1) * limit;
@@ -132,6 +131,12 @@ const taskController = {
                     assigner: req.user?._id,
                 }]
             };
+            if (req.query.searchKey) {
+                filters.$or = [
+                    { title: { $regex: req.query.searchKey, $options: 'i' } },
+                    { description: { $regex: req.query.searchKey, $options: 'i' } },
+                ];
+            }
             const tasks = await Tasks.find(filters)
                 .populate([
                     { path: 'assignee', populate: { path: 'personalInfo', populate: { path: 'photo' } } },

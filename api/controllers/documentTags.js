@@ -51,7 +51,7 @@ const documentTagController = {
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;
 
-            let filters = { isDeleted: false, organization: req.organization?._id || null, isDefault: false };
+            let filters = { isDeleted: false, organization: req.organization?._id || null, isDefault: { $ne: true } };
             if (req.route.path.indexOf('defaults') > -1) {
                 filters.isDefault = true;
             }

@@ -267,7 +267,7 @@ const Employee = () => {
           " "
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <AddNewButton>Send Welcome</AddNewButton>{" "}
+            <AddNewButton>Send Welcome Emails</AddNewButton>{" "}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
           </div>
         )}
@@ -481,8 +481,8 @@ const Employee = () => {
                         />
                         <TabelParaContainer>
                           <TabelDarkPara>
-                            {data.personalInfo[0]?.firstName}{" "}
-                            {data.personalInfo[0]?.lastName}
+                            {data.personalInfo?.firstName}{" "}
+                            {data.personalInfo?.lastName}
                           </TabelDarkPara>
                           <TabelLightPara style={{ textTransform: "none" }}>
                             {data.email || " - "}
@@ -491,17 +491,17 @@ const Employee = () => {
                       </TabelDiv>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.personalInfo[0].employeeId || " - "}
+                      {data.personalInfo.employeeId || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.personalInfo[0].homePhone || " - "}
+                      {data.personalInfo.homePhone || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {/* <Moment format="YYYY/MM/DD"> */}{" "}
                       {data.positions[0]?.startDate
                         ? moment(data.positions[0]?.startDate).format(
-                            "DD/MM/YYYY"
-                          )
+                          "DD/MM/YYYY"
+                        )
                         : " - "}
                       {/* </Moment> */}
                     </TableCell>
@@ -509,8 +509,8 @@ const Employee = () => {
                       {(data.role === ROLES.EMPLOYEE
                         ? "USER"
                         : data.role === ROLES.HR
-                        ? " HR"
-                        : data.role) || " - "}
+                          ? " HR"
+                          : data.role) || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <IconContainer>

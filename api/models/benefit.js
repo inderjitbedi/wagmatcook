@@ -9,14 +9,16 @@ const benefitSchema = new mongoose.Schema({
     description: {
         type: String,
         default: null,
-    }, order: {
+    },
+    order: {
         type: Number,
         default: null,
     },
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization',
-        required: true,
+        required: false,
+        default: null
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

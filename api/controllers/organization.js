@@ -9,6 +9,12 @@ const UserOrganization = require("../models/userOrganization");
 const crypto = require("crypto");
 const fileController = require("./file");
 const EmployeePersonalInfo = require("../models/employeePersonalInfo");
+const Benefit = require("../models/benefit");
+const Department = require("../models/department");
+const EmployeeType = require("../models/employeeType");
+const LeaveType = require("../models/leaveType");
+const Disciplinary = require("../models/disciplinary");
+const DocumentTags = require("../models/documentTags");
 
 // Function to create a directory if it doesn't exist
 const createDirectoryIfNotExists = (directory) => {
@@ -95,9 +101,13 @@ const orgController = {
 
   async listOrganizationsWithPrimaryUsers(req, res) {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+      let filters = { isDeleted: false, isActive: true }
       const organizations = await Organization.aggregate([
         {
-          $match: { isDeleted: false, isActive: true }, // Match active and non-deleted organizations
+          $match: filters, // Match active and non-deleted organizations
         },
         {
           $lookup: {
@@ -136,11 +146,19 @@ const orgController = {
         {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
-      ]);
+      ]).skip(startIndex)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+      const totalOrganizations = await Organization.countDocuments(filters);
+      const totalPages = Math.ceil(totalOrganizations / req.query.limit);
 
       res.status(200).json({
         organizations,
-        message: "Organizations with primary users fetched successfully",
+        totalOrganizations,
+        currentPage: page,
+        totalPages,
+        message: "Organizations fetched successfully",
       });
     } catch (error) {
       console.error("listOrganizationsWithPrimaryUsers:error -", error);
@@ -172,6 +190,95 @@ const orgController = {
       await org.save();
 
       const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
+
+
+      const benefits = await Benefit.find({ isDefault: true, isDeleted: false });
+      let order = 1;
+      for (const benefit of benefits) {
+        const newBenefit = new Benefit({
+          name: benefit.name,
+          organization: org._id,
+          description: benefit.description,
+          isDefault: false,
+          createdBy: req.user._id,
+          order
+        });
+        await newBenefit.save();
+        order++;
+      }
+
+      const departments = await Department.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const department of departments) {
+        const newDepartment = new Department({
+          name: department.name,
+          organization: org._id,
+          description: department.description,
+          isDefault: false,
+          createdBy: req.user._id,
+          order
+        });
+        await newDepartment.save();
+        order++;
+      }
+
+
+      const employeeTypes = await EmployeeType.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const employeeType of employeeTypes) {
+        const newEmployeeType = new EmployeeType({
+          name: employeeType.name,
+          organization: org._id,
+          createdBy: req.user._id,
+          order
+        });
+        await newEmployeeType.save();
+        order++;
+      }
+
+      const leaveTypes = await LeaveType.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const leaveType of leaveTypes) {
+        const newLeaveType = new LeaveType({
+          name: leaveType.name,
+          organization: org._id,
+          description: leaveType.description,
+          createdBy: req.user._id,
+          order
+        });
+        await newLeaveType.save();
+        order++;
+      }
+
+
+      const disciplinaries = await Disciplinary.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const disciplinary of disciplinaries) {
+        const newDisciplinary = new Disciplinary({
+          name: disciplinary.name,
+          organization: org._id,
+          description: disciplinary.description,
+          createdBy: req.user._id,
+          order
+        });
+        await newDisciplinary.save();
+        order++;
+      }
+
+      const documentTags = await DocumentTags.find({ isDefault: true, isDeleted: false });
+      order = 1;
+      for (const documentTag of documentTags) {
+        const newDocumentTag = new DocumentTags({
+          name: documentTag.name,
+          organization: org._id,
+          createdBy: req.user._id,
+          order
+        });
+        await newDocumentTag.save();
+        order++;
+      }
+
+
       const token = crypto.randomBytes(20).toString("hex");
       user.invitationToken = token;
       user.invitationTokenExpiry = Date.now() + 3600000 * 24;
