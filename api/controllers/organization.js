@@ -138,6 +138,58 @@ const orgController = {
             isActive: { $first: "$isActive" },
             isDeleted: { $first: "$isDeleted" },
             primaryUser: { $first: "$users.user" },
+            createdAt: { $first: "$createdAt" }
+          },
+        },
+        {
+          $lookup: {
+            from: "users", // Name of the User collection
+            localField: "primaryUser",
+            foreignField: "_id",
+            as: "primaryUser", // Store the populated user in the 'primaryUser' field
+          },
+        },
+        {
+          $unwind: "$primaryUser", // Unwind the populated primaryUser
+        },
+        {
+          $sort: { createdAt: -1 }, // Add the $sort stage to sort by createdAt in descending order
+        },
+      ]).skip(startIndex)
+        .limit(limit)
+      // .sort({ createdAt: -1 });
+
+      // const totalOrganizations = await Organization.countDocuments(filters);
+
+
+      const totalOrganizations = await Organization.aggregate([
+        {
+          $match: filters, // Match active and non-deleted organizations
+        },
+        {
+          $lookup: {
+            from: "userorganizations", // Name of the UserOrganization collection
+            localField: "_id",
+            foreignField: "organization",
+            as: "users",
+          },
+        },
+        {
+          $unwind: "$users", // Unwind the users array
+        },
+        {
+          $match: { "users.isPrimary": true }, // Filter for users with isPrimary: true
+        },
+        {
+          $group: {
+            _id: "$_id",
+            name: { $first: "$name" },
+            size: { $first: "$size" },
+            logo: { $first: "$logo" },
+            createdBy: { $first: "$createdBy" },
+            isActive: { $first: "$isActive" },
+            isDeleted: { $first: "$isDeleted" },
+            primaryUser: { $first: "$users.user" },
           },
         },
         {
@@ -152,16 +204,11 @@ const orgController = {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
       ])
-        .skip(startIndex)
-        .limit(limit)
-        .sort({ createdAt: -1 });
-
-      const totalOrganizations = await Organization.countDocuments(filters);
-      const totalPages = Math.ceil(totalOrganizations / req.query.limit);
+      const totalPages = Math.ceil(totalOrganizations.length / req.query.limit);
 
       res.status(200).json({
         organizations,
-        totalOrganizations,
+        totalOrganizations: totalOrganizations.length,
         currentPage: page,
         totalPages,
         message: "Organizations fetched successfully",
@@ -410,12 +457,9 @@ const orgController = {
 };
 async function processUsers(users) {
   for (const user of users) {
-    //console.log(user.email, user.receivedWelcomeEmail);
-    sendGrid.send(user.email, "welcome", { user });
-    await User.findOneAndUpdate(
-      { _id: user._id },
-      { receivedWelcomeEmail: true }
-    );
+    console.log(user.email, user.receivedWelcomeEmail);
+    // sendGrid.send(user.email, 'welcome', { user });
+    await User.findOneAndUpdate({ _id: user._id }, { receivedWelcomeEmail: true });
   }
 }
 module.exports = orgController;
