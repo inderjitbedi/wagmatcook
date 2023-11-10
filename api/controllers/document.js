@@ -38,7 +38,7 @@ const documentController = {
                 version: version === versions.MAJOR ? 1 : 0.1,
             });
             await documentVersion.save();
-            //console.log({
+            console.log({
                 title,
                 tags,
                 departments,
