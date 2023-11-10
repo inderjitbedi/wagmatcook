@@ -983,7 +983,7 @@ const employeeController = {
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
-      console.log("first", req.params.id);
+      //console.log("first", req.params.id);
       const reviews = await EmployeeReviews.aggregate([
         {
           $match: {
@@ -1046,7 +1046,7 @@ const employeeController = {
         //     },
         // },
       ]);
-      console.log("Reviews:", reviews);
+      //console.log("Reviews:", reviews);
 
       res.status(200).json({
         reviews,
@@ -1748,7 +1748,7 @@ const employeeController = {
         employee: req.body.to,
       });
 
-      console.log("relation = ", relation);
+      //console.log("relation = ", relation);
       if (relation) {
         return res
           .status(400)
@@ -1780,7 +1780,7 @@ const employeeController = {
       //     ...req.body,
       //     doneBy: req.user._id,
       // }, { upsert: true, new: true });
-      // console.log(offboarding);
+      // //console.log(offboarding);
       res.status(200).json({
         message: "Employee responsibilities transferred successfully",
       });

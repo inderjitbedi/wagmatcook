@@ -88,7 +88,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "0.8rem",
   height: "59.7rem",
   overflowY: "scroll",
@@ -578,11 +578,13 @@ const LeaveHistory = () => {
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.from
-                        ? moment(data.from).format("D MMM, YYYY")
+                        ? moment.utc(data.from).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                      {data.to
+                        ? moment.utc(data.to).format("D MMM, YYYY")
+                        : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.hours || " - "}

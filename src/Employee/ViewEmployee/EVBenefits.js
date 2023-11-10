@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import httpClient from "../../api/httpClient";
 import { toast } from "react-toastify";
@@ -33,7 +32,6 @@ const EVBenefits = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isAccount, setIsAccount] = useState(false);
   const [refresh, setRefresh] = useState(0);
-
 
   const Navigate = useNavigate();
   const location = useLocation();
@@ -162,9 +160,9 @@ const EVBenefits = () => {
                         <ViewPara>
                           {" "}
                           {result.benefit?.startDate
-                            ? moment(result.benefit?.startDate).format(
-                                "DD/MM/YYYY"
-                              )
+                            ? moment
+                                .utc(result.benefit?.startDate)
+                                .format("DD/MM/YYYY")
                             : " - "}{" "}
                         </ViewPara>
                       </FlexColumn>
@@ -172,9 +170,9 @@ const EVBenefits = () => {
                         <TitlePara>End Date </TitlePara>
                         <ViewPara>
                           {result.benefit?.endDate
-                            ? moment(result.benefit?.endDate).format(
-                                "DD/MM/YYYY"
-                              )
+                            ? moment
+                                .utc(result.benefit?.endDate)
+                                .format("DD/MM/YYYY")
                             : " - "}{" "}
                         </ViewPara>
                       </FlexColumn>

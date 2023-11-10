@@ -83,7 +83,6 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
     mode: "all",
     defaultValues: {
       positions: [initialPosition],
-      isActive: false,
     },
   });
 
@@ -130,7 +129,7 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       })
         .then(({ result, error }) => {
           if (result) {
-            // console.log(result, "this what result Looks like ");
+            // //console.log(result, "this what result Looks like ");
             setResult(result);
             resolve(result);
             if (result.positions) {
@@ -211,12 +210,14 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          // console.log(result);
+          // //console.log(result);
           if (isEdit) {
             // Navigate(`/organization-admin/employee/list`);
             // Navigate(-1);
             setIsEdit(false);
             setRefresh(refresh + 1);
+            window.location.reload();
+
 
             toast.success(result.message, {
               className: "toast",
@@ -590,12 +591,15 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                               message: " Required",
                             },
                             onChange: (e) => {
+
+                            
                               const endDateValue = getValues(
                                 `positions.${index}.endDate`
                               );
                               const startDateValue = getValues(
                                 `positions.${index}.startDate`
                               );
+                             
                               // const startDate = e.target.value;
 
                               if (endDateValue && startDateValue) {

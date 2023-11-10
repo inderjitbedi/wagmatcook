@@ -82,7 +82,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
 
   borderRadius: "8px",
   height: "52rem",
@@ -180,7 +180,6 @@ const ManagerLeaves = () => {
     },
   });
   const onSubmit = (data) => {
-
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -487,7 +486,7 @@ const ManagerLeaves = () => {
               <TableBody>
                 {result?.leaves?.length == 0 && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={9}>
                       No Leaves found
                     </TableCell>
                   </TableRow>
@@ -529,11 +528,13 @@ const ManagerLeaves = () => {
                     </TableCell>
                     <TableCell align="left" sx={CellStyle2}>
                       {data.from
-                        ? moment(data.from).format("D MMM, YYYY")
+                        ? moment.utc(data.from).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={CellStyle2}>
-                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                      {data.to
+                        ? moment.utc(data.to).format("D MMM, YYYY")
+                        : " - "}
                     </TableCell>
                     <TableCell align="left" sx={CellStyle2}>
                       {data.leaveType?.name}

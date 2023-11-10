@@ -65,7 +65,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   height: "52rem",
   overflowY: "scroll",
@@ -256,14 +256,13 @@ const EVDiscipline = () => {
         },
       })
         .then((data) => {
-
           if (data?.result) {
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
             // setFormData({ ...formData, file: data?.result.file._id });
             setIsUploading(false);
           } else {
-            console.log(data.error);
+            //console.log(data.error);
             toast.error(data.error.error);
             // setErrors({ ...errors, fileError: data?.error?.error });
           }
@@ -278,20 +277,22 @@ const EVDiscipline = () => {
     }
   };
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
 
@@ -742,7 +743,9 @@ const EVDiscipline = () => {
                             <TitlePara>
                               issued On:{" "}
                               {data.issueDate
-                                ? moment(data.issueDate).format("D MMM, YYYY")
+                                ? moment
+                                    .utc(data.issueDate)
+                                    .format("D MMM, YYYY")
                                 : " - "}
                             </TitlePara>
                           </FlexSpaceBetween>
@@ -796,9 +799,9 @@ const EVDiscipline = () => {
                               <ReviewsDiv>
                                 Expiry Date:{" "}
                                 {data.expiryDate
-                                  ? moment(data.expiryDate).format(
-                                      "D MMM, YYYY"
-                                    )
+                                  ? moment
+                                      .utc(data.expiryDate)
+                                      .format("D MMM, YYYY")
                                   : " - "}
                               </ReviewsDiv>
                             )}

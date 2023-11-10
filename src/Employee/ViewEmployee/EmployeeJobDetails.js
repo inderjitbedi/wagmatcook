@@ -66,7 +66,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   height: "50rem",
   overflowY: "scroll",
@@ -180,7 +180,7 @@ const EmployeeJobDetails = () => {
         .then(({ result, error }) => {
           if (result) {
             setResult(result);
-            console.log(result, "we are getting the persnal information ");
+            //console.log(result, "we are getting the persnal information ");
             resolve(result);
           } else {
             //toast.warn("something went wrong ");
@@ -439,7 +439,7 @@ const EmployeeJobDetails = () => {
                                   <TitlePara>Position Start Date</TitlePara>
                                   <ViewPara>
                                     {data?.startDate
-                                      ? moment(data?.startDate).format(
+                                      ? moment.utc(data?.startDate).format(
                                           "DD/MM/YYYY"
                                         )
                                       : "-"}
@@ -449,7 +449,7 @@ const EmployeeJobDetails = () => {
                                   <TitlePara>Position End Date</TitlePara>
                                   <ViewPara>
                                     {data?.endDate
-                                      ? moment(data?.endDate).format(
+                                      ? moment.utc(data?.endDate).format(
                                           "D MMM, YYYY"
                                         )
                                       : "Present"}
@@ -596,23 +596,40 @@ const EmployeeJobDetails = () => {
                               <TitlePara>
                                 From:{" "}
                                 {data.startDate
-                                  ? moment(data.startDate).format("D MMM, YYYY")
+                                  ? moment
+                                      .utc(data.startDate)
+                                      .format("D MMM, YYYY")
                                   : " - "}
                                 <span style={{ marginLeft: "14px" }}>
                                   {" "}
                                   To:
                                   {data.endDate
-                                    ? moment(data.endDate).format("D MMM, YYYY")
+                                    ? moment
+                                        .utc(data.endDate)
+                                        .format("D MMM, YYYY")
                                     : " Present "}
                                 </span>{" "}
                               </TitlePara>
-                              <FlexContaier
+                              <FlexSpaceBetween
                                 style={{
                                   alignItems: "center",
                                   marginTop: "10px",
                                 }}
                               >
-                                <IconContainer>
+                                <div>
+                                  {data?.isPrimary && (
+                                    <TitlePara style={{ margin: "0px" }}>
+                                      {data?.isPrimary && (
+                                        <span style={ApprovedStyles}>
+                                          {" "}
+                                          Primary
+                                        </span>
+                                      )}
+                                    </TitlePara>
+                                  )}
+                                </div>
+
+                                <IconContainer style={{ marginRight: "0px" }}>
                                   <Icons
                                     src="/images/icons/eye.svg"
                                     onClick={() => HandleUpdateAction(data)}
@@ -628,17 +645,7 @@ const EmployeeJobDetails = () => {
                                     />
                                   )}
                                 </IconContainer>
-                                {data?.isPrimary && (
-                                  <TitlePara style={{ margin: "0px" }}>
-                                    {data?.isPrimary && (
-                                      <span style={ApprovedStyles}>
-                                        {" "}
-                                        Primary
-                                      </span>
-                                    )}
-                                  </TitlePara>
-                                )}
-                              </FlexContaier>
+                              </FlexSpaceBetween>
                             </FlexColumn>
                           </TimelineDiv>
                         </VerticalTimelineElement>
@@ -1228,7 +1235,7 @@ const EmployeeJobDetails = () => {
                                     <AlignFlex>
                                       <input
                                         type="checkbox"
-                                        readOnly={update}
+                                        disabled={update}
                                         {...register(`isBebEligible`, {})}
                                         id={`isBebEligible`}
                                       />
@@ -1246,7 +1253,7 @@ const EmployeeJobDetails = () => {
                                   <FlexColumnForm>
                                     <AlignFlex>
                                       <input
-                                        readOnly={update}
+                                        disabled={update}
                                         type="checkbox"
                                         {...register(`isPrimary`, {})}
                                         id={`isPrimary`}

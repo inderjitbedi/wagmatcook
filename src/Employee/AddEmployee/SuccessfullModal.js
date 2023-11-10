@@ -12,7 +12,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const ModalThanks = styled.div`
@@ -20,7 +20,7 @@ const ModalThanks = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0rem;
+  padding: 6rem 0rem 4rem 0rem;
   position: relative;
 `;
 const ModalThanksImg = styled.img`

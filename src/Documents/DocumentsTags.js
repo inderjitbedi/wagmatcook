@@ -204,9 +204,9 @@ const DocumentsTags = () => {
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
-     if (userType === ROLES.SUPER_ADMIN) {
-       data.isDefault = true;
-     }
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     let dataCopy = { ...data, order: documentTags?.length + 1 };
     setIsLoading(true);
     let url = API_URLS.createDocumentTags;
@@ -272,9 +272,9 @@ const DocumentsTags = () => {
       });
   };
   const HandleUpdate = (data) => {
-     if (userType === ROLES.SUPER_ADMIN) {
-       data.isDefault = true;
-     }
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
     let dataCopy = data;
 
     let url = API_URLS.updateDocumentTags.replace(":id", Id);
@@ -310,7 +310,7 @@ const DocumentsTags = () => {
       });
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
+    //console.log(reOrder, "this reorder");
     let url = API_URLS.reorderDocumentTags;
 
     httpClient({
@@ -553,7 +553,7 @@ const DocumentsTags = () => {
                     >
                       {!documentTags?.length && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" sx={CellStyle2} colSpan={3}>
+                          <TableCell align="center" sx={CellStyle2} colSpan={4}>
                             No Document Tags Found
                           </TableCell>
                         </TableRow>
@@ -563,6 +563,7 @@ const DocumentsTags = () => {
                           key={data._id}
                           draggableId={data._id}
                           index={index}
+                          isDragDisabled={searchValue.length !== 0}
                         >
                           {(provided, snapshot) => (
                             <TableRow

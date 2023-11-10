@@ -366,7 +366,7 @@ const OALeaves = () => {
       });
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
+    //console.log(reOrder, "this reorder");
     let url = API_URLS.reorderLeaveType;
 
     httpClient({
@@ -775,6 +775,7 @@ const OALeaves = () => {
                           key={data._id}
                           draggableId={data._id}
                           index={index}
+                          isDragDisabled={searchValue.length !== 0}
                         >
                           {(provided, snapshot) => (
                             <TableRow

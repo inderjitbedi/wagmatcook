@@ -62,10 +62,10 @@ export default function RegisterOrganization() {
         },
       })
         .then((data: any) => {
-          console.log(data);
+          //console.log(data);
 
           if (data?.result) {
-            console.log(data?.result);
+            //console.log(data?.result);
             setFile(data?.result?.file);
             setFormData({ ...formData, file: data?.result.file._id });
           } else {
@@ -94,7 +94,7 @@ export default function RegisterOrganization() {
   };
 
   const handleSubmit = (event: any) => {
-    console.log(formData);
+    //console.log(formData);
     event.preventDefault();
 
     if (
@@ -213,14 +213,16 @@ export default function RegisterOrganization() {
                       </label>
                     </div>
 
-                    <button
-                      type="button"
-                      aria-label="Remove button"
-                      className="mx-1 mt-2 remove-button"
-                      onClick={RemoveFile}
-                    >
-                      Remove
-                    </button>
+                    {file && (
+                      <button
+                        type="button"
+                        aria-label="Remove button"
+                        className="mx-1 mt-2 remove-button"
+                        onClick={RemoveFile}
+                      >
+                        Remove
+                      </button>
+                    )}
                     {/* <span className='gray-text'>'png', 'jpg', 'jpeg', 'gif', 'tiff'*png *jpeg up to 10MB at least 400px by 400px</span> */}
                   </div>
                 </div>

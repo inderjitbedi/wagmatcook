@@ -107,7 +107,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   maxHeight: "55rem",
   overflowY: "scroll",
@@ -165,7 +165,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setSearchValue(data);
   };
   const onSubmit = (data) => {
-    console.log("on submit data:", data);
+    //console.log("on submit data:", data);
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -245,26 +245,28 @@ const Applicants = ({ jobid, Tabvalue }) => {
   };
 
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    //console.log("this file type:", type);
+    ////console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -288,7 +290,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         },
       })
         .then((data) => {
-          //console.log(data);
+          ////console.log(data);
 
           if (data?.result) {
             setUploadedFiles([...uploadedFiles, data?.result?.file]);
@@ -305,7 +307,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         });
     }
   };
-  // console.log("this is array of files :", uploadedFiles);
+  // //console.log("this is array of files :", uploadedFiles);
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
@@ -553,7 +555,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     // Create an anchor element
     documents.forEach((document) => {
       const fileUrl = API_URL + document?.path;
-      console.log(fileUrl, document);
+      //console.log(fileUrl, document);
       anchorRef.current.href = fileUrl;
       anchorRef.current.target = "_blank";
       anchorRef.current.download = document.originalName;
@@ -1094,12 +1096,12 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
                       {data?.appliedOn
-                        ? moment(data.appliedOn).format("D MMM, YYYY")
+                        ? moment.utc(data.appliedOn).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.interviewDate
-                        ? moment(data.interviewDate).format("D MMM, YYYY")
+                        ? moment.utc(data.interviewDate).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
@@ -1182,7 +1184,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
         isLoading={isDeleting}
         HandleDelete={HandleDelete}
       />
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
     </>
   );
 };

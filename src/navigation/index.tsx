@@ -22,10 +22,8 @@ interface User {
 }
 const roleBasedGuard = (allowedRoles: any, userRole: any) => {
   if (allowedRoles.includes(userRole)) {
- 
     return true;
   } else {
-
     return false;
   }
 };
@@ -47,7 +45,7 @@ const Navigation = () => {
   // useEffect(() => {
   //   // Check if user exists in localStorage on each route change
   //   setIsUser(!!(localStorage.getItem("user") && localStorage.getItem("token")));
-  // console.log(!!(localStorage.getItem("user") && localStorage.getItem("token")));
+  // //console.log(!!(localStorage.getItem("user") && localStorage.getItem("token")));
 
   // }, [location]);
   //useAppSelector((!!(localStorage.getItem("user") && localStorage.getItem("token")))LoggedIn);
@@ -56,7 +54,6 @@ const Navigation = () => {
   const renderNestedRoutes = (routes: any) => {
     const userRole = user?.role || "user";
 
-    
     return (
       <>
         {routes.map(

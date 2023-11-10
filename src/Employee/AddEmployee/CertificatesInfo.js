@@ -145,20 +145,22 @@ const CertificatesInfo = () => {
     }
   };
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const handleFileChange = async (e, index) => {
@@ -228,12 +230,12 @@ const CertificatesInfo = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          // console.log(result, "this what result Looks like ");
+          // //console.log(result, "this what result Looks like ");
           setResult(result);
           const resetfile = result.certificates.map((data) => data.file);
           setFiles(resetfile);
           if (result.certificates) {
-            // console.log("certificates is working");
+            // //console.log("certificates is working");
             result.certificates.forEach((data) => {
               if (data.completionDate || data.expiryDate) {
                 data.completionDate = new Date(data.completionDate)

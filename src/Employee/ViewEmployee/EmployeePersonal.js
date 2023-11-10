@@ -257,9 +257,9 @@ const EmployeePersonal = () => {
                         <TitlePara>Date of Birth</TitlePara>
                         <ViewPara>
                           {result.personalInfo?.dob
-                            ? moment(result.personalInfo?.dob).format(
-                                "DD/MM/YYYY"
-                              )
+                            ? moment
+                                .utc(result.personalInfo?.dob)
+                                .format("DD/MM/YYYY")
                             : " - "}
                         </ViewPara>
                       </FlexColumn>

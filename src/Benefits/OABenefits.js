@@ -78,19 +78,7 @@ const OABenefits = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  const [anchorEl, setAnchorEl] = useState(false);
-  const openMenu = Boolean(anchorEl);
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
+
   const {
     register,
     clearErrors,
@@ -121,7 +109,7 @@ const OABenefits = () => {
     }
   };
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
+    //console.log(reOrder, "this reorder");
     let url = API_URLS.reorderBenefits;
 
     httpClient({
@@ -263,7 +251,7 @@ const OABenefits = () => {
       });
   };
   const HandleUpdate = (data) => {
-    // console.log("update Data:", data);
+    // //console.log("update Data:", data);
     if (userType === ROLES.SUPER_ADMIN) {
       data.isDefault = true;
     }
@@ -301,7 +289,7 @@ const OABenefits = () => {
         setIsLoading(false);
       });
   };
-  console.log("user type nin benefits page ", userType);
+  //console.log("user type nin benefits page ", userType);
   const style = {
     position: "absolute",
     top: "50%",
@@ -358,7 +346,7 @@ const OABenefits = () => {
     const reorderedData = Array.from(benefits);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    console.log("drag is working ");
+    //console.log("drag is working ");
     setBenefits(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id));
   };
@@ -591,6 +579,7 @@ const OABenefits = () => {
                           key={data._id}
                           draggableId={data._id}
                           index={index}
+                          isDragDisabled={searchValue.length !== 0}
                         >
                           {(provided, snapshot) => (
                             <TableRow
@@ -674,48 +663,6 @@ const OABenefits = () => {
         message="Are you sure you want to delete this benefit?"
         isLoading={isLoading}
       />
-      <Menu
-        sx={{ margin: "0rem" }}
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem
-          style={{
-            color: "#222B45",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Settings
-        </MenuItem>
-        <MenuItem
-          onClick={HandleLogout}
-          style={{
-            color: "#EA4335",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Logout
-        </MenuItem>
-      </Menu>
     </>
   );
 };

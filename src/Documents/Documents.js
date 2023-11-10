@@ -23,6 +23,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { WithContext as ReactTags } from "react-tag-input";
 import { DevTool } from "@hookform/devtools";
+import styled from "styled-components";
 
 import {
   DisciplinaryDiv,
@@ -57,6 +58,7 @@ import {
   EditButton,
   LightPara,
   ButtonIcon,
+  TabelDarkPara,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import { Link } from "react-router-dom";
 
@@ -69,7 +71,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
@@ -96,6 +98,17 @@ const CellStyle2 = {
   lineHeight: "2rem",
 };
 
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 const Documents = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -167,7 +180,7 @@ const Documents = () => {
       } else {
         data.file = null;
       }
-      // console.log("form data", data);
+      // //console.log("form data", data);
 
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
@@ -349,7 +362,7 @@ const Documents = () => {
       });
   };
   const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
+    ////console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -415,7 +428,7 @@ const Documents = () => {
   useEffect(() => {
     GetDocuments();
   }, [page, searchValue]);
-  // console.log("this is our suggestions :", suggestions);
+  // //console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
     comma: 188,
     enter: 13,
@@ -425,26 +438,28 @@ const Documents = () => {
   // };
 
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    //console.log("this file type:", type);
+    ////console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -467,10 +482,10 @@ const Documents = () => {
         },
       })
         .then((data) => {
-          //console.log(data);
+          ////console.log(data);
 
           if (data?.result) {
-            //console.log(data?.result);
+            ////console.log(data?.result);
             setFile(data?.result?.file);
 
             setIsUploading(false);
@@ -543,7 +558,7 @@ const Documents = () => {
               <>
                 <ModalUpperDiv>
                   <ModalHeading>
-                    {!update ? "Add Document" : "Update Documents"}
+                    {!update ? "Add Document" : "Update Document"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -626,8 +641,8 @@ const Documents = () => {
                       )}
                     />
 
-                    {errors.department && (
-                      <Errors>{errors.department?.message}</Errors>
+                    {errors.departments && (
+                      <Errors>{errors.departments?.message}</Errors>
                     )}
                     <InputLabel>
                       Keywords <InputSpan>*</InputSpan>
@@ -676,9 +691,7 @@ const Documents = () => {
                         />
                       )}
                     />
-                    {errors.keywords && (
-                      <Errors>{errors.keywords?.message}</Errors>
-                    )}
+                    {errors.tags && <Errors>{errors.tags?.message}</Errors>}
                     <InputLabel>
                       Version <InputSpan>*</InputSpan>
                     </InputLabel>
@@ -728,7 +741,7 @@ const Documents = () => {
                       type="file"
                       {...register(`file`, {
                         required: {
-                          value: true,
+                          value: file ? false : true,
                           message: "Required",
                         },
                         onChange: (e) => {
@@ -933,7 +946,9 @@ const Documents = () => {
                         }
                       }}
                     >
-                      {data.title || " - "}
+                      <UnderlineHoverEffect>
+                        <TabelDarkPara>{data.title || " - "}</TabelDarkPara>
+                      </UnderlineHoverEffect>
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.departments
@@ -966,7 +981,9 @@ const Documents = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
+                        ? moment
+                            .utc(data?.updatedAt)
+                            .format("D MMM, YYYY hh:mm A")
                         : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

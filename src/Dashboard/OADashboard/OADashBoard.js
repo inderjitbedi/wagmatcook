@@ -398,7 +398,7 @@ const OADashBoard = ({ screenWidth }) => {
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Departments</DashCardTitle>
-                  {departmentData.totalDepartments > 3 && (
+                  {
                     <MainCardView
                       onClick={() =>
                         navigate("/organization-admin/departments")
@@ -407,7 +407,7 @@ const OADashBoard = ({ screenWidth }) => {
                     >
                       View All
                     </MainCardView>
-                  )}
+                  }
                 </MainCardTitleDiv>
                 {departmentData?.departments.map((data) => (
                   <CardList>
@@ -442,7 +442,7 @@ const OADashBoard = ({ screenWidth }) => {
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Disciplinary Types</DashCardTitle>
-                  {disciplinaryData?.totalDisciplinaries > 3 && (
+                  {
                     <MainCardView
                       style={{ cursor: "pointer" }}
                       onClick={() =>
@@ -451,11 +451,13 @@ const OADashBoard = ({ screenWidth }) => {
                     >
                       View All
                     </MainCardView>
-                  )}
+                  }
                 </MainCardTitleDiv>
                 {disciplinaryData?.disciplinaries?.map((data) => (
                   <CardList>
-                    <MainCardPara>{data.name} </MainCardPara>
+                    <MainCardPara style={{ margin: "1.2rem 0rem" }}>
+                      {data.name}{" "}
+                    </MainCardPara>
                     {/* <CardListPara>
                       Requires BCR:
                       <CardListSpan>
@@ -488,7 +490,7 @@ const OADashBoard = ({ screenWidth }) => {
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>New Employee</DashCardTitle>
-                  {employeeData.totalEmployees > 3 && (
+                  {
                     <MainCardView
                       style={{ cursor: "pointer" }}
                       onClick={() =>
@@ -497,10 +499,10 @@ const OADashBoard = ({ screenWidth }) => {
                     >
                       View All
                     </MainCardView>
-                  )}
+                  }
                 </MainCardTitleDiv>
                 {employeeData?.employees?.map((data) => (
-                  <CardEmployeeList>
+                  <CardEmployeeList style={{marginBottom:"1rem"}}>
                     <CardEmployeeDiv>
                       <CardEmployeeImg
                         src={
@@ -554,20 +556,26 @@ const OADashBoard = ({ screenWidth }) => {
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Leaves</DashCardTitle>
-                  {leavesData.totalLeaveTypes > 3 && (
+                  {
                     <MainCardView
                       style={{ cursor: "pointer" }}
                       onClick={() => navigate("/organization-admin/leaves")}
                     >
                       View All
                     </MainCardView>
-                  )}
+                  }
                 </MainCardTitleDiv>
                 {leavesData?.leaveTypes.map((data) => (
                   <CardLeavesList>
-                    <CardLeavesDiv style={{ width: "50%" }}>
+                    <CardLeavesDiv style={{ width: "48%" }}>
                       <MainCardPara>{data.name}</MainCardPara>
-                      <MainCardParaLight>{data.description}</MainCardParaLight>
+                      <MainCardParaLight>
+                        {data.description
+                          ? data.description.length > 45
+                            ? data.description?.substring(0, 45) + "..."
+                            : data.description
+                          : " - "}
+                      </MainCardParaLight>
                       <CardLeavesParaMobile>
                         Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver}
                       </CardLeavesParaMobile>

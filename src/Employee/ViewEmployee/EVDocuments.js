@@ -77,6 +77,7 @@ const EVDocuments = () => {
   const handleClose = () => {
     setOpen(false);
     setFile(null);
+    setErrors("")
   };
   const [Id, setId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -233,24 +234,27 @@ const EVDocuments = () => {
   });
   const [isUploading, setIsUploading] = useState(false);
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const removeFile = (e) => {
     setFile(null);
+    setErrors("");
     // setValue("file", null);
   };
   const handleUpload = (file, type) => {
@@ -269,7 +273,6 @@ const EVDocuments = () => {
         },
       })
         .then((data) => {
-
           if (data?.result) {
             setFile(data?.result?.file);
             //  insert(index, { file: data?.result?.file?._id });
@@ -290,6 +293,7 @@ const EVDocuments = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) {
+      setFile(null);
       setErrors({ fileError: "Required" });
       return;
     }
@@ -336,7 +340,7 @@ const EVDocuments = () => {
 
           <BasicInfoContainer>
             <BasicInfoDiv>
-              <FlexSpaceBetween style={{ marginBottom: "1rem"}}>
+              <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Documents</BasicHeading>
 
                 {/* <TitlePara>Last Updated On: 15-04-2023</TitlePara> */}
@@ -517,7 +521,7 @@ const EVDocuments = () => {
                           <>
                             {file ? (
                               <UploadImagePara>
-                                File uploaded successfully
+                                Choose another file to upload
                               </UploadImagePara>
                             ) : (
                               <>
@@ -525,6 +529,7 @@ const EVDocuments = () => {
                                 <UploadImagePara>
                                   Drop your files here
                                 </UploadImagePara>
+                                <UploadImageLight>or</UploadImageLight>
                                 <UploadImageLight>
                                   <span style={{ color: "#279AF1" }}>
                                     Browse file

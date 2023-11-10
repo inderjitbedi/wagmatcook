@@ -11,15 +11,10 @@ interface User {
 }
 const roleBasedGuard = (allowedRoles: any, userRole: any) => {
   if (allowedRoles.includes(userRole)) {
-    console.log(
-      "in true condition:",
-      allowedRoles,
-      userRole,
-      allowedRoles.includes(userRole)
-    );
+   
     return true;
   } else {
-    console.log("in flase condition:", allowedRoles, userRole);
+    //console.log("in flase condition:", allowedRoles, userRole);
 
     return false;
   }
@@ -40,7 +35,7 @@ const PrivateLayout = ({ component: Component, meta }: any) => {
     } else {
       navigate("/");
       localStorage.setItem("returnUrl", pathname);
-      console.log("the pathname is stored in local storage :", pathname);
+      //console.log("the pathname is stored in local storage :", pathname);
     }
   }, [navigate]);
   const userRole = user?.role;

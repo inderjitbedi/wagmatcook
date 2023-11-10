@@ -26,7 +26,6 @@ const createDirectoryIfNotExists = (directory) => {
 const orgController = {
   async create(req, res) {
     try {
-
       let file = await File.findOne({ _id: req.body.file });
       if (file) {
         req.body.logo = await fileController.moveToUploads(req, file);
@@ -35,11 +34,17 @@ const orgController = {
       req.body.createdBy = req.user._id;
 
       const relation = await UserOrganization.findOne({
-        user: req.user._id, isActive: true, isDeleted: false, isPrimary: true
+        user: req.user._id,
+        isActive: true,
+        isDeleted: false,
+        isPrimary: true,
       });
       let org = null;
       if (relation) {
-        org = await Organization.findOneAndUpdate({ _id: relation.organization }, req.body)
+        org = await Organization.findOneAndUpdate(
+          { _id: relation.organization },
+          req.body
+        );
       }
       res.status(200).json({
         organization: org,
@@ -104,7 +109,7 @@ const orgController = {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 9999;
       const startIndex = (page - 1) * limit;
-      let filters = { isDeleted: false, isActive: true }
+      let filters = { isDeleted: false, isActive: true };
       const organizations = await Organization.aggregate([
         {
           $match: filters, // Match active and non-deleted organizations
@@ -146,7 +151,8 @@ const orgController = {
         {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
-      ]).skip(startIndex)
+      ])
+        .skip(startIndex)
         .limit(limit)
         .sort({ createdAt: -1 });
 
@@ -167,21 +173,21 @@ const orgController = {
   },
   async initiate(req, res) {
     try {
-      console.log(req.body);
+      //console.log(req.body);
       const organization = await Organization.findOne({ name: req.body.name });
       if (organization) {
         return res
           .status(400)
           .json({ message: "Organization name already registered" });
       }
-      console.log(organization);
+      //console.log(organization);
       const userExists = await User.findOne({ email: req.body.email });
       if (userExists) {
         return res
           .status(400)
           .json({ message: "User email already registered" });
       }
-      console.log(userExists);
+      //console.log(userExists);
 
       const org = new Organization({
         name: req.body.name,
@@ -191,8 +197,10 @@ const orgController = {
 
       const user = new User({ email: req.body.email, role: roles.ORG_ADMIN });
 
-
-      const benefits = await Benefit.find({ isDefault: true, isDeleted: false });
+      const benefits = await Benefit.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       let order = 1;
       for (const benefit of benefits) {
         const newBenefit = new Benefit({
@@ -201,13 +209,16 @@ const orgController = {
           description: benefit.description,
           isDefault: false,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newBenefit.save();
         order++;
       }
 
-      const departments = await Department.find({ isDefault: true, isDeleted: false });
+      const departments = await Department.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       order = 1;
       for (const department of departments) {
         const newDepartment = new Department({
@@ -216,27 +227,32 @@ const orgController = {
           description: department.description,
           isDefault: false,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newDepartment.save();
         order++;
       }
 
-
-      const employeeTypes = await EmployeeType.find({ isDefault: true, isDeleted: false });
+      const employeeTypes = await EmployeeType.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       order = 1;
       for (const employeeType of employeeTypes) {
         const newEmployeeType = new EmployeeType({
           name: employeeType.name,
           organization: org._id,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newEmployeeType.save();
         order++;
       }
 
-      const leaveTypes = await LeaveType.find({ isDefault: true, isDeleted: false });
+      const leaveTypes = await LeaveType.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       order = 1;
       for (const leaveType of leaveTypes) {
         const newLeaveType = new LeaveType({
@@ -244,14 +260,16 @@ const orgController = {
           organization: org._id,
           description: leaveType.description,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newLeaveType.save();
         order++;
       }
 
-
-      const disciplinaries = await Disciplinary.find({ isDefault: true, isDeleted: false });
+      const disciplinaries = await Disciplinary.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       order = 1;
       for (const disciplinary of disciplinaries) {
         const newDisciplinary = new Disciplinary({
@@ -259,25 +277,27 @@ const orgController = {
           organization: org._id,
           description: disciplinary.description,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newDisciplinary.save();
         order++;
       }
 
-      const documentTags = await DocumentTags.find({ isDefault: true, isDeleted: false });
+      const documentTags = await DocumentTags.find({
+        isDefault: true,
+        isDeleted: false,
+      });
       order = 1;
       for (const documentTag of documentTags) {
         const newDocumentTag = new DocumentTags({
           name: documentTag.name,
           organization: org._id,
           createdBy: req.user._id,
-          order
+          order,
         });
         await newDocumentTag.save();
         order++;
       }
-
 
       const token = crypto.randomBytes(20).toString("hex");
       user.invitationToken = token;
@@ -285,7 +305,7 @@ const orgController = {
       await user.save();
 
       const personalInfo = new EmployeePersonalInfo({ employee: user._id });
-      await personalInfo.save()
+      await personalInfo.save();
 
       const relation = new UserOrganization({
         user: user._id,
@@ -305,13 +325,21 @@ const orgController = {
   },
   async saUpdateOrgAdmin(req, res) {
     try {
-      const user = await User.findOneAndUpdate({
-        _id: req.params.userid
-      }, { email: req.body.email }, { new: true });
+      const user = await User.findOneAndUpdate(
+        {
+          _id: req.params.userid,
+        },
+        { email: req.body.email },
+        { new: true }
+      );
 
-      const org = await Organization.findOneAndUpdate({
-        _id: req.params.organizationid
-      }, { name: req.body.name }, { new: true });
+      const org = await Organization.findOneAndUpdate(
+        {
+          _id: req.params.organizationid,
+        },
+        { name: req.body.name },
+        { new: true }
+      );
 
       res.status(200).json({
         org,
@@ -323,17 +351,19 @@ const orgController = {
     }
   },
 
-
   async update(req, res) {
     try {
-
       let file = await File.findOne({ _id: req.body.file });
       if (file) {
         req.body.logo = await fileController.moveToUploads(req, file);
       }
-      const org = await Organization.findOneAndUpdate({
-        _id: req.organization._id
-      }, req.body, { new: true });
+      const org = await Organization.findOneAndUpdate(
+        {
+          _id: req.organization._id,
+        },
+        req.body,
+        { new: true }
+      );
 
       res.status(200).json({
         org,
@@ -348,8 +378,8 @@ const orgController = {
   async details(req, res) {
     try {
       const details = await Organization.findOne({
-        _id: req.organization._id
-      }).populate('logo');
+        _id: req.organization._id,
+      }).populate("logo");
 
       res.status(200).json({
         details,
@@ -363,24 +393,29 @@ const orgController = {
 
   async sendWelcomeEmail(req, res) {
     try {
-
-      let users = await User.find({ organization: req.organization?._id || null, isActive: true, receivedWelcomeEmail: false }).populate("personalInfo");
+      let users = await User.find({
+        organization: req.organization?._id || null,
+        isActive: true,
+        receivedWelcomeEmail: false,
+      }).populate("personalInfo");
       await processUsers(users);
       res.status(200).json({
-        message: 'Welcome emails sent successfully'
+        message: "Welcome emails sent successfully",
       });
     } catch (error) {
       console.error("employeeController:update:error -", error);
       res.status(400).json(error);
     }
   },
-
 };
 async function processUsers(users) {
   for (const user of users) {
-    console.log(user.email, user.receivedWelcomeEmail);
-    sendGrid.send(user.email, 'welcome', { user });
-    await User.findOneAndUpdate({ _id: user._id }, { receivedWelcomeEmail: true });
+    //console.log(user.email, user.receivedWelcomeEmail);
+    sendGrid.send(user.email, "welcome", { user });
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { receivedWelcomeEmail: true }
+    );
   }
 }
 module.exports = orgController;

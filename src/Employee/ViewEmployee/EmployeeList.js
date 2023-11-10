@@ -23,6 +23,7 @@ import { useForm, Controller } from "react-hook-form";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import API_URLS from "../../constants/apiUrls";
 import Pagination from "@mui/material/Pagination";
+import styled from "styled-components";
 
 import {
   DashHeader,
@@ -66,7 +67,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellStyle = {
@@ -85,7 +86,17 @@ const Celllstyle2 = {
   fontWeight: "400",
   lineHeight: "15px",
 };
-
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 const Employee = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -135,7 +146,9 @@ const Employee = () => {
   const GetEmployees = (user) => {
     setIsLoading(true);
 
-    let url = API_URLS.getEmployeeList.replace("Page", page);
+    let url = API_URLS.getEmployeeList
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -160,8 +173,30 @@ const Employee = () => {
         setIsLoading(false);
       });
   };
-  // console.log("result of the fetch api ", result);
-  // caling the fetch employee list api
+  // send welocme email
+  const SendWelcomeEmail = () => {
+    let url = API_URLS.sendWelcomeEmail;
+
+    httpClient({
+      method: "post",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        // console.error("Error:", error);
+        toast.error("Error creating Employee. Please try again.");
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -177,11 +212,11 @@ const Employee = () => {
       setUser(parsedUser);
       GetEmployees(parsedUser);
     }
-  }, [page]);
+  }, [page, searchValue]);
   const HandleSubmitData = (data) => {
     return data;
   };
-  // console.log("submit data ", HandleSubmitData());
+  // //console.log("submit data ", HandleSubmitData());
   // Add New Employee Post api  user name and email
 
   const FilterData = [
@@ -264,7 +299,9 @@ const Employee = () => {
           " "
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <AddNewButton>Send Welcome Emails</AddNewButton>{" "}
+            <AddNewButton onClick={() => SendWelcomeEmail()}>
+              Send Welcome Emails
+            </AddNewButton>{" "}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
           </div>
         )}
@@ -451,7 +488,7 @@ const Employee = () => {
                       sx={Celllstyle2}
                       style={{ minWidth: "150px" }}
                     >
-                      <TabelDiv
+                      <UnderlineHoverEffect
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
                             Navigate(
@@ -485,7 +522,7 @@ const Employee = () => {
                             {data.email || " - "}
                           </TabelLightPara>
                         </TabelParaContainer>
-                      </TabelDiv>
+                      </UnderlineHoverEffect>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.personalInfo.employeeId || " - "}
@@ -496,9 +533,9 @@ const Employee = () => {
                     <TableCell align="left" sx={Celllstyle2}>
                       {/* <Moment format="YYYY/MM/DD"> */}{" "}
                       {data.positions[0]?.startDate
-                        ? moment(data.positions[0]?.startDate).format(
-                            "DD/MM/YYYY"
-                          )
+                        ? moment
+                            .utc(data.positions[0]?.startDate)
+                            .format("D MMM, YYYY")
                         : " - "}
                       {/* </Moment> */}
                     </TableCell>

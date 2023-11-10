@@ -20,7 +20,7 @@ const fileController = {
                 size: uploadedFile.size,
                 uploadedBy: req.user._id
             }
-            console.log("fileController:upload:file-payload-", payload);
+            //console.log("fileController:upload:file-payload-", payload);
             const file = new File({ ...payload });
             await file.save();
             res.status(201).json({ file, message: 'File uploaded successfully.' });
@@ -37,7 +37,7 @@ const fileController = {
             if (!file) {
                 return null;
             }
-            console.log("Moving file .. ");
+            //console.log("Moving file .. ");
             const tempFilePath = [file.destination, file.name].join('/');
             const newFilePath = 'uploads/';
             const newFileName = Date.now() + '_' + req.user._id + '_' + file.originalName.replaceAll(' ', '_');
@@ -50,7 +50,7 @@ const fileController = {
                 path.join(__dirname, '../' + destFilePath)
             );
 
-            console.log('Saved File:', {
+            //console.log('Saved File:', {
                 ...file.toObject(),
                 destination: newFilePath,
                 path: destFilePath,

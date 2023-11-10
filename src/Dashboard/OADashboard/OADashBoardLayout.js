@@ -15,7 +15,7 @@ const OADashBoardLayout = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  console.log("our screen size", screenWidth);
+  //console.log("our screen size", screenWidth);
 
   return (
     <Dashboard>

@@ -71,7 +71,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   height: "59.7rem",
   overflowY: "scroll",
@@ -125,7 +125,6 @@ const EVPerformance = () => {
 
   const [byError, setByError] = useState(null);
   const onSubmit = (data) => {
-  
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -136,7 +135,7 @@ const EVPerformance = () => {
     }
 
     if (isEmptyObject(errors) && !update) {
-      //console.log(file, ":this is file ");
+      ////console.log(file, ":this is file ");
       if (file) {
         data.file = file._id;
       } else {
@@ -164,26 +163,28 @@ const EVPerformance = () => {
   //   //
   // };
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    //console.log("this file type:", type);
+    ////console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -207,10 +208,10 @@ const EVPerformance = () => {
         },
       })
         .then((data) => {
-          //console.log(data);
+          ////console.log(data);
 
           if (data?.result) {
-            //console.log(data?.result);
+            ////console.log(data?.result);
             setFile(data?.result?.file);
 
             setIsUploading(false);
@@ -320,7 +321,7 @@ const EVPerformance = () => {
       (suggestion) => suggestion.text === tag.text
     );
 
-    //console.log("tag :", tag, "issuggestioin:", isTagInSuggestions);
+    ////console.log("tag :", tag, "issuggestioin:", isTagInSuggestions);
 
     if (isTagInSuggestions) {
       setTags([...tags, tag]);
@@ -338,7 +339,7 @@ const EVPerformance = () => {
   };
 
   const handleTagClick = (index) => {
-    //console.log("The tag at index " + index + " was clicked");
+    ////console.log("The tag at index " + index + " was clicked");
   };
 
   const KeyCodes = {
@@ -371,7 +372,7 @@ const EVPerformance = () => {
         data?.completedBy.some((completedObj) => completedObj._id === obj.id)
       )
       .map((obj) => ({ id: obj.id, text: obj.text }));
-    //console.log(addTags, ":these are the tags ");
+    ////console.log(addTags, ":these are the tags ");
     setTags(addTags);
     handleOpen();
     setFile(data.file);
@@ -386,7 +387,7 @@ const EVPerformance = () => {
   };
 
   const HandleUpdate = (data) => {
-    //console.log("update Data:", data);
+    ////console.log("update Data:", data);
     setIsLoading(true);
     let dataCopy = data;
 
@@ -467,7 +468,7 @@ const EVPerformance = () => {
           if (result) {
             resolve(result);
             setSuggestionsData(result);
-            //console.log("suggestions are:", result);
+            ////console.log("suggestions are:", result);
 
             const suggestions = result?.users?.map((data) => ({
               id: data?.userData._id,
@@ -496,10 +497,10 @@ const EVPerformance = () => {
         });
     });
   };
-  //console.log(suggestions, "this is map  data for suggestions");
+  ////console.log(suggestions, "this is map  data for suggestions");
 
-  // console.log("tags data:", tags);
-  console.log(byError);
+  // //console.log("tags data:", tags);
+  //console.log(byError);
 
   return (
     <>
@@ -844,9 +845,9 @@ const EVPerformance = () => {
                               <TitlePara>
                                 Date of Review:{" "}
                                 {data.reviewDate
-                                  ? moment(data.reviewDate).format(
-                                      "D MMM, YYYY"
-                                    )
+                                  ? moment
+                                      .utc(data.reviewDate)
+                                      .format("D MMM, YYYY")
                                   : " - "}
                               </TitlePara>
                             </FlexSpaceBetween>
@@ -903,9 +904,9 @@ const EVPerformance = () => {
                                 <ReviewsDiv>
                                   Next Review on:{" "}
                                   {data.nextReviewDate
-                                    ? moment(data.nextReviewDate).format(
-                                        "DD/MM/YYYY"
-                                      )
+                                    ? moment
+                                        .utc(data.nextReviewDate)
+                                        .format("DD/MM/YYYY")
                                     : " - "}
                                 </ReviewsDiv>
                               )}
