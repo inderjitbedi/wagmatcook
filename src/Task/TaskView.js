@@ -380,7 +380,7 @@ const TaskView = () => {
     //   return `${months} ${months === 1 ? "month" : "months"} ago`;
     // }
     else {
-      const Date = moment(inputDate).format("YYYY-MM-DD hh:mm A");
+      const Date = moment.utc(inputDate).format("YYYY-MM-DD hh:mm A");
 
       return Date;
     }
@@ -591,7 +591,7 @@ const TaskView = () => {
                 <TaskTitle>
                   {" "}
                   {taskDetails?.dueDate
-                    ? moment(taskDetails.dueDate).format("D MMM, YYYY")
+                    ? moment.utc(taskDetails.dueDate).format("D MMM, YYYY")
                     : " - "}{" "}
                 </TaskTitle>
               </FlexContaier>

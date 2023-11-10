@@ -19,13 +19,13 @@ const PublicLayout = ({ component: Component }: any) => {
   };
   const location = useLocation();
 
-  // console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
+  // //console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
   //
   const imageUrl =
     location.pathname.indexOf("/organization-admin/complete-signup") > -1
       ? "./../../../assets/solar-bg.png"
       : "/images/image 4.svg";
-  // console.log(Component.name, imageUrl);
+  // //console.log(Component.name, imageUrl);
   const { pathname } = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();

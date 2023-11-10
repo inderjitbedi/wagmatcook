@@ -19,6 +19,7 @@ import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
 import ROLES from "../constants/roles";
+import { useForm } from "react-hook-form";
 
 import {
   AddNewButton,
@@ -54,7 +55,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
@@ -85,28 +86,7 @@ const Disciplinary = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
-  const [open, setOpen] = useState(false);
-  const HandleOpen = () => {
-    setFormData({
-      name: "",
-      description: "",
-      requiredBcr: "",
-    });
-    setOpen(true);
-  };
-  const HandleClose = () => {
-    setOpen(false);
-    setdescriptionLength(500);
-    setErrors("");
-  };
-  // update modal var
-  const [openEdit, setOpenEdit] = useState(false);
-  const HandleOpenEdit = () => setOpenEdit(true);
-  const HandleCloseEdit = () => {
-    setdescriptionLength(500);
-    setOpenEdit(false);
-    setErrors("");
-  };
+
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -118,31 +98,63 @@ const Disciplinary = () => {
   };
   const [Id, setId] = useState("");
   const [result, setResult] = useState([]);
-  const [descriptionLength, setdescriptionLength] = useState(500);
+  const [detailsLength, setDetailsLength] = useState(500);
+  const [update, setUpdate] = useState(false);
+
   const [searchValue, setSearchValue] = useState("");
 
   const [disciplinaryData, setDisciplinaryData] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    // requiredBcr: "",
+  const [open, setOpen] = useState(false);
+  const HandleOpen = () => setOpen(true);
+  const HandleClose = () => {
+    setOpen(false);
+    setDetailsLength(500);
+    clearErrors();
+    reset({});
+  };
+  const {
+    register,
+    clearErrors,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    mode: "all",
+    defaultValues: {
+      name: "",
+      description: "",
+    },
   });
 
-  const [errors, setErrors] = useState({
-    nameError: "",
-    descriptionError: "",
-    // requiredBcrError: "",
-  });
+  const onSubmit = (data) => {
+    function isEmptyObject(obj) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isEmptyObject(errors) && !update) {
+      HandleSubmit(data);
+    } else if (update && isEmptyObject(errors)) {
+      HandleUpdate(data);
+    }
+  };
 
-  const [upDateData, setupDateData] = useState({
-    name: "",
-    description: "",
-    // requiredBcr: "",
-  });
-
-  const HandleLoadMore = () => {
-    const nextPage = result.currentPage + 1;
-    setPage(nextPage);
+  const HandleUpdateAction = (data) => {
+    setUpdate(true);
+    setId(data._id);
+    setDetailsLength(500 - data?.description?.length);
+    reset({ name: data.name, description: data.description });
+    HandleOpen();
+  };
+  const HandleOpenAddNewAction = () => {
+    setUpdate(false);
+    HandleOpen();
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
   };
   //Delete function
   const HandleDelete = () => {
@@ -184,7 +196,8 @@ const Disciplinary = () => {
     setIsLoading(true);
     var url = "";
     if (role === ROLES.SUPER_ADMIN) {
-      url = API_URLS.getSADisciplinary.replace("Page", page)
+      url = API_URLS.getSADisciplinary
+        .replace("Page", page)
         .replace("searchValue", searchValue);
     } else {
       url = API_URLS.getDisciplinary
@@ -234,205 +247,88 @@ const Disciplinary = () => {
   }, [searchValue, page]);
 
   //create new enter in table
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-
+  const HandleSubmit = (data) => {
+    setIsLoading(true);
     let url = API_URLS.createDisciplinary;
-    if (!formData.name) {
-      setErrors((prevState) => {
-        return {
-          ...prevState,
-          nameError: "Required",
-        };
-      });
-      if (!formData.description) {
-        setErrors((prevState) => {
-          return {
-            ...prevState,
 
-            descriptionError: "Required",
-          };
-        });
-      } else {
-        setErrors("");
-      }
+    setIsLoading(true);
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
     }
-    if (
-      formData.name &&
-      formData.description &&
-      !errors.nameError &&
-      !errors.descriptionError
-    ) {
-      setIsLoading(true);
-      let dataCopy = {
-        ...formData,
-        order: disciplinaryData?.length + 1,
-      };
-      if (userType === ROLES.SUPER_ADMIN) {
-        dataCopy = {
-          ...formData,
-          isDefault: true,
-          order: disciplinaryData?.length + 1,
-        };
-      }
+    let dataCopy = { ...data, order: disciplinaryData?.length + 1 };
 
-      httpClient({
-        method: "post",
-        url,
-        data: dataCopy,
-      })
-        .then(({ result, error }) => {
-          if (result) {
-            HandleClose();
-            GetDisciplinary(userType);
-            setFormData("");
-            setErrors("");
-            toast.success(result.message, {
-              className: "toast",
-            }); //"Entry Added Successfully");
-          } else {
-            //toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error creating Disciplinary. Please try again.");
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
           HandleClose();
-          setIsLoading(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+          GetDisciplinary(userType);
+          reset();
+
+          toast.success(result.message, {
+            className: "toast",
+          }); //"Entry Added Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating Disciplinary. Please try again.");
+        HandleClose();
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   // handel updates
-  const HandleUpdate = () => {
-    let dataCopy = { ...upDateData };
-     if (userType === ROLES.SUPER_ADMIN) {
-       dataCopy = { ...upDateData, isDefault: true };
-     }
+  const HandleUpdate = (data) => {
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
+
+    let dataCopy = data;
     let url = API_URLS.updateDisciplinary.replace(":id", Id);
-    if (!upDateData.name) {
-      setErrors((prevState) => {
-        return {
-          ...prevState,
-          nameError: "Required",
-        };
-      });
-      if (!upDateData.description) {
-        setErrors((prevState) => {
-          return {
-            ...prevState,
 
-            descriptionError: "Required",
-          };
-        });
-      } else {
-        setErrors("");
-      }
-      // console.log("in handel submit ", errors);
-    }
+    setIsLoading(true);
 
-    if (
-      upDateData.description &&
-      upDateData.name &&
-      !errors.nameError &&
-      !errors.descriptionError
-    ) {
-      setIsLoading(true);
-
-      httpClient({
-        method: "put",
-        url,
-        data: dataCopy,
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          GetDisciplinary(userType);
+          setId("");
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //"Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
       })
-        .then(({ result, error }) => {
-          if (result) {
-            GetDisciplinary(userType);
-            setId("");
-            HandleCloseEdit();
-            setupDateData("");
-            setErrors("");
-            toast.success(result.message, {
-              className: "toast",
-            }); //"Entry Updated Successfully");
-          } else {
-            //toast.warn("something went wrong ");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          toast.error("Error creating Disciplinary. Please try again.");
-          setIsLoading(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating Disciplinary. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
   // Handle changes here
-  const HandleChanges = (e) => {
-    const { value, name } = e.target;
-    // Validation for the Name field
-    if (name === "name") {
-      if (!value) {
-        setErrors({ ...errors, nameError: "Required" });
-      } else {
-        setErrors({ ...errors, nameError: "" });
-      }
-    }
-    if (name === "description") {
-      setdescriptionLength(500 - value.length);
-      // validation: Description should not be empty and should have a minimum length of 10 characters
-      if (!value) {
-        setErrors({
-          ...errors,
-          descriptionError: "Required",
-        });
-      } else if (formData.description?.length > 500) {
-        setErrors({
-          ...errors,
-          descriptionError: "Details cannot exceed 500 characters",
-        });
-      } else {
-        setErrors({ ...errors, descriptionError: "" });
-      }
-    }
-
-    setFormData({ ...formData, [name]: value });
-  };
-  const HandleChangesEdit = (e) => {
-    const { value, name } = e.target;
-    // Validation for the Name field
-    if (name === "name") {
-      if (!value) {
-        setErrors({ ...errors, nameError: "Required" });
-      } else {
-        setErrors({ ...errors, nameError: "" });
-      }
-    }
-    if (name === "description") {
-      setdescriptionLength(500 - value.length);
-      if (!value) {
-        setErrors({
-          ...errors,
-          descriptionError: "Required",
-        });
-      } else if (formData?.description?.length > 500) {
-        setErrors({
-          ...errors,
-          descriptionError: "Details cannot exceed 500 characters",
-        });
-      } else {
-        setErrors({ ...errors, descriptionError: "" });
-      }
-    }
-    setupDateData({ ...upDateData, [name]: value });
-  };
 
   // Handle reorder
   const HandleReorder = (reOrder) => {
-    console.log(reOrder, "this reorder");
+    //console.log(reOrder, "this reorder");
     let url = API_URLS.reorderDisciplinary;
 
     httpClient({
@@ -462,7 +358,7 @@ const Disciplinary = () => {
     const reorderedData = Array.from(disciplinaryData);
     const [movedItem] = reorderedData.splice(result.source.index, 1);
     reorderedData.splice(result.destination.index, 0, movedItem);
-    // console.log("drag is working ");
+    // //console.log("drag is working ");
     setDisciplinaryData(reorderedData);
     HandleReorder(reorderedData.map((item) => item._id)); // Update the API with the new order
   };
@@ -480,29 +376,7 @@ const Disciplinary = () => {
     background: isDraggingOver ? "#fff" : "#fff",
     padding: "2px",
   });
-  const PopulateUpdateForm = (data) => {
-    setupDateData({
-      name: data.name,
-      description: data.description,
-      // requiredBcr: data.requiredBcr,
-    });
-    setdescriptionLength(500 - data.description.length);
 
-    HandleOpenEdit();
-  };
-  const [anchorEl, setAnchorEl] = useState(false);
-  const openMenu = Boolean(anchorEl);
-  const handleClickMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    Navigate("/");
-  };
   return (
     <>
       <>
@@ -545,45 +419,70 @@ const Disciplinary = () => {
                 </div>
               ) : (
                 <>
-                  <ModalUpperDiv>
-                    <ModalHeading>Add New Disciplinary Type</ModalHeading>
-                    <ModalIcon
-                      onClick={() => {
-                        HandleClose();
-                        setErrors("");
-                        setFormData("");
-                      }}
-                      src="/images/icons/Alert-Circle.svg"
-                    />
-                  </ModalUpperDiv>
-                  <ModalUpperMid>
-                    <InputLabel>
-                      Disciplinary Type Name <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Input
-                      type="text"
-                      name="name"
-                      onChange={HandleChanges}
-                      value={formData.name}
-                    />
-                    <Errors>{errors.nameError}</Errors>
-                    <InputLabel>
-                      Details <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <TextArea
-                      type="text"
-                      name="description"
-                      onChange={HandleChanges}
-                      value={formData.description}
-                    />
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <ModalUpperDiv>
+                      <ModalHeading>
+                        {" "}
+                        {!update ? "Add Disciplinary" : "Update Disciplinary"}
+                      </ModalHeading>
+                      <ModalIcon
+                        onClick={() => {
+                          HandleClose();
+                          setUpdate(false);
+                          clearErrors();
+                          reset({});
+                        }}
+                        src="/images/icons/Alert-Circle.svg"
+                      />
+                    </ModalUpperDiv>
+                    <ModalUpperMid>
+                      <InputLabel>
+                        Disciplinary Type Name <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <Input
+                        type="text"
+                        {...register("name", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                        })}
+                      />
+                      <Errors>{errors.nameError}</Errors>
+                      <InputLabel>
+                        Details <InputSpan>*</InputSpan>
+                      </InputLabel>
+                      <TextArea
+                        type="text"
+                        {...register("description", {
+                          required: {
+                            value: true,
+                            message: "Required",
+                          },
+                          maxLength: {
+                            value: 500,
+                            message: "Details exceeds 500 characters ",
+                          },
+                          // minLength: {
+                          //   value: 10,
+                          //   message: "Atleast write  10 characters ",
+                          // },
+                          onChange: (value) => {
+                            setDetailsLength(500 - value.target.value.length);
+                          },
+                        })}
+                      />
 
-                    <InputPara>
-                      {" "}
-                      <Errors>{errors.descriptionError}</Errors>{" "}
-                      {descriptionLength > -1 ? descriptionLength : 0}{" "}
-                      characters left
-                    </InputPara>
-                    {/* <InputLabel>
+                      <InputPara>
+                        {" "}
+                        {<Errors>{errors.description?.message}</Errors>}{" "}
+                        <span style={{ justifySelf: "flex-end" }}>
+                          {" "}
+                          {detailsLength > -1 ? detailsLength : 0} characters
+                          left
+                        </span>
+                      </InputPara>
+                      {/* <InputLabel>
                   Requires BCR? <InputSpan>*</InputSpan>
                 </InputLabel>
 
@@ -596,17 +495,16 @@ const Disciplinary = () => {
                   <Option value={true}>Yes</Option>
                   <Option value={false}>No</Option>
                 </Select> */}
-                    {/* <Errors>{errors.requiredBcrError}</Errors> */}
-                    <AddNewButton
-                      onClick={(e) => {
-                        HandleSubmit(e);
-                      }}
-                      disabled={isLoading}
-                      style={{ marginTop: "2.5rem" }}
-                    >
-                      Submit
-                    </AddNewButton>
-                  </ModalUpperMid>
+                      {/* <Errors>{errors.requiredBcrError}</Errors> */}
+
+                      <AddNewButton
+                        disabled={isLoading}
+                        style={{ marginTop: "2.5rem" }}
+                      >
+                        {!update ? "Submit" : "Update"}
+                      </AddNewButton>
+                    </ModalUpperMid>
+                  </form>
                 </>
               )}
             </Box>
@@ -690,6 +588,7 @@ const Disciplinary = () => {
                             key={data._id}
                             draggableId={data._id}
                             index={index}
+                            isDragDisabled={searchValue.length !== 0}
                           >
                             {(provided, snapshot) => (
                               <TableRow
@@ -734,8 +633,7 @@ const Disciplinary = () => {
                                   <ActionIconDiv>
                                     <ActionIcons
                                       onClick={() => {
-                                        setId(data._id);
-                                        PopulateUpdateForm(data);
+                                        HandleUpdateAction(data);
                                       }}
                                       src="/images/icons/Pendown.svg"
                                     />
@@ -774,107 +672,7 @@ const Disciplinary = () => {
         )}
       </>
       {/* modal fo editing  */}
-      <Modal
-        open={openEdit}
-        sx={{
-          backgroundColor: "rgb(27, 27, 27, 0.75)",
-          backdropFilter: "blur(8px)",
-        }}
-        // onClose={HandleCloseEdit}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          {isLoading ? (
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                height: "38.6rem",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 999,
-              }}
-            >
-              <RotatingLines
-                strokeColor="#279AF1"
-                strokeWidth="3"
-                animationDuration="0.75"
-                width="52"
-                visible={true}
-              />
-            </div>
-          ) : (
-            <>
-              <ModalUpperDiv>
-                <ModalHeading> Update Disciplinary Type</ModalHeading>
-                <ModalIcon
-                  onClick={() => {
-                    HandleCloseEdit();
-                    setErrors("");
-                    setFormData("");
-                  }}
-                  src="/images/icons/Alert-Circle.svg"
-                />
-              </ModalUpperDiv>
-              <ModalUpperMid>
-                <InputLabel>
-                  Disciplinary Type Name <InputSpan>*</InputSpan>
-                </InputLabel>
-                <Input
-                  type="text"
-                  name="name"
-                  onChange={HandleChangesEdit}
-                  value={upDateData.name}
-                  // placeholder={name}
-                />
-                <Errors>{errors.nameError}</Errors>
-                <InputLabel>
-                  Details <InputSpan>*</InputSpan>
-                </InputLabel>
-                <TextArea
-                  type="text"
-                  name="description"
-                  onChange={HandleChangesEdit}
-                  value={upDateData.description}
-                  // placeholder={descriptio}
-                />
-                <Errors style={{ display: "inline-block" }}>
-                  {errors.descriptionError}
-                </Errors>
-                <InputPara>
-                  {" "}
-                  <Errors>{errors.descriptionError}</Errors>{" "}
-                  {descriptionLength > -1 ? descriptionLength : 0} characters
-                  left
-                </InputPara>
-                {/* <InputLabel>
-              Requires BCR? <InputSpan>*</InputSpan>
-            </InputLabel>
-            <Select
-              value={upDateData.requiredBcr}
-              name="requiredBcr"
-              onChange={HandleChangesEdit}
-            >
-              <Option value="" disabled hidden>
-                select a option
-              </Option>
-              <Option value={true}>Yes</Option>
-              <Option value={false}>No</Option>
-            </Select> */}
-                <AddNewButton
-                  onClick={() => {
-                    HandleUpdate();
-                  }}
-                  disabled={isLoading}
-                >
-                  Update
-                </AddNewButton>
-              </ModalUpperMid>
-            </>
-          )}
-        </Box>
-      </Modal>
+
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
@@ -883,48 +681,6 @@ const Disciplinary = () => {
         message="Are you sure you want to delete this disciplinary type?"
         isLoading={isLoading}
       />
-      <Menu
-        sx={{ margin: "0rem" }}
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem
-          style={{
-            color: "#222B45",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Settings
-        </MenuItem>
-        <MenuItem
-          onClick={HandleLogout}
-          style={{
-            color: "#EA4335",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Logout
-        </MenuItem>
-      </Menu>
     </>
   );
 };

@@ -17,7 +17,7 @@ const VerifyOTP = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isUrl, setUrl] = useState("");
-  console.log("this the locaton: ", location.pathname);
+  //console.log("this the locaton: ", location.pathname);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

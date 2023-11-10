@@ -1102,7 +1102,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
+            ${moment.utc(data.request.from || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1124,7 +1124,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
+            ${moment.utc(data.request.to || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1412,7 +1412,7 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
+            ${moment.utc(data.request.from || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1434,7 +1434,7 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
               line-height: 32px;
               margin: 0px;
             ">
-            ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
+            ${moment.utc(data.request.to || "").format("MMM DD yyyy")}</span>
             </p>
             <p style="
             width: 100%;
@@ -1723,7 +1723,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.request.from || "").format("MMM DD yyyy")}</span>
+                ${moment
+                  .utc(data.request.from || "")
+                  .format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -1745,7 +1747,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.request.to || "").format("MMM DD yyyy")}</span>
+                ${moment
+                  .utc(data.request.to || "")
+                  .format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2036,7 +2040,9 @@ height: 152px;" />
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                ${moment
+                  .utc(data.task.dueDate || "")
+                  .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2306,7 +2312,9 @@ height: 152px;" />
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                ${moment
+                  .utc(data.task.dueDate || "")
+                  .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2601,7 +2609,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   line-height: 32px;
                   margin: 0px;
                 ">
-                ${moment(data.task.dueDate || "").format("MMM DD yyyy")} </span>
+                ${moment
+                  .utc(data.task.dueDate || "")
+                  .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;

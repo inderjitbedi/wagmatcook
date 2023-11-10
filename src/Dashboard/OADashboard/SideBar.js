@@ -131,7 +131,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
 
     Navigate("/");
   };
-  // console.log(orgData, "this is orgdata");
+  // //console.log(orgData, "this is orgdata");
   let API_URL = process.env.REACT_APP_API_URL;
 
   return (
@@ -241,7 +241,8 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
                 clip-rule="evenodd"
                 d="M17.2692 14.25C17.2692 14.664 16.9184 15 16.4843 15C16.0502 15 15.6993 14.664 15.6993 14.25C15.6993 13.0095 14.6428 12 13.3445 12C12.8084 12 12.299 12.1755 11.8876 12.4867C12.3147 13.2338 12.5596 14.0903 12.5596 15C12.5596 15.414 12.2087 15.75 11.7746 15.75C11.3405 15.75 10.9897 15.414 10.9897 15C10.9897 12.9323 9.22903 11.25 7.06494 11.25C4.90084 11.25 3.1402 12.9323 3.1402 15C3.1402 15.414 2.78933 15.75 2.35526 15.75C1.92118 15.75 1.57031 15.414 1.57031 15C1.57031 12.105 4.03583 9.75 7.06494 9.75C8.57753 9.75 9.94804 10.3372 10.9426 11.2845C11.6247 10.7805 12.4646 10.5 13.3445 10.5C15.5086 10.5 17.2692 12.1823 17.2692 14.25ZM13.3445 6.75C13.7778 6.75 14.1295 7.08675 14.1295 7.5C14.1295 7.91325 13.7778 8.25 13.3445 8.25C12.9112 8.25 12.5596 7.91325 12.5596 7.5C12.5596 7.08675 12.9112 6.75 13.3445 6.75ZM13.3445 9.75C14.6428 9.75 15.6993 8.7405 15.6993 7.5C15.6993 6.2595 14.6428 5.25 13.3445 5.25C12.0462 5.25 10.9897 6.2595 10.9897 7.5C10.9897 8.7405 12.0462 9.75 13.3445 9.75ZM7.06494 3.75C7.93073 3.75 8.63483 4.42275 8.63483 5.25C8.63483 6.07725 7.93073 6.75 7.06494 6.75C6.19914 6.75 5.49504 6.07725 5.49504 5.25C5.49504 4.42275 6.19914 3.75 7.06494 3.75ZM7.06494 8.25C8.79653 8.25 10.2047 6.9045 10.2047 5.25C10.2047 3.5955 8.79653 2.25 7.06494 2.25C5.33334 2.25 3.92515 3.5955 3.92515 5.25C3.92515 6.9045 5.33334 8.25 7.06494 8.25Z"
                 fill={
-                  location.pathname === "/organization-admin/employee/list" ||
+                  location.pathname.indexOf("employee/list") > -1 ||
+                  location.pathname.indexOf("employee/details") > -1 ||
                   isHovering.employee
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -250,7 +251,8 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname === "/organization-admin/employee/list" ||
+                location.pathname.indexOf("employee/list") > -1 ||
+                location.pathname.indexOf("employee/details") > -1 ||
                 isHovering.employee
                   ? style
                   : { color: "#5C5C5C" }
@@ -270,16 +272,14 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
           <SideBarListContainer style={{ zIndex: "1" }}>
             <BiTask
               style={
-                location.pathname === "/organization-admin/tasks" ||
-                isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
             />
             <SideBarListTitle
               style={
-                location.pathname === "/organization-admin/tasks" ||
-                isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -334,7 +334,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
                 stroke={
-                  location.pathname === "/organization-admin/documents" ||
+                  location.pathname.indexOf("documents") > -1 ||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -344,7 +344,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 9.75H11.7741"
                 stroke={
-                  location.pathname === "/organization-admin/documents" ||
+                  location.pathname.indexOf("documents") > -1 ||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -355,7 +355,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 6.75H11.7741"
                 stroke={
-                  location.pathname === "/organization-admin/documents" ||
+                  location.pathname.indexOf("documents") > -1 ||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -366,7 +366,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 12H9.41929"
                 stroke={
-                  location.pathname === "/organization-admin/documents" ||
+                  location.pathname.indexOf("documents") > -1 ||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -377,7 +377,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname === "/organization-admin/documents" ||
+                location.pathname.indexOf("documents") > -1 ||
                 isHovering.documents
                   ? style
                   : { color: "#5C5C5C" }

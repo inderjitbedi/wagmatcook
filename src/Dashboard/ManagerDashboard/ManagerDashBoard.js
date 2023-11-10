@@ -126,7 +126,7 @@ const ManagerDashBoard = () => {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "flex-start",
                       margin: "3rem 0rem",
                     }}
                   >
@@ -221,7 +221,7 @@ const ManagerDashBoard = () => {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "flex-start",
                       margin: "3rem 0rem",
                     }}
                   >
@@ -239,7 +239,7 @@ const ManagerDashBoard = () => {
                         </CardSubHeading>
                         <CardSubGrey>
                           {data.expiryDate
-                            ? moment(data.expiryDate).format("D MMM, YYYY")
+                            ? moment.utc(data.expiryDate).format("D MMM, YYYY")
                             : " - "}
                         </CardSubGrey>
                       </FlexColumn>

@@ -17,7 +17,7 @@ import UserSideBar from "./UserDashboard/UserSideBar";
 import ManagerSideBar from "./ManagerDashboard/ManagerSideBar";
 import HRSideBar from "./HRDashboard/HRSideBar";
 import { useHeaderInfoContext } from "../Context/ContextProvider";
-
+import SASideBar from "../SuperAdmin/SideBar/SASideBar";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -91,7 +91,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
   const openMenuNotification = Boolean(anchorElNotification);
   const handleClickMenuNotification = (event) => {
     setAnchorElNotification(event.currentTarget);
-    // console.log("working menu for notification");
+    // //console.log("working menu for notification");
     setShowAll(false);
   };
   const handleCloseMenuNotification = () => {
@@ -193,6 +193,16 @@ const CommenDashHeader = ({ onSearch, text }) => {
         <SidebarWrapper>
           {" "}
           <UserSideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    } else if (userType === ROLES.SUPER_ADMIN) {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <SASideBar
             ToggleSidebar={ToggleSidebar}
             screenWidth={screenWidth}
           />{" "}
@@ -431,7 +441,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
           location.pathname.indexOf("personal-info") > -1 ||
           location.pathname.indexOf("employee/benefits") > -1 ||
           location.pathname.indexOf("tasks/details") > -1 ||
-          location.pathname.indexOf("documents/history") > -1 ? (
+          location.pathname.indexOf("documents/history") > -1 ||
+          location.pathname.indexOf("dashboard") > -1 ? (
             " "
           ) : screenWidth < 600 ? (
             <SearchBarWrapper expanded={expanded}>
@@ -646,7 +657,9 @@ const CommenDashHeader = ({ onSearch, text }) => {
                       <NotificationListText>{data.title}</NotificationListText>
                       <NotificationListTextLight>
                         {data.createdAt
-                          ? moment(data.createdAt).format("D MMM, YYYY hh:mm A")
+                          ? moment
+                              .utc(data.createdAt)
+                              .format("D MMM, YYYY hh:mm A")
                           : "-"}
                       </NotificationListTextLight>
                     </NotificationFlexCol>

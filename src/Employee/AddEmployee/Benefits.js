@@ -442,7 +442,7 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
 
                   <FlexColumnForm>
                     <InputLabel>
-                      Description <InputSpan>*</InputSpan>
+                      Description 
                     </InputLabel>
                     <TextArea
                       style={{ height: "14rem" }}

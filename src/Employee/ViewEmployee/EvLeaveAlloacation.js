@@ -74,7 +74,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const EvLeaveAlloacation = () => {
@@ -349,7 +349,7 @@ const EvLeaveAlloacation = () => {
           </FlexSpaceBetween>
           <LeaveDiv>
             Leave Alloactions
-            {userType === ROLES.EMPLOYEE ? (
+            {userType === ROLES.EMPLOYEE  ||  userType === ROLES.MANAGER ? (
               " "
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
@@ -559,7 +559,7 @@ const EvLeaveAlloacation = () => {
       <DeleteModal
         openDelete={openDelete}
         message="Are you sure you want to delete this 
-        leave Allocation?"
+        leave allocation?"
         HandleCloseDelete={HandleCloseDelete}
         isLoading={isDeleting}
         HandleDelete={HandleDelete}

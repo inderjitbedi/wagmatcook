@@ -581,6 +581,7 @@ input[type="checkbox"] {
   box-sizing: border-box;
   top: 3.9rem;
   padding: 0px;
+  z-index: 9999;
 }
 
 .ReactTags__suggestions ul {

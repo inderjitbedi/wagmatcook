@@ -105,7 +105,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   maxHeight: "55rem",
   overflowY: "scroll",
@@ -235,26 +235,28 @@ const Selection = ({ jobid, Tabvalue }) => {
   };
 
   const getFileType = (file) => {
-    const fileExtension = file.name.split(".").pop().toLowerCase();
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
 
-    if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
-      return "image";
-    } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
-      return "video";
-    } else if (fileExtension === "pdf") {
-      return "pdf";
-    } else if (fileExtension === "xlsx" || fileExtension === "xls") {
-      return "xlsx";
-    } else if (fileExtension === "doc" || fileExtension === "docx") {
-      return "doc";
-    } else {
-      return "unknown";
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
     }
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     let type = await getFileType(e.target.files[0]);
-    //console.log("this file type:", type);
+    ////console.log("this file type:", type);
     if (type != "unknown") {
       handleUpload(file, type);
     } else {
@@ -278,10 +280,10 @@ const Selection = ({ jobid, Tabvalue }) => {
         },
       })
         .then((data) => {
-          //console.log(data);
+          ////console.log(data);
 
           if (data?.result) {
-            //console.log(data?.result);
+            ////console.log(data?.result);
             setFile(data?.result?.file);
             setUploadedFiles([...uploadedFiles, data?.result?.file]);
 
@@ -1085,6 +1087,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                           key={data._id}
                           draggableId={data._id}
                           index={index}
+                          isDragDisabled={searchValue.length !== 0}
                         >
                           {(provided, snapshot) => (
                             <TableRow
@@ -1124,14 +1127,16 @@ const Selection = ({ jobid, Tabvalue }) => {
                     </TableCell> */}
                               <TableCell sx={CellStyle2} align="left">
                                 {data?.appliedOn
-                                  ? moment(data.appliedOn).format("D MMM, YYYY")
+                                  ? moment
+                                      .utc(data.appliedOn)
+                                      .format("D MMM, YYYY")
                                   : " - "}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">
                                 {data?.interviewDate
-                                  ? moment(data.interviewDate).format(
-                                      "D MMM, YYYY"
-                                    )
+                                  ? moment
+                                      .utc(data.interviewDate)
+                                      .format("D MMM, YYYY")
                                   : " - "}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">

@@ -31,7 +31,8 @@ const style = {
   borderRadius: "0.8rem",
 };
 const ModalContainer = styled.div`
-  padding: 0rem 1.2rem 1.5rem 2.9rem;
+  padding: 2rem 2.9rem 1.5rem 2.9rem;
+
   border-bottom: 1px solid #f3f3f5;
   display: flex;
   align-items: center;

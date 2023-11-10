@@ -20,6 +20,7 @@ import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
 import { AiOutlinePrinter } from "react-icons/ai";
+import styled from "styled-components";
 
 import {
   DisciplinaryDiv,
@@ -45,7 +46,19 @@ import {
   ApproveStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
+import { TabelDarkPara } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 const style = {
   position: "absolute",
   top: "50%",
@@ -55,7 +68,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
   // height: "55rem",
   // overflowY: "scroll",
@@ -196,7 +209,9 @@ const JobPosting = () => {
   };
   const GetJobPostings = () => {
     setIsLoading(true);
-    let url = API_URLS.listJobs.replace("Page",page).replace("searchValue",searchValue);
+    let url = API_URLS.listJobs
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -311,19 +326,18 @@ const JobPosting = () => {
   };
   useEffect(() => {
     GetJobPostings();
-  
   }, [page, searchValue]);
   useEffect(() => {
     GetDepartments();
 
-  if (location.pathname.indexOf("manager") > -1) {
-    setUserType(ROLES.MANAGER);
-  } else if (location.pathname.indexOf("hr") > -1) {
-    setUserType(ROLES.HR);
-  } else if (location.pathname.indexOf("user") > -1) {
-    setUserType(ROLES.EMPLOYEE);
-  }
-  } ,[])
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+  }, []);
 
   return (
     <>
@@ -683,7 +697,9 @@ const JobPosting = () => {
                           }
                         }}
                       >
-                        {data?.title || " - "}
+                        <UnderlineHoverEffect>
+                          <TabelDarkPara>{data.title || " - "}</TabelDarkPara>
+                        </UnderlineHoverEffect>
                       </MenuIconDiv>
                     </TableCell>
                     {/* <TableCell sx={CellStyle2} align="left">
@@ -694,12 +710,12 @@ const JobPosting = () => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data?.postingDate
-                        ? moment(data.postingDate).format("D MMM, YYYY")
+                        ? moment.utc(data.postingDate).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data?.closingDate
-                        ? moment(data.closingDate).format("D MMM, YYYY")
+                        ? moment.utc(data.closingDate).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     {/* <TableCell sx={CellStyle2} align="left">
@@ -708,7 +724,7 @@ const JobPosting = () => {
                     {/* <TableCell sx={CellStyle2} align="left">
                       {data.postingDate || " - "}
                       {data.dueDate
-                          ? moment(data.dueDate).format("D MMM, YYYY")
+                          ? moment.utc(data.dueDate).format("D MMM, YYYY")
                           : " -"}
                     </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
@@ -721,7 +737,8 @@ const JobPosting = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE || userType === ROLES.MANAGER ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
                           " "
                         ) : (
                           <ActionIcons

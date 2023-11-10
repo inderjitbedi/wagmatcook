@@ -198,7 +198,7 @@ const JobView = () => {
                 <TaskLight>Posting Date</TaskLight>
                 <TaskDescription>
                   {result?.job?.postingDate
-                    ? moment(result?.job?.postingDate).format("D MMM, YYYY")
+                    ? moment.utc(result?.job?.postingDate).format("D MMM, YYYY")
                     : " - "}
                 </TaskDescription>
               </FlexColumn>
@@ -207,7 +207,7 @@ const JobView = () => {
                 <TaskDescription>
                   {" "}
                   {result?.job?.closingDate
-                    ? moment(result?.job?.closingDate).format("D MMM, YYYY")
+                    ? moment.utc(result?.job?.closingDate).format("D MMM, YYYY")
                     : " - "}
                 </TaskDescription>
               </FlexColumn>

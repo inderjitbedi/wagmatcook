@@ -106,6 +106,8 @@ const ManagerLeaveAction = () => {
     setDetailsLength(500 - value.length);
     if (value.length > 500) {
       setComentError("Comment exceeds  500 characters ");
+    } else {
+      setComentError("");
     }
     setComment(value);
   };
@@ -174,6 +176,7 @@ const ManagerLeaveAction = () => {
           // toast.success(result.message, {
           //   className: "toast",
           // });
+          setComment("");
           HandleOpenDelete(isApproved ? "Approve" : "Reject");
           //Entry Updated Successfully");
         } else {
@@ -255,7 +258,7 @@ const ManagerLeaveAction = () => {
                     <ColumnFlexDiv>
                       <Titlelight>From</Titlelight>
                       {leaveDetails.from
-                        ? moment(leaveDetails.from).format("D MMM, YYYY")
+                        ? moment.utc(leaveDetails.from).format("D MMM, YYYY")
                         : " - "}
                       <Titledark> </Titledark>
                     </ColumnFlexDiv>
@@ -264,7 +267,7 @@ const ManagerLeaveAction = () => {
                       <Titledark>
                         {" "}
                         {leaveDetails.to
-                          ? moment(leaveDetails.to).format("D MMM, YYYY")
+                          ? moment.utc(leaveDetails.to).format("D MMM, YYYY")
                           : " - "}
                       </Titledark>
                     </ColumnFlexDiv>

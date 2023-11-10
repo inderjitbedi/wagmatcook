@@ -63,7 +63,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
@@ -149,7 +149,9 @@ const SAOrganization = () => {
   const GetOrganizationList = () => {
     setIsLoading(true);
 
-    let url = API_URLS.adminOrganizationList.replace("Page", page).replace("searchValue",searchValue);
+    let url = API_URLS.adminOrganizationList
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
     httpClient({
       method: "get",
       url,
@@ -474,13 +476,13 @@ const SAOrganization = () => {
                           src="/images/icons/Pendown.svg"
                         />
 
-                        <ActionIcons
+                        {/* <ActionIcons
                           onClick={() => {
                             HandleOpenDelete();
                             setId(data._id);
                           }}
                           src="/images/icons/Trash-2.svg"
-                        />
+                        /> */}
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>

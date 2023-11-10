@@ -60,7 +60,7 @@ export default function CompleteSignup() {
   //   }
   // };
   // useEffect(() => {
-  //   console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
+  //   //console.log(location.pathname.indexOf('/organization-admin/complete-signup'));
   // }, []);
   // const handlePasswordChange = (e: any) => {
   //   const { value } = e.target;
@@ -101,10 +101,7 @@ export default function CompleteSignup() {
         .then(({ result, error }: any) => {
           if (result?.user) {
             localStorage.setItem("user", JSON.stringify(result?.user));
-            localStorage.setItem(
-              "org",
-              JSON.stringify(result?.organization)
-            );
+            localStorage.setItem("org", JSON.stringify(result?.organization));
             setIsLoading(false);
 
             localStorage.setItem("token", result?.token);

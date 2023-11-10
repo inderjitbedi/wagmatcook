@@ -96,6 +96,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             {(headerData?.personalInfo?.firstName
               ? headerData?.personalInfo?.firstName
               : " -") +
+              " " +
               (headerData?.personalInfo?.lastName
                 ? headerData?.personalInfo?.lastName
                 : " -")}

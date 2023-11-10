@@ -143,6 +143,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             {(headerData?.personalInfo?.firstName
               ? headerData?.personalInfo?.firstName
               : " -") +
+              " " +
               (headerData?.personalInfo?.lastName
                 ? headerData?.personalInfo?.lastName
                 : " -")}
@@ -349,16 +350,14 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
           <SideBarListContainer style={{ zIndex: "1" }}>
             <BiTask
               style={
-                location.pathname === "/manager-management/tasks" ||
-                isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
             />
             <SideBarListTitle
               style={
-                location.pathname === "/manager-management/tasks" ||
-                isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -385,7 +384,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
                 stroke={
-                  location.pathname === "/manager-management/documents" ||
+                  location.pathname.indexOf("documents") > -1||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -395,7 +394,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 9.75H11.7741"
                 stroke={
-                  location.pathname === "/manager-management/documents" ||
+                  location.pathname.indexOf("documents") > -1||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -406,7 +405,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 6.75H11.7741"
                 stroke={
-                  location.pathname === "/manager-management/documents" ||
+                  location.pathname.indexOf("documents") > -1||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -417,7 +416,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 12H9.41929"
                 stroke={
-                  location.pathname === "/manager-management/documents" ||
+                  location.pathname.indexOf("documents") > -1||
                   isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -428,7 +427,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname === "/manager-management/documents" ||
+                location.pathname.indexOf("documents") > -1||
                 isHovering.documents
                   ? style
                   : { color: "#5C5C5C" }

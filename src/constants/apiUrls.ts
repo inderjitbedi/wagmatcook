@@ -3,6 +3,8 @@ const API_URLS = {
   loginWithOtp: `/auth/login-with-otp`,
   resendOtp: `/auth/resend-otp/:email`,
   verifyOtp: `/auth/verify-otp`,
+  // send welcome email
+  sendWelcomeEmail: `/organization/send-welcome-email`,
   // super admin routes apis
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
   adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10&searchKey=searchValue`,
@@ -113,7 +115,7 @@ const API_URLS = {
   // user accout api
   userLeaveBalance: `/employee/leave-balance`,
   // employee list api
-  getEmployeeList: `/employee/list?page=Page&limit=10`,
+  getEmployeeList: `/employee/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeList: `/employee/delete/Id`,
   //task apis
   getTaskList: `/task/list?page=Page&limit=10&searchKey=searchValue`,

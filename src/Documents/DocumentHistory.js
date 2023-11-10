@@ -252,7 +252,9 @@ const DocumentHistory = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
+                        ? moment
+                            .utc(data?.updatedAt)
+                            .format("D MMM, YYYY hh:mm A")
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

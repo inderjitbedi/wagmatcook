@@ -21,6 +21,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
 import ROLES from "../constants/roles";
+import styled from "styled-components";
 
 import {
   DisciplinaryDiv,
@@ -46,6 +47,7 @@ import {
   ApproveStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
+import { TabelDarkPara } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const style = {
   position: "absolute",
@@ -56,7 +58,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
@@ -82,7 +84,17 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
-
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 const Task = () => {
   const Navigate = useNavigate();
   const location = useLocation();
@@ -696,7 +708,9 @@ const Task = () => {
                         }
                       }}
                     >
-                      {data.title || " - "}
+                      <UnderlineHoverEffect>
+                        <TabelDarkPara>{data.title || " - "}</TabelDarkPara>
+                      </UnderlineHoverEffect>
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {userType === ROLES.EMPLOYEE
@@ -711,7 +725,7 @@ const Task = () => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data.dueDate
-                        ? moment(data.dueDate).format("D MMM, YYYY")
+                        ? moment.utc(data.dueDate).format("D MMM, YYYY")
                         : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

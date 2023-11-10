@@ -9,6 +9,7 @@ import InputMask from "react-input-mask";
 import ROLES from "../../constants/roles";
 import { ErrorMessage } from "@hookform/error-message";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
+
 import {
   HeaderEmployee,
   BackButton,
@@ -190,6 +191,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
             // Navigate(-1);
             setIsEdit(false);
             setRefresh(refresh + 1);
+            window.location.reload();
             toast.success(result.message, {
               className: "toast",
             });
@@ -373,11 +375,14 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           Upload image
                         </UploadImgButton>
                       </FlexContaier>
-                      <LightPara onClick={removeFile}>Remove</LightPara>
+                      {file && (
+                        <LightPara onClick={removeFile}>Remove</LightPara>
+                      )}
                     </FlexContaier>
 
                     <UploadPara>
-                      *png *jpeg up to 10MB at least 400px by 400px
+                      *png *jpg *jpeg *gif *tiff up to 10MB at least 400px by
+                      400px
                     </UploadPara>
                   </FlexColumn>
                 </ImgUpload>

@@ -13,11 +13,11 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "37.4rem",
+  width: "44.6rem",
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "0.8rem",
 };
 const ModalContainer = styled.div`
@@ -25,7 +25,8 @@ const ModalContainer = styled.div`
   flex-direction: column;
   /* align-items: center;
   justify-content: center; */
-  padding: 4px 2rem;
+  padding: 2rem 2.9rem 1.5rem 2.9rem;
+
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -252,12 +253,14 @@ const SettingsModal = ({
     })
       .then(({ result, error }) => {
         if (result) {
-          // orgData.name = data.name;
-          // orgData.size = data.size;
-          // orgData.logo = orgFile;
-          
           localStorage.setItem("org", JSON.stringify(result.org));
           HandleCloseSettings();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+            window.location.reload();
+
         } else {
           //toast.warn("something went wrong ");
         }
@@ -278,7 +281,6 @@ const SettingsModal = ({
     const orgDataString = localStorage.getItem("org");
     const orgData = JSON.parse(orgDataString);
     setOrgData(orgData);
-
   }, [orgProfile]);
   let API_URL = process.env.REACT_APP_API_URL;
 

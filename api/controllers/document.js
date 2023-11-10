@@ -25,11 +25,11 @@ const documentController = {
                         };
                     })
                 );
-                console.log(newDocumentTags);
+                //console.log(newDocumentTags);
                 newDocumentTags = newDocumentTags.map((tag) => tag._id);
-                console.log(newDocumentTags);
+                //console.log(newDocumentTags);
 
-                console.log("old = ", tags, "\n new=", newDocumentTags);
+                //console.log("old = ", tags, "\n new=", newDocumentTags);
                 tags = [...tags, ...newDocumentTags];
             }
             const documentVersion = new DocumentVersion({
@@ -38,7 +38,7 @@ const documentController = {
                 version: version === versions.MAJOR ? 1 : 0.1,
             });
             await documentVersion.save();
-            console.log({
+            //console.log({
                 title,
                 tags,
                 departments,

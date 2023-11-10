@@ -54,7 +54,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "8px",
 };
 const CellHeadStyles = {
@@ -567,7 +567,7 @@ const EmployeeTypes = () => {
                     >
                       {!result.employeeTypes?.length && (
                         <TableRow sx={{ height: "20rem" }}>
-                          <TableCell align="center" colSpan={3} sx={CellStyle2}>
+                          <TableCell align="center" colSpan={4} sx={CellStyle2}>
                             No Employee Types Found
                           </TableCell>
                         </TableRow>
@@ -577,6 +577,7 @@ const EmployeeTypes = () => {
                           key={data._id}
                           draggableId={data._id}
                           index={index}
+                          isDragDisabled={searchValue.length !== 0}
                         >
                           {(provided, snapshot) => (
                             <TableRow

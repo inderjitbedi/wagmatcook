@@ -196,7 +196,7 @@ export const TabelDarkPara = styled.p`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1rem;
+  line-height: 1.8rem;
   text-transform: capitalize;
 `;
 export const TabelLightPara = styled.p`
@@ -333,7 +333,7 @@ export const SectionCard = styled.div`
   gap: 1.6rem;
   margin-bottom: 1.6rem;
   width: 100%;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   flex-wrap: wrap;
 `;
 export const SectionCardContainer = styled.div`
@@ -707,12 +707,16 @@ export const ButtonBlue = styled.button`
   text-transform: capitalize;
 `;
 export const ModalContainer = styled.div`
-  padding: 0rem 2.9rem 1.5rem 2.9rem;
+  padding: 2rem 2.9rem 1.5rem 2.9rem;
   border-bottom: 2px solid #f3f3f5;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #ffffff;
 `;
 export const ModalHeading = styled.h1`
   color: #222b45;
@@ -876,6 +880,7 @@ export const UploadImageContainer = styled.label`
   flex-direction: column;
   height: 15.2rem;
   margin-bottom: 1.6rem;
+  cursor: pointer;
 `;
 export const UploadImageName = styled.div`
   width: 100%;
@@ -904,7 +909,7 @@ export const UploadImagePara = styled.div`
 export const UploadImageLight = styled.div`
   color: #8f9bb3;
   font-family: Inter;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: 1.2rem;

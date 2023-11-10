@@ -102,7 +102,7 @@ const style = {
   bgcolor: "background.paper",
   border: "1px solid #EFF4FA",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "0.8rem",
   height: "59.7rem",
   overflowY: "scroll",
@@ -229,10 +229,10 @@ const EVLeaveHistory = () => {
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
- const [page, setPage] = useState(1);
- const HandleChangePage = (event, value) => {
-   setPage(value);
- };
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [open, setOpen] = useState(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -281,7 +281,6 @@ const EVLeaveHistory = () => {
   });
 
   const onSubmit = (data) => {
-
     function isEmptyObject(obj) {
       for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -698,11 +697,13 @@ const EVLeaveHistory = () => {
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.from
-                        ? moment(data.from).format("D MMM, YYYY")
+                        ? moment.utc(data.from).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.to ? moment(data.to).format("D MMM, YYYY") : " - "}
+                      {data.to
+                        ? moment.utc(data.to).format("D MMM, YYYY")
+                        : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {data.hours || " - "}

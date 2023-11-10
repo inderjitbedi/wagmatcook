@@ -15,7 +15,7 @@ const style = {
   bgcolor: "background.paper",
   border: "none",
   boxShadow: 45,
-  padding: "2rem 0rem",
+  // padding: "2rem 0rem",
   borderRadius: "0.8rem",
 };
 const ModalThanks = styled.div`
