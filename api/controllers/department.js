@@ -38,7 +38,7 @@ const departmentController = {
         try {
             let department = await Department.findOne({ _id: req.params.id, isDeleted: false }).populate('organization');
             await department.save();
-            res.status(201).json({ department, message: 'Department created successfully.' });
+            res.status(201).json({ department, message: 'Department details fetched successfully.' });
         } catch (error) {
             console.error("departmentController:detail:error -", error);
             res.status(400).json(error);
