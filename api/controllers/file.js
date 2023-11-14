@@ -50,12 +50,12 @@ const fileController = {
                 path.join(__dirname, '../' + destFilePath)
             );
 
-            // //console.log('Saved File:', {
-            //     ...file.toObject(),
-            //     destination: newFilePath,
-            //     path: destFilePath,
-            //     name: newFileName,
-            // });
+            console.log('Saved File:', {
+                ...file.toObject(),
+                destination: newFilePath,
+                path: destFilePath,
+                name: newFileName,
+            });
 
             const updatedFile = await File.findOneAndUpdate(
                 { _id: file._id },

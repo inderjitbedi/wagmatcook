@@ -85,7 +85,7 @@ export const ActionIconDiv = styled.div`
   gap: 2rem;
 `;
 export const ModalUpperDiv = styled.div`
-  padding: 0rem 1.6rem 1rem 3.5rem;
+  padding: 2rem 1.6rem 1rem 3.5rem;
   border-bottom: 1px solid #eff4fa;
   display: flex;
   align-items: center;

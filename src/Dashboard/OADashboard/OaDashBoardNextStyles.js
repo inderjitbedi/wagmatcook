@@ -18,6 +18,9 @@ export const SectionCardContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   min-width: 20rem;
+    border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0rem 1rem 2rem,
+    rgba(0, 0, 0, 0.23) 0rem 6px 6px;
   @media only screen and (max-width: 800px) {
     flex: 0 1 calc(50% - 20px);
   }
@@ -36,6 +39,9 @@ export const SectionCardContainer2 = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+    border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0rem 1rem 2rem,
+    rgba(0, 0, 0, 0.23) 0rem 6px 6px;
   @media only screen and (max-width: 800px) {
     flex: 0 1 calc(50% - 20px);
   }
@@ -53,6 +59,9 @@ export const SectionCardContainer3 = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+    border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0rem 1rem 2rem,
+    rgba(0, 0, 0, 0.23) 0rem 6px 6px;
   @media only screen and (max-width: 800px) {
     flex: 0 1 calc(50% - 20px);
   }
@@ -70,6 +79,9 @@ export const SectionCardContainer4 = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+    border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.19) 0rem 1rem 2rem,
+    rgba(0, 0, 0, 0.23) 0rem 6px 6px;
   @media only screen and (max-width: 800px) {
     flex: 0 1 calc(50% - 20px);
   }

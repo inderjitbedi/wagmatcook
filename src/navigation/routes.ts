@@ -61,6 +61,7 @@ import JobView from "../Staffing/JobView";
 import JobDetailsLayout from "../Staffing/JobDetailsLayout";
 import Applicants from "../Staffing/Applicants";
 import Offboarding from "../OffBoarding/offBoarding";
+import Announcements from "../Announcements/Announcements";
 const Routes: any = [
   {
     component: signup,
@@ -135,6 +136,15 @@ const Routes: any = [
         component: OALeaves,
         path: "leaves",
         title: "Leaves",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: Announcements,
+        path: "announcements",
+        title: "Announcements",
         to: "/",
         type: "private",
         index: true,
@@ -533,10 +543,20 @@ const Routes: any = [
         index: true,
         meta: { allowedRoles: [ROLES.MANAGER] },
       },
+
       {
         component: TaskView,
         path: "tasks/details/:taskid",
         title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
+      },
+      {
+        component: Announcements,
+        path: "announcements",
+        title: "Announcements",
         to: "/",
         type: "private",
         index: true,
@@ -840,6 +860,15 @@ const Routes: any = [
         component: TaskView,
         path: "tasks/details/:taskid",
         title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.HR] },
+      },
+      {
+        component: Announcements,
+        path: "announcements",
+        title: "Announcements",
         to: "/",
         type: "private",
         index: true,

@@ -555,18 +555,6 @@ const Departments = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            {departmentData.length === 0 && (
-              <div
-                style={{
-                  width: "100%",
-                  height: "50rem",
-                  textAlign: "center",
-                  margin: "10rem auto",
-                }}
-              >
-                No departments found
-              </div>
-            )}
 
             {result?.totalPages > 1 && (
               <PaginationDiv>

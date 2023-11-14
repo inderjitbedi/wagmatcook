@@ -45,6 +45,8 @@ import {
   SearchBarWrapper,
   SearchInputMobile,
   SearchButton,
+  NotificationSapcebetween,
+  NewTag,
 } from "./OADashboard/OADashBoardStyles";
 export const newStyle = styled.p`
   border-radius: 10rem;
@@ -416,7 +418,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       {isSidebarOpen && <SidebarContainer />}
       <DashHeader>
         <FlexContaier>
-          {screenWidth < 1200
+          {screenWidth < 1200 || location.pathname.indexOf("account") > -1
             ? " "
             : (location.pathname.indexOf("details") > -1 ||
                 location.pathname.indexOf("request") > -1 ||
@@ -655,13 +657,16 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
                     <NotificationFlexCol>
                       <NotificationListText>{data.title}</NotificationListText>
-                      <NotificationListTextLight>
-                        {data.createdAt
-                          ? moment
-                              .utc(data.createdAt)
-                              .format("D MMM, YYYY hh:mm A")
-                          : "-"}
-                      </NotificationListTextLight>
+                      <NotificationSapcebetween>
+                        <NotificationListTextLight>
+                          {data.createdAt
+                            ? moment
+                                .utc(data.createdAt)
+                                .format("D MMM, YYYY hh:mm A")
+                            : "-"}
+                        </NotificationListTextLight>
+                        { !data.isRead && <NewTag>New</NewTag> }
+                      </NotificationSapcebetween>
                     </NotificationFlexCol>
                   </NotificationList>
                 </>

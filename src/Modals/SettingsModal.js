@@ -25,7 +25,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   /* align-items: center;
   justify-content: center; */
-  padding: 2rem 2.9rem 1.5rem 2.9rem;
+  padding: 2rem 1.6rem 1.6rem 3.5rem;
 
   position: relative;
   width: 100%;
@@ -38,7 +38,7 @@ const ModalIconDelete = styled.img`
   cursor: pointer;
   position: absolute;
   right: 1rem;
-  top: 0rem;
+  top: 2.8rem;
 `;
 const ModalHeading = styled.h1`
   color: #222b45;
@@ -259,7 +259,7 @@ const SettingsModal = ({
           toast.success(result.message, {
             className: "toast",
           });
-            window.location.reload();
+            // window.location.reload();
 
         } else {
           //toast.warn("something went wrong ");

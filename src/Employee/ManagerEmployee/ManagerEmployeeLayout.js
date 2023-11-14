@@ -110,9 +110,6 @@ const ManagerEmployeeLayout = () => {
               <ManagerEmployeeSideBar employeeId={employeeid} />
             </SideBarContainer>
           )}
-          <SideBarContainer>
-            <ManagerEmployeeSideBar employeeId={employeeid} />
-          </SideBarContainer>
           <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
             <CommenHeader employeeid={employeeid} />
 

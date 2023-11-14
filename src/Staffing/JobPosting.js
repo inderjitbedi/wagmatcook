@@ -737,17 +737,6 @@ const JobPosting = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
                         <ActionIcons
                           onClick={() => {
                             if (userType === ROLES.HR) {
@@ -770,6 +759,17 @@ const JobPosting = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
+                        {userType === ROLES.EMPLOYEE ||
+                        userType === ROLES.MANAGER ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
                         {/* <AiOutlinePrinter
                           style={{
                             width: "2rem",

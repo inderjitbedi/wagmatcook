@@ -282,6 +282,26 @@ export const NotificationListText = styled.p`
   line-height: 2rem;
   margin: 0rem;
 `;
+export const NotificationSapcebetween = styled.div`
+display: flex;
+justify-content: space-between;
+width: 100%;
+align-items: center;
+box-sizing: border-box;
+
+`;
+export const NewTag = styled.p`
+  margin: 0;
+  font-family: Inter;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4rem;
+  background-color: #1592ef;
+  color: #a7d6f9;
+  border-radius: 50%;
+  padding: 4px 6px;
+`;
 export const NotificationListTextLight = styled.p`
   color: #a5acb8;
   font-family: Inter;
@@ -290,11 +310,14 @@ export const NotificationListTextLight = styled.p`
   font-weight: 500;
   line-height: 2rem;
   margin: 0rem;
+  width: 100%;
+  flex:1;
 `;
 export const NotificationFlexCol = styled.div`
   display: flex;
   gap: 0.8rem;
   flex-direction: column;
+  width: 100%;
 `;
 export const NotificationSelect = styled.select`
   color: #9ea0aa;

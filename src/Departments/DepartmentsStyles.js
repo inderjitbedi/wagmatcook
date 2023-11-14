@@ -160,13 +160,13 @@ export const ModalIconDelete = styled.img`
   top: 0rem;
 `;
 export const ModalUpperMid = styled.div`
-  border-bottom: 1px solid #eff4fa;
+  /* border-bottom: 1px solid #eff4fa; */
   padding: 1.6rem 3.5rem 2.6rem 3.5rem;
   box-sizing: border-box;
 `;
 export const ModalBottom = styled.div`
   gap: 2.5rem;
-  padding: 1.6rem 1.6rem 0rem 3.5rem;
+  padding: 1.6rem 1.6rem 1.6rem 3.5rem;
   display: flex;
   align-items: center;
 `;
