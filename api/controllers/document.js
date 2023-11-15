@@ -16,12 +16,16 @@ const documentController = {
 
 
             if (newTags?.length) {
+                let filters = { isDeleted: false, organization: req.organization?._id || null, isDefault: { $ne: true } };
+                let totalDocumentTags = await DocumentTags.countDocuments(filters);
+
                 let newDocumentTags = await DocumentTags.insertMany(
                     newTags.map((tag) => {
                         return {
                             name: tag,
                             createdBy: req.user?._id,
                             organization: req.organization?._id,
+                            order: ++totalDocumentTags
                         };
                     })
                 );
