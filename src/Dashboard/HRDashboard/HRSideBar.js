@@ -318,7 +318,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             />
             <SideBarListTitle
               style={
-                location.indexOf("task") > -1 || isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }

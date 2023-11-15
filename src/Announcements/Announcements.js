@@ -173,6 +173,7 @@ const Announcements = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
+    setFile(null);
   };
   const HandleUpdateAction = (data) => {
     setUpdate(true);
@@ -339,6 +340,7 @@ const Announcements = () => {
           setFile(null);
           GetAnnouncements();
           reset();
+          setFile(null);
 
           toast.success(result.message, {
             className: "toast",
@@ -391,9 +393,11 @@ const Announcements = () => {
 
       <DisciplinaryDiv>
         <DisciplinaryHeading>Announcements</DisciplinaryHeading>
-     { userType === ROLES.ORG_ADMIN &&  <AddNewButton onClick={() => HandleOpenAddNewAction()}>
-          Add New
-        </AddNewButton>}
+        {(userType === ROLES.ORG_ADMIN || userType === ROLES.HR) && (
+          <AddNewButton onClick={() => HandleOpenAddNewAction()}>
+            Add New
+          </AddNewButton>
+        )}
         <Modal
           open={open}
           sx={{
@@ -759,13 +763,16 @@ const Announcements = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
-                       {userType === ROLES.ORG_ADMIN &&  <ActionIcons
-                          onClick={() => {
-                            HandleOpenDelete();
-                            setId(data._id);
-                          }}
-                          src="/images/icons/Trash-2.svg"
-                        />}
+                        {(userType === ROLES.ORG_ADMIN ||
+                          userType === ROLES.HR) && (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleOpenDelete();
+                              setId(data._id);
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
                         {data.attachment && (
                           <Link
                             to={API_URL + data?.attachment?.path}
