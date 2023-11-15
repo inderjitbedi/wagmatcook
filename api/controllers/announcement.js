@@ -47,10 +47,6 @@ const announcementController = {
     },
     async list(req, res) {
         try {
-
-            // if (!req.params.orgid) {
-            //     return res.status(400).json({ message: 'Please provide Organization Id' });
-            // }
             const page = parseInt(req.query.page) || 1;
             const limit = parseInt(req.query.limit) || 9999;
             const startIndex = (page - 1) * limit;

@@ -97,6 +97,14 @@ const taskController = {
                 else // if (task.assignee.role === roles.HR) | obvious HR
                     task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`
             }
+            let type = "TASK_STATUS_UPDATED"
+            const notification = new Notifications({
+                title: notificationConstants[type].title?.replace('{user}', req.user?.name || [req.user?.personalInfo?.firstName, req.user?.personalInfo?.lastName].join(' ')).replace('{taskName}', task?.title),
+                type,
+                sender: req.user._id,
+                receiver: task.sentTo?._id
+            });
+            await notification.save();
 
             sendGrid.send(task.sentTo?.email, "taskStatusUpdate", { task });
 
@@ -225,16 +233,22 @@ const taskController = {
             ])
 
 
+
+            let task = comment.task;
+
+
             let type = "TASK_COMMENT"
             const notification = new Notifications({
-                title: notificationConstants[type].title?.replace('{commenter}', comment.commenter?.name || [comment.commenter?.personalInfo?.firstName, comment.commenter?.personalInfo?.lastName].join(' ')),
+                title: notificationConstants[type].title?.replace('{commenter}', comment.commenter?.name || [comment.commenter?.personalInfo?.firstName, comment.commenter?.personalInfo?.lastName].join(' ')).replace('{taskName}', task?.title),
                 type,
                 sender: req.user._id,
-                receiver: req.user._id.equals(req.body.assignee) ? req.body.assigner : req.body.assignee
+                receiver: req.user._id.equals(task.assignee?._id) ? task.assigner?._id : task.assignee?._id
             });
             await notification.save();
 
-            let task = comment.task;
+
+
+
             if (task.assignee._id.equals(req.user._id)) {
                 task.sentTo = task.assigner
                 if (task.assigner.role === roles.MANAGER)

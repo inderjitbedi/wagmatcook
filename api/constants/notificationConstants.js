@@ -36,4 +36,9 @@ module.exports = Object.freeze({
         description: ""
     },
 
+    TASK_STATUS_UPDATED: {
+        title: "{user} has changed the status of the task '{taskName}'.",
+        description: ""
+    },
+
 });
