@@ -164,7 +164,7 @@ const API_URLS = {
   // manager Dashboard apis
   getDashboardData: `/dashboard/data`,
   // annoncemnet apis
-  getAnnouncement: `/announcement/list`,
+  getAnnouncement: `/announcement/list?page=Page&limit=10&searchKey=searchValue`,
   createAnnouncement: `/announcement/create`,
   deleteAnnouncement: `/announcement/delete/:id`,
   detailsAnnouncement: `/announcement/detail/:id`,

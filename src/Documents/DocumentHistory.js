@@ -235,9 +235,7 @@ const DocumentHistory = () => {
                     <TableCell sx={CellStyle2} align="left">
                       <MenuIconDiv>
                         {data.version !== undefined
-                          ? Number.isInteger(data.version)
-                            ? data.version.toFixed(1)
-                            : data.version
+                          ? data.version.toFixed(1)
                           : " - "}
                       </MenuIconDiv>
                     </TableCell>
@@ -252,9 +250,7 @@ const DocumentHistory = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment
-                            .utc(data?.updatedAt)
-                            .format("D MMM, YYYY hh:mm A")
+                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
