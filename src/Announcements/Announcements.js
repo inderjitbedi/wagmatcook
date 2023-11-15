@@ -587,9 +587,7 @@ const Announcements = () => {
                       id="upload"
                       className="custom"
                     />
-                    {update ? (
-                      ""
-                    ) : (
+                    {update && file ? (
                       <div
                         style={{
                           display: "flex",
@@ -627,6 +625,46 @@ const Announcements = () => {
                               <LightPara onClick={removeFile}>Remove</LightPara>
                             )}
                       </div>
+                    ) : !update ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1.6rem",
+                          alignItems: "center",
+                          marginBottom: "2rem",
+                        }}
+                      >
+                        <EditButton
+                          htmlFor="upload"
+                          style={{ width: "max-content" }}
+                        >
+                          {" "}
+                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file ? (
+                            "Upload Document "
+                          ) : file?.originalName.length <= 32 ? (
+                            file?.originalName
+                          ) : (
+                            file?.originalName?.substring(0, 30) + "..."
+                          )}
+                        </EditButton>
+                        {update
+                          ? " "
+                          : file && (
+                              <LightPara onClick={removeFile}>Remove</LightPara>
+                            )}
+                      </div>
+                    ) : (
+                      " "
                     )}
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
                     {!update ? (
