@@ -18,6 +18,8 @@ import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { BiTask } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
+import { TbMessageCheck } from "react-icons/tb";
+
 
 const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
   const { headerData } = useHeaderInfoContext();
@@ -83,6 +85,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
     task: false,
     logout: false,
     staffing: false,
+    announcements: false,
   });
   const handleMouseEnter = (linkName) => {
     setIsHovering((prevState) => ({
@@ -603,7 +606,35 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/manager-management/announcements"
+          onMouseEnter={() => handleMouseEnter("announcements")}
+          onMouseLeave={() => handleMouseLeave("announcements")}
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <TbMessageCheck
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            />
 
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Announcements
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
         <Link
           style={{ textDecoration: "none" }}
           to={`/manager-management/account/personal-info/${userData?._id}`}

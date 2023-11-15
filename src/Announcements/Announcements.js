@@ -20,11 +20,15 @@ import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import DeleteModal from "../Modals/DeleteModal";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import moment from "moment";
+import { Link } from "react-router-dom";
 
 import {
   EditButton,
   ButtonIcon,
   LightPara,
+  ModalContainer,
+  ModalFormContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import {
   AddNewButton,
@@ -60,6 +64,8 @@ const style = {
   boxShadow: 45,
   // padding: "2rem 0rem",
   borderRadius: "8px",
+  maxHeight: "59.7rem",
+  overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -86,6 +92,8 @@ const CellStyle2 = {
 };
 
 const Announcements = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
@@ -101,39 +109,9 @@ const Announcements = () => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  // const [Announcements, setAnnouncements] = useState([]);
-  const Announcements = [
-    {
-      _id: 1,
-      title: "imagine Title",
-      description: "here you can a Description",
-      date: "14 Nov,2023",
-    },
-    {
-      _id: 2,
-      title: "imagine Title",
-      description: "here you can a Description",
-      date: "14 Nov,2023",
-    },
-    {
-      _id: 3,
-      title: "imagine Title",
-      description: "here you can a Description",
-      date: "14 Nov,2023",
-    },
-    {
-      _id: 4,
-      title: "imagine Title",
-      description: "here you can a Description",
-      date: "14 Nov,2023",
-    },
-    {
-      _id: 5,
-      title: "imagine Title",
-      description: "here you can a Description",
-      date: "14 Nov,2023",
-    },
-  ];
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [Announcements, setAnnouncements] = useState([]);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
@@ -146,21 +124,17 @@ const Announcements = () => {
   const [update, setUpdate] = useState(false);
   useEffect(() => {
     GetDepartments();
+    GetAnnouncements();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
-      // GetDepartments(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
-      // GetDepartments(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-      // GetDepartments(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
-      // GetDepartments(ROLES.ORG_ADMIN);
     } else if (location.pathname.indexOf("super-admin") > -1) {
       setUserType(ROLES.SUPER_ADMIN);
-      // GetDepartments(ROLES.SUPER_ADMIN);
     }
   }, [page, searchValue]);
   const {
@@ -183,8 +157,11 @@ const Announcements = () => {
       }
       return true;
     }
+    if (file) {
+      data.attachment = file;
+    }
     if (isEmptyObject(errors) && !update) {
-      // HandleSubmit(data);
+      HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
       // HandleUpdate(data);
     }
@@ -201,7 +178,16 @@ const Announcements = () => {
     setUpdate(true);
     setId(data._id);
     setDetailsLength(500 - data?.description?.length);
-    reset({ name: data.name, description: data.description });
+    reset({
+      title: data.title,
+      description: data.description,
+      departments: data.departments?.map((data) => data._id),
+      announcementDate: data.announcementDate
+        ? new Date(data.announcementDate).toISOString().split("T")[0]
+        : null,
+    });
+    setFile(data?.attachment);
+
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -306,15 +292,108 @@ const Announcements = () => {
     setFile(null);
     setValue("file", null);
   };
+
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteAnnouncement.replace(":id", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          setId("");
+          GetAnnouncements();
+
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        //console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
+  };
+  const HandleSubmit = (data) => {
+    let dataCopy = data;
+
+    setIsLoading(true);
+
+    let url = API_URLS.createAnnouncement.replace(":id", Id);
+    httpClient({
+      method: "post",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          setFile(null);
+          GetAnnouncements();
+          reset();
+
+          toast.success(result.message, {
+            className: "toast",
+          }); //Employee proformance added successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        toast.error("Error Adding review . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetAnnouncements = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.getAnnouncement
+        .replace("searchValue", searchValue)
+        .replace("Page", page);
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            setAnnouncements(result.announcements);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Announcements" />
 
       <DisciplinaryDiv>
         <DisciplinaryHeading>Announcements</DisciplinaryHeading>
-        <AddNewButton onClick={() => HandleOpenAddNewAction()}>
+     { userType === ROLES.ORG_ADMIN &&  <AddNewButton onClick={() => HandleOpenAddNewAction()}>
           Add New
-        </AddNewButton>
+        </AddNewButton>}
         <Modal
           open={open}
           sx={{
@@ -347,7 +426,7 @@ const Announcements = () => {
               </div>
             ) : (
               <>
-                <ModalUpperDiv>
+                <ModalContainer>
                   <ModalHeading>
                     {!update ? "Add Announcement" : "Update Announcement"}
                   </ModalHeading>
@@ -360,14 +439,16 @@ const Announcements = () => {
                     }}
                     src="/images/icons/Alert-Circle.svg"
                   />
-                </ModalUpperDiv>
+                </ModalContainer>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <ModalUpperMid>
+                  <ModalFormContainer>
                     <InputLabel>
-                      Announcement Title <InputSpan>*</InputSpan>
+                      Announcement Title{" "}
+                      {update ? "" : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <Input
-                      {...register("tile", {
+                      readOnly={update}
+                      {...register("title", {
                         required: {
                           value: true,
                           message: "Required",
@@ -377,9 +458,11 @@ const Announcements = () => {
                     />
                     {errors.title && <Errors>{errors.title?.message}</Errors>}
                     <InputLabel>
-                      Date of Announcements<InputSpan>*</InputSpan>
+                      Date of Announcement{" "}
+                      {update ? "" : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <Input
+                      readOnly={update}
                       type="date"
                       {...register("announcementDate", {
                         required: {
@@ -392,7 +475,7 @@ const Announcements = () => {
                       <Errors>{errors.announcementDate?.message}</Errors>
                     )}
                     <InputLabel>
-                      Departments <InputSpan>*</InputSpan>
+                      Departments {update ? "" : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <Controller
                       name="departments"
@@ -406,6 +489,8 @@ const Announcements = () => {
                       render={({ field: { onChange, value, ref } }) => (
                         <Autocomplete
                           multiple
+                          disabled={update}
+                          disabledItemsFocusable={update}
                           id="tags-standard"
                           value={
                             value
@@ -438,6 +523,7 @@ const Announcements = () => {
                           renderInput={(params) => (
                             <TextField
                               {...params}
+                              disabled={update}
                               inputRef={ref}
                               placeholder="Select Departments"
                             />
@@ -450,9 +536,10 @@ const Announcements = () => {
                       <Errors>{errors.departments?.message}</Errors>
                     )}
                     <InputLabel>
-                      Description <InputSpan>*</InputSpan>
+                      Description {update ? "" : <InputSpan>*</InputSpan>}
                     </InputLabel>
                     <TextArea
+                      readOnly={update}
                       type="text"
                       {...register("description", {
                         required: {
@@ -483,6 +570,7 @@ const Announcements = () => {
                     <input
                       style={{ width: "50%" }}
                       type="file"
+                      disabled={update}
                       {...register(`file`, {
                         // required: {
                         //   value: update ? false : true,
@@ -526,23 +614,21 @@ const Announcements = () => {
                           file?.originalName?.substring(0, 30) + "..."
                         )}
                       </EditButton>
-                      {file && (
-                        <LightPara onClick={removeFile}>Remove</LightPara>
-                      )}
+                      {update
+                        ? " "
+                        : file && (
+                            <LightPara onClick={removeFile}>Remove</LightPara>
+                          )}
                     </div>
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
-                  </ModalUpperMid>
-                  <ModalBottom>
                     {!update ? (
                       <AddNewButton type="submit" disabled={isUploading}>
                         Submit
                       </AddNewButton>
                     ) : (
-                      <AddNewButton type="submit" disabled={isUploading}>
-                        Update
-                      </AddNewButton>
+                      " "
                     )}
-                  </ModalBottom>
+                  </ModalFormContainer>
                 </form>
               </>
             )}
@@ -586,7 +672,7 @@ const Announcements = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
+                    style={{ minWidth: "15rem" }}
                     align="left"
                   >
                     Title
@@ -607,7 +693,7 @@ const Announcements = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "45rem" }}
+                    style={{ minWidth: "25rem" }}
                     align="left"
                   >
                     Description
@@ -648,10 +734,18 @@ const Announcements = () => {
                       {data.title || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.date || " - "}
+                      {data.announcementDate
+                        ? moment
+                            .utc(data?.announcementDate)
+                            .format("D MMM, YYYY")
+                        : " -"}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.department || " - "}
+                      {data.departments
+                        ? data?.departments
+                            ?.map((department) => department.name)
+                            .join(", ")
+                        : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data.description || " - "}
@@ -663,15 +757,28 @@ const Announcements = () => {
                           onClick={() => {
                             HandleUpdateAction(data);
                           }}
-                          src="/images/icons/Pendown.svg"
+                          src="/images/icons/eye.svg"
                         />
-                        <ActionIcons
+                       {userType === ROLES.ORG_ADMIN &&  <ActionIcons
                           onClick={() => {
                             HandleOpenDelete();
                             setId(data._id);
                           }}
                           src="/images/icons/Trash-2.svg"
-                        />
+                        />}
+                        {data.attachment && (
+                          <Link
+                            to={API_URL + data?.attachment?.path}
+                            target="_blank"
+                            download
+                            style={{
+                              textDecoration: "none",
+                              marginTop: "0rem",
+                            }}
+                          >
+                            <ActionIcons src="/images/icons/Download.svg" />
+                          </Link>
+                        )}
                       </ActionIconDiv>
                     </TableCell>
                   </TableRow>
@@ -697,7 +804,7 @@ const Announcements = () => {
       <DeleteModal
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
-        // HandleDelete={HandleDelete}
+        HandleDelete={HandleDelete}
         message="Are you sure you want to delete this department?"
         isLoading={isLoading}
       />

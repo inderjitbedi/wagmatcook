@@ -133,7 +133,7 @@ export const DepartmentButtonContainer = styled.div`
 `;
 
 export const ModalUpperDiv = styled.div`
-  padding: 0rem 1.6rem 1rem 3.5rem;
+  padding: 2rem 1.6rem 1rem 3.5rem;
   border-bottom: 1px solid #eff4fa;
   display: flex;
   align-items: center;
@@ -166,7 +166,7 @@ export const ModalUpperMid = styled.div`
 `;
 export const ModalBottom = styled.div`
   gap: 2.5rem;
-  padding: 1.6rem 1.6rem 1.6rem 3.5rem;
+  padding: 0rem 1.6rem 1.6rem 3.5rem;
   display: flex;
   align-items: center;
 `;
