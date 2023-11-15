@@ -979,11 +979,12 @@ const Documents = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
+                        ? moment(data?.updatedAt)
+                            .local()
+                            .format("D MMM, YYYY hh:mm A")
                         : " -"}
                       {/* {moment.tz(data?.updatedAt, 'America/Toronto',
                       true).format("D MMM, YYYY hh:mm A")} */}
-                      
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}

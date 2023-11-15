@@ -432,7 +432,7 @@ const Announcements = () => {
               <>
                 <ModalContainer>
                   <ModalHeading>
-                    {!update ? "Add Announcement" : "Update Announcement"}
+                    {!update ? "Add Announcement" : "View Announcement"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -587,43 +587,47 @@ const Announcements = () => {
                       id="upload"
                       className="custom"
                     />
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "1.6rem",
-                        alignItems: "center",
-                        marginBottom: "2rem",
-                      }}
-                    >
-                      <EditButton
-                        htmlFor="upload"
-                        style={{ width: "max-content" }}
+                    {update ? (
+                      ""
+                    ) : (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "1.6rem",
+                          alignItems: "center",
+                          marginBottom: "2rem",
+                        }}
                       >
-                        {" "}
-                        <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                        {isUploading ? (
-                          <ThreeDots
-                            height="8"
-                            width="80"
-                            radius="9"
-                            color="#279AF1"
-                            ariaLabel="three-dots-loading"
-                            visible={true}
-                          />
-                        ) : !file ? (
-                          "Upload Document "
-                        ) : file?.originalName.length <= 32 ? (
-                          file?.originalName
-                        ) : (
-                          file?.originalName?.substring(0, 30) + "..."
-                        )}
-                      </EditButton>
-                      {update
-                        ? " "
-                        : file && (
-                            <LightPara onClick={removeFile}>Remove</LightPara>
+                        <EditButton
+                          htmlFor="upload"
+                          style={{ width: "max-content" }}
+                        >
+                          {" "}
+                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                          {isUploading ? (
+                            <ThreeDots
+                              height="8"
+                              width="80"
+                              radius="9"
+                              color="#279AF1"
+                              ariaLabel="three-dots-loading"
+                              visible={true}
+                            />
+                          ) : !file ? (
+                            "Upload Document "
+                          ) : file?.originalName.length <= 32 ? (
+                            file?.originalName
+                          ) : (
+                            file?.originalName?.substring(0, 30) + "..."
                           )}
-                    </div>
+                        </EditButton>
+                        {update
+                          ? " "
+                          : file && (
+                              <LightPara onClick={removeFile}>Remove</LightPara>
+                            )}
+                      </div>
+                    )}
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
                     {!update ? (
                       <AddNewButton type="submit" disabled={isUploading}>
