@@ -23,6 +23,7 @@ const taskRoute = require("./routes/task");
 const documentTagRoute = require("./routes/documentTag");
 const documentRoute = require("./routes/document");
 const jobRoute = require("./routes/job");
+const announcementRoute = require("./routes/announcement");
 
 const swagger = require("./swagger");
 const swaggerUi = require("swagger-ui-express");
@@ -77,6 +78,7 @@ app.use("/api/task", taskRoute);
 app.use("/api/document-tag", documentTagRoute);
 app.use("/api/document", documentRoute);
 app.use("/api/job", jobRoute);
+app.use("/api/announcement", announcementRoute);
 
 app.use("/api", express.static(path.join(__dirname, "../wagmatcook")));
 app.use("/api/media", express.static(path.join(__dirname, "assets")));

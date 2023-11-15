@@ -404,14 +404,14 @@ const orgController = {
       if (file) {
         req.body.logo = await fileController.moveToUploads(req, file);
       }
-      const org = await Organization.findOneAndUpdate(
+      let org = await Organization.findOneAndUpdate(
         {
           _id: req.organization._id,
         },
         req.body,
         { new: true }
       );
-
+      org = await org.populate("logo")
       res.status(200).json({
         org,
         message: "Organization profile updated successfully.",
