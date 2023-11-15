@@ -960,9 +960,7 @@ const Documents = () => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       {data?.versions[0]?.version !== undefined
-                        ? Number.isInteger(data.versions[0].version)
-                          ? data.versions[0].version.toFixed(1)
-                          : data.versions[0].version
+                        ? data.versions[0].version.toFixed(1)
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
@@ -981,10 +979,11 @@ const Documents = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.updatedAt
-                        ? moment
-                            .utc(data?.updatedAt)
-                            .format("D MMM, YYYY hh:mm A")
+                        ? moment(data?.updatedAt).format("D MMM, YYYY hh:mm A")
                         : " -"}
+                      {/* {moment.tz(data?.updatedAt, 'America/Toronto',
+                      true).format("D MMM, YYYY hh:mm A")} */}
+                      
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}

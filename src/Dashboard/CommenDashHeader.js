@@ -233,7 +233,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const GetNotificationList = () => {
+  const GetNotificationList = (allread) => {
     setIsLoading(true);
     let url = API_URLS.getNotificationList;
     httpClient({
@@ -243,7 +243,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
       .then(({ result, error }) => {
         if (result) {
           setNotificationList(result.notifications);
-          HandleMarkRead(result.notifications);
+          if (!allread) HandleMarkRead(result.notifications);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -290,7 +290,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          // GetNotificationList();
+          GetNotificationList("allread");
           GetNotificationCount();
           // toast.success(result.message, {
           // className: "toast",
@@ -660,12 +660,12 @@ const CommenDashHeader = ({ onSearch, text }) => {
                       <NotificationSapcebetween>
                         <NotificationListTextLight>
                           {data.createdAt
-                            ? moment
-                                .utc(data.createdAt)
-                                .format("D MMM, YYYY hh:mm A")
+                            ? moment(data.createdAt).format(
+                                "D MMM, YYYY hh:mm A"
+                              )
                             : "-"}
                         </NotificationListTextLight>
-                        { !data.isRead && <NewTag>New</NewTag> }
+                        {!data.isRead && <NewTag>New</NewTag>}
                       </NotificationSapcebetween>
                     </NotificationFlexCol>
                   </NotificationList>

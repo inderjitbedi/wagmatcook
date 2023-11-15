@@ -18,6 +18,8 @@ import httpClient from "../../api/httpClient";
 import { BiTask } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
 import { BsFilePost } from "react-icons/bs";
+import { TbMessageCheck } from "react-icons/tb";
+
 
 const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
   const { headerData } = useHeaderInfoContext();
@@ -60,6 +62,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
     staffing: false,
     task: false,
     logout: false,
+    announcements: false,
   });
   const handleMouseEnter = (linkName) => {
     setIsHovering((prevState) => ({
@@ -315,7 +318,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             />
             <SideBarListTitle
               style={
-                location.indexOf("task") > -1 || isHovering.task
+                location.pathname.indexOf("task") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -555,6 +558,35 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             >
               {" "}
               Staffing
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/hr-management/announcements"
+          onMouseEnter={() => handleMouseEnter("announcements")}
+          onMouseLeave={() => handleMouseLeave("announcements")}
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <TbMessageCheck
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            />
+
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Announcements
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
