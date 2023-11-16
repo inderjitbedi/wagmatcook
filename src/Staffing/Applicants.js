@@ -335,7 +335,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
       const ids = selectedApplicants.map((applicant) => applicant._id);
       HandleReorder(ids);
     } else {
-      data.selectionOrder = 0;
+      data.selectionOrder = undefined;
     }
 
     setIsLoading(true);
@@ -794,7 +794,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               <Select {...field}>
                                 <Option>Select</Option>
                                 <Option value={interviewed.YES}> Yes </Option>
-                                <Option value={interviewed.NO}> N0 </Option>
+                                <Option value={interviewed.NO}> No </Option>
                                 <Option value={interviewed.DID_NOT_ATTEND}>
                                   Did not attend
                                 </Option>
@@ -822,7 +822,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                     if (Value === "true") {
                                       setIsSelect(true);
                                       setValue("selectionOrder", 0);
-
                                     } else {
                                       setIsSelect(false);
                                       setValue("selectionOrder", 0);
@@ -844,10 +843,16 @@ const Applicants = ({ jobid, Tabvalue }) => {
                         </FlexContaierForm>
                         {isSelect && (
                           <FlexColumnForm>
-                            <InputLabel>Select Order</InputLabel>
+                            <InputLabel>Selection Order</InputLabel>
                             <Controller
                               name="selectionOrder"
                               control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
                               render={({ field }) => (
                                 <Select {...field}>
                                   <Option value={0}>Select</Option>
