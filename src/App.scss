@@ -761,6 +761,11 @@ input[type="checkbox"] {
   color: #279af1 !important;
 }
 
-.Mui-disabled{
+.Mui-disabled {
   opacity: 1 !important;
+}
+button:disabled {
+  background-color: #8f9bb3;
+  cursor: not-allowed;
+  /* Add any other styles for the disabled state */
 }
