@@ -136,6 +136,14 @@ const AnnouncementDetails = () => {
             </FlexSpaceBetween>
             <FlexSpaceBetween>
               <FlexColumnNoWidth>
+                <TaskLight>Description</TaskLight>
+                <TaskDescription>
+                  {result?.announcement?.description || " - "}
+                </TaskDescription>
+              </FlexColumnNoWidth>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween>
+              <FlexColumnNoWidth>
                 <TaskLight>Attachment</TaskLight>
                 {result?.announcement?.attachment ? (
                   <FlexContaier>
@@ -154,15 +162,6 @@ const AnnouncementDetails = () => {
                 ) : (
                   <TaskDescription>No attachment found</TaskDescription>
                 )}
-              </FlexColumnNoWidth>
-            </FlexSpaceBetween>
-
-            <FlexSpaceBetween>
-              <FlexColumnNoWidth>
-                <TaskLight>Description</TaskLight>
-                <TaskDescription>
-                  {result?.announcement?.description || " - "}
-                </TaskDescription>
               </FlexColumnNoWidth>
             </FlexSpaceBetween>
           </BackGroundWhite>
