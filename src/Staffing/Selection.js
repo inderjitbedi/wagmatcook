@@ -687,18 +687,19 @@ const Selection = ({ jobid, Tabvalue }) => {
                               const endDate = getValues("interviewDate");
 
                               const startDate = new Date(e.target.value);
-
-                              if (startDate >= new Date(endDate) && endDate) {
-                                setError("expiryDate", {
-                                  type: "custom",
-                                  message:
-                                    "Must not be earlier than  applied on",
-                                });
-                              } else {
-                                setError("interviewDate", {
-                                  type: "custom",
-                                  message: "",
-                                });
+                              if (startDate && endDate) {
+                                if (startDate >= new Date(endDate) && endDate) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message:
+                                      "Must not be earlier than  applied on",
+                                  });
+                                } else {
+                                  setError("interviewDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
                               }
                             },
                           })}
@@ -709,34 +710,32 @@ const Selection = ({ jobid, Tabvalue }) => {
                     <FlexColumnForm
                       style={{ margin: " 0.6rem 0rem 1rem 0rem" }}
                     >
-                      <AlignFlex>
-                        <input
-                          type="checkbox"
-                          defaultChecked={false}
-                          {...register(`isEligibile`, {
-                            onChange: (e) => {
-                              const Value = e.target.checked;
-                              if (Value) {
-                                setIsVisible(true);
-                              } else {
-                                setIsVisible(false);
-                                // setValue("interviewed", null);
-                                // setValue("interviewDate", null);
-                              }
-                            },
-                          })}
-                          id={`isEligibile`}
-                        />
-                        <InputLabel
-                          htmlFor={`isEligibile`}
-                          style={{
-                            marginBottom: "0rem",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Is Eligible?{" "}
-                        </InputLabel>
-                      </AlignFlex>
+                      <InputLabel>Is Eligible? </InputLabel>
+                      <Controller
+                        name={`isEligibile`}
+                        control={control}
+                        rules={{
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
+                          onChange: (e) => {
+                            let Value = e.target.value;
+                            if (Value === "true") {
+                              setIsVisible(true);
+                            } else {
+                              setIsVisible(false);
+                            }
+                          },
+                        }}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Option value="">Select</Option>
+                            <Option value={true}>yes</Option>
+                            <Option value={false}>No</Option>
+                          </Select>
+                        )}
+                      />
                     </FlexColumnForm>
 
                     <FlexColumnForm>
@@ -751,7 +750,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                           validate: (fieldValue) => {
                             const startDateValue = getValues("appliedOn");
 
-                            const endDateValue = getValues("interviewDate");
+                            const endDateValue = fieldValue;
 
                             if (endDateValue && startDateValue) {
                               const endDate = new Date(endDateValue);
@@ -807,31 +806,32 @@ const Selection = ({ jobid, Tabvalue }) => {
                         <FlexContaierForm style={{ marginBottom: "1rem" }}>
                           {isShow ? (
                             <FlexColumnForm>
-                              <AlignFlex>
-                                <input
-                                  type="checkbox"
-                                  {...register(`isSelected`, {
-                                    onChange: (e) => {
-                                      const Value = e.target.checked;
-                                      if (Value) {
-                                        setIsSelect(true);
-                                      } else {
-                                        setIsSelect(false);
-                                      }
-                                    },
-                                  })}
-                                  id={`isSelected`}
-                                />
-                                <InputLabel
-                                  htmlFor={`isSelected`}
-                                  style={{
-                                    marginBottom: "0rem",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  Is Selected
-                                </InputLabel>
-                              </AlignFlex>
+                              <InputLabel> Is Selected </InputLabel>
+                              <Controller
+                                name={`isSelected`}
+                                control={control}
+                                rules={{
+                                  // required: {
+                                  //   value: true,
+                                  //   message: "Required",
+                                  // },
+                                  onChange: (e) => {
+                                    const Value = e.target.value;
+                                    if (Value === "true") {
+                                      setIsSelect(true);
+                                    } else {
+                                      setIsSelect(false);
+                                    }
+                                  },
+                                }}
+                                render={({ field }) => (
+                                  <Select {...field}>
+                                    <Option value="">Select</Option>
+                                    <Option value={true}>Yes</Option>
+                                    <Option value={false}>No</Option>
+                                  </Select>
+                                )}
+                              />
                             </FlexColumnForm>
                           ) : (
                             "  "
@@ -1035,14 +1035,14 @@ const Selection = ({ jobid, Tabvalue }) => {
                       style={{ minWidth: "9rem" }}
                       align="left"
                     >
-                      Interview&nbsp;Date
+                      Meets&nbsp;Eligibility
                     </TableCell>
                     <TableCell
                       sx={CellHeadStyles}
                       style={{ minWidth: "9rem" }}
                       align="left"
                     >
-                      Meets&nbsp;Eligibility
+                      Interview&nbsp;Date
                     </TableCell>
 
                     <TableCell
@@ -1133,14 +1133,14 @@ const Selection = ({ jobid, Tabvalue }) => {
                                   : " - "}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">
+                                {data?.isEligibile ? "Yes" : "No"}
+                              </TableCell>
+                              <TableCell sx={CellStyle2} align="left">
                                 {data?.interviewDate
                                   ? moment
                                       .utc(data.interviewDate)
                                       .format("D MMM, YYYY")
                                   : " - "}
-                              </TableCell>
-                              <TableCell sx={CellStyle2} align="left">
-                                {data?.isEligibile ? "Yes" : "No"}
                               </TableCell>
 
                               <TableCell sx={CellStyle2} align="left">

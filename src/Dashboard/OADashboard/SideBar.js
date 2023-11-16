@@ -245,7 +245,8 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
                 fill={
                   location.pathname.indexOf("employee/list") > -1 ||
                   location.pathname.indexOf("employee/details") > -1 ||
-                  isHovering.employee
+                  isHovering.employee ||
+                  location.pathname.indexOf("employee/send-welcome") > -1
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -255,7 +256,8 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               style={
                 location.pathname.indexOf("employee/list") > -1 ||
                 location.pathname.indexOf("employee/details") > -1 ||
-                isHovering.employee
+                isHovering.employee ||
+                location.pathname.indexOf("employee/send-welcome") > -1
                   ? style
                   : { color: "#5C5C5C" }
               }

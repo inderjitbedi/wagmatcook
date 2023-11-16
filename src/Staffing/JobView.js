@@ -51,7 +51,6 @@ const JobView = () => {
   const [result, setResult] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
-  const [departmentData, setDepartmentData] = useState([]);
   const [valueTab, setValueTab] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
 

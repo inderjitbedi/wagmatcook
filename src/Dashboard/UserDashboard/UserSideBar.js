@@ -16,6 +16,8 @@ import {
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import httpClient from "../../api/httpClient";
 import { BiTask } from "react-icons/bi";
+import { TbMessageCheck } from "react-icons/tb";
+
 
 const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
   const { headerData } = useHeaderInfoContext();
@@ -59,6 +61,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
     task: false,
     logout: false,
     events: false,
+    announcements: false,
   });
   const handleMouseEnter = (linkName) => {
     setIsHovering((prevState) => ({
@@ -254,6 +257,35 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             >
               {" "}
               Tasks
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link>
+        <Link
+          style={{ textDecoration: "none" }}
+          to="/user-management/announcements"
+          onMouseEnter={() => handleMouseEnter("announcements")}
+          onMouseLeave={() => handleMouseLeave("announcements")}
+        >
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <TbMessageCheck
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            />
+
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("announcements") > -1 ||
+                isHovering.announcements
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Announcements
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>

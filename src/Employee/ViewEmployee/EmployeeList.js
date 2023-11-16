@@ -299,7 +299,9 @@ const Employee = () => {
           " "
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <AddNewButton onClick={() => SendWelcomeEmail()}>
+            <AddNewButton
+              // onClick={() => Navigate("/organization-admin/employee/send-welcome")}
+            >
               Send Welcome Emails
             </AddNewButton>{" "}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
