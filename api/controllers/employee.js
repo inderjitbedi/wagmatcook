@@ -1915,6 +1915,45 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
-};
 
+  async unwelcomedList(req, res) {
+    try {
+      let users = await User.find({
+        organization: req.organization?._id || null,
+        isActive: true,
+        isDeleted: false,
+        receivedWelcomeEmail: false,
+      }).populate("personalInfo");
+
+      res.status(200).json({
+        users,
+        message: "Unwelcomed employee list fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async sendWelcomeEmail(req, res) {
+    try {
+      if (req.body.users && req.body.users.length)
+        await processUsers(req.body.users);
+      res.status(200).json({
+        message: "Welcome email sent successfully to the selected users.",
+      });
+    } catch (error) {
+      console.error("employeeController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+};
+async function processUsers(users) {
+  for (const user of users) {
+    console.log(user);
+    // sendGrid.send(user.email, 'welcome', { user });
+    let user = await User.findOneAndUpdate({ _id: user }, { receivedWelcomeEmail: true }, { new: true });
+    console.log("Welcome email sent to ", user.email);
+  }
+}
 module.exports = employeeController;

@@ -126,12 +126,11 @@ const emailTemplates = {
                                 line-height: 32px;
                                 margin: 0;
                               ">
-                              Hi ${
-                                data.user.name ||
-                                data.user.personalInfo?.firstName ||
-                                data.user.email ||
-                                ""
-                              }
+                              Hi ${data.user.name ||
+        data.user.personalInfo?.firstName ||
+        data.user.email ||
+        ""
+        }
                                 </h1>
                                 <p style="
                                 color: #222b45;
@@ -180,11 +179,9 @@ const emailTemplates = {
                                     line-height: 16px;
                                     padding: 0.8em 1.25em;
                                     border: none;
-                                  " href="${
-                                    process.env.FRONTEND_URL
-                                  }organization-admin/complete-signup/${
-        data.user.email
-      }/${data.user.invitationToken}"
+                                  " href="${process.env.FRONTEND_URL
+        }organization-admin/complete-signup/${data.user.email
+        }/${data.user.invitationToken}"
                                      target="_blank">
                                     Join Now
                                     </a>
@@ -209,11 +206,9 @@ const emailTemplates = {
                                       button above, copy and paste the URL below into your web
                                       browser.</p>
                                   <p class="f-fallback sub">
-                                      ${
-                                        process.env.FRONTEND_URL
-                                      }organization-admin/complete-signup/${
-        data.user.email
-      }/${data.user.invitationToken}
+                                      ${process.env.FRONTEND_URL
+        }organization-admin/complete-signup/${data.user.email
+        }/${data.user.invitationToken}
                                   </p>
                               </td>
                           </tr>
@@ -371,12 +366,11 @@ const emailTemplates = {
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${
-                    data.req.user.name ||
-                    data.req.user.personalInfo?.firstName ||
-                    data.req.user.email ||
-                    ""
-                  }
+                  Hi ${data.req.user.name ||
+        data.req.user.personalInfo?.firstName ||
+        data.req.user.email ||
+        ""
+        }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -910,6 +904,187 @@ const emailTemplates = {
       `,
     };
   },
+  announcement(data) {
+    return {
+      subject: "Wagmatcook | Announcement",
+      html: `<!DOCTYPE html>
+      <html lang="en">
+      
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+          @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+      
+          body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            font-family: "Inter", sans-serif;
+          }
+      
+          table,
+          td {
+            mso-table-lspace: 0px !important;
+            mso-table-rspace: 0px !important;
+          }
+      
+          table {
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            margin: 0 auto !important;
+          }
+      
+          @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+            u~div .email-container {
+              min-width: 320px !important;
+            }
+          }
+      
+          @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+            u~div .email-container {
+              min-width: 375px !important;
+            }
+          }
+      
+          @media only screen and (min-device-width: 414px) {
+            u~div .email-container {
+              min-width: 414px !important;
+            }
+          }
+        </style>
+      </head>
+      
+      <body>
+        <center style="width: 100%">
+          <div style="max-width: 700px; margin: 0 auto" class="email-container">
+            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+              style="margin: auto">
+              <tr>
+                <td valign="top">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%"
+                    style="background: #093fe1">
+                    <tr>
+                      <td style="text-align: left; padding: 36px 50px 0px 50px">
+                        <p style="
+                              color: #fff;
+                              font-family: 'Inter', sans-serif;
+                              font-size: 24px;
+                              font-style: normal;
+                              font-weight: 700;
+                              line-height: normal;
+                              letter-spacing: -0.48px;
+                              width: 100%;
+                            ">
+                          Wagmatcook
+                        </p>
+                      </td>
+                    <tr>
+                      <td align="center">
+                        <img src="https://hrapi.chantsit.com/public/events.png" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p style="
+                    color: #fff;
+                    text-align: center;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 32px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 48px; /* 150% */
+                    letter-spacing: -0.64px;
+                    width: 80%;
+                    margin: 20px auto;
+                  ">
+                          Save the Date for Our Upcoming Company Event!
+                        </p>
+                      </td>
+                    </tr>
+              </tr>
+            </table>
+            </td>
+            </tr>
+            <tr>
+              <td align="left" style="padding: 40px 50px 0px 50px">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                  <tr>
+                    <td style="text-align: left; padding: 40px 50px 0px 50px;">
+                      <h1 style="
+                      width: 100%;
+                      color: #222b45;
+                      font-family: 'Inter', sans-serif;
+                      font-size: 18px;
+                      font-style: normal;
+                      font-weight: 700;
+                      line-height: 32px;
+                      margin: 0;
+                    ">
+                    Hi ${data.user?.firstName},
+                      </h1>
+                      <p style="
+                      color: #222b45;
+                      font-family: 'Inter', sans-serif;
+                      font-size: 16px;
+                      font-style: normal;
+                      font-weight: 400;
+                      line-height: 28px;
+                    ">
+                        A new announcement was posted to the Wagmatcook Community Portal.  See details below and follow the link to learn more.
+                      </p>
+      
+                      <p style="
+                      font-family: 'Inter', sans-serif;
+                      color: #222B45;
+      
+                       font-size: 16px;
+                       font-style: normal;
+                      font-weight: 600;
+                       line-height: 24px;
+                      margin: 20px 0px;
+                    ">
+                    href="${data.announcement.shortDescription}
+                       <a style="color: #093FE1;"  href="${data.announcement.redirectUrl}>Read More...  </a> 
+                      </p>
+                      
+                      
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            </table>
+            <table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td align="left" style="
+                      width: 100%;
+                      color: #222b45;
+                      font-family: 'Inter', sans-serif;
+                      font-size: 14px;
+                      font-style: normal;
+                      font-weight: 500;
+                      line-height: 24px;
+                      margin-bottom: 90px;
+                      padding: 60px 50px 40px 50px;
+                    ">
+                  <p style="margin: 0px">Best regards,</p>
+                  <p style="margin: 0px">The Wagmatcook Team</p>
+                  <p style="margin: 0px">www.wagmatcook.com</p>
+                </td>
+              </tr>
+            </table>
+      
+          </div>
+        </center>
+      </body>
+      
+      </html>
+      `,
+    };
+  },
   leaveRejected(data) {
     return {
       subject: "Wagmatcook | Leave Rejected",
@@ -1034,10 +1209,9 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-              Hi ${
-                data.request.employee.name ||
-                data.request.employee.personalInfo?.firstName
-              },
+              Hi ${data.request.employee.name ||
+        data.request.employee.personalInfo?.firstName
+        },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1343,10 +1517,9 @@ height: 152px; background-color: #F1FFEF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                 Hi ${
-                   data.request.employee.name ||
-                   data.request.employee.personalInfo?.firstName
-                 },
+                 Hi ${data.request.employee.name ||
+        data.request.employee.personalInfo?.firstName
+        },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1652,10 +1825,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${
-                    data.request.responder.name ||
-                    data.request.responder.personalInfo?.firstName
-                  },
+                  Hi ${data.request.responder.name ||
+        data.request.responder.personalInfo?.firstName
+        },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1665,10 +1837,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 font-weight: 400;
                 line-height: 28px;
               ">
-                 You have received a leave request from ${
-                   data.request.employee.name ||
-                   data.request.employee.personalInfo?.firstName
-                 } which requires your action.
+                 You have received a leave request from ${data.request.employee.name ||
+        data.request.employee.personalInfo?.firstName
+        } which requires your action.
                 </p>
 
                 <p style="
@@ -1724,8 +1895,8 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   margin: 0px;
                 ">
                 ${moment
-                  .utc(data.request.from || "")
-                  .format("MMM DD yyyy")}</span>
+          .utc(data.request.from || "")
+          .format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -1748,8 +1919,8 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   margin: 0px;
                 ">
                 ${moment
-                  .utc(data.request.to || "")
-                  .format("MMM DD yyyy")}</span>
+          .utc(data.request.to || "")
+          .format("MMM DD yyyy")}</span>
                 </p>
                 <p style="
                 width: 100%;
@@ -1802,11 +1973,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
   border: none;
   border-radius: 8px;
   background: #279af1;
-  padding: 0.75em 1.25em;" href="${
-    process.env.FRONTEND_URL
-  }manager-management/leaves-request/${data.request.employee._id}/${
-        data.request._id
-      }">View Details</a>
+  padding: 0.75em 1.25em;" href="${process.env.FRONTEND_URL
+        }manager-management/leaves-request/${data.request.employee._id}/${data.request._id
+        }">View Details</a>
 
               </td>
             </tr>
@@ -1969,10 +2138,9 @@ height: 152px;" />
                 line-height: 32px;
                 margin: 0;
               ">
-              Hi ${
-                data.task.assignee.name ||
-                data.task.assignee.personalInfo?.firstName
-              },
+              Hi ${data.task.assignee.name ||
+        data.task.assignee.personalInfo?.firstName
+        },
                 </h1>
                 <p style="
                 color: #222b45;
@@ -1982,10 +2150,9 @@ height: 152px;" />
                 font-weight: 400;
                 line-height: 28px;
               ">
-                  You have assigned a new task by ${
-                    data.task.assigner.name ||
-                    data.task.assigner.personalInfo?.firstName
-                  }.
+                  You have assigned a new task by ${data.task.assigner.name ||
+        data.task.assigner.personalInfo?.firstName
+        }.
                 </p>
 
                 <p style="
@@ -2041,8 +2208,8 @@ height: 152px;" />
                   margin: 0px;
                 ">
                 ${moment
-                  .utc(data.task.dueDate || "")
-                  .format("MMM DD yyyy")} </span>
+          .utc(data.task.dueDate || "")
+          .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2255,10 +2422,9 @@ height: 152px;" />
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${
-                    data.task.sentTo.name ||
-                    data.task.sentTo.personalInfo?.firstName
-                  }
+                  Hi ${data.task.sentTo.name ||
+        data.task.sentTo.personalInfo?.firstName
+        }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -2313,8 +2479,8 @@ height: 152px;" />
                   margin: 0px;
                 ">
                 ${moment
-                  .utc(data.task.dueDate || "")
-                  .format("MMM DD yyyy")} </span>
+          .utc(data.task.dueDate || "")
+          .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;
@@ -2549,10 +2715,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 line-height: 32px;
                 margin: 0;
               ">
-                  Hi ${
-                    data.task.sentTo.name ||
-                    data.task.sentTo.personalInfo?.firstName
-                  }
+                  Hi ${data.task.sentTo.name ||
+        data.task.sentTo.personalInfo?.firstName
+        }
                 </h1>
                 <p style="
                 color: #222b45;
@@ -2562,10 +2727,9 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                 font-weight: 400;
                 line-height: 28px;
               ">
-              ${
-                data.comment.commenter.name ||
-                data.comment.commenter.personalInfo?.firstName
-              } commented on the following task.
+              ${data.comment.commenter.name ||
+        data.comment.commenter.personalInfo?.firstName
+        } commented on the following task.
                 </p>
 
                 <p style="
@@ -2610,8 +2774,8 @@ height: 152px; background-color: #EDF1FF; border-radius: 50%;">
                   margin: 0px;
                 ">
                 ${moment
-                  .utc(data.task.dueDate || "")
-                  .format("MMM DD yyyy")} </span>
+          .utc(data.task.dueDate || "")
+          .format("MMM DD yyyy")} </span>
                 </p>
                 <p style="
                 width: 100%;

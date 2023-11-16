@@ -1,9 +1,155 @@
 const leaveStatus = require("../enum/leaveStatus");
 const EmployeeCertificates = require("../models/employeeCertificates");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
+const EmployeePositionHistory = require("../models/employeePositionHistory");
 
 const dashboardController = {
 
+
+    async departments(req, res) {
+        try {
+
+            // let users = await EmployeePositionHistory.aggregate([
+            //     {
+            //         $match: {
+            //             department: {
+            //                 $in: req.body.departments.map(departmentId => new mongoose.Types.ObjectId(departmentId))
+            //             },
+            //             isDeleted: false
+            //         },
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'users',
+            //             localField: 'employee',
+            //             foreignField: '_id',
+            //             as: 'employeeData'
+            //         }
+            //     },
+            //     {
+            //         $unwind: '$employeeData'
+            //     },
+            //     {
+            //         $match: {
+            //             "employeeData.isActive": true,
+            //             "employeeData.isDeleted": false,
+            //         }
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'userorganizations',
+            //             localField: 'employee',
+            //             foreignField: 'user',
+            //             as: 'relation'
+            //         }
+            //     },
+            //     {
+            //         $unwind: '$relation'
+            //     },
+            //     {
+            //         $match: {
+            //             "relation.organization": req.body.organization,
+            //         }
+            //     },
+            //     {
+            //         $lookup: {
+            //             from: 'employeepersonalinfos',
+            //             localField: 'employeeData.personalInfo',
+            //             foreignField: '_id',
+            //             as: 'personalInfoData'
+            //         }
+            //     },
+
+            //     {
+            //         $unwind: '$personalInfoData'
+            //     },
+            //     {
+            //         $group: {
+            //             _id: '$employeeData._id',
+            //             document: { $first: '$$ROOT' }
+            //         }
+            //     },
+            //     {
+            //         $replaceRoot: { newRoot: '$document' }
+            //     }
+            // ])
+
+            let departmentEmployees = await EmployeePositionHistory.aggregate([
+                {
+                    $match: {
+                        isDeleted: false
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'employee',
+                        foreignField: '_id',
+                        as: 'employeeData'
+                    }
+                },
+                {
+                    $unwind: '$employeeData'
+                },
+                {
+                    $match: {
+                        "employeeData.isActive": true,
+                        "employeeData.isDeleted": false,
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'userorganizations',
+                        localField: 'employee',
+                        foreignField: 'user',
+                        as: 'relation'
+                    }
+                },
+                {
+                    $unwind: '$relation'
+                },
+                {
+                    $match: {
+                        "relation.organization": req.body.organization,
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'employeepersonalinfos',
+                        localField: 'employeeData.personalInfo',
+                        foreignField: '_id',
+                        as: 'personalInfoData'
+                    }
+                },
+                {
+                    $unwind: '$personalInfoData'
+                },
+                {
+                    $group: {
+                        _id: '$department',
+                        totalEmployees: { $sum: 1 },
+                        documents: { $push: '$$ROOT' }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        totalEmployees: 1,
+                        documents: 1
+                    }
+                }
+            ]);
+            console.log(departmentEmployees);
+
+            res.status(200).json({
+                departmentEmployees,
+                message: 'Dashboard data fetched successfully'
+            });
+        } catch (error) {
+            console.error("departmentController:list:error -", error);
+            res.status(400).json(error);
+        }
+    },
     async hrData(req, res) {
         try {
 
