@@ -4,7 +4,9 @@ const API_URLS = {
   resendOtp: `/auth/resend-otp/:email`,
   verifyOtp: `/auth/verify-otp`,
   // send welcome email
-  sendWelcomeEmail: `/organization/send-welcome-email`,
+  listWelcomeEmail: `employee/unwelcomed/list`,
+  sendWelcomeEmail: `employee/welcome-email `,
+
   // super admin routes apis
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
   adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10&searchKey=searchValue`,
@@ -167,6 +169,7 @@ const API_URLS = {
   getAnnouncement: `/announcement/list?page=Page&limit=10&searchKey=searchValue`,
   createAnnouncement: `/announcement/create`,
   deleteAnnouncement: `/announcement/delete/:id`,
+  updateAnnouncement: `/announcement/update/:id`,
   detailsAnnouncement: `/announcement/detail/:id`,
 };
 

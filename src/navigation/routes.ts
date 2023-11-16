@@ -62,6 +62,8 @@ import JobDetailsLayout from "../Staffing/JobDetailsLayout";
 import Applicants from "../Staffing/Applicants";
 import Offboarding from "../OffBoarding/offBoarding";
 import Announcements from "../Announcements/Announcements";
+import AnnouncementDetails from "../Announcements/AnnouncementDetails";
+import SendWelcome from "../Employee/SendWelcome";
 const Routes: any = [
   {
     component: signup,
@@ -144,6 +146,15 @@ const Routes: any = [
       {
         component: Announcements,
         path: "announcements",
+        title: "Announcements",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: AnnouncementDetails,
+        path: "announcements/details/:id",
         title: "Announcements",
         to: "/",
         type: "private",
@@ -246,6 +257,15 @@ const Routes: any = [
       {
         component: Disciplinary,
         path: "disciplinary",
+        title: "Disciplinary ",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: SendWelcome,
+        path: "employee/send-welcome",
         title: "Disciplinary ",
         to: "/",
         type: "private",
@@ -563,6 +583,15 @@ const Routes: any = [
         meta: { allowedRoles: [ROLES.MANAGER] },
       },
       {
+        component: AnnouncementDetails,
+        path: "announcements/details/:id",
+        title: "Announcements",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.MANAGER] },
+      },
+      {
         component: Documents,
         path: "documents",
         title: "Tasks View",
@@ -868,6 +897,15 @@ const Routes: any = [
       {
         component: Announcements,
         path: "announcements",
+        title: "Announcements",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.HR] },
+      },
+      {
+        component: AnnouncementDetails,
+        path: "announcements/details/:id",
         title: "Announcements",
         to: "/",
         type: "private",
@@ -1191,6 +1229,24 @@ const Routes: any = [
         title: "Benefits ",
         to: "/",
         type: "private",
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
+      },
+      {
+        component: Announcements,
+        path: "announcements",
+        title: "Announcements",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.EMPLOYEE] },
+      },
+      {
+        component: AnnouncementDetails,
+        path: "announcements/details/:id",
+        title: "Announcements",
+        to: "/",
+        type: "private",
+        index: true,
         meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {

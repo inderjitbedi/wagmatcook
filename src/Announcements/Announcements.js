@@ -22,6 +22,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 import {
   EditButton,
@@ -51,8 +52,9 @@ import {
   DisciplinaryDiv,
   ActionIcons,
   ActionIconDiv,
+  MenuIconDiv,
 } from "../Disciplinary/DisciplinaryStyles";
-
+import { TabelDarkPara } from "../Disciplinary/DisciplinaryStyles";
 const style = {
   position: "absolute",
   top: "50%",
@@ -90,6 +92,17 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 
 const Announcements = () => {
   let API_URL = process.env.REACT_APP_API_URL;
@@ -163,7 +176,7 @@ const Announcements = () => {
     if (isEmptyObject(errors) && !update) {
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
-      // HandleUpdate(data);
+      HandleUpdate(data);
     }
   };
   const [open, setOpen] = useState(false);
@@ -357,6 +370,45 @@ const Announcements = () => {
         setIsLoading(false);
       });
   };
+  const HandleUpdate = (data) => {
+    // //console.log("update Data:", data);
+    if (userType === ROLES.SUPER_ADMIN) {
+      data.isDefault = true;
+    }
+
+    let dataCopy = data;
+    let url = API_URLS.updateAnnouncement.replace(":id", Id);
+
+    setIsLoading(true);
+
+    httpClient({
+      method: "put",
+      url,
+      data: dataCopy,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setId("");
+          GetAnnouncements();
+          setUpdate(false);
+          HandleClose();
+          reset();
+          toast.success(result.message, {
+            className: "toast",
+          }); //Entry Updated Successfully");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Updating Benefits . Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const GetAnnouncements = () => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
@@ -432,7 +484,7 @@ const Announcements = () => {
               <>
                 <ModalContainer>
                   <ModalHeading>
-                    {!update ? "Add Announcement" : "View Announcement"}
+                    {!update ? "Add Announcement" : "Update Announcement"}
                   </ModalHeading>
                   <ModalIcon
                     onClick={() => {
@@ -447,11 +499,9 @@ const Announcements = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalFormContainer>
                     <InputLabel>
-                      Announcement Title{" "}
-                      {update ? "" : <InputSpan>*</InputSpan>}
+                      Announcement Title <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Input
-                      readOnly={update}
                       {...register("title", {
                         required: {
                           value: true,
@@ -461,7 +511,7 @@ const Announcements = () => {
                       type="text"
                     />
                     {errors.title && <Errors>{errors.title?.message}</Errors>}
-                    <InputLabel>
+                    {/* " <InputLabel>
                       Date of Announcement{" "}
                       {update ? "" : <InputSpan>*</InputSpan>}
                     </InputLabel>
@@ -477,9 +527,9 @@ const Announcements = () => {
                     />
                     {errors.announcementDate && (
                       <Errors>{errors.announcementDate?.message}</Errors>
-                    )}
+                    )}" */}
                     <InputLabel>
-                      Departments {update ? "" : <InputSpan>*</InputSpan>}
+                      Departments <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
                       name="departments"
@@ -493,8 +543,7 @@ const Announcements = () => {
                       render={({ field: { onChange, value, ref } }) => (
                         <Autocomplete
                           multiple
-                          disabled={update}
-                          disabledItemsFocusable={update}
+                          limitTags={2}
                           id="tags-standard"
                           value={
                             value
@@ -504,9 +553,24 @@ const Announcements = () => {
                               : []
                           }
                           onChange={(event, newValue) => {
-                            onChange(
-                              newValue ? newValue.map((item) => item._id) : []
+                            console.log(
+                              "this the selected value :",
+                              newValue,
+                              newValue.some(
+                                (item) => item.name === "Select All"
+                              )
                             );
+                            if (
+                              newValue.some(
+                                (item) => item.name === "Select All"
+                              )
+                            ) {
+                              onChange(departmentData.map((item) => item._id));
+                            } else {
+                              onChange(
+                                newValue ? newValue.map((item) => item._id) : []
+                              );
+                            }
                           }}
                           sx={{ width: " 100% " }}
                           isOptionEqualToValue={(option, value) =>
@@ -523,11 +587,13 @@ const Announcements = () => {
                               {...props}
                             />
                           )}
-                          options={departmentData}
+                          options={[
+                            { _id: "selectAll", name: "Select All" },
+                            ...departmentData,
+                          ]}
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              disabled={update}
                               inputRef={ref}
                               placeholder="Select Departments"
                             />
@@ -540,10 +606,9 @@ const Announcements = () => {
                       <Errors>{errors.departments?.message}</Errors>
                     )}
                     <InputLabel>
-                      Description {update ? "" : <InputSpan>*</InputSpan>}
+                      Description <InputSpan>*</InputSpan>
                     </InputLabel>
                     <TextArea
-                      readOnly={update}
                       type="text"
                       {...register("description", {
                         required: {
@@ -574,7 +639,6 @@ const Announcements = () => {
                     <input
                       style={{ width: "50%" }}
                       type="file"
-                      disabled={update}
                       {...register(`file`, {
                         // required: {
                         //   value: update ? false : true,
@@ -587,93 +651,48 @@ const Announcements = () => {
                       id="upload"
                       className="custom"
                     />
-                    {update && file ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "1.6rem",
-                          alignItems: "center",
-                          marginBottom: "2rem",
-                        }}
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1.6rem",
+                        alignItems: "center",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <EditButton
+                        htmlFor="upload"
+                        style={{ width: "max-content" }}
                       >
-                        <EditButton
-                          htmlFor="upload"
-                          style={{ width: "max-content" }}
-                        >
-                          {" "}
-                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {isUploading ? (
-                            <ThreeDots
-                              height="8"
-                              width="80"
-                              radius="9"
-                              color="#279AF1"
-                              ariaLabel="three-dots-loading"
-                              visible={true}
-                            />
-                          ) : !file ? (
-                            "Upload Document "
-                          ) : file?.originalName.length <= 32 ? (
-                            file?.originalName
-                          ) : (
-                            file?.originalName?.substring(0, 30) + "..."
-                          )}
-                        </EditButton>
-                        {update
-                          ? " "
-                          : file && (
-                              <LightPara onClick={removeFile}>Remove</LightPara>
-                            )}
-                      </div>
-                    ) : !update ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "1.6rem",
-                          alignItems: "center",
-                          marginBottom: "2rem",
-                        }}
-                      >
-                        <EditButton
-                          htmlFor="upload"
-                          style={{ width: "max-content" }}
-                        >
-                          {" "}
-                          <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
-                          {isUploading ? (
-                            <ThreeDots
-                              height="8"
-                              width="80"
-                              radius="9"
-                              color="#279AF1"
-                              ariaLabel="three-dots-loading"
-                              visible={true}
-                            />
-                          ) : !file ? (
-                            "Upload Document "
-                          ) : file?.originalName.length <= 32 ? (
-                            file?.originalName
-                          ) : (
-                            file?.originalName?.substring(0, 30) + "..."
-                          )}
-                        </EditButton>
-                        {update
-                          ? " "
-                          : file && (
-                              <LightPara onClick={removeFile}>Remove</LightPara>
-                            )}
-                      </div>
-                    ) : (
-                      " "
-                    )}
+                        {" "}
+                        <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                        {isUploading ? (
+                          <ThreeDots
+                            height="8"
+                            width="80"
+                            radius="9"
+                            color="#279AF1"
+                            ariaLabel="three-dots-loading"
+                            visible={true}
+                          />
+                        ) : !file ? (
+                          "Upload Document "
+                        ) : file?.originalName.length <= 32 ? (
+                          file?.originalName
+                        ) : (
+                          file?.originalName?.substring(0, 30) + "..."
+                        )}
+                      </EditButton>
+                      {file && (
+                        <LightPara onClick={removeFile}>Remove</LightPara>
+                      )}
+                    </div>
+
                     {errors.file && <Errors> {errors.file?.message} </Errors>}
-                    {!update ? (
-                      <AddNewButton type="submit" disabled={isUploading}>
-                        Submit
-                      </AddNewButton>
-                    ) : (
-                      " "
-                    )}
+
+                    <AddNewButton type="submit" disabled={isUploading}>
+                      {update ? "Update" : "Submit"}
+                    </AddNewButton>
                   </ModalFormContainer>
                 </form>
               </>
@@ -723,13 +742,13 @@ const Announcements = () => {
                   >
                     Title
                   </TableCell>
-                  <TableCell
+                  {/* " <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
                     Date
-                  </TableCell>
+                  </TableCell>" */}
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "15rem" }}
@@ -737,13 +756,13 @@ const Announcements = () => {
                   >
                     Department
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "25rem" }}
                     align="left"
                   >
                     Description
-                  </TableCell>
+                  </TableCell> */}
 
                   <TableCell
                     sx={CellHeadStyles}
@@ -758,7 +777,7 @@ const Announcements = () => {
               <TableBody>
                 {!Announcements?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" colSpan={5} sx={CellStyle2}>
+                    <TableCell align="center" colSpan={3} sx={CellStyle2}>
                       No announcements found
                     </TableCell>
                   </TableRow>
@@ -777,15 +796,39 @@ const Announcements = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
-                      {data.title || " - "}
+                      <MenuIconDiv
+                        onClick={() => {
+                          if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/announcements/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/announcements/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(
+                              `/user-management/announcements/details/${data._id}`
+                            );
+                          } else {
+                            Navigate(
+                              `/organization-admin/announcements/details/${data._id}`
+                            );
+                          }
+                        }}
+                      >
+                        <UnderlineHoverEffect>
+                          <TabelDarkPara>{data.title || " - "}</TabelDarkPara>
+                        </UnderlineHoverEffect>
+                      </MenuIconDiv>
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.announcementDate
                         ? moment
                             .utc(data?.announcementDate)
                             .format("D MMM, YYYY")
                         : " -"}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
                       {data.departments
                         ? data?.departments
@@ -793,18 +836,43 @@ const Announcements = () => {
                             .join(", ")
                         : " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.description || " - "}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
                         <ActionIcons
                           onClick={() => {
-                            HandleUpdateAction(data);
+                            if (userType === ROLES.HR) {
+                              Navigate(
+                                `/hr-management/announcements/details/${data._id}`
+                              );
+                            } else if (userType === ROLES.MANAGER) {
+                              Navigate(
+                                `/manager-management/announcements/details/${data._id}`
+                              );
+                            } else if (userType === ROLES.EMPLOYEE) {
+                              Navigate(
+                                `/user-management/announcements/details/${data._id}`
+                              );
+                            } else {
+                              Navigate(
+                                `/organization-admin/announcements/details/${data._id}`
+                              );
+                            }
                           }}
                           src="/images/icons/eye.svg"
                         />
+                        {(userType === ROLES.ORG_ADMIN ||
+                          userType === ROLES.HR) && (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
                         {(userType === ROLES.ORG_ADMIN ||
                           userType === ROLES.HR) && (
                           <ActionIcons
@@ -854,7 +922,7 @@ const Announcements = () => {
         openDelete={openDelete}
         HandleCloseDelete={HandleCloseDelete}
         HandleDelete={HandleDelete}
-        message="Are you sure you want to delete this department?"
+        message="Are you sure you want to delete this announcement?"
         isLoading={isLoading}
       />
     </>

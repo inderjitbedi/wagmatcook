@@ -160,6 +160,10 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setDetailsLength(500);
     clearErrors();
     reset({});
+    setUploadedFiles([]);
+    setIsShow(false);
+    setIsVisible(false);
+    setIsSelect(false);
   };
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -188,7 +192,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
       HandleUpdate(data);
     }
   };
+
   const HandleUpdateAction = (data) => {
+    // console.log("data when we update aemtry:",data)
     setUpdate(true);
     setId(data?._id);
     reset({
@@ -209,15 +215,19 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setUploadedFiles(data.documents);
     if (data.interviewed === interviewed.YES) {
       setIsShow(true);
+      // console.log("this is inside interviewed", data.interviewed);
     } else {
       setIsShow(false);
       setValue("isSelected", false);
+      // console.log("this is inside interviewed esle", data.interviewed);
     }
     if (data.isEligibile) {
       setIsVisible(true);
+      // console.log("this is inside isEligible", data.isEligibile);
     }
     if (data.isSelected) {
       setIsSelect(true);
+      // console.log("this is inside isSelected", data.isSelected);
     }
     // setValue(
     //   "file",
@@ -230,11 +240,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
     HandleOpen();
-    reset({
-      isEligibile: false,
-      interviewDate: "",
-      interviewed: "",
-    });
+    reset({});
     clearErrors();
     setIsShow(false);
     setDetailsLength(500);
@@ -335,7 +341,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
       const ids = selectedApplicants.map((applicant) => applicant._id);
       HandleReorder(ids);
     } else {
-      data.selectionOrder = selectedApplicants.length + 1;
+      data.selectionOrder = applicants.length + 1;
     }
 
     setIsLoading(true);
@@ -402,8 +408,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
   };
   const HandleUpdate = (data) => {
     let dataCopy = data;
-    if (data.selectionOrder) {
-      data.selectionOrder = selectedApplicants.length;
+    if (!data.selectionOrder) {
+      data.selectionOrder = applicants.length;
     }
     let url = API_URLS.updateApplicants
       .replace(":jobid", jobid)
@@ -422,11 +428,20 @@ const Applicants = ({ jobid, Tabvalue }) => {
             (applicant) => applicant._id === result.applicant._id
           );
           const Target = data.selectionOrder - 1;
+          console.log(
+            "this is applicants update",
+            currentIndex,
+            Target,
+            selectedApplicants
+          );
           if (currentIndex !== -1) {
             selectedApplicants.splice(currentIndex, 1);
             selectedApplicants.splice(Target, 0, result.applicant);
+          } else {
+            selectedApplicants.splice(Target, 0, result.applicant);
           }
           const ids = selectedApplicants.map((applicant) => applicant._id);
+
           HandleReorder(ids);
           setId("");
           GetApplicants();
@@ -563,7 +578,6 @@ const Applicants = ({ jobid, Tabvalue }) => {
       anchorRef.current.click();
     });
   };
-
   return (
     <>
       <DisciplinaryDiv>
@@ -672,18 +686,19 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               const endDate = getValues("interviewDate");
 
                               const startDate = new Date(e.target.value);
-
-                              if (startDate >= new Date(endDate) && endDate) {
-                                setError("expiryDate", {
-                                  type: "custom",
-                                  message:
-                                    "Must not be earlier than  applied on",
-                                });
-                              } else {
-                                setError("interviewDate", {
-                                  type: "custom",
-                                  message: "",
-                                });
+                              if (startDate && endDate) {
+                                if (startDate >= new Date(endDate)) {
+                                  setError("expiryDate", {
+                                    type: "custom",
+                                    message:
+                                      "Must not be earlier than  applied on",
+                                  });
+                                } else {
+                                  setError("interviewDate", {
+                                    type: "custom",
+                                    message: "",
+                                  });
+                                }
                               }
                             },
                           })}
@@ -696,32 +711,33 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     <FlexColumnForm
                       style={{ margin: " 0.6rem 0rem 1rem 0rem" }}
                     >
-                      <AlignFlex>
-                        <input
-                          type="checkbox"
-                          defaultChecked={false}
-                          {...register(`isEligibile`, {
-                            onChange: (e) => {
-                              let Value = e.target.checked;
-                              if (Value) {
-                                setIsVisible(true);
-                              } else {
-                                setIsVisible(false);
-                              }
-                            },
-                          })}
-                          id={`isEligibile`}
-                        />
-                        <InputLabel
-                          htmlFor={`isEligibile`}
-                          style={{
-                            marginBottom: "0rem",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Is Eligible?{" "}
-                        </InputLabel>
-                      </AlignFlex>
+                      <InputLabel>Is Eligible? </InputLabel>
+                      <Controller
+                        name={`isEligibile`}
+                        control={control}
+                        rules={{
+                          // required: {
+                          //   value: true,
+                          //   message: "Required",
+                          // },
+                          onChange: (e) => {
+                            let Value = e.target.value;
+
+                            if (Value === "true") {
+                              setIsVisible(true);
+                            } else {
+                              setIsVisible(false);
+                            }
+                          },
+                        }}
+                        render={({ field }) => (
+                          <Select {...field}>
+                            <Option value="">Select</Option>
+                            <Option value={true}>Yes</Option>
+                            <Option value={false}>No</Option>
+                          </Select>
+                        )}
+                      />
                     </FlexColumnForm>
 
                     {isVisible ? (
@@ -739,7 +755,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                               validate: (fieldValue) => {
                                 const startDateValue = getValues("appliedOn");
 
-                                const endDateValue = getValues("interviewDate");
+                                const endDateValue = fieldValue;
 
                                 if (endDateValue && startDateValue) {
                                   const endDate = new Date(endDateValue);
@@ -797,31 +813,32 @@ const Applicants = ({ jobid, Tabvalue }) => {
                         <FlexContaierForm style={{ marginBottom: "1rem" }}>
                           {isShow ? (
                             <FlexColumnForm>
-                              <AlignFlex>
-                                <input
-                                  type="checkbox"
-                                  {...register(`isSelected`, {
-                                    onChange: (e) => {
-                                      let Value = e.target.checked;
-                                      if (Value) {
-                                        setIsSelect(true);
-                                      } else {
-                                        setIsSelect(false);
-                                      }
-                                    },
-                                  })}
-                                  id={`isSelected`}
-                                />
-                                <InputLabel
-                                  htmlFor={`isSelected`}
-                                  style={{
-                                    marginBottom: "0rem",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  Is Selected
-                                </InputLabel>
-                              </AlignFlex>
+                              <InputLabel> Is Selected </InputLabel>
+                              <Controller
+                                name={`isSelected`}
+                                control={control}
+                                rules={{
+                                  // required: {
+                                  //   value: true,
+                                  //   message: "Required",
+                                  // },
+                                  onChange: (e) => {
+                                    const Value = e.target.value;
+                                    if (Value === "true") {
+                                      setIsSelect(true);
+                                    } else {
+                                      setIsSelect(false);
+                                    }
+                                  },
+                                }}
+                                render={({ field }) => (
+                                  <Select {...field}>
+                                    <Option value="">Select</Option>
+                                    <Option value={true}>Yes</Option>
+                                    <Option value={false}>No</Option>
+                                  </Select>
+                                )}
+                              />
                             </FlexColumnForm>
                           ) : (
                             "  "
@@ -839,23 +856,17 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                   {selectedApplicants.length === 0 && (
                                     <Option value={1}>1</Option>
                                   )}
-                                  {update
-                                    ? selectedApplicants.map((data, index) => (
+                                  {selectedApplicants.length > 0 &&
+                                    Array.from(
+                                      {
+                                        length: selectedApplicants.length + 1,
+                                      },
+                                      (_, index) => (
                                         <Option key={index} value={index + 1}>
                                           {index + 1}
                                         </Option>
-                                      ))
-                                    : selectedApplicants.length > 0 &&
-                                      Array.from(
-                                        {
-                                          length: selectedApplicants.length + 1,
-                                        },
-                                        (_, index) => (
-                                          <Option key={index} value={index + 1}>
-                                            {index + 1}
-                                          </Option>
-                                        )
-                                      )}
+                                      )
+                                    )}
                                 </Select>
                               )}
                             />
@@ -1024,14 +1035,14 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Interview&nbsp;Date
+                    Meets&nbsp;Eligibility
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "9rem" }}
                     align="left"
                   >
-                    Meets&nbsp;Eligibility
+                    Interview&nbsp;Date
                   </TableCell>
 
                   <TableCell
@@ -1100,12 +1111,12 @@ const Applicants = ({ jobid, Tabvalue }) => {
                         : " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
+                      {data?.isEligibile ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
                       {data?.interviewDate
                         ? moment.utc(data.interviewDate).format("D MMM, YYYY")
                         : " - "}
-                    </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
-                      {data?.isEligibile ? "Yes" : "No"}
                     </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">

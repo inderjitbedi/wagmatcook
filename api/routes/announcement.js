@@ -9,7 +9,7 @@ router.post(
   verifyToken([roles.ORG_ADMIN, roles.HR]),
   announcementController.create
 );
-// router.put('/update/:id', verifyToken([roles.SUPER_ADMIN, roles.ORG_ADMIN]), announcementController.update);
+router.put('/update/:id', verifyToken([roles.SUPER_ADMIN, roles.ORG_ADMIN]), announcementController.update);
 router.put(
   "/delete/:id",
   verifyToken([roles.ORG_ADMIN, roles.HR]),

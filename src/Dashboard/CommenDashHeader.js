@@ -425,7 +425,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
                 location.pathname.indexOf("personal-info") > -1 ||
                 location.pathname.indexOf("employee/benefits") > -1 ||
                 location.pathname.indexOf("tasks/details") > -1 ||
-                location.pathname.indexOf("documents/history") > -1) && (
+                location.pathname.indexOf("documents/history") > -1 ||
+                location.pathname.indexOf("send-welcome") > -1) && (
                 <BackButton onClick={() => Navigate(-1)}>
                   <IconsEmployee src="/images/icons/ArrowLeft.svg" />
                   Back
@@ -565,18 +566,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
             Organization Profile
           </MenuItem>
         )}
-        <MenuItem
-          style={{
-            color: "#222B45",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Settings
-        </MenuItem>
+
         <MenuItem
           onClick={HandleLogout}
           style={{

@@ -263,8 +263,9 @@ export const TabelDarkPara = styled.p`
   font-size: 1.4rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1rem;
+  line-height: 1.8rem;
   text-transform: capitalize;
+  margin: 0;
 `;
 export const TabelLightPara = styled.p`
   color: #8f9bb3;
