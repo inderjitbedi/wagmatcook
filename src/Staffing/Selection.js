@@ -30,34 +30,25 @@ import {
   MenuIconDiv,
   ActionIconDiv,
   ActionIcons,
-  ModalUpperDiv,
   ModalHeading,
   ModalIcon,
   ModalUpperMid,
   Input,
-  TextArea,
   InputLabel,
   InputSpan,
-  InputPara,
   Select,
   Option,
   Errors,
-  PendingStyle,
-  ApproveStyle,
-  RejectStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
   EditButton,
   ButtonIcon,
   LightPara,
-  FlexSpaceBetween,
-  FlexSpaceBetweenmobile,
-  FlexColumn,
   FlexColumnForm,
   FlexContaierForm,
-  AlignFlex,
   UploadFile,
+  ModalContainer
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -581,7 +572,7 @@ const Selection = ({ jobid, Tabvalue }) => {
               </div>
             ) : (
               <>
-                <ModalUpperDiv>
+                <ModalContainer>
                   <ModalHeading>
                     {!update ? "Add Applicant" : "Update Applicant"}
                   </ModalHeading>
@@ -594,7 +585,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                     }}
                     src="/images/icons/Alert-Circle.svg"
                   />
-                </ModalUpperDiv>
+                </ModalContainer>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <FlexColumnForm>

@@ -69,7 +69,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: " 44.6rem",
   bgcolor: "background.paper",
-  border: "1px solid #EFF4FA",
+  border: "none",
   boxShadow: 45,
   // padding: "2rem 0rem",
   borderRadius: "8px",

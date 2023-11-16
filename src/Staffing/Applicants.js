@@ -28,38 +28,28 @@ import {
   DisciplinaryDiv,
   DisciplinaryHeading,
   AddNewButton,
-  MenuIcon,
   MenuIconDiv,
   ActionIconDiv,
   ActionIcons,
-  ModalUpperDiv,
   ModalHeading,
   ModalIcon,
   ModalUpperMid,
   Input,
-  TextArea,
   InputLabel,
   InputSpan,
-  InputPara,
   Select,
   Option,
   Errors,
-  PendingStyle,
-  ApproveStyle,
-  RejectStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 import {
   EditButton,
   ButtonIcon,
   LightPara,
-  FlexSpaceBetween,
-  FlexSpaceBetweenmobile,
-  FlexColumn,
   FlexColumnForm,
   FlexContaierForm,
-  AlignFlex,
   UploadFile,
+  ModalContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -137,6 +127,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isSelect, setIsSelect] = useState(false);
   const [selectedApplicants, setSelectedApplicants] = useState([]);
+  const [order, setOrder] = useState("");
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -164,6 +155,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setIsShow(false);
     setIsVisible(false);
     setIsSelect(false);
+    setOrder("");
   };
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -197,6 +189,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     // console.log("data when we update aemtry:",data)
     setUpdate(true);
     setId(data?._id);
+    setOrder(data?.selectionOrder);
     reset({
       name: data.name,
       interviewed: data.interviewed,
@@ -236,7 +229,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
 
     HandleOpen();
   };
-
+  console.log("this is order ", order);
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
     HandleOpen();
@@ -248,6 +241,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
     setIsShow(false);
     setIsVisible(false);
     setIsSelect(false);
+    setOrder("");
   };
 
   const getFileType = (file) => {
@@ -341,7 +335,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
       const ids = selectedApplicants.map((applicant) => applicant._id);
       HandleReorder(ids);
     } else {
-      data.selectionOrder = applicants.length + 1;
+      data.selectionOrder = 0;
     }
 
     setIsLoading(true);
@@ -408,9 +402,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
   };
   const HandleUpdate = (data) => {
     let dataCopy = data;
-    if (!data.selectionOrder) {
-      data.selectionOrder = applicants.length;
-    }
+    // if (!data.selectionOrder) {
+    //   data.selectionOrder = applicants.length;
+    // }
     let url = API_URLS.updateApplicants
       .replace(":jobid", jobid)
       .replace(":id", Id);
@@ -424,25 +418,26 @@ const Applicants = ({ jobid, Tabvalue }) => {
     })
       .then(({ result, error }) => {
         if (result) {
-          const currentIndex = selectedApplicants.findIndex(
-            (applicant) => applicant._id === result.applicant._id
-          );
-          const Target = data.selectionOrder - 1;
-          console.log(
-            "this is applicants update",
-            currentIndex,
-            Target,
-            selectedApplicants
-          );
-          if (currentIndex !== -1) {
-            selectedApplicants.splice(currentIndex, 1);
-            selectedApplicants.splice(Target, 0, result.applicant);
-          } else {
-            selectedApplicants.splice(Target, 0, result.applicant);
+          if (result.applicant.selectionOrder !== 0) {
+            const currentIndex = selectedApplicants.findIndex(
+              (applicant) => applicant._id === result.applicant._id
+            );
+            const Target = data.selectionOrder - 1;
+            console.log(
+              "this is applicants update",
+              currentIndex,
+              Target,
+              selectedApplicants
+            );
+            if (currentIndex !== -1) {
+              selectedApplicants.splice(currentIndex, 1);
+              selectedApplicants.splice(Target, 0, result.applicant);
+            } else {
+              selectedApplicants.splice(Target, 0, result.applicant);
+            }
+            const ids = selectedApplicants.map((applicant) => applicant._id);
+            HandleReorder(ids);
           }
-          const ids = selectedApplicants.map((applicant) => applicant._id);
-
-          HandleReorder(ids);
           setId("");
           GetApplicants();
           setUpdate(false);
@@ -639,7 +634,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
               </div>
             ) : (
               <>
-                <ModalUpperDiv>
+                <ModalContainer>
                   <ModalHeading>
                     {!update ? "Add Applicant" : "Update Applicant"}
                   </ModalHeading>
@@ -652,7 +647,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                     }}
                     src="/images/icons/Alert-Circle.svg"
                   />
-                </ModalUpperDiv>
+                </ModalContainer>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <ModalUpperMid>
                     <FlexColumnForm>
@@ -791,15 +786,15 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                   setIsShow(false);
                                   setValue("isSelected", false);
                                   setIsSelect(false);
-                                  setValue("selectionOrder", " ");
+                                  setValue("selectionOrder", 0);
                                 }
                               },
                             }}
                             render={({ field }) => (
                               <Select {...field}>
                                 <Option>Select</Option>
-                                <Option value={interviewed.YES}> YES </Option>
-                                <Option value={interviewed.NO}> NO </Option>
+                                <Option value={interviewed.YES}> Yes </Option>
+                                <Option value={interviewed.NO}> N0 </Option>
                                 <Option value={interviewed.DID_NOT_ATTEND}>
                                   Did not attend
                                 </Option>
@@ -826,8 +821,11 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                     const Value = e.target.value;
                                     if (Value === "true") {
                                       setIsSelect(true);
+                                      setValue("selectionOrder", 0);
+
                                     } else {
                                       setIsSelect(false);
+                                      setValue("selectionOrder", 0);
                                     }
                                   },
                                 }}
@@ -856,17 +854,23 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                   {selectedApplicants.length === 0 && (
                                     <Option value={1}>1</Option>
                                   )}
-                                  {selectedApplicants.length > 0 &&
-                                    Array.from(
-                                      {
-                                        length: selectedApplicants.length + 1,
-                                      },
-                                      (_, index) => (
+                                  {order == 0
+                                    ? selectedApplicants.length > 0 &&
+                                      Array.from(
+                                        {
+                                          length: selectedApplicants.length + 1,
+                                        },
+                                        (_, index) => (
+                                          <Option key={index} value={index + 1}>
+                                            {index + 1}
+                                          </Option>
+                                        )
+                                      )
+                                    : selectedApplicants.map((data, index) => (
                                         <Option key={index} value={index + 1}>
                                           {index + 1}
                                         </Option>
-                                      )
-                                    )}
+                                      ))}
                                 </Select>
                               )}
                             />
