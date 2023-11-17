@@ -85,6 +85,15 @@ export const CardSubGrey = styled.p`
   line-height: 1.6rem; /* 133.333% */
   margin: 0;
 `;
+export const CardSubBlack = styled.span`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6rem;
+  margin: 0;
+`;
 export const CardImg = styled.img`
   width: 3rem;
   height: 3rem;

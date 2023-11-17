@@ -37,6 +37,7 @@ import {
   WorkAnniversary,
   CardIcons,
   MainCardView,
+  CardSubBlack,
 } from "./ManagerStyles";
 import moment from "moment";
 import { FlexSpaceBetween } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
@@ -167,48 +168,86 @@ const ManagerDashBoard = () => {
           <Heading_24> Good Evening</Heading_24>
           <CardContainer>
             <FlexColContainer>
-              <CardBody>
-                <CardHeading>Leave Request</CardHeading>
-                {!dashboardData?.leaves?.length && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      margin: "3rem 0rem",
-                    }}
-                  >
-                    <CardSubHeading>No pending leave request</CardSubHeading>
-                  </div>
-                )}
-                {dashboardData?.leaves?.map((data) => (
-                  <CardList>
-                    <FlexContainer>
-                      <CardImg
-                        src={
-                          data?.employee?.personalInfo?.photo
-                            ? API_URL +
-                              data?.employee?.personalInfo?.photo?.path
-                            : "/images/User.jpg"
-                        }
-                      />
-                      <FlexColumn>
-                        <CardSubHeading>
-                          {data?.employee?.personalInfo
-                            ? [
-                                data?.employee?.personalInfo?.firstName,
-                                data?.employee?.personalInfo?.lastName,
-                              ].join(" ")
-                            : " - "}
-                        </CardSubHeading>
-                        <CardSubGrey>
-                          {data?.employee ? data?.employee?.email : " - "}
-                        </CardSubGrey>
-                      </FlexColumn>
-                    </FlexContainer>
-                    <PendingStyle>{data?.status}</PendingStyle>
-                  </CardList>
-                ))}
-              </CardBody>
+              {userType === ROLES.EMPLOYEE ? (
+                <CardBody>
+                  <CardHeading>Applied Leave Request</CardHeading>
+                  {!dashboardData?.leaves?.length && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        margin: "3rem 0rem",
+                      }}
+                    >
+                      <CardSubHeading>No pending leave request</CardSubHeading>
+                    </div>
+                  )}
+                  {dashboardData?.leaves?.map((data) => (
+                    <CardList style={{ width: "100%" }}>
+                      <FlexContainer>
+                        <FlexColumn>
+                          <CardSubHeading>Lieu Time</CardSubHeading>
+                          <FlexContainer style={{ flex: "1" }}>
+                            <CardSubGrey>
+                              From:
+                              <CardSubBlack>30 Apr, 2020</CardSubBlack>
+                            </CardSubGrey>
+                            <CardSubGrey>
+                              To:
+                              <CardSubBlack>30 Apr, 2020</CardSubBlack>
+                            </CardSubGrey>
+                          </FlexContainer>
+                        </FlexColumn>
+                      </FlexContainer>
+                      <PendingStyle>{data?.status}</PendingStyle>
+                    </CardList>
+                  ))}
+                </CardBody>
+              ) : (
+                <CardBody>
+                  <CardHeading>Leave Request</CardHeading>
+                  {!dashboardData?.leaves?.length && (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        margin: "3rem 0rem",
+                      }}
+                    >
+                      <CardSubHeading>No pending leave request</CardSubHeading>
+                    </div>
+                  )}
+                  {dashboardData?.leaves?.map((data) => (
+                    <CardList>
+                      <FlexContainer>
+                        <CardImg
+                          src={
+                            data?.employee?.personalInfo?.photo
+                              ? API_URL +
+                                data?.employee?.personalInfo?.photo?.path
+                              : "/images/User.jpg"
+                          }
+                        />
+                        <FlexColumn>
+                          <CardSubHeading>
+                            {data?.employee?.personalInfo
+                              ? [
+                                  data?.employee?.personalInfo?.firstName,
+                                  data?.employee?.personalInfo?.lastName,
+                                ].join(" ")
+                              : " - "}
+                          </CardSubHeading>
+                          <CardSubGrey>
+                            {data?.employee ? data?.employee?.email : " - "}
+                          </CardSubGrey>
+                        </FlexColumn>
+                      </FlexContainer>
+                      <PendingStyle>{data?.status}</PendingStyle>
+                    </CardList>
+                  ))}
+                </CardBody>
+              )}
+
               {/* <CardBody>
             <CardHeading>Leave Adjustments</CardHeading>
             <CardList>
