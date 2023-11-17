@@ -140,6 +140,8 @@ const SendWelcome = () => {
     })
       .then(({ result, error }) => {
         if (result) {
+          GetWelcomeEmployeeList();
+          setSelectedRows([]);
           toast.success(result.message, {
             className: "toast",
           });

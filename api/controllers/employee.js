@@ -1932,7 +1932,7 @@ const employeeController = {
         .skip(startIndex)
         .limit(limit);
 
-      const totalUsers = await EmployeeType.countDocuments({
+      const totalUsers = await User.countDocuments({
         receivedWelcomeEmail: false,
       });
       const totalPages = Math.ceil(totalUsers / req.query.limit);
