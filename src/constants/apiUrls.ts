@@ -4,8 +4,8 @@ const API_URLS = {
   resendOtp: `/auth/resend-otp/:email`,
   verifyOtp: `/auth/verify-otp`,
   // send welcome email
-  listWelcomeEmail: `employee/unwelcomed/list`,
-  sendWelcomeEmail: `employee/welcome-email `,
+  listWelcomeEmail: `employee/unwelcomed/list?page=Page&limit=Limit&searchKey=searchValue`,
+  sendWelcomeEmail: `employee/welcome-email`,
 
   // super admin routes apis
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
