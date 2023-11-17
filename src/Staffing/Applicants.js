@@ -174,12 +174,14 @@ const Applicants = ({ jobid, Tabvalue }) => {
       if (uploadedFiles) {
         const documentIds = uploadedFiles.map((file) => file._id);
         data.documents = documentIds;
+        delete data.file;
       }
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
       if (uploadedFiles) {
         const documentIds = uploadedFiles.map((file) => file._id);
         data.documents = documentIds;
+        delete data.file;
       }
       HandleUpdate(data);
     }
@@ -203,7 +205,8 @@ const Applicants = ({ jobid, Tabvalue }) => {
       isEligibile: data.isEligibile,
       isSelected: data.isSelected,
       file: data.documents,
-      selectionOrder: data?.selectionOrder,
+      selectionOrder:
+        data?.selectionOrder == 0 ? undefined : data?.selectionOrder,
     });
     setUploadedFiles(data.documents);
     if (data.interviewed === interviewed.YES) {
@@ -786,7 +789,7 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                   setIsShow(false);
                                   setValue("isSelected", false);
                                   setIsSelect(false);
-                                  setValue("selectionOrder", 0);
+                                  setValue("selectionOrder", undefined);
                                 }
                               },
                             }}
@@ -821,10 +824,9 @@ const Applicants = ({ jobid, Tabvalue }) => {
                                     const Value = e.target.value;
                                     if (Value === "true") {
                                       setIsSelect(true);
-                                      setValue("selectionOrder", 0);
                                     } else {
                                       setIsSelect(false);
-                                      setValue("selectionOrder", 0);
+                                      setValue("selectionOrder", undefined);
                                     }
                                   },
                                 }}

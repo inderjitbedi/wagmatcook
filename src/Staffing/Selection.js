@@ -48,7 +48,7 @@ import {
   FlexColumnForm,
   FlexContaierForm,
   UploadFile,
-  ModalContainer
+  ModalContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -194,7 +194,8 @@ const Selection = ({ jobid, Tabvalue }) => {
         : null,
       isEligibile: data.isEligibile,
       isSelected: data.isSelected,
-      selectionOrder: data?.selectionOrder,
+      selectionOrder:
+        data?.selectionOrder == 0 ? undefined : data?.selectionOrder,
       // file: data.documents.map((file) => file._id),
     });
     setUploadedFiles(data.documents);
@@ -389,6 +390,8 @@ const Selection = ({ jobid, Tabvalue }) => {
           const Target = data.selectionOrder - 1;
           if (currentIndex !== -1) {
             selectedApplicants.splice(currentIndex, 1);
+            selectedApplicants.splice(Target, 0, result.applicant);
+          } else {
             selectedApplicants.splice(Target, 0, result.applicant);
           }
           const ids = selectedApplicants.map((applicant) => applicant._id);
@@ -812,6 +815,7 @@ const Selection = ({ jobid, Tabvalue }) => {
                                       setIsSelect(true);
                                     } else {
                                       setIsSelect(false);
+                                      setValue("selectionOrder", undefined);
                                     }
                                   },
                                 }}
@@ -835,6 +839,12 @@ const Selection = ({ jobid, Tabvalue }) => {
                             <Controller
                               name="selectionOrder"
                               control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
                               render={({ field }) => (
                                 <Select {...field}>
                                   <Option value={0}>Select</Option>
