@@ -53,6 +53,10 @@ import {
   DisciplinaryHeading,
   DisciplinaryDiv,
   FlexContaier,
+  PaginationDivExpand,
+  PaginationPara,
+  PaginationSelect,
+  PaginationOption,
 } from "../Disciplinary/DisciplinaryStyles";
 
 const CellHeadStyles = {
@@ -88,6 +92,8 @@ const SendWelcome = () => {
 
   const Navigate = useNavigate();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState([]);
   const [userType, setUserType] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
@@ -123,11 +129,21 @@ const SendWelcome = () => {
     setSearchValue(data);
   };
   const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
-  const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState([]);
+  const handleItemsPerPageChange = (event) => {
+    const newItemsPerPage = Number(event.target.value);
+    setItemsPerPage(newItemsPerPage);
+    setPage(1);
+  };
+
+  const startItem = (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(
+    startItem + itemsPerPage - 1,
+    result?.totalUsers || 0
+  );
 
   const SendWelcomeEmail = () => {
     let url = API_URLS.sendWelcomeEmail;
@@ -160,7 +176,7 @@ const SendWelcome = () => {
     var url = API_URLS.listWelcomeEmail
       .replace("searchValue", searchValue)
       .replace("Page", page)
-      .replace("Limit", 10);
+      .replace("Limit", itemsPerPage);
 
     httpClient({
       method: "get",
@@ -185,7 +201,8 @@ const SendWelcome = () => {
   };
   useEffect(() => {
     GetWelcomeEmployeeList();
-  }, []);
+  }, [page, itemsPerPage]);
+
   const rows = [
     {
       _id: "101",
@@ -354,8 +371,24 @@ const SendWelcome = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          {result?.totalPages > 1 && (
-            <PaginationDiv>
+
+          <PaginationDivExpand>
+            <FlexContaier style={{ alignItems: "center" }}>
+              <PaginationPara>Items per page</PaginationPara>
+              <PaginationSelect
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+              >
+                <PaginationOption value={5}>5</PaginationOption>
+                <PaginationOption value={10}>10</PaginationOption>
+                <PaginationOption value={15}>15</PaginationOption>
+                <PaginationOption value={20}>20</PaginationOption>
+              </PaginationSelect>
+              <PaginationPara>{`${startItem}-${endItem} of ${
+                result?.totalUsers || 0
+              }`}</PaginationPara>
+            </FlexContaier>
+            {result?.totalPages > 1 && (
               <Pagination
                 count={result?.totalPages}
                 variant="outlined"
@@ -363,8 +396,8 @@ const SendWelcome = () => {
                 page={page}
                 onChange={HandleChangePage}
               />
-            </PaginationDiv>
-          )}
+            )}
+          </PaginationDivExpand>
         </>
       )}
     </>
