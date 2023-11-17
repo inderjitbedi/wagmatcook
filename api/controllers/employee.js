@@ -1918,15 +1918,29 @@ const employeeController = {
 
   async unwelcomedList(req, res) {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+
       let users = await User.find({
         // organization: req.organization?._id || null,
         // isActive: true,
         // isDeleted: false,
         receivedWelcomeEmail: false,
-      }).populate("personalInfo");
+      })
+        .populate("personalInfo")
+        .skip(startIndex)
+        .limit(limit);
 
+      const totalUsers = await EmployeeType.countDocuments({
+        receivedWelcomeEmail: false,
+      });
+      const totalPages = Math.ceil(totalUsers / req.query.limit);
       res.status(200).json({
         users,
+        totalUsers,
+        currentPage: page,
+        totalPages,
         message: "Unwelcomed employee list fetched successfully",
       });
     } catch (error) {
@@ -1949,11 +1963,15 @@ const employeeController = {
   },
 };
 async function processUsers(users) {
-  for (const user of users) {
+  for (let user of users) {
     console.log(user);
     // sendGrid.send(user.email, 'welcome', { user });
-    let user = await User.findOneAndUpdate({ _id: user }, { receivedWelcomeEmail: true }, { new: true });
-    console.log("Welcome email sent to ", user.email);
+    let employee = await User.findOneAndUpdate(
+      { _id: user },
+      { receivedWelcomeEmail: true },
+      { new: true }
+    );
+    console.log("Welcome email sent to ", employee.email);
   }
 }
 module.exports = employeeController;

@@ -52,6 +52,7 @@ import {
   PaginationDiv,
   DisciplinaryHeading,
   DisciplinaryDiv,
+  FlexContaier,
 } from "../Disciplinary/DisciplinaryStyles";
 
 const CellHeadStyles = {
@@ -83,14 +84,17 @@ const CellStyle2 = {
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const SendWelcome = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
+  const [unwelcomedUser, setUnwelcomedUser] = useState([]);
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      setSelectedRows(rows);
+      setSelectedRows(unwelcomedUser);
     } else {
       setSelectedRows([]);
     }
@@ -127,10 +131,12 @@ const SendWelcome = () => {
 
   const SendWelcomeEmail = () => {
     let url = API_URLS.sendWelcomeEmail;
-
+    let user = selectedRows?.map((user) => user._id);
+    let dataCopy = { users: user };
     httpClient({
       method: "post",
       url,
+      data: dataCopy,
     })
       .then(({ result, error }) => {
         if (result) {
@@ -151,7 +157,8 @@ const SendWelcome = () => {
     setIsLoading(true);
     var url = API_URLS.listWelcomeEmail
       .replace("searchValue", searchValue)
-      .replace("Page", page);
+      .replace("Page", page)
+      .replace("Limit", 10);
 
     httpClient({
       method: "get",
@@ -160,7 +167,7 @@ const SendWelcome = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          
+          setUnwelcomedUser(result.users);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -211,6 +218,17 @@ const SendWelcome = () => {
 
       <DisciplinaryDiv>
         <DisciplinaryHeading>Employees</DisciplinaryHeading>
+        {selectedRows.length > 0 && (
+          <FlexContaier style={{ alignItems: "center", gap: "1.6rem" }}>
+            <TabelLightPara>
+              Selected Employees:{" "}
+              <span style={{ color: "#222b45" }}> {selectedRows.length}</span>
+            </TabelLightPara>
+            <AddNewButton onClick={() => SendWelcomeEmail()}>
+              Send Now
+            </AddNewButton>
+          </FlexContaier>
+        )}
       </DisciplinaryDiv>
       {isLoading ? (
         <div
@@ -268,7 +286,14 @@ const SendWelcome = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows?.map((data) => (
+                {!unwelcomedUser?.length && (
+                  <TableRow sx={{ height: "20rem" }}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                      No employee found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {unwelcomedUser?.map((data) => (
                   <TableRow
                     key={data.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -291,7 +316,29 @@ const SendWelcome = () => {
                       sx={CellStyle}
                       style={{ minWidth: "150px" }}
                     >
-                      {data.name}
+                      <TabelDiv>
+                        <TabelImg
+                          src={
+                            data.photo && data.photo.length
+                              ? API_URL + data.photo?.path
+                              : "/images/User.jpg"
+                          }
+                        />
+                        <TabelParaContainer>
+                          <TabelDarkPara>
+                            {" "}
+                            {data.name
+                              ? data.name
+                              : data?.personalInfo
+                              ? [
+                                  data?.personalInfo?.firstName,
+                                  data?.personalInfo?.lastName,
+                                ].join(" ")
+                              : " - "}
+                          </TabelDarkPara>
+                          <TabelLightPara>{data.email || " - "}</TabelLightPara>
+                        </TabelParaContainer>
+                      </TabelDiv>
                     </TableCell>
                     <TableCell
                       align="left"
@@ -305,6 +352,17 @@ const SendWelcome = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
         </>
       )}
     </>
