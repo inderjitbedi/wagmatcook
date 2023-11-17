@@ -769,3 +769,10 @@ button:disabled {
   cursor: not-allowed;
   /* Add any other styles for the disabled state */
 }
+.resetStyle {
+  & input[type="checkbox"] {
+  transform: translateY(0);
+  display: block;
+    margin: 12px 0px 0px 10px;
+  }
+}

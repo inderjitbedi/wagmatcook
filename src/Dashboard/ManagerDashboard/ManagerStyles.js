@@ -20,6 +20,12 @@ export const CardContainer = styled.div`
     flex-direction: column;
   }
 `;
+export const MainCardView = styled.p`
+  color: #279af1;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.6rem;
+`;
 export const FlexColContainer = styled.div`
   display: flex;
   flex-direction: column;

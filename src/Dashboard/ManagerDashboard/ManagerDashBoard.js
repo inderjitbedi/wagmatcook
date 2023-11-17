@@ -5,6 +5,8 @@ import httpClient from "../../api/httpClient";
 import API_URLS from "../../constants/apiUrls";
 import { toast } from "react-toastify";
 import { RotatingLines } from "react-loader-spinner";
+import { useLocation } from "react-router";
+import ROLES from "../../constants/roles";
 
 import {
   DashHeader,
@@ -34,14 +36,22 @@ import {
   PendingStyle,
   WorkAnniversary,
   CardIcons,
+  MainCardView,
 } from "./ManagerStyles";
 import moment from "moment";
+import { FlexSpaceBetween } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
+
 const ManagerDashBoard = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
   const [dashboardData, setDashboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(false);
+  const [Announcements, setAnnouncements] = useState([]);
+  const [result, setResult] = useState([]);
+
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,11 +59,7 @@ const ManagerDashBoard = () => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    navigate("/");
-  };
+
   const array6 = [1, 1, 1, 1, 1, 1];
   const array5 = [1, 2, 1, 2];
   const [searchValue, setSearchValue] = useState("");
@@ -89,8 +95,49 @@ const ManagerDashBoard = () => {
         });
     });
   };
+  const GetAnnouncements = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      let url = API_URLS.listAnnouncement;
+
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            setResult(result);
+            setAnnouncements(result.announcements);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          //console.error("Error:", error);
+          toast.error("Error creating department. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
   useEffect(() => {
     GetDashboardInfo();
+    GetAnnouncements();
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+    } else if (location.pathname.indexOf("super-admin") > -1) {
+      setUserType(ROLES.SUPER_ADMIN);
+    }
   }, []);
 
   return (
@@ -194,25 +241,46 @@ const ManagerDashBoard = () => {
             </FlexColContainer>
             <FlexColContainer>
               <CardBody>
-                <CardHeading> Announcements</CardHeading>
-                <CardList>
-                  <FlexColumn style={{ gap: "8px" }}>
-                    <CardSubHeading>
-                      Hurry! Your IT declaration is awaiting. Please submit it
-                      before the window gets closed.{" "}
-                    </CardSubHeading>
-                    <CardSubGrey>12-05-2023</CardSubGrey>
-                  </FlexColumn>
-                </CardList>
-                <CardList>
-                  <FlexColumn style={{ gap: "8px" }}>
-                    <CardSubHeading>
-                      Hurry! Your IT declaration is awaiting. Please submit it
-                      before the window gets closed.{" "}
-                    </CardSubHeading>
-                    <CardSubGrey>12-05-2023</CardSubGrey>
-                  </FlexColumn>
-                </CardList>
+                <FlexSpaceBetween style={{ alignItems: "center", margin: "0" }}>
+                  <CardHeading> Announcements</CardHeading>
+                  <MainCardView
+                    onClick={() => {
+                      if (userType === ROLES.MANAGER) {
+                        Navigate(`/manager-management/announcements`);
+                      } else if (userType === ROLES.HR) {
+                        Navigate(`/hr-management/announcements`);
+                      } else {
+                        Navigate(`/user-management/announcements`);
+                      }
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    View All
+                  </MainCardView>
+                </FlexSpaceBetween>
+                {!Announcements?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No announcements found </CardSubHeading>
+                  </div>
+                )}
+                {Announcements?.map((data) => (
+                  <CardList>
+                    <FlexColumn style={{ gap: "8px" }}>
+                      <CardSubHeading>{data.title || " - "}</CardSubHeading>
+                      <CardSubGrey>
+                        {data.updatedAt
+                          ? moment(data.updatedAt).format("D MMM, YYYY")
+                          : " "}
+                      </CardSubGrey>
+                    </FlexColumn>
+                  </CardList>
+                ))}
               </CardBody>
 
               <CardBody>

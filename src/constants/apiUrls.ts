@@ -171,6 +171,7 @@ const API_URLS = {
   deleteAnnouncement: `/announcement/delete/:id`,
   updateAnnouncement: `/announcement/update/:id`,
   detailsAnnouncement: `/announcement/detail/:id`,
+  listAnnouncement: `announcement/list?limit=5`,
 };
 
 export default API_URLS;
