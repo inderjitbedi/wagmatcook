@@ -160,6 +160,7 @@ const SendWelcome = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+          
         } else {
           //toast.warn("something went wrong ");
         }
