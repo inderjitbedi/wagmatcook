@@ -1919,9 +1919,9 @@ const employeeController = {
   async unwelcomedList(req, res) {
     try {
       let users = await User.find({
-        organization: req.organization?._id || null,
-        isActive: true,
-        isDeleted: false,
+        // organization: req.organization?._id || null,
+        // isActive: true,
+        // isDeleted: false,
         receivedWelcomeEmail: false,
       }).populate("personalInfo");
 

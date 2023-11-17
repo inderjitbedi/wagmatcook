@@ -204,6 +204,8 @@ const Employee = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
     let user = localStorage.getItem("user");
 
@@ -299,13 +301,13 @@ const Employee = () => {
           " "
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <AddNewButton
+          { userType === ROLES.ORG_ADMIN && <AddNewButton
               onClick={() =>
                 Navigate("/organization-admin/employee/send-welcome")
               }
             >
               Send Welcome Emails
-            </AddNewButton>{" "}
+            </AddNewButton>}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
           </div>
         )}
