@@ -437,29 +437,5 @@ const orgController = {
       res.status(400).json(error);
     }
   },
-
-  async sendWelcomeEmail(req, res) {
-    try {
-      let users = await User.find({
-        organization: req.organization?._id || null,
-        isActive: true,
-        receivedWelcomeEmail: false,
-      }).populate("personalInfo");
-      await processUsers(users);
-      res.status(200).json({
-        message: "Welcome emails sent successfully",
-      });
-    } catch (error) {
-      console.error("employeeController:update:error -", error);
-      res.status(400).json(error);
-    }
-  },
-};
-async function processUsers(users) {
-  for (const user of users) {
-    console.log(user.email, user.receivedWelcomeEmail);
-    // sendGrid.send(user.email, 'welcome', { user });
-    await User.findOneAndUpdate({ _id: user._id }, { receivedWelcomeEmail: true });
-  }
 }
 module.exports = orgController;

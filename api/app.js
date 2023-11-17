@@ -54,10 +54,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swagger));
 
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on("connected", () => {
-  //console.log("Connected to DB");
+  console.log("Connected to DB");
 });
 mongoose.connection.on("error", (err) => {
-  //console.log("DB connection failed: ", err);
+  console.log("DB connection failed: ", err);
 });
 app.use(loggerMiddleware);
 
@@ -87,5 +87,5 @@ app.use("/api/temp", express.static(path.join(__dirname, "temp")));
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(process.env.PORT, () => {
-  //console.log('Server started on port ' + process.env.PORT);
+  console.log('Server started on port ' + process.env.PORT);
 });
