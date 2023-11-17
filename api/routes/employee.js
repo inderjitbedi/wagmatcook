@@ -154,8 +154,7 @@ router.put('/offboard', verifyToken([roles.HR, roles.MANAGER, roles.ORG_ADMIN]),
 router.get('/offboarding-list', verifyToken([roles.HR, roles.MANAGER, roles.ORG_ADMIN]), employeeController.offboardingList);
 
 router.post('/welcome-email', verifyToken([roles.ORG_ADMIN]), employeeController.sendWelcomeEmail);
-router.post('/unwelcomed/list', verifyToken([roles.ORG_ADMIN]), employeeController.unwelcomedList);
-
+router.get('/unwelcomed/list', verifyToken([roles.ORG_ADMIN]), employeeController.unwelcomedList);
 
 
 module.exports = router;

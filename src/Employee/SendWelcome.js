@@ -174,7 +174,7 @@ const SendWelcome = () => {
       });
   };
   useEffect(() => {
-    // GetWelcomeEmployeeList();
+    GetWelcomeEmployeeList();
   }, []);
   const rows = [
     {
