@@ -293,6 +293,15 @@ export const PaginationDiv = styled.div`
   width: 100%;
   margin: 1.6rem 0rem;
 `;
+export const PaginationDivExpand = styled.div`
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+  margin: 1.6rem 0rem;
+  padding: 0px 10px;
+
+`;
 export const PendingStyle = styled.p`
   border-radius: 10rem;
   background: #fff1dd;
@@ -379,4 +388,32 @@ export const StyledLabelActive = styled(ToggelLabel)`
   &::after {
     width: 1.5rem;
   }
+`;
+export const PaginationPara = styled.p`
+  margin: 0;
+  color: #8f9bb3;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.8rem;
+`;
+export const PaginationSelect = styled.select`
+  color: black;
+  border: 1px solid black;
+  padding: 2px;
+  background: transparent;
+  outline: none;
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
+`;
+export const PaginationOption = styled.option`
+  color: #9ea0aa;
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2rem;
 `;
