@@ -300,7 +300,9 @@ const Employee = () => {
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
             <AddNewButton
-              // onClick={() => Navigate("/organization-admin/employee/send-welcome")}
+              onClick={() =>
+                Navigate("/organization-admin/employee/send-welcome")
+              }
             >
               Send Welcome Emails
             </AddNewButton>{" "}

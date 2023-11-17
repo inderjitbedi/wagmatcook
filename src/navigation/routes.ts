@@ -64,6 +64,7 @@ import Offboarding from "../OffBoarding/offBoarding";
 import Announcements from "../Announcements/Announcements";
 import AnnouncementDetails from "../Announcements/AnnouncementDetails";
 import SendWelcome from "../Employee/SendWelcome";
+import Reports from "../Reports/Reports";
 const Routes: any = [
   {
     component: signup,
@@ -174,6 +175,15 @@ const Routes: any = [
         component: Departments,
         path: "departments",
         title: "Departments",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+      },
+      {
+        component: Reports,
+        path: "reports",
+        title: "Reports",
         to: "/",
         type: "private",
         index: true,

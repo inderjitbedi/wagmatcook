@@ -12,20 +12,10 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
+
 import {
   DashHeader,
   DashHeaderSearch,
@@ -71,6 +61,7 @@ const CellHeadStyles = {
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "1.6rem",
+  padding: "8px",
 };
 
 const CellStyle = {
@@ -79,6 +70,7 @@ const CellStyle = {
   fontStyle: "normal",
   fontWeight: 600,
   lineHeight: "1.5rem",
+  padding: "8px",
 };
 const CellStyle2 = {
   color: "#222B45",
@@ -86,42 +78,43 @@ const CellStyle2 = {
   fontStyle: "normal",
   fontWeight: 400,
   lineHeight: "1.5rem",
+  padding: "8px",
 };
 
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 const SendWelcome = () => {
   const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [selected, setSelected] = useState([]);
-
+  const [selectedRows, setSelectedRows] = useState([]);
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      // const newSelected = rows.map((n) => n.id);
-      // setSelected(newSelected);
-      return;
+      setSelectedRows(rows);
+    } else {
+      setSelectedRows([]);
     }
-    setSelected([]);
   };
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
+  const handleClick = (event, data) => {
+    const selectedIndex = selectedRows.findIndex((row) => row._id === data._id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
+      newSelected = newSelected.concat(selectedRows, data);
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(selectedRows.slice(1));
+    } else if (selectedIndex === selectedRows.length - 1) {
+      newSelected = newSelected.concat(selectedRows.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selectedRows.slice(0, selectedIndex),
+        selectedRows.slice(selectedIndex + 1)
       );
     }
-    setSelected(newSelected);
-  };
 
+    setSelectedRows(newSelected);
+  };
+  console.log("selected row ", selectedRows);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
@@ -181,8 +174,35 @@ const SendWelcome = () => {
       });
   };
   useEffect(() => {
-    GetWelcomeEmployeeList();
+    // GetWelcomeEmployeeList();
   }, []);
+  const rows = [
+    {
+      _id: "101",
+      name: "lalit kumar ",
+      role: "employee",
+    },
+    {
+      _id: "202",
+      name: "lalit sharma ",
+      role: "Hr",
+    },
+    {
+      _id: "303",
+      name: "lalit bhatiwal ",
+      role: "manager",
+    },
+    {
+      _id: "404",
+      name: "lalit verma ",
+      role: "user",
+    },
+    {
+      _id: "505",
+      name: "lalit singh",
+      role: "Hr",
+    },
+  ];
 
   return (
     <>
@@ -212,7 +232,7 @@ const SendWelcome = () => {
       ) : (
         <>
           <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+            <Table sx={{ minWidth: 650 }} aria-labelledby="simple table">
               <TableHead>
                 <TableRow
                   sx={{
@@ -224,16 +244,22 @@ const SendWelcome = () => {
                     align="left"
                     style={{ width: "2rem" }}
                   >
-                    <Checkbox color="primary" onChange={handleSelectAllClick} />
+                    <Checkbox
+                      color="primary"
+                      className="resetStyle"
+                      onChange={handleSelectAllClick}
+                      sx={{ "& .MuiSvgIcon-root": { fontSize: 20 } }}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "188" }}
+                    sx={{ ...CellHeadStyles, maxWidth: "188" }}
                     align="left"
                   >
                     Name
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "105px" }}
+                    sx={{ ...CellHeadStyles, maxWidth: "105px" }}
                     align="left"
                   >
                     Role
@@ -241,33 +267,40 @@ const SendWelcome = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow
-                  // key={data.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  style={{ background: "#fff" }}
-                >
-                  <TableCell align="center" sx={CellStyle2}>
-                    <Checkbox
-                      color="primary"
-                      // checked={handleClick}
-                      onChange={handleClick}
-                    />
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={CellStyle2}
-                    style={{ minWidth: "150px" }}
+                {rows?.map((data) => (
+                  <TableRow
+                    key={data.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    style={{ background: "#fff" }}
+                  >
+                    <TableCell align="center" sx={CellStyle2}>
+                      <Checkbox
+                        color="primary"
+                        checked={selectedRows.some(
+                          (row) => row._id === data._id
+                        )}
+                        onChange={(event) => handleClick(event, data)}
+                        sx={{ "& .MuiSvgIcon-root": { fontSize: 20 } }}
+                        className="resetStyle"
+                        inputProps={{ "aria-label": "controlled" }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={CellStyle}
+                      style={{ minWidth: "150px" }}
                     >
-                      name
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={CellStyle2}
-                    style={{ minWidth: "150px" }}
+                      {data.name}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={CellStyle2}
+                      style={{ minWidth: "150px" }}
                     >
-                      role
-                  </TableCell>
-                </TableRow>
+                      {data.role}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
