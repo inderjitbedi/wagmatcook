@@ -25,6 +25,7 @@ export const MainCardView = styled.p`
   font-size: 1.4rem;
   font-weight: 600;
   line-height: 1.6rem;
+  margin: 0;
 `;
 export const FlexColContainer = styled.div`
   display: flex;

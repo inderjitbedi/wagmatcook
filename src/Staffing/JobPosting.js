@@ -732,7 +732,7 @@ const JobPosting = () => {
                       {data.boardMembers || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.applicants || " 25"}
+                      {data.applicants?.length || " - "}
                     </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">

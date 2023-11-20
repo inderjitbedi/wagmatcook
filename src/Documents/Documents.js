@@ -939,6 +939,10 @@ const Documents = () => {
                           Navigate(
                             `/manager-management/documents/history/${data._id}`
                           );
+                        } else if (userType === ROLES.EMPLOYEE) {
+                          Navigate(
+                            `/user-management/documents/history/${data._id}`
+                          );
                         } else {
                           Navigate(
                             `/organization-admin/documents/history/${data._id}`
@@ -998,6 +1002,10 @@ const Documents = () => {
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
                                 `/manager-management/documents/history/${data._id}`
+                              );
+                            } else if (userType === ROLES.EMPLOYEE) {
+                              Navigate(
+                                `/user-management/documents/history/${data._id}`
                               );
                             } else {
                               Navigate(

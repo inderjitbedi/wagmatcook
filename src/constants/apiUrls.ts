@@ -119,8 +119,10 @@ const API_URLS = {
   // employee list api
   getEmployeeList: `/employee/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeList: `/employee/delete/Id`,
+  getManagerEmployeeList: `employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
   //task apis
-  getTaskList: `/task/list?page=Page&limit=10&searchKey=searchValue`,
+  getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
+`,
   updateTask: `/task/update/:id`,
   deleteTask: `/task/delete/:id`,
   createTask: `/task/create`,

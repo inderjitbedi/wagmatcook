@@ -123,11 +123,21 @@ const leaveController = {
             }])
             let type = req.body.isApproved ? notificationType.LEAVE_APPROVED : notificationType.LEAVE_REJECTED
             const notification = new Notifications({
-                title: notificationConstants[type].title?.replace('{responder}', [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName].join(' ')).replace('{leavetype}', allocation.leaveType.name) || '',
-                description: notificationConstants[type].description || '',
-                type: type,
-                sender: req.user._id,
-                receiver: req.params.id
+              title:
+                notificationConstants[type].title
+                  ?.replace(
+                    "{responder}",
+                    [
+                      req.user?.personalInfo.firstName,
+                      req.user?.personalInfo.lastName,
+                    ].join(" ")
+                  )
+                  .replace("{leavetype}", allocation.leaveType.name) || "",
+              description: notificationConstants[type].description || "",
+              type: type,
+              sender: req.user._id,
+              receiver: req.params.id,
+              leaveId: allocation._id,
             });
             await notification.save();
 

@@ -154,18 +154,34 @@ const dashboardController = {
         try {
 
             let filters = { isDeleted: false, responder: req.user._id, status: leaveStatus.PENDING };
+            const userRole = req.user.role;
+            if (userRole === "EMPLOYEE") {
+              // If the user is an EMPLOYEE, change the filters accordingly
+              filters = {
+                isDeleted: false,
+                employee: req.user._id,
+                status: leaveStatus.PENDING,
+              };
+            }
 
-            const leaves = await EmployeeLeaveHistory.find(filters).populate([{
-                path: 'employee',
-                populate: {
-                    path: 'personalInfo',
+
+            const leaves = await EmployeeLeaveHistory.find(filters)
+              .populate([
+                {
+                  path: "employee",
+                  populate: {
+                    path: "personalInfo",
                     populate: {
-                        path: 'photo'
-                    }
-                }
-            }, {
-                path: 'leaveType'
-            }]).sort({ createdAt: -1 });
+                      path: "photo",
+                    },
+                  },
+                },
+                {
+                  path: "leaveType",
+                },
+              ])
+              .sort({ createdAt: -1 })
+              .limit(5);
 
 
             const today = new Date();

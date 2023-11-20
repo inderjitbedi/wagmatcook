@@ -601,6 +601,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     </InputLabel>
                     <Input
                       type="text"
+                      readOnly={isEdit}
                       {...register("workEmail", {
                         required: {
                           value: true,
@@ -712,6 +713,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     <InputLabel>Employee ID</InputLabel>
                     <Input
                       type="text"
+                      readOnly={isEdit}
                       {...register("employeeId", {
                         // required: {
                         //   value: true,

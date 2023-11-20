@@ -1,49 +1,59 @@
 const mongoose = require('mongoose');
 
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     postingDate: {
-        type: Date,
-        required: true,
+      type: Date,
+      required: true,
     },
     closingDate: {
-        type: Date,
-        required: true,
+      type: Date,
+      required: true,
     },
     department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Department',
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      required: true,
     },
     boardMembers: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     isDeleted: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     organization: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Organization',
-        default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      default: null,
     },
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
     updatedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
-}, {
+    applicants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Applicant",
+        default: null,
+      },
+    ],
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
 const Job = mongoose.model('Job', schema);
 
