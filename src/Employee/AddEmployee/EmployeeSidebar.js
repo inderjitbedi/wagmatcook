@@ -53,7 +53,7 @@ const EmployeeSidebar = () => {
     return (
       <>
         {" "}
-        <SidebarTitle>Wagmatcook</SidebarTitle>
+        <SidebarTitle>Your Community Portal</SidebarTitle>
         <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
         <SideBarLogoContainer>
           <SideBarLogo src="/images/icons/Group-Logo.svg" />

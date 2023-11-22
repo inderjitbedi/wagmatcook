@@ -110,7 +110,9 @@ export default function SignIn() {
 
           <div className="signup-form mt-8">
             <h1>Sign in</h1>
-            <p className="text">Welcome to Wagmatcook Employee Management. </p>
+            <p className="text">
+              Welcome to Your Community Portal Employee Management.{" "}
+            </p>
             <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mt: 1 }}>
                 <InputLabel>

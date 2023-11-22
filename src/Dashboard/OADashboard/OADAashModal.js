@@ -75,7 +75,7 @@ const OADAashModal = ({ isOpen, closeModal }) => {
             <ModalImg src="images/image1.jpg" />
           </ModalImgDiv>
           <ModalTextDiv>
-            <ModalHeading>Welcome to Wagmatcook </ModalHeading>
+            <ModalHeading>Welcome to Your Community Portal </ModalHeading>
             <ModalPara>
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text

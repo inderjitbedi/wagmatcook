@@ -11,7 +11,7 @@ import { RotatingLines } from "react-loader-spinner";
 import Badge from "@mui/material/Badge";
 import SettingsModal from "../../Modals/SettingsModal.js";
 import CommenDashHeader from "../CommenDashHeader.js";
-
+import API_URLS from "../../constants/apiUrls.ts";
 import {
   Dashboard,
   DashNav,
@@ -233,7 +233,8 @@ const OADashBoard = ({ screenWidth }) => {
     return new Promise((resolve, reject) => {
       // setIsLoading(true);
 
-      let url = `/department/list?limit=3`;
+      // let url = `/department/list?limit=3`;
+      let url = API_URLS.getDashboardDepartmentList;
       httpClient({
         method: "get",
         url,
@@ -241,7 +242,7 @@ const OADashBoard = ({ screenWidth }) => {
         .then(({ result, error }) => {
           if (result) {
             // setResult(result);
-            setDepartmentData(result);
+            setDepartmentData(result.departmentEmployees);
             resolve(result);
           } else {
             //toast.warn("something went wrong ");
@@ -394,7 +395,7 @@ const OADashBoard = ({ screenWidth }) => {
           <DashCardContainer>
             {/* Department card */}
 
-            {departmentData?.departments?.length ? (
+            {departmentData?.length ? (
               <MainCard>
                 <MainCardTitleDiv>
                   <DashCardTitle>Departments</DashCardTitle>
@@ -409,13 +410,13 @@ const OADashBoard = ({ screenWidth }) => {
                     </MainCardView>
                   }
                 </MainCardTitleDiv>
-                {departmentData?.departments.map((data) => (
+                {departmentData?.map((data) => (
                   <CardList>
-                    <MainCardPara>{data.name}</MainCardPara>
-                    {/* <CardListPara>
-                      Employees:
-                      <CardListSpan>0</CardListSpan>
-                    </CardListPara> */}
+                    <MainCardPara>{data?.departmentDetails?.name}</MainCardPara>
+                    <CardListPara>
+                      Employees:{" "}
+                      <CardListSpan> {data?.totalEmployees}</CardListSpan>
+                    </CardListPara>
                   </CardList>
                 ))}
               </MainCard>
@@ -502,7 +503,7 @@ const OADashBoard = ({ screenWidth }) => {
                   }
                 </MainCardTitleDiv>
                 {employeeData?.employees?.map((data) => (
-                  <CardEmployeeList style={{marginBottom:"1rem"}}>
+                  <CardEmployeeList style={{ marginBottom: "1rem" }}>
                     <CardEmployeeDiv>
                       <CardEmployeeImg
                         src={

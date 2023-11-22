@@ -108,7 +108,7 @@ const SACommonHeader = ({ onSearch, text }) => {
       {isSidebarOpen && <SidebarContainer />}
       <DashHeader>
         <DashHeaderTitle>
-          {screenWidth < 1200 ? <span>Wagmatcook</span> : text}{" "}
+          {screenWidth < 1200 ? <span>Your Community Portal</span> : text}{" "}
         </DashHeaderTitle>
         <DashHeaderSearch>
           {screenWidth < 600 ? (

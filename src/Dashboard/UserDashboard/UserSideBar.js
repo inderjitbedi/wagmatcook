@@ -83,7 +83,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
           src="/images/icons/Alert-Circle.svg"
         />
       )}{" "}
-      <SidebarTitle>Wagmatcook</SidebarTitle>
+      <SidebarTitle>Your Community Portal</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
         <SideBarLogo
@@ -240,8 +240,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
           <SideBarListContainer style={{ zIndex: "1" }}>
             <BiTask
               style={
-                location.pathname.indexOf("tasks") > -1 || 
-                isHovering.task
+                location.pathname.indexOf("tasks") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }

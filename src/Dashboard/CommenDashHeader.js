@@ -434,7 +434,11 @@ const CommenDashHeader = ({ onSearch, text }) => {
               )}
           <DashHeaderTitle>
             {" "}
-            {screenWidth < 1200 ? <span>Wagmatcook</span> : text}{" "}
+            {screenWidth < 1200 ? (
+              <span>Your Community Portal</span>
+            ) : (
+              text
+            )}{" "}
           </DashHeaderTitle>
         </FlexContaier>
 
