@@ -358,20 +358,18 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
                       <TabelDiv>
                         <TabelImg
                           src={
-                            data?.employee?.personalInfo?.photo &&
-                            data?.employee?.personalInfo?.photo.length
-                              ? API_URL +
-                                data?.employee?.personalInfo?.photo?.path
+                            data?.photo && data?.photo.length
+                              ? API_URL + data?.photo?.path
                               : "/images/User.jpg"
                           }
                         />
                         <TabelParaContainer>
                           <TabelDarkPara>
-                            {data?.employee?.personalInfo?.firstName}{" "}
-                            {data?.employee?.personalInfo?.lastName}
+                            {data?.personalInfo?.firstName}{" "}
+                            {data?.personalInfo?.lastName}
                           </TabelDarkPara>
                           <TabelLightPara style={{ textTransform: "none" }}>
-                            {data?.employee?.email || " - "}
+                            {data?.employeeData?.email || " - "}
                           </TabelLightPara>
                         </TabelParaContainer>
                       </TabelDiv>
@@ -380,17 +378,17 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
                       {data?.leaveType?.name || " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
-                      {data.from
+                      {data?.from
                         ? moment.utc(data.from).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
-                      {data.to
+                      {data?.to
                         ? moment.utc(data.to).format("D MMM, YYYY")
                         : " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
-                      {data.positions[0].department.name}
+                      {data?.departmentsData?.name || " - "}
                     </TableCell>{" "}
                   </TableRow>
                 ))}

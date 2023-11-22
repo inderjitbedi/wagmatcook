@@ -177,6 +177,13 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                   >
                     Role
                   </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Department
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -231,6 +238,9 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                         : data.role === ROLES.HR
                         ? " HR"
                         : data.role) || " - "}
+                    </TableCell>{" "}
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.departmentInfo?.name}
                     </TableCell>{" "}
                   </TableRow>
                 ))}

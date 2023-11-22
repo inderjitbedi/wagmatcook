@@ -451,6 +451,17 @@ const employeeController = {
           },
         },
         {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department", // Adjust field names as per your data model
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$departmentInfo",
+        },
+        {
           $sort: {
             "positions.startDate": -1, // Sort by startDate in descending order
           },

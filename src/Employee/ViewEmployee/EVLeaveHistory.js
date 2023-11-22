@@ -598,7 +598,7 @@ const EVLeaveHistory = () => {
                         {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
                       </Sectionsmalltitle>
                       <Sectionsmalltitle>
-                        {data?.consumed} of {data?.totalAllocation} hours used
+                        {data?.consumed} of {data?.totalAllocation} Hrs used
                       </Sectionsmalltitle>
                     </FlexColumn100>
                   </SectionCardContainer>

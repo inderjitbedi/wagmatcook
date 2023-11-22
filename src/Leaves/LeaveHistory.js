@@ -62,6 +62,7 @@ import {
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
+  FlexContaier,
 } from "../Disciplinary/DisciplinaryStyles";
 const CellStyle = {
   color: "#8F9BB3",
@@ -168,7 +169,7 @@ const LeaveHistory = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
-
+  const [liueTime, setLiueTime] = useState(false);
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
 
   const handleShowMoreClick = () => {
@@ -221,6 +222,14 @@ const LeaveHistory = () => {
   };
   const HandleOpenAddNewAction = () => {
     handleOpen();
+    setLiueTime(false);
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  };
+  const HandleOpenAddNewActionLiue = () => {
+    handleOpen();
+    setLiueTime(true)
     reset({});
     clearErrors();
     setDetailsLength(500);
@@ -465,11 +474,28 @@ const LeaveHistory = () => {
                 <FlexColumn100>
                   <Sectionlighttitle>
                     {" "}
-                    {data?.leaveTypeObj?.name || "- "}{" "}
+                    {data?.leaveTypeObj?.name || "- "} -{" "}
+                    <span
+                      style={{
+                        color: "#222b45",
+                        textAlign: "right",
+                        fontFamily: "Inter",
+                        fontSize: "1.4rem",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "1.8rem",
+                        margin: 0,
+                      }}
+                    >
+                      {data?.totalAllocation - data?.consumed || " - "} Hrs
+                      remaining
+                    </span>
                   </Sectionlighttitle>
                   <Sectionsmalltitle>
-                    {data?.consumed || " 0"} of {data?.totalAllocation || "-"}{" "}
-                    Hrs Consumed
+                    {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
+                  </Sectionsmalltitle>
+                  <Sectionsmalltitle>
+                    {data?.consumed} of {data?.totalAllocation} Hrs used
                   </Sectionsmalltitle>
                 </FlexColumn100>
               </SectionCardContainer>
@@ -484,10 +510,14 @@ const LeaveHistory = () => {
           </div>
           <DisciplinaryDiv>
             <DisciplinaryHeading> Leave History</DisciplinaryHeading>
-
-            <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-              Add New
-            </ButtonBlue>
+            <FlexContaier>
+              <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
+                Add Lieu Time
+              </ButtonBlue>
+              <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+                Add New
+              </ButtonBlue>
+            </FlexContaier>
           </DisciplinaryDiv>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -652,7 +682,11 @@ const LeaveHistory = () => {
                 <>
                   <ModalContainer>
                     <ModalHeading>
-                      {!update ? "Applying for Leave" : "View Leave"}
+                      {!update
+                        ? liueTime
+                          ? "Applying for Liue Time"
+                          : "Applying for Leave"
+                        : "View Leave"}
                     </ModalHeading>
                     <ModalIcon
                       onClick={handleClose}
@@ -770,11 +804,17 @@ const LeaveHistory = () => {
                             render={({ field }) => (
                               <Select {...field} disabled={update}>
                                 <Option>Select</Option>
-                                {leaveType?.map((data) => (
-                                  <Option value={data.leaveType?._id}>
-                                    {data.leaveType?.name}
+                                {liueTime ? (
+                                  <Option >
+                                    Liue Time
                                   </Option>
-                                ))}
+                                ) : (
+                                  leaveType?.map((data) => (
+                                    <Option value={data.leaveType?._id}>
+                                      {data.leaveType?.name}
+                                    </Option>
+                                  ))
+                                )}
                               </Select>
                             )}
                           />

@@ -7,6 +7,7 @@ const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const LeaveType = require("../models/leaveType");
 const Notifications = require("../models/notification");
 const User = require("../models/user");
+const UserOrganization = require("../models/userOrganization");
 const sendGrid = require("../providers/sendGrid");
 const EmployeePosition = require("../models/employeePositionHistory");
 const mongoose = require("mongoose");
@@ -66,76 +67,209 @@ const leaveController = {
       res.status(400).json(error);
     }
   },
+
   async listAll(req, res) {
     try {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
       const startIndex = (page - 1) * limit;
 
-      let filters = { isDeleted: false };
+      const userOrganization = await UserOrganization.findOne({
+        user: req.user._id,
+      });
 
-      if (req.query.searchKey) {
-        filters.$or = [
-          { name: { $regex: req.query.searchKey, $options: "i" } },
-          { description: { $regex: req.query.searchKey, $options: "i" } },
-        ];
+      if (!userOrganization) {
+        return res.status(400).json({ message: "User organization not found" });
       }
-     if (req.query.leaveType) {
-       filters["leaveType._id"] = req.query.leaveType;
-     }
-      const leaves = await EmployeeLeaveHistory.find(filters)
-        .populate([
-          {
-            path: "employee",
-            populate: [
+      const organizationID = userOrganization.organization;
+      console.log("this is user", organizationID);
+
+      let pipeline = [
+        {
+          $match: {
+            isDeleted: false,
+            role: { $ne: roles.ORG_ADMIN },
+          },
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "employee",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": organizationID || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "employee",
+            foreignField: "_id",
+            as: "employeeData",
+          },
+        },
+        {
+          $unwind: "$employeeData",
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "employeeData._id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "employeeData._id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $unwind: "$positions",
+        },
+        {
+          $match: {
+            "positions.isPrimary": true,
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department",
+            foreignField: "_id",
+            as: "departmentsData",
+          },
+        },
+        {
+          $unwind: "$departmentsData",
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photo",
+          },
+        },
+        {
+          $unwind: "$photo",
+        },
+        {
+          $lookup: {
+            from: "leavetypes",
+            localField: "leaveType",
+            foreignField: "_id",
+            as: "leaveType",
+          },
+        },
+        {
+          $unwind: "$leaveType",
+        },
+
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ];
+
+      // Conditionally add a $match stage for searchKey
+      if (req.query.searchKey) {
+        pipeline.push({
+          $match: {
+            $or: [
+              { name: { $regex: req.query.searchKey, $options: "i" } },
               {
-                path: "personalInfo",
-                populate: {
-                  path: "photo",
+                "personalInfo.firstName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+              {
+                "personalInfo.lastName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+              {
+                "departmentsData.name": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+              {
+                "leaveType.name": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
                 },
               },
             ],
           },
-          {
-            path: "responder",
-            populate: {
-              path: "personalInfo",
-            },
+        });
+      }
+
+      // Conditionally add a $match stage for leaveType
+      if (req.query.leaveType) {
+        const leaveTypeId = new mongoose.Types.ObjectId(req.query.leaveType);
+        pipeline.push({
+          $match: {
+            "leaveType._id": leaveTypeId,
           },
+        });
+      }
 
-          {
-            path: "leaveType",
+      // Conditionally add a $match stage for department
+      if (req.query.department) {
+        const departmentId = new mongoose.Types.ObjectId(req.query.department);
+        pipeline.push({
+          $match: {
+            "positions.department": departmentId,
           },
-        ])
-        .skip(startIndex)
-        .limit(limit)
-        .sort({ createdAt: -1 });
-       
-      const employeeIds = leaves.map((leave) => leave.employee._id);
+        });
+      }
+      if (req.query.startDate) {
+        const startDate = new Date(req.query.startDate);
+        pipeline.push({
+          $match: {
+            from: { $gte: startDate },
+          },
+        });
+      }
 
-      const positionHistory = await EmployeePosition.find({
-        employee: { $in: employeeIds },
-        isPrimary: true,
-      }).populate("department");
-
-      const leavesWithPositions = await leaves.map((leave) => {
-        const employeePosition = positionHistory.find(
-          (position) =>
-            position.employee.toString() === leave.employee._id.toString()
-        );
-
-        // Add the position to the leave
-        return {
-          ...leave.toObject(),
-          positions: [employeePosition],
-        };
-      });
-      console.log("this is uppdated leave list ", leavesWithPositions);
-      const totalLeaves = await EmployeeLeaveHistory.countDocuments(filters);
+      // Conditionally add a $match stage for end date
+      if (req.query.endDate) {
+        const endDate = new Date(req.query.endDate);
+        pipeline.push({
+          $match: {
+            to: { $lte: endDate },
+          },
+        });
+      }
+      const leaves = await EmployeeLeaveHistory.aggregate([
+        ...pipeline,
+        {
+          $skip: startIndex,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
+      let totalLeaves = await EmployeeLeaveHistory.aggregate(pipeline);
+      totalLeaves = totalLeaves.length > 0 ? totalLeaves.length : 0;
       const totalPages = Math.ceil(totalLeaves / req.query.limit);
 
       res.status(200).json({
-        leaves: leavesWithPositions,
+        leaves,
         totalLeaves,
         currentPage: page,
         totalPages,
