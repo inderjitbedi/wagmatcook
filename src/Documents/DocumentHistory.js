@@ -95,7 +95,7 @@ const DocumentHistory = () => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
 
-      let url = API_URLS.getDocumentDetails.replace(":id", documentid);
+      let url = API_URLS.getDocumentDetails.replace(":id", documentid).replace("Page",page);
       httpClient({
         method: "get",
         url,
@@ -121,7 +121,7 @@ const DocumentHistory = () => {
   };
   useEffect(() => {
     GetDocumentsDetails();
-  }, []);
+  }, [page]);
   const BackArrowButton = styled.div`
     display: none;
 

@@ -18,7 +18,6 @@ import httpClient from "../../api/httpClient";
 import { BiTask } from "react-icons/bi";
 import { TbMessageCheck } from "react-icons/tb";
 
-
 const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
   const { headerData } = useHeaderInfoContext();
 
@@ -62,7 +61,6 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
     logout: false,
     events: false,
     announcements: false,
-    
   });
   const handleMouseEnter = (linkName) => {
     setIsHovering((prevState) => ({
@@ -242,7 +240,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
           <SideBarListContainer style={{ zIndex: "1" }}>
             <BiTask
               style={
-                location.pathname === "/user-management/tasks" ||
+                location.pathname.indexOf("tasks") > -1 || 
                 isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
@@ -250,8 +248,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             />
             <SideBarListTitle
               style={
-                location.pathname === "/user-management/tasks" ||
-                isHovering.task
+                location.pathname.indexOf("tasks") > -1 || isHovering.task
                   ? style
                   : { color: "#5C5C5C" }
               }
@@ -278,8 +275,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
                 stroke={
-                  location.pathname.indexOf("user-management/documents") >
-                    -1 || isHovering.documents
+                  location.pathname.indexOf("user-management/documents") > -1 ||
+                  isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -288,8 +285,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 9.75H11.7741"
                 stroke={
-                  location.pathname.indexOf("user-management/documents") >
-                    -1 || isHovering.documents
+                  location.pathname.indexOf("user-management/documents") > -1 ||
+                  isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -299,8 +296,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 6.75H11.7741"
                 stroke={
-                  location.pathname.indexOf("user-management/documents") >
-                    -1 || isHovering.documents
+                  location.pathname.indexOf("user-management/documents") > -1 ||
+                  isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -310,8 +307,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 12H9.41929"
                 stroke={
-                  location.pathname.indexOf("user-management/documents") >
-                    -1 || isHovering.documents
+                  location.pathname.indexOf("user-management/documents") > -1 ||
+                  isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
@@ -321,8 +318,8 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("user-management/documents") >
-                  -1 || isHovering.documents
+                location.pathname.indexOf("user-management/documents") > -1 ||
+                isHovering.documents
                   ? style
                   : { color: "#5C5C5C" }
               }

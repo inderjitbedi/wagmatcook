@@ -10,7 +10,10 @@ const authController = {
   async register(req, res) {
     try {
       const { email } = req.body;
-      let user = await User.findOne({ email });
+
+      let user = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+      });
       if (user) {
         return res.status(400).json({ message: "Email already registered." });
       }
@@ -23,13 +26,10 @@ const authController = {
       req.user = user;
       await sendGrid.send(user.email, "tempPassword", { req, token });
 
-      res
-        .status(201)
-        .json({
-          user,
-          message:
-            "User registered. Temp password successfully sent via email.",
-        });
+      res.status(201).json({
+        user,
+        message: "User registered. Temp password successfully sent via email.",
+      });
     } catch (error) {
       console.error("authController:register:error -", error);
       res.status(400).json(error);
@@ -38,7 +38,9 @@ const authController = {
   async resendTempPassword(req, res, next) {
     try {
       const { email } = req.params;
-      const user = await User.findOne({ email });
+      const user = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+      });
       if (!user) {
         return res.status(400).json({ message: "User not found." });
       }
@@ -52,12 +54,10 @@ const authController = {
       req.user = user;
       await sendGrid.send(user.email, "tempPassword", { req, token });
 
-      res
-        .status(200)
-        .json({
-          user,
-          message: "Temp password successfully resent via email.",
-        });
+      res.status(200).json({
+        user,
+        message: "Temp password successfully resent via email.",
+      });
     } catch (err) {
       next(err);
     }
@@ -67,7 +67,7 @@ const authController = {
     try {
       const { email, tempPassword } = req.params;
       let user = await User.findOne({
-        email,
+        email: { $regex: new RegExp(email, "i") },
         tempPassword,
         tempPasswordExpiry: { $gt: Date.now() },
       });
@@ -94,7 +94,10 @@ const authController = {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      let user = await User.findOne({ email, isDeleted: false });
+      let user = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+        isDeleted: false,
+      });
       if (!user) {
         return res.status(400).json({ message: "User not found." });
       }
@@ -115,7 +118,9 @@ const authController = {
     try {
       const { email } = req.params;
       // Check if user already exists
-      const existingUser = await User.findOne({ email });
+      const existingUser = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+      });
       // if (existingUser) {
       //     return res.status(409).json({ isUnique: !existingUser, message: 'User already exists' });
       // }
@@ -128,7 +133,9 @@ const authController = {
   async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
-      const user = await User.findOne({ email });
+      const user = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+      });
       if (!user) {
         return res.status(400).json({ message: "User not found" });
       }
@@ -173,7 +180,9 @@ const authController = {
   async sendOtpForLogin(req, res) {
     try {
       const { email } = req.body;
-      let user = await User.findOne({ email }).populate("personalInfo");
+      let user = await User.findOne({
+        email: { $regex: new RegExp(email, "i") },
+      }).populate("personalInfo");
       if (!user) {
         return res.status(400).json({ message: "User not registered." });
       }
@@ -216,7 +225,7 @@ const authController = {
     try {
       const { email, otp } = req.body;
       let user = await User.findOne({
-        email,
+        email: { $regex: new RegExp(email, "i") },
         otp,
         otpExpiry: { $gt: Date.now() },
       }).populate({
@@ -247,14 +256,12 @@ const authController = {
           },
         ]);
       }
-      res
-        .status(200)
-        .json({
-          user,
-          organization: relation?.organization || {},
-          token,
-          message: "User signed in successfully",
-        });
+      res.status(200).json({
+        user,
+        organization: relation?.organization || {},
+        token,
+        message: "User signed in successfully",
+      });
     } catch (error) {
       console.error("authController:register:error -", error);
       res.status(400).json(error);
@@ -292,14 +299,12 @@ const authController = {
           },
         ]);
       }
-      res
-        .status(200)
-        .json({
-          user,
-          organization: relation?.organization || {},
-          token,
-          message: "User signed in successfully",
-        });
+      res.status(200).json({
+        user,
+        organization: relation?.organization || {},
+        token,
+        message: "User signed in successfully",
+      });
     } catch (error) {
       console.error("authController:register:error -", error);
       res.status(400).json(error);
@@ -346,14 +351,12 @@ const authController = {
         { personalInfo: personalInfo._id },
         { new: true }
       );
-      res
-        .status(200)
-        .json({
-          user,
-          organization: relation.organization,
-          token,
-          message: "User signup completed successfully",
-        });
+      res.status(200).json({
+        user,
+        organization: relation.organization,
+        token,
+        message: "User signup completed successfully",
+      });
     } catch (error) {
       console.error("authController:register:error -", error);
       res.status(400).json(error);

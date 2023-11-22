@@ -12,6 +12,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import ReportTabel from "./ReportTabel";
+import ReportsLeaves from "./ReportsLeaves";
 import {
   FlexSpaceBetween,
   FlexColumn,
@@ -46,10 +47,7 @@ const Reports = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  const [page, setPage] = useState(1);
-  const HandleChangePage = (event, value) => {
-    setPage(value);
-  };
+  
   const [valueTab, setValueTab] = useState(0);
 
   const HandleChangeTab = (event, newValue) => {
@@ -89,7 +87,7 @@ const Reports = () => {
       {" "}
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Reports"} />
       <BackGroundWhite>
-        <div style={{ width: "100%", marginBottom:"10px" }}>
+        <div style={{ width: "100%", marginBottom: "10px" }}>
           <Tabs
             value={valueTab}
             onChange={HandleChangeTab}
@@ -100,10 +98,10 @@ const Reports = () => {
           </Tabs>
         </div>
         <CustomTabPanel value={valueTab} index={0}>
-          <ReportTabel  Tabvalue={valueTab} />
+          <ReportsLeaves Tabvalue={valueTab} searchValue={searchValue} />
         </CustomTabPanel>
         <CustomTabPanel value={valueTab} index={1}>
-          <ReportTabel  Tabvalue={valueTab} />
+          <ReportTabel Tabvalue={valueTab} searchValue={searchValue} />
         </CustomTabPanel>
       </BackGroundWhite>
     </>

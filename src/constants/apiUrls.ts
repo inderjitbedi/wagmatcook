@@ -39,7 +39,7 @@ const API_URLS = {
   // Leave Type oa route
   getLeaveType: `/leave-type/list?page=Page&limit=10&searchKey=searchValue`,
   getSALeaveType: `/leave-type/list/defaults?page=Page&limit=10&searchKey=searchValue`,
-
+  getLeaveTypeList: `leave-type/list`,
   createLeaveType: `/leave-type/create`,
   updateLeaveType: `/leave-type/update/:id`,
   deleteLeaveType: `/leave-type/delete/:id`,
@@ -87,7 +87,6 @@ const API_URLS = {
   deleteEmployeePerformance: `/employee/review/:employeeid/delete/:id`,
   suggestionList: `/employee/completed-by-list`,
   // employee leave hsitory
-  getLeaveTypeList: `/leave-type/list`,
   submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request`,
   getLeaveHistory: `/employee/leave-history/:employeeid?page=Page&limit=10&searchKey=searchValue`,
   //employee allocation
@@ -101,7 +100,9 @@ const API_URLS = {
   getEmployeeDocuments: `/employee/documents/:employeeid`,
   deleteEmployeeDocument: `/employee/documents/:employeeid/delete/:id`,
   // leaves api
-  getLeaves: `/leave/history?page=Page&limit=10`,
+  getLeaves: `/leave/history?page=Page&limit=10&searchKey=searchValue`,
+  getALLLeaves: `/leave/history/all?page=Page&limit=10&searchKey=searchValue`,
+
   getLeaveDetails: `/leave/history/:employeeid/:requestid`,
   respondLeave: `/leave/history/:employeeid/:requestid/respond`,
   //notification api
@@ -120,6 +121,7 @@ const API_URLS = {
   getEmployeeList: `/employee/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeList: `/employee/delete/Id`,
   getManagerEmployeeList: `employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
+  getBebEligibleEmployeeList: `employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
   //task apis
   getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
 `,
@@ -148,7 +150,7 @@ const API_URLS = {
   updateDocument: `/document/update/:id`,
   deleteDocument: `/document/delete/:id`,
   getDocuments: `/document/list?page=Page&limit=10&searchKey=searchValue`,
-  getDocumentDetails: `/document/detail/:id`,
+  getDocumentDetails: `/document/detail/:id?page=Page&limit=10`,
   // offboarding  apis routes
   getOffboardingList: `/employee/offboarding-list?page=Page&limit=10&searchKey=searchValue`,
   updateOffboarding: `/employee/offboard`,

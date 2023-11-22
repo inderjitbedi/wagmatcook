@@ -210,7 +210,18 @@ const ManagerDashBoard = () => {
                   )}
                   {dashboardData?.leaves?.map((data) => (
                     <CardList style={{ width: "100%" }}>
-                      <FlexContainer>
+                      <FlexContainer
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/announcements`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(`/user-management/leaves/${user?._id}`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
                         <FlexColumn>
                           <CardSubHeading>
                             {data?.leaveType?.name || " - "}

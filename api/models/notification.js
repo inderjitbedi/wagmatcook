@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const notificationType = require('../enum/notificationType');
+const mongoose = require("mongoose");
+const notificationType = require("../enum/notificationType");
 
 const notificationsSchema = new mongoose.Schema(
   {
@@ -30,16 +30,11 @@ const notificationsSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    leaveId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "EmployeeLeaveHistory",
+    dataId: {
+      type: String,
       default: null,
     },
-    taskId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tasks",
-      default: null,
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,
@@ -50,7 +45,6 @@ const notificationsSchema = new mongoose.Schema(
   }
 );
 
-
-const Notifications = mongoose.model('Notifications', notificationsSchema);
+const Notifications = mongoose.model("Notifications", notificationsSchema);
 
 module.exports = Notifications;

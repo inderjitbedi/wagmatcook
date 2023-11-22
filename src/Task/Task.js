@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../api/httpClient";
@@ -402,11 +402,24 @@ const Task = () => {
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
       <DisciplinaryDiv>
         <DisciplinaryHeading>
-          All {sort ? "Completed" : "Pending"} Tasks
+          {sort ? "Completed" : "Pending"} Tasks
         </DisciplinaryHeading>
         <FlexContaier>
-          <AddNewButton onClick={() => HandleSort(true)}>
-            View {sort ? "Pending" : "Completed"} Tasks
+          <AddNewButton onClick={() => HandleSort(true)} disabled={isLoading}>
+            {isLoading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : "View" + sort ? (
+              "Pending"
+            ) : (
+              "Completed"
+            )}
           </AddNewButton>
           {userType === ROLES.EMPLOYEE ? (
             " "

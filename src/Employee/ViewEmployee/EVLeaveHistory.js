@@ -581,7 +581,7 @@ const EVLeaveHistory = () => {
                       </Sectionlighttitle>
                       <Sectionsmalltitle>
                         {data?.consumed || " 0"} of{" "}
-                        {data?.totalAllocation || "-"} Hrs Consumed
+                        {data?.totalAllocation || "-"} Hrs used
                       </Sectionsmalltitle>
                     </FlexColumn100>
                   </SectionCardContainer>

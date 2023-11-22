@@ -12,10 +12,12 @@ const taskController = {
       req.body.assigner = req.user?._id;
       let task = new Tasks(req.body);
       await task.save();
+      
       task = await task.populate([
         { path: "assignee", populate: { path: "personalInfo" } },
         { path: "assigner", populate: { path: "personalInfo" } },
       ]);
+      console.log("this is task",task)
       let type = "TASK_ASSIGNED";
       const notification = new Notifications({
         title: notificationConstants[type].title?.replace(
@@ -30,7 +32,7 @@ const taskController = {
         type,
         sender: req.user._id,
         receiver: req.body.assignee,
-        taskId: task._id,
+        dataId: task._id,
       });
       await notification.save();
 
@@ -132,7 +134,7 @@ const taskController = {
         type,
         sender: req.user._id,
         receiver: task.sentTo?._id,
-        taskId: task._id,
+        dataId: task._id,
       });
       console.log("this is the task id ", task._id);
       await notification.save();
@@ -326,7 +328,7 @@ const taskController = {
         receiver: req.user._id.equals(task.assignee?._id)
           ? task.assigner?._id
           : task.assignee?._id,
-        taskId: task._id,
+        dataId: task._id,
       });
       await notification.save();
 

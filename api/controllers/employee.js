@@ -116,6 +116,7 @@ const employeeController = {
             as: "positions",
           },
         },
+
         {
           $lookup: {
             from: "files",
@@ -129,6 +130,7 @@ const employeeController = {
             "positions.startDate": -1, // Sort by startDate in descending order
           },
         },
+
         {
           $skip: startIndex,
         },
@@ -327,7 +329,176 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
+  async listBebEligible(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
 
+      let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+
+      console.log(req.user._id);
+      if (req.query.searchKey) {
+        filters.$or = [
+          { name: { $regex: req.query.searchKey, $options: "i" } },
+          { email: { $regex: req.query.searchKey, $options: "i" } },
+          { role: { $regex: req.query.searchKey, $options: "i" } },
+          // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        ];
+      }
+      const employees = await User.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        // {
+        //     $match: {
+        //         $or: [
+        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        //         ],
+        //     },
+        // },
+
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $addFields: {
+            positions: {
+              $filter: {
+                input: "$positions",
+                as: "position",
+                cond: {
+                  $eq: ["$$position.isDeleted", false],
+                },
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $in: [true, "$positions.isBebEligible"],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photoInfo",
+          },
+        },
+        {
+          $sort: {
+            "positions.startDate": -1, // Sort by startDate in descending order
+          },
+        },
+
+        {
+          $skip: startIndex,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
+
+      let totalEmployees = await UserOrganization.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "userData",
+          },
+        },
+        {
+          $unwind: "$userData",
+        },
+        {
+          $match: {
+            "userData.isActive": true,
+            "userData.isDeleted": false,
+            organization: req.organization?._id || null,
+            "userData.role": { $ne: roles.ORG_ADMIN },
+          },
+        },
+      ]).count("user");
+      totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0;
+      const totalPages = Math.ceil(totalEmployees / req.query.limit);
+      res.status(200).json({
+        employees,
+        totalEmployees,
+        currentPage: page,
+        totalPages,
+        message: "Employees fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
   async getActiveList(req, res) {
     try {
       const employees = await UserOrganization.aggregate([
@@ -1829,7 +2000,7 @@ const employeeController = {
         type: notificationType.LEAVE_REQUEST,
         sender: req.params.id,
         receiver: req.body.responder,
-        leaveId: allocation._id,
+        dataId: request._id,
       });
       await notification.save();
 

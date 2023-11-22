@@ -15,6 +15,11 @@ router.get(
   verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
   employeeController.listForManager
 );
+router.get(
+  "/list/BebEligible",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  employeeController.listBebEligible
+);
 
 
 router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.delete);
@@ -178,6 +183,8 @@ router.post('/leave-allocation/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), e
 router.put('/leave-allocation/:id/delete/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteLeaveAllocation);
 
 router.get('/leave-history/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveHistory);
+
+
 router.get('/leave-history/:id/:requestid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveHistory);
 router.post('/leave-history/:id/request', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.addLeaveRequest);
 router.get('/active-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getActiveList);

@@ -257,8 +257,8 @@ const ManagerLeaveAction = () => {
                   <FormContainer>
                     <ColumnFlexDiv>
                       <Titlelight>From</Titlelight>
-                      {leaveDetails.from
-                        ? moment.utc(leaveDetails.from).format("D MMM, YYYY")
+                      {leaveDetails?.from
+                        ? moment.utc(leaveDetails?.from).format("D MMM, YYYY")
                         : " - "}
                       <Titledark> </Titledark>
                     </ColumnFlexDiv>
@@ -266,8 +266,8 @@ const ManagerLeaveAction = () => {
                       <Titlelight>To</Titlelight>
                       <Titledark>
                         {" "}
-                        {leaveDetails.to
-                          ? moment.utc(leaveDetails.to).format("D MMM, YYYY")
+                        {leaveDetails?.to
+                          ? moment.utc(leaveDetails?.to).format("D MMM, YYYY")
                           : " - "}
                       </Titledark>
                     </ColumnFlexDiv>
@@ -297,7 +297,7 @@ const ManagerLeaveAction = () => {
                         Comment
                       </Titledark>
 
-                      {leaveDetails.status === "PENDING" ? (
+                      {leaveDetails?.status === "PENDING" ? (
                         <>
                           <TextArea
                             type="text"
@@ -321,7 +321,7 @@ const ManagerLeaveAction = () => {
                       )}
                     </ColumnFlexDiv>
                   </FormContainer>
-                  {leaveDetails.status === "PENDING" && (
+                  {leaveDetails?.status === "PENDING" && (
                     <FormContainer>
                       <AddNewButton onClick={() => HandleSubmitLeave(true)}>
                         {" "}
