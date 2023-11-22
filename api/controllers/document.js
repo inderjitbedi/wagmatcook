@@ -216,6 +216,13 @@ const documentController = {
           { "tags.name": { $regex: req.query.searchKey, $options: "i" } },
         ];
       }
+      if (req.query.department) {
+        filters["departments"] = req.query.department;
+      }
+
+      if (req.query.keywords) {
+        filters["tags"] = { $in: req.query.keywords };
+      }
       const document = await Document.find(filters)
         .populate([
           {

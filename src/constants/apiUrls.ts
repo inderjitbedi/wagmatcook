@@ -169,6 +169,7 @@ const API_URLS = {
   reorderApplicants: `/job/:jobid/applicant/reorder`,
   // manager Dashboard apis
   getDashboardData: `/dashboard/data`,
+  getDashboardDepartmentList: `/dashboard/department/list`,
   // annoncemnet apis
   getAnnouncement: `/announcement/list?page=Page&limit=10&searchKey=searchValue`,
   createAnnouncement: `/announcement/create`,

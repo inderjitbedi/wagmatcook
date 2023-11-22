@@ -415,10 +415,8 @@ const Task = () => {
                 ariaLabel="three-dots-loading"
                 visible={true}
               />
-            ) : "View" + sort ? (
-              "Pending"
             ) : (
-              "Completed"
+              "View " + (sort ? "Pending" : "Completed")
             )}
           </AddNewButton>
           {userType === ROLES.EMPLOYEE ? (
@@ -767,16 +765,6 @@ const Task = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
                         <ActionIcons
                           onClick={() => {
                             if (userType === ROLES.HR) {
@@ -799,6 +787,17 @@ const Task = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
+                        {userType === ROLES.EMPLOYEE ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
+
                         {userType === ROLES.EMPLOYEE ? (
                           " "
                         ) : (

@@ -59,6 +59,9 @@ import {
   LightPara,
   ButtonIcon,
   TabelDarkPara,
+  FlexSpaceBetweenmobile,
+  FilterDiv,
+  FilterContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import { Link } from "react-router-dom";
 
@@ -295,13 +298,20 @@ const Documents = () => {
         setIsLoading(false);
       });
   };
-  const GetDocuments = () => {
+  const GetDocuments = (filters) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
 
       let url = API_URLS.getDocuments
         .replace("searchValue", searchValue)
         .replace("Page", page);
+      if (filters?.keywords) {
+        url += `&keywords=${filters.keywords}`;
+      }
+      if (filters?.department) {
+        url += `&department=${filters.department}`;
+      }
+
       httpClient({
         method: "get",
         url,
@@ -502,6 +512,23 @@ const Documents = () => {
   const removeFile = (e) => {
     setFile(null);
     setValue("file", null);
+  };
+  const [department, setDepartment] = useState("");
+
+  const [keywords, seteKeywords] = useState("");
+  const handleDepartmentChange = (event) => {
+    setDepartment(event.target.value);
+  };
+  const handleKeywordsChange = (event) => {
+    seteKeywords(event.target.value);
+  };
+  const handleFilterButtonClick = () => {
+    const filters = {
+      keywords: keywords,
+      department: department,
+    };
+
+    GetDocuments(filters);
   };
   return (
     <>
@@ -812,6 +839,43 @@ const Documents = () => {
           </Box>
         </Modal>
       </DisciplinaryDiv>
+      <FlexSpaceBetweenmobile
+        style={{
+          background: "#fff",
+          padding: "1rem 2rem",
+          margin: "0rem",
+          alignItems: "flex-end",
+        }}
+      >
+        <FilterDiv>
+          <FilterContainer>
+            <InputLabel>Department</InputLabel>
+            <Select value={department} onChange={handleDepartmentChange}>
+              <Option value="">Select</Option>
+
+              {departmentData?.map((data, index) => (
+                <Option value={data._id}>{data.name}</Option>
+              ))}
+            </Select>
+          </FilterContainer>
+          <FilterContainer>
+            <InputLabel>Keywords</InputLabel>
+            <Select value={keywords} onChange={handleKeywordsChange}>
+              <Option value="">Select</Option>
+
+              {suggestions?.map((data, index) => (
+                <Option value={data.id}>{data.text}</Option>
+              ))}
+            </Select>
+          </FilterContainer>
+        </FilterDiv>
+        <AddNewButton
+          onClick={handleFilterButtonClick}
+          style={{ marginBottom: "20px" }}
+        >
+          Filter
+        </AddNewButton>
+      </FlexSpaceBetweenmobile>
       {isLoading ? (
         <div
           style={{

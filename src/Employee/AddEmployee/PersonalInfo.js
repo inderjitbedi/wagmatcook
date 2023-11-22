@@ -690,6 +690,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                         {...register(`isActive`, {})}
                         id={`isBebEligible`}
                         defaultChecked={true}
+                        disabled={isEdit}
                       />
                       <InputLabel
                         htmlFor={`isBebEligible`}

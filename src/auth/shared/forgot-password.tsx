@@ -72,22 +72,23 @@ export default function ForgotPassword() {
         <Grid item xs={3}>
           <div className="sidebar">
             <div className="content-box">
-              <div className="logo">Wagmatcook</div>
+              <div className="logo">Your Community Portal</div>
               <h4 className="mt-6">
-                Communicate to Employees via Feeds, SMS, Email
+                Access your employee and organizational information in one
+                location!
               </h4>
               <p>
-                Welcome to our website! We hope it provides you with a good
-                perspective about our community. Better yet, come visit us and
-                the experiences we are willing to share with you.
+                Welcome to your employee portal. Here you will be access all
+                your employment related information and organization documents
+                for greater information sharing.
               </p>
             </div>
             <div className="">
-              <img
+              {/* <img
                 src="../assets/login-image.svg"
                 alt="background-img"
                 width="100%"
-              />
+              /> */}
             </div>
           </div>
         </Grid>

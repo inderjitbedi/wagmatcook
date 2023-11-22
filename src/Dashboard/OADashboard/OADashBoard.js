@@ -412,10 +412,10 @@ const OADashBoard = ({ screenWidth }) => {
                 {departmentData?.departments.map((data) => (
                   <CardList>
                     <MainCardPara>{data.name}</MainCardPara>
-                    <CardListPara>
+                    {/* <CardListPara>
                       Employees:
                       <CardListSpan>0</CardListSpan>
-                    </CardListPara>
+                    </CardListPara> */}
                   </CardList>
                 ))}
               </MainCard>

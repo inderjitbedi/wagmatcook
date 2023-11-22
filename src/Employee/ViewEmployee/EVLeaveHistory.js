@@ -577,11 +577,28 @@ const EVLeaveHistory = () => {
                     <FlexColumn100>
                       <Sectionlighttitle>
                         {" "}
-                        {data?.leaveTypeObj?.name || "- "}{" "}
+                        {data?.leaveTypeObj?.name || "- "} -{" "}
+                        <span
+                          style={{
+                            color: "#222b45",
+                            textAlign: "right",
+                            fontFamily: "Inter",
+                            fontSize: "1.4rem",
+                            fontStyle: "normal",
+                            fontWeight: 400,
+                            lineHeight: "1.8rem",
+                            margin: 0,
+                          }}
+                        >
+                          {data?.totalAllocation - data?.consumed || " - "} Hrs
+                          remaining
+                        </span>
                       </Sectionlighttitle>
                       <Sectionsmalltitle>
-                        {data?.consumed || " 0"} of{" "}
-                        {data?.totalAllocation || "-"} Hrs used
+                        {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
+                      </Sectionsmalltitle>
+                      <Sectionsmalltitle>
+                        {data?.consumed} of {data?.totalAllocation} hours used
                       </Sectionsmalltitle>
                     </FlexColumn100>
                   </SectionCardContainer>
