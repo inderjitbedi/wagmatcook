@@ -11,6 +11,11 @@ const UserOrganization = require("../models/userOrganization");
 const sendGrid = require("../providers/sendGrid");
 const EmployeePosition = require("../models/employeePositionHistory");
 const mongoose = require("mongoose");
+const pdfTemplate = require("../utils/pdfTemplate");
+const pdfGenerator = require("../utils/pdfGenerator");
+const path = require("path");
+const fs = require("fs");
+const Department = require("../models/department");
 
 const leaveController = {
   async list(req, res) {
@@ -81,7 +86,9 @@ const leaveController = {
       if (!userOrganization) {
         return res.status(400).json({ message: "User organization not found" });
       }
-      const organizationID = userOrganization.organization;
+      // const organizationID = userOrganization.organization;
+      const organizationID = req.organization._id;
+
       console.log("this is user", organizationID);
 
       let pipeline = [
@@ -237,17 +244,24 @@ const leaveController = {
           },
         });
       }
-      if (req.query.startDate) {
+
+      if (req.query.startDate && req.query.endDate) {
+        const startDate = new Date(req.query.startDate);
+        const endDate = new Date(req.query.endDate);
+
+        pipeline.push({
+          $match: {
+            $and: [{ from: { $gte: startDate } }, { to: { $lte: endDate } }],
+          },
+        });
+      } else if (req.query.startDate) {
         const startDate = new Date(req.query.startDate);
         pipeline.push({
           $match: {
             from: { $gte: startDate },
           },
         });
-      }
-
-      // Conditionally add a $match stage for end date
-      if (req.query.endDate) {
+      } else if (req.query.endDate) {
         const endDate = new Date(req.query.endDate);
         pipeline.push({
           $match: {
@@ -255,6 +269,7 @@ const leaveController = {
           },
         });
       }
+
       const leaves = await EmployeeLeaveHistory.aggregate([
         ...pipeline,
         {
@@ -280,6 +295,186 @@ const leaveController = {
       res.status(400).json(error);
     }
   },
+  async generatePdf(req, res) {
+    try {
+      const organizationID = req.organization._id;
+
+      let pipeline = [
+        {
+          $match: {
+            isDeleted: false,
+            role: { $ne: roles.ORG_ADMIN },
+          },
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "employee",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": organizationID || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "employee",
+            foreignField: "_id",
+            as: "employeeData",
+          },
+        },
+        {
+          $unwind: "$employeeData",
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "employeeData._id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "employeeData._id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $unwind: "$positions",
+        },
+        {
+          $match: {
+            "positions.isPrimary": true,
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department",
+            foreignField: "_id",
+            as: "departmentsData",
+          },
+        },
+        {
+          $unwind: "$departmentsData",
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photo",
+          },
+        },
+        {
+          $unwind: "$photo",
+        },
+        {
+          $lookup: {
+            from: "leavetypes",
+            localField: "leaveType",
+            foreignField: "_id",
+            as: "leaveType",
+          },
+        },
+        {
+          $unwind: "$leaveType",
+        },
+
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ];
+
+      // Conditionally add a $match stage for leaveType
+      if (req.query.leaveType) {
+        const leaveTypeId = new mongoose.Types.ObjectId(req.query.leaveType);
+        pipeline.push({
+          $match: {
+            "leaveType._id": leaveTypeId,
+          },
+        });
+      }
+
+      // Conditionally add a $match stage for department
+      if (req.query.department) {
+        const departmentId = new mongoose.Types.ObjectId(req.query.department);
+        pipeline.push({
+          $match: {
+            "positions.department": departmentId,
+          },
+        });
+      }
+
+      if (req.query.startDate && req.query.endDate) {
+        const startDate = new Date(req.query.startDate);
+        const endDate = new Date(req.query.endDate);
+
+        pipeline.push({
+          $match: {
+            $and: [{ from: { $gte: startDate } }, { to: { $lte: endDate } }],
+          },
+        });
+      } else if (req.query.startDate) {
+        const startDate = new Date(req.query.startDate);
+        pipeline.push({
+          $match: {
+            from: { $gte: startDate },
+          },
+        });
+      } else if (req.query.endDate) {
+        const endDate = new Date(req.query.endDate);
+        pipeline.push({
+          $match: {
+            to: { $lte: endDate },
+          },
+        });
+      }
+      const LeaveName = await LeaveType.findOne({
+        _id: req.query.leaveType,
+        isDeleted: false,
+      });
+      const DepartmentName = await Department.findOne({
+        _id: req.query.department,
+        isDeleted: false,
+      });
+
+      const LeaveDetails = {
+        leaveType: LeaveName?.name,
+        department: DepartmentName?.name,
+        startDate: req.query.startDate,
+        endDate: req.query.endDate,
+      };
+      const leaves = await EmployeeLeaveHistory.aggregate([...pipeline]);
+      // console.log("this our leaves", leaves);
+      const htmlTemplate = await pdfTemplate.leaveReports(leaves, LeaveDetails);
+      // console.log("this is my template", htmlTemplate);
+      const pdfOutputPath = path.join(__dirname, `Leave_report.pdf`);
+      await pdfGenerator(htmlTemplate, pdfOutputPath, `<p></p>`);
+
+      // Send the generated PDF as a response
+      res.status(200).sendFile(pdfOutputPath, () => {
+        // Remove the generated PDF file after sending
+        //  fs.unlinkSync(pdfOutputPath);
+      });
+    } catch (error) {
+      console.error("jobController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
   async respondLeaveRequest(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.id }).populate(

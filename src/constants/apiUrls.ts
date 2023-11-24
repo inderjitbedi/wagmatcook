@@ -102,6 +102,7 @@ const API_URLS = {
   // leaves api
   getLeaves: `/leave/history?page=Page&limit=10&searchKey=searchValue`,
   getALLLeaves: `/leave/history/all?page=Page&limit=10&searchKey=searchValue`,
+  generateLeavePdf: `/leave/generate/pdf?`,
 
   getLeaveDetails: `/leave/history/:employeeid/:requestid`,
   respondLeave: `/leave/history/:employeeid/:requestid/respond`,
@@ -120,8 +121,9 @@ const API_URLS = {
   // employee list api
   getEmployeeList: `/employee/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeList: `/employee/delete/Id`,
-  getManagerEmployeeList: `employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
-  getBebEligibleEmployeeList: `employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
+  getManagerEmployeeList: `/employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
+  getBebEligibleEmployeeList: `/employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
+  generateBEBPdf: `/employee/BebEligible/generatePdf`,
   //task apis
   getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
 `,
@@ -160,6 +162,7 @@ const API_URLS = {
   deleteJobs: `/job/delete/:id`,
   listJobs: `/job/list?page=Page&limit=10&searchKey=searchValue`,
   detailsJobs: `/job/detail/:id`,
+  generatePdf: `/job/generateJobPDF/:id`,
   // applicants routes
   createApplicants: `/job/:jobid/applicant/create`,
   updateApplicants: `/job/:jobid/applicant/update/:id`,

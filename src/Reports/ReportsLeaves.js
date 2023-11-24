@@ -13,6 +13,7 @@ import API_URLS from "../constants/apiUrls";
 import { toast } from "react-toastify";
 import Pagination from "@mui/material/Pagination";
 import moment from "moment";
+import { AiOutlinePrinter } from "react-icons/ai";
 
 import {
   DashHeader,
@@ -51,6 +52,8 @@ import {
   Option,
   FlexSpaceBetween,
   FlexSpaceBetweenmobile,
+  FlexContaier,
+  FlexColumn,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import { PaginationDiv } from "../Disciplinary/DisciplinaryStyles";
 
@@ -78,7 +81,7 @@ const CellStyle2 = {
   lineHeight: "1.5rem",
 };
 
-const ReportsLeaves = ({ searchValue, Tabvalue }) => {
+const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
   let API_URL = process.env.REACT_APP_API_URL;
 
   const [userType, setUserType] = useState("");
@@ -121,6 +124,19 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
       endDate: endDate,
     };
 
+    GetAllLeaveList(filters);
+  };
+  const clearFilters = () => {
+    setLeaveType("");
+    setDepartment("");
+    setStartDate("");
+    setEndDate("");
+    const filters = {
+      leaveType: null,
+      department: null,
+      startDate: null,
+      endDate: null,
+    };
     GetAllLeaveList(filters);
   };
 
@@ -208,6 +224,46 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
         // setIsLoading(false);
       });
   };
+  const GetGeneratePdf = (filters) => {
+    let url = API_URLS.generateLeavePdf;
+    if (filters?.leaveType) {
+      url += `&leaveType=${filters.leaveType}`;
+    }
+    if (filters?.department) {
+      url += `&department=${filters.department}`;
+    }
+    if (filters?.startDate) {
+      url += `&startDate=${filters.startDate}`;
+    }
+    if (filters?.endDate) {
+      url += `&endDate=${filters.endDate}`;
+    }
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          const blob = new Blob([result], { type: "application/pdf" });
+          const pdfURL = window.URL.createObjectURL(blob);
+          window.open(pdfURL, "_blank");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
+  const filters = {
+    leaveType: leaveType,
+    department: department,
+    startDate: startDate,
+    endDate: endDate,
+  };
+  // GetGeneratePdf(filters);
+
   useEffect(() => {
     GetAllLeaveList();
   }, [page, searchValue]);
@@ -215,6 +271,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
     GetAllLeaveTypeList();
     GetDepartmentList();
   }, []);
+  const areFiltersEmpty = !!(leaveType || department || startDate || endDate);
   return (
     <div>
       <FlexSpaceBetweenmobile
@@ -259,12 +316,33 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
             />
           </FilterContainer>
         </FilterDiv>
-        <AddNewButton
-          onClick={handleFilterButtonClick}
-          style={{ marginBottom: "20px" }}
-        >
-          Filter
-        </AddNewButton>
+        <FlexColumn style={{ width: "max-content", alignItems: "flex-end" }}>
+          <AiOutlinePrinter
+            onClick={() => GetGeneratePdf(filters)}
+            style={{
+              width: "2rem",
+              height: "2rem",
+              cursor: "pointer",
+              color: "#279AF1",
+            }}
+          />
+          <FlexContaier>
+            <AddNewButton
+              onClick={clearFilters}
+              style={{ marginBottom: "20px" }}
+              disabled={!areFiltersEmpty}
+            >
+              Clear
+            </AddNewButton>
+            <AddNewButton
+              onClick={handleFilterButtonClick}
+              style={{ marginBottom: "20px" }}
+              disabled={!areFiltersEmpty}
+            >
+              Filter
+            </AddNewButton>
+          </FlexContaier>
+        </FlexColumn>
       </FlexSpaceBetweenmobile>
 
       {isLoading ? (
@@ -356,21 +434,21 @@ const ReportsLeaves = ({ searchValue, Tabvalue }) => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       <TabelDiv>
-                        <TabelImg
+                        {/* <TabelImg
                           src={
                             data?.photo && data?.photo.length
                               ? API_URL + data?.photo?.path
                               : "/images/User.jpg"
                           }
-                        />
+                        /> */}
                         <TabelParaContainer>
                           <TabelDarkPara>
                             {data?.personalInfo?.firstName}{" "}
                             {data?.personalInfo?.lastName}
                           </TabelDarkPara>
-                          <TabelLightPara style={{ textTransform: "none" }}>
+                          {/* <TabelLightPara style={{ textTransform: "none" }}>
                             {data?.employeeData?.email || " - "}
-                          </TabelLightPara>
+                          </TabelLightPara> */}
                         </TabelParaContainer>
                       </TabelDiv>
                     </TableCell>

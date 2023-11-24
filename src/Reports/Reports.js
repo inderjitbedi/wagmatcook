@@ -13,6 +13,8 @@ import Tab from "@mui/material/Tab";
 import PropTypes from "prop-types";
 import ReportTabel from "./ReportTabel";
 import ReportsLeaves from "./ReportsLeaves";
+import { AiOutlinePrinter } from "react-icons/ai";
+
 import {
   FlexSpaceBetween,
   FlexColumn,
@@ -43,11 +45,11 @@ const Reports = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-
+  const [count, setCount] = useState(0);
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
-  
+
   const [valueTab, setValueTab] = useState(0);
 
   const HandleChangeTab = (event, newValue) => {
@@ -87,7 +89,15 @@ const Reports = () => {
       {" "}
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Reports"} />
       <BackGroundWhite>
-        <div style={{ width: "100%", marginBottom: "10px" }}>
+        <div
+          style={{
+            width: "100%",
+            marginBottom: "10px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Tabs
             value={valueTab}
             onChange={HandleChangeTab}
@@ -96,6 +106,7 @@ const Reports = () => {
             <Tab label="Leave report " {...a11yProps(0)} />
             <Tab label="BEB Eligible" {...a11yProps(1)} />
           </Tabs>
+         
         </div>
         <CustomTabPanel value={valueTab} index={0}>
           <ReportsLeaves Tabvalue={valueTab} searchValue={searchValue} />

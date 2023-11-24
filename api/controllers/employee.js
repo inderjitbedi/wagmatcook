@@ -21,7 +21,10 @@ const Notifications = require("../models/notification");
 const notificationType = require("../enum/notificationType");
 const notificationConstants = require("../constants/notificationConstants");
 const Offboarding = require("../models/offboarding");
-
+const pdfTemplate = require("../utils/pdfTemplate");
+const pdfGenerator = require("../utils/pdfGenerator");
+const path = require("path");
+const fs = require("fs");
 const employeeController = {
   async list(req, res) {
     try {
@@ -507,6 +510,134 @@ const employeeController = {
       });
     } catch (error) {
       console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+  async generatePdf(req, res) {
+    try {
+      let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+      const employees = await User.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        // {
+        //     $match: {
+        //         $or: [
+        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        //         ],
+        //     },
+        // },
+
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $addFields: {
+            positions: {
+              $filter: {
+                input: "$positions",
+                as: "position",
+                cond: {
+                  $eq: ["$$position.isDeleted", false],
+                },
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $in: [true, "$positions.isBebEligible"],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photoInfo",
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department", // Adjust field names as per your data model
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$departmentInfo",
+        },
+        {
+          $sort: {
+            "positions.startDate": -1, // Sort by startDate in descending order
+          },
+        },
+      ]);
+      // console.log("this is employee ebe list ", employees);
+      const htmlTemplate = await pdfTemplate.bebEligibleReports(employees);
+      // console.log("this is my template", htmlTemplate);
+      const pdfOutputPath = path.join(__dirname, `BEB_report.pdf`);
+      await pdfGenerator(htmlTemplate, pdfOutputPath, `<p></p>`);
+
+      // Send the generated PDF as a response
+      res.status(200).sendFile(pdfOutputPath, () => {
+        // Remove the generated PDF file after sending
+        //  fs.unlinkSync(pdfOutputPath);
+      });
+    } catch (error) {
+      console.error("jobController:list:error -", error);
       res.status(400).json(error);
     }
   },

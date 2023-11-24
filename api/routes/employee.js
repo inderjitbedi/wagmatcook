@@ -20,6 +20,11 @@ router.get(
   verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
   employeeController.listBebEligible
 );
+router.get(
+  "/BebEligible/generatePdf",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  employeeController.generatePdf
+);
 
 
 router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.delete);

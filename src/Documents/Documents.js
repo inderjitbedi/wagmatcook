@@ -530,6 +530,17 @@ const Documents = () => {
 
     GetDocuments(filters);
   };
+  const clearFilters = () => {
+    setDepartment("");
+    seteKeywords("");
+    const filters = {
+      keywords: null,
+      department: null,
+    };
+    GetDocuments(filters);
+  };
+  const areFiltersEmpty = !!(keywords || department);
+
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Documents" />
@@ -869,12 +880,22 @@ const Documents = () => {
             </Select>
           </FilterContainer>
         </FilterDiv>
-        <AddNewButton
-          onClick={handleFilterButtonClick}
-          style={{ marginBottom: "20px" }}
-        >
-          Filter
-        </AddNewButton>
+        <FlexContaier>
+          <AddNewButton
+            onClick={clearFilters}
+            style={{ marginBottom: "20px" }}
+            disabled={!areFiltersEmpty}
+          >
+            Clear
+          </AddNewButton>
+          <AddNewButton
+            onClick={handleFilterButtonClick}
+            style={{ marginBottom: "20px" }}
+            disabled={!areFiltersEmpty}
+          >
+            Filter
+          </AddNewButton>
+        </FlexContaier>
       </FlexSpaceBetweenmobile>
       {isLoading ? (
         <div

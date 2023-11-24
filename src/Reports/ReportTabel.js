@@ -14,6 +14,7 @@ import API_URLS from "../constants/apiUrls";
 import { toast } from "react-toastify";
 import moment from "moment";
 import Pagination from "@mui/material/Pagination";
+import { AiOutlinePrinter } from "react-icons/ai";
 
 import {
   TabelDarkPara,
@@ -22,7 +23,11 @@ import {
   TabelDiv,
   TabelParaContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
-import { PaginationDiv } from "../Disciplinary/DisciplinaryStyles";
+import {
+  PaginationDiv,
+  DisciplinaryDiv,
+  DisciplinaryHeading,
+} from "../Disciplinary/DisciplinaryStyles";
 
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -92,6 +97,26 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
         setIsLoading(false);
       });
   };
+  const GetGeneratePdf = () => {
+    let url = API_URLS.generateBEBPdf;
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          const blob = new Blob([result], { type: "application/pdf" });
+          const pdfURL = URL.createObjectURL(blob);
+          window.open(pdfURL, "_blank");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
   useEffect(() => {
     let user = localStorage.getItem("user");
     if (user) {
@@ -125,6 +150,18 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
         </div>
       ) : (
         <>
+          <DisciplinaryDiv>
+            <DisciplinaryHeading>BEB Eligible Employees</DisciplinaryHeading>
+            <AiOutlinePrinter
+              onClick={() => GetGeneratePdf()}
+              style={{
+                width: "2rem",
+                height: "2rem",
+                cursor: "pointer",
+                color: "#279AF1",
+              }}
+            />
+          </DisciplinaryDiv>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -162,13 +199,13 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                   >
                     Phone
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
                     Join&nbsp;Date
-                  </TableCell>
+                  </TableCell> */}
 
                   <TableCell
                     sx={CellHeadStyles}
@@ -201,21 +238,21 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">
                       <TabelDiv>
-                        <TabelImg
+                        {/* <TabelImg
                           src={
                             data.photoInfo && data.photoInfo.length
                               ? API_URL + data.photoInfo[0]?.path
                               : "/images/User.jpg"
                           }
-                        />
+                        /> */}
                         <TabelParaContainer>
                           <TabelDarkPara>
                             {data.personalInfo?.firstName}{" "}
                             {data.personalInfo?.lastName}
                           </TabelDarkPara>
-                          <TabelLightPara style={{ textTransform: "none" }}>
+                          {/* <TabelLightPara style={{ textTransform: "none" }}>
                             {data.email || " - "}
-                          </TabelLightPara>
+                          </TabelLightPara> */}
                         </TabelParaContainer>
                       </TabelDiv>
                     </TableCell>
@@ -225,13 +262,13 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                     <TableCell sx={CellStyle2} align="left">
                       {data.personalInfo.homePhone || " - "}
                     </TableCell>
-                    <TableCell sx={CellStyle2} align="left">
+                    {/* <TableCell sx={CellStyle2} align="left">
                       {data.positions[0]?.startDate
                         ? moment
                             .utc(data.positions[0]?.startDate)
                             .format("D MMM, YYYY")
                         : " - "}
-                    </TableCell>{" "}
+                    </TableCell>{" "} */}
                     <TableCell sx={CellStyle2} align="left">
                       {(data.role === ROLES.EMPLOYEE
                         ? "USER"

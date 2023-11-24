@@ -1,12 +1,21 @@
 const Job = require("../models/job");
 const JobApplicant = require("../models/jobApplicant");
-
+const fileController = require("../controllers/file");
+const File = require("../models/file");
+const pdfTemplate = require("../utils/pdfTemplate");
+const pdfGenerator = require("../utils/pdfGenerator");
+const path = require("path");
+const fs = require("fs");
 const jobController = {
   async create(req, res) {
     try {
       req.body.createdBy = req.user._id;
       req.body.organization = req.organization?._id || null;
       const job = new Job(req.body);
+      let file = await File.findOne({ _id: req.body.file });
+      if (file) {
+        req.body.file = await fileController.moveToUploads(req, file);
+      }
       await job.save();
       res.status(201).json({ job, message: "Job created successfully." });
     } catch (error) {
@@ -18,6 +27,10 @@ const jobController = {
     try {
       req.body.updatedBy = req.user._id;
       req.body.organization = req.organization?._id || null;
+      let file = await File.findOne({ _id: req.body.file });
+      if (file) {
+        req.body.file = await fileController.moveToUploads(req, file);
+      }
       const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       });
@@ -44,7 +57,7 @@ const jobController = {
       let job = await Job.findOne({
         _id: req.params.id,
         isDeleted: false,
-      }).populate("organization department");
+      }).populate("organization department file");
       await job.save();
       res
         .status(201)
@@ -73,6 +86,7 @@ const jobController = {
       }
       const jobs = await Job.find(filters)
         .populate("department")
+        .populate("file")
         .skip(startIndex)
         .limit(limit);
 
@@ -85,6 +99,37 @@ const jobController = {
         currentPage: page,
         totalPages,
         message: "Jobs fetched successfully",
+      });
+    } catch (error) {
+      console.error("jobController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+  async generatePdf(req, res) {
+    try {
+      const jobId = req.params.id;
+      let filters = { isDeleted: false, job: req.params?.id };
+      const jobDetails = await Job.findOne({
+        _id: jobId,
+        isDeleted: false,
+      }).populate("organization department file");
+      // console.log("Job Details:", jobDetails);
+      const applicants = await JobApplicant.find(filters)
+        .populate("documents")
+        .sort({ selectionOrder: 1 });
+
+      const htmlTemplate = await pdfTemplate.jobApplicants(
+        jobDetails,
+        applicants
+      );
+      // console.log("this is my template", htmlTemplate);
+      const pdfOutputPath = path.join(__dirname, `job_${jobId}_report.pdf`);
+      await pdfGenerator(htmlTemplate, pdfOutputPath, `<p></p>`);
+
+      // Send the generated PDF as a response
+      res.status(200).sendFile(pdfOutputPath, () => {
+        // Remove the generated PDF file after sending
+        //  fs.unlinkSync(pdfOutputPath);
       });
     } catch (error) {
       console.error("jobController:list:error -", error);
@@ -159,12 +204,10 @@ const jobController = {
         isDeleted: false,
       }).populate("documents");
       await applicant.save();
-      res
-        .status(201)
-        .json({
-          applicant,
-          message: "Job applicant detail fetched successfully.",
-        });
+      res.status(201).json({
+        applicant,
+        message: "Job applicant detail fetched successfully.",
+      });
     } catch (error) {
       console.error("jobController:detail:error -", error);
       res.status(400).json(error);

@@ -17,7 +17,7 @@ import { Stepper, Step } from "react-form-stepper";
 import Selection from "./Selection";
 import { DisciplinaryHeading } from "../Disciplinary/DisciplinaryStyles";
 import { AiOutlinePrinter } from "react-icons/ai";
-
+import { Link } from "react-router-dom";
 import {
   FlexSpaceBetween,
   FlexColumn,
@@ -39,7 +39,7 @@ import {
   StepHr,
   StepText,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
-
+import { ActionIcons } from "../Disciplinary/DisciplinaryStyles";
 const JobView = () => {
   let API_URL = process.env.REACT_APP_API_URL;
   const { jobid } = useParams();
@@ -53,7 +53,7 @@ const JobView = () => {
   const [page, setPage] = useState(1);
   const [valueTab, setValueTab] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
-
+  const [pdf, setPdf] = useState([]);
   const steps = [
     {
       title: "Applicant List",
@@ -137,6 +137,27 @@ const JobView = () => {
         setIsLoading(false);
       });
   };
+  const GetGeneratePdf = () => {
+    let url = API_URLS.generatePdf.replace(":id", jobid);
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          const blob = new Blob([result], { type: "application/pdf" });
+          const pdfURL = URL.createObjectURL(blob);
+
+          window.open(pdfURL, "_blank");
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+      });
+  };
   useEffect(() => {
     GetJobPostings();
   }, []);
@@ -174,6 +195,7 @@ const JobView = () => {
                 </BackArrowButton> */}
               <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
               <AiOutlinePrinter
+                onClick={GetGeneratePdf}
                 style={{
                   width: "2rem",
                   height: "2rem",
@@ -212,12 +234,32 @@ const JobView = () => {
               </FlexColumn>
             </FlexSpaceBetween>
             <FlexSpaceBetween>
-              <FlexColumnNoWidth>
+              <FlexColumn>
                 <TaskLight>Board Members</TaskLight>
                 <TaskDescription>
                   {result?.job?.boardMembers || " - "}
                 </TaskDescription>
-              </FlexColumnNoWidth>
+              </FlexColumn>
+              <FlexColumn>
+                <TaskLight>Attachment</TaskLight>
+                {result?.job?.file ? (
+                  <FlexContaier>
+                    <TaskDescription>
+                      {result?.job?.file?.originalName}
+                    </TaskDescription>
+                    <Link
+                      to={API_URL + result?.job?.file?.path}
+                      target="_blank"
+                      download
+                      style={{ textDecoration: "none" }}
+                    >
+                      <ActionIcons src="/images/icons/Download.svg" />
+                    </Link>
+                  </FlexContaier>
+                ) : (
+                  <TaskDescription>No attachment found</TaskDescription>
+                )}
+              </FlexColumn>
             </FlexSpaceBetween>
             {/* <FlexSpaceBetween>
                 <FlexColumnNoWidth>

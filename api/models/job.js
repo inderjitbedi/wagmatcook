@@ -49,6 +49,11 @@ const schema = new mongoose.Schema(
         default: null,
       },
     ],
+    file: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "File",
+      default: null,
+    },
   },
   {
     timestamps: true,
