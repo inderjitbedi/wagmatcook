@@ -24,7 +24,7 @@ const templates = {
         margin: 0 auto !important;
         padding: 0 !important;
         height: 100% !important;
-        width: 595px !important;
+        width: 100% !important;
         font-family: "Inter", sans-serif;
         box-sizing: border-box;
       }
@@ -64,7 +64,7 @@ const templates = {
     </style>
   </head>
   <body>
-    <div style="width: 100%; background: #F9F9F9; padding: 56px 0px 21px 42px">
+    <div style="width: 100%; background-color: #686868; padding: 16px 0px 21px 42px">
       <div
         style="
           display: flex;
@@ -76,7 +76,7 @@ const templates = {
       >
         <p
           style="
-            color: #B2B2B2;
+            color: #AFAFAF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -88,7 +88,7 @@ const templates = {
         </p>
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 20px;
             font-style: normal;
             font-weight: 700;
@@ -105,7 +105,7 @@ const templates = {
         >
           <p
             style="
-              color: #B2B2B2;
+              color: #AFAFAF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -117,7 +117,7 @@ const templates = {
           </p>
           <p
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -133,7 +133,7 @@ const templates = {
         >
           <p
             style="
-              color: #B2B2B2;
+              color: #AFAFAF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -145,7 +145,7 @@ const templates = {
           </p>
           <p
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -162,7 +162,7 @@ const templates = {
     <div
       style="
         width: 100%;
-        background: #F9F9F9;
+        background-color: #686868;
         padding: 19px 0px 19px 42px;
         gap: 12px;
         border-top: 1px solid #E6E6E6;
@@ -173,7 +173,7 @@ const templates = {
       <div style="width: 50%">
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -184,7 +184,7 @@ const templates = {
           Posting Date:
           <span
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 700;
@@ -199,7 +199,7 @@ const templates = {
       <div style="width: 50%">
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -207,10 +207,10 @@ const templates = {
             margin: 0;
           "
         >
-          closing Date:
+          Closing Date:
           <span
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 700;
@@ -225,7 +225,7 @@ const templates = {
     </div>
     <div
       style="
-        background: #FFF;
+        background-color: #FFFFFF;
         width: 100%;
         padding: 11px 24px 50px 24px;
         display: flex;
@@ -310,7 +310,7 @@ const templates = {
         margin: 0 auto !important;
         padding: 0 !important;
         height: 100% !important;
-        width: 595px !important;
+        width: 100% !important;
         font-family: "Inter", sans-serif;
         box-sizing: border-box;
       }
@@ -326,7 +326,7 @@ const templates = {
         text-align: left;
       }
       th {
-        background: #f6f6f6;
+        background-color: #f6f6f6;
         color: #93959a;
         font-size: 8px;
         font-style: normal;
@@ -350,7 +350,7 @@ const templates = {
     </style>
   </head>
   <body>
-    <div style="width: 100%; background: #F9F9F9; padding: 56px 0px 21px 42px">
+    <div style="width: 100%; background-color: #F9F9F9; padding: 16px 0px 21px 42px">
       <div
         style="
           display: flex;
@@ -362,7 +362,7 @@ const templates = {
       >
         <p
           style="
-            color: #B2B2B2;
+            color: #AFAFAF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -374,7 +374,7 @@ const templates = {
         </p>
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 20px;
             font-style: normal;
             font-weight: 700;
@@ -391,7 +391,7 @@ const templates = {
         >
           <p
             style="
-              color: #B2B2B2;
+              color: #AFAFAF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -403,7 +403,7 @@ const templates = {
           </p>
           <p
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -419,7 +419,7 @@ const templates = {
         >
           <p
             style="
-              color: #B2B2B2;
+              color: #AFAFAF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -431,7 +431,7 @@ const templates = {
           </p>
           <p
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 400;
@@ -448,7 +448,7 @@ const templates = {
     <div
       style="
         width: 100%;
-        background: #F9F9F9;
+        background-color: #F9F9F9;
         padding: 19px 0px 19px 42px;
         gap: 12px;
         border-top: 1px solid #E6E6E6;
@@ -459,7 +459,7 @@ const templates = {
       <div style="width: 50%">
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -467,10 +467,10 @@ const templates = {
             margin: 0;
           "
         >
-          Posting Date:
+          Start Date:
           <span
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 700;
@@ -489,7 +489,7 @@ const templates = {
       <div style="width: 50%">
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -497,10 +497,10 @@ const templates = {
             margin: 0;
           "
         >
-          closing Date:
+          End Date:
           <span
             style="
-              color: #242424;
+              color: #FFFFFF;
               font-size: 12px;
               font-style: normal;
               font-weight: 700;
@@ -519,7 +519,7 @@ const templates = {
     </div>
     <div
       style="
-        background: #FFF;
+        background-color: #FFFFFF;
         width: 100%;
         padding: 11px 24px 50px 24px;
         display: flex;
@@ -609,7 +609,7 @@ const templates = {
         margin: 0 auto !important;
         padding: 0 !important;
         height: 100% !important;
-        width: 595px !important;
+        width: 100% !important;
         font-family: "Inter", sans-serif;
         box-sizing: border-box;
       }
@@ -625,7 +625,7 @@ const templates = {
         text-align: left;
       }
       th {
-        background: #f6f6f6;
+        background-color: #f6f6f6;
         color: #93959a;
         font-size: 8px;
         font-style: normal;
@@ -649,7 +649,7 @@ const templates = {
     </style>
   </head>
   <body>
-    <div style="width: 100%; background: #F9F9F9; padding: 56px 0px 21px 42px">
+    <div style="width: 100%; background-color: #F9F9F9; padding: 16px 0px 21px 42px">
        <div
         style="
           display: flex;
@@ -661,7 +661,7 @@ const templates = {
       >
         <p
           style="
-            color: #B2B2B2;
+            color: #AFAFAF;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
@@ -673,7 +673,7 @@ const templates = {
         </p>
         <p
           style="
-            color: #242424;
+            color: #FFFFFF;
             font-size: 20px;
             font-style: normal;
             font-weight: 700;
@@ -689,7 +689,7 @@ const templates = {
    
     <div
       style="
-        background: #FFF;
+        background-color: #FFFFFF;
         width: 100%;
         padding: 11px 24px 50px 24px;
         display: flex;
@@ -710,7 +710,7 @@ const templates = {
         </thead>
         <tbody>
         ${employees.map(
-          (data,index) => `<tr>
+          (data, index) => `<tr>
             <td>${index + 1}</td>
             <td
               style="

@@ -385,15 +385,23 @@ const EvLeaveAlloacation = () => {
                     Total&nbsp;Allocation (Hrs)
                   </TableCell>
 
-                  <TableCell sx={{ ...CellStyle }} align="left">
-                    Actions
-                  </TableCell>
+                  {userType === ROLES.MANAGER ? (
+                    " "
+                  ) : (
+                    <TableCell sx={{ ...CellStyle }} align="left">
+                      Actions
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {!result?.allocations?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={Celllstyle2} colSpan={4}>
+                    <TableCell
+                      align="center"
+                      sx={Celllstyle2}
+                      colSpan={userType === ROLES.MANAGER ? 3 : 4}
+                    >
                       No leave allocations found
                     </TableCell>
                   </TableRow>
@@ -416,9 +424,12 @@ const EvLeaveAlloacation = () => {
                       {data.totalAllocation}
                     </TableCell>
 
-                    <TableCell align="center" sx={Celllstyle2}>
-                      <IconContainer>
-                        {/* {userType === ROLES.EMPLOYEE || isAccount ? (
+                    {userType === ROLES.MANAGER ? (
+                      " "
+                    ) : (
+                      <TableCell align="center" sx={Celllstyle2}>
+                        <IconContainer>
+                          {/* {userType === ROLES.EMPLOYEE || isAccount ? (
                           ""
                         ) : (
                           <Icons
@@ -429,21 +440,22 @@ const EvLeaveAlloacation = () => {
                             src="/images/icons/Pendown.svg"
                           />
                         )} */}
-                        {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ||
-                        isAccount ? (
-                          " "
-                        ) : (
-                          <Icons
-                            onClick={() => {
-                              setId(data._id);
-                              HandleOpenDelete();
-                            }}
-                            src="/images/icons/Trash-2.svg"
-                          />
-                        )}
-                      </IconContainer>
-                    </TableCell>
+                          {userType === ROLES.EMPLOYEE ||
+                          userType === ROLES.MANAGER ||
+                          isAccount ? (
+                            " "
+                          ) : (
+                            <Icons
+                              onClick={() => {
+                                setId(data._id);
+                                HandleOpenDelete();
+                              }}
+                              src="/images/icons/Trash-2.svg"
+                            />
+                          )}
+                        </IconContainer>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>

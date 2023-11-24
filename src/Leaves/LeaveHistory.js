@@ -155,6 +155,7 @@ const LeaveHistory = () => {
     reset({});
     setOpen(false);
     setDetailsLength(500);
+    setLiueTime(false);
   };
   const [user, setUser] = useState();
 
@@ -171,7 +172,7 @@ const LeaveHistory = () => {
   const [showAll, setShowAll] = useState(false);
   const [liueTime, setLiueTime] = useState(false);
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
-
+  const [lieuId, setLieuId] = useState();
   const handleShowMoreClick = () => {
     setShowAll(!showAll);
   };
@@ -229,7 +230,7 @@ const LeaveHistory = () => {
   };
   const HandleOpenAddNewActionLiue = () => {
     handleOpen();
-    setLiueTime(true)
+    setLiueTime(true);
     reset({});
     clearErrors();
     setDetailsLength(500);
@@ -347,6 +348,10 @@ const LeaveHistory = () => {
       ":employeeid",
       user?._id
     );
+    if (liueTime) {
+      url += `&lieuTime=${true}`;
+      data.leaveType = lieuId._id;
+    }
 
     let dataCopy = data;
     httpClient({
@@ -404,7 +409,38 @@ const LeaveHistory = () => {
         });
     });
   };
-
+  const GetLeaveTypesList = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // const trimid = employeeid?.trim();
+      let url = API_URLS.getLeaveTypeList;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            const LieuId = result.leaveTypes.find(
+              (obj) => obj.cantDelete === true
+            );
+            setLieuId(LieuId);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  console.log("this the leave type lieu:", lieuId);
   let API_URL = process.env.REACT_APP_API_URL;
   const userstyle = {
     padding: "1.6rem 2.0rem",
@@ -426,19 +462,23 @@ const LeaveHistory = () => {
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
-      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
-      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-      GetLeaveAlloactionBalance();
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
+
     if (user) {
-      Promise.all([GetReportList(), GetLeaveAlloaction(), GetLeaveHistory()]);
+      Promise.all([
+        GetReportList(),
+        GetLeaveAlloaction(),
+        GetLeaveHistory(),
+        GetLeaveAlloactionBalance(),
+        GetLeaveTypesList(),
+      ]);
     }
   }, [user, searchValue]);
   return (
@@ -792,32 +832,37 @@ const LeaveHistory = () => {
                             Leave Type {update ? " " : <InputSpan>*</InputSpan>}{" "}
                           </InputLabel>
 
-                          <Controller
-                            name="leaveType"
-                            control={control}
-                            rules={{
-                              required: {
-                                value: true,
-                                message: "Required",
-                              },
-                            }}
-                            render={({ field }) => (
-                              <Select {...field} disabled={update}>
-                                <Option>Select</Option>
-                                {liueTime ? (
-                                  <Option >
-                                    Liue Time
+                          {liueTime ? (
+                            <Input
+                              type="text"
+                              {...register("leaveType", {})}
+                              readOnly
+                              placeholder="Lieu Time"
+                            />
+                          ) : (
+                            <Controller
+                              name="leaveType"
+                              control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
+                              render={({ field }) => (
+                                <Select {...field} disabled={update}>
+                                  <Option disabled selected>
+                                    Select
                                   </Option>
-                                ) : (
-                                  leaveType?.map((data) => (
+                                  {leaveType?.map((data) => (
                                     <Option value={data.leaveType?._id}>
                                       {data.leaveType?.name}
                                     </Option>
-                                  ))
-                                )}
-                              </Select>
-                            )}
-                          />
+                                  ))}
+                                </Select>
+                              )}
+                            />
+                          )}
                           {<Errors>{errors.leaveType?.message}</Errors>}
                         </FlexColumnForm>
                         <FlexColumnForm>

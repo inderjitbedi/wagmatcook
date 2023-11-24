@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import httpClient from "../api/httpClient";
 import ROLES from "../constants/roles";
 import API_URLS from "../constants/apiUrls";
@@ -60,6 +60,7 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
   const [user, setUser] = useState();
+  const [isUploading, setIsUploading] = useState(false);
 
   const [page, setPage] = useState(1);
   const HandleChangePage = (event, value) => {
@@ -98,23 +99,32 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
       });
   };
   const GetGeneratePdf = () => {
+    setIsUploading(true);
     let url = API_URLS.generateBEBPdf;
     httpClient({
       method: "get",
       url,
+      responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
       .then(({ result, error }) => {
         if (result) {
           const blob = new Blob([result], { type: "application/pdf" });
           const pdfURL = URL.createObjectURL(blob);
+          setIsUploading(false);
+
           window.open(pdfURL, "_blank");
         } else {
           //toast.warn("something went wrong ");
+          setIsUploading(false);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsUploading(false);
       });
   };
   useEffect(() => {
@@ -152,15 +162,27 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
         <>
           <DisciplinaryDiv>
             <DisciplinaryHeading>BEB Eligible Employees</DisciplinaryHeading>
-            <AiOutlinePrinter
-              onClick={() => GetGeneratePdf()}
-              style={{
-                width: "2rem",
-                height: "2rem",
-                cursor: "pointer",
-                color: "#279AF1",
-              }}
-            />
+
+            {isUploading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : (
+              <AiOutlinePrinter
+                onClick={() => GetGeneratePdf()}
+                style={{
+                  width: "2rem",
+                  height: "2rem",
+                  cursor: "pointer",
+                  color: "#279AF1",
+                }}
+              />
+            )}
           </DisciplinaryDiv>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

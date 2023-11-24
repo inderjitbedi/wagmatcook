@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import httpClient from "../api/httpClient";
 import ROLES from "../constants/roles";
 import API_URLS from "../constants/apiUrls";
@@ -91,6 +91,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
   const [leaveTypeList, setLeaveTypeList] = useState([]);
   const [departmentList, setDepartmentList] = useState([]);
   const [page, setPage] = useState(1);
+  const [isUploading, setIsUploading] = useState(false);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
@@ -226,6 +227,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
   };
   const GetGeneratePdf = (filters) => {
     let url = API_URLS.generateLeavePdf;
+    setIsUploading(true);
     if (filters?.leaveType) {
       url += `&leaveType=${filters.leaveType}`;
     }
@@ -241,11 +243,16 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
     httpClient({
       method: "get",
       url,
+      responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
       .then(({ result, error }) => {
         if (result) {
           const blob = new Blob([result], { type: "application/pdf" });
           const pdfURL = window.URL.createObjectURL(blob);
+          setIsUploading(false);
           window.open(pdfURL, "_blank");
         } else {
           //toast.warn("something went wrong ");
@@ -254,6 +261,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsUploading(false);
       });
   };
   const filters = {
@@ -317,23 +325,30 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
           </FilterContainer>
         </FilterDiv>
         <FlexColumn style={{ width: "max-content", alignItems: "flex-end" }}>
-          <AiOutlinePrinter
-            onClick={() => GetGeneratePdf(filters)}
-            style={{
-              width: "2rem",
-              height: "2rem",
-              cursor: "pointer",
-              color: "#279AF1",
-            }}
-          />
+          <div style={{ marginBottom: "1rem",marginRight:"1rem"}}>
+            {isUploading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : (
+              <AiOutlinePrinter
+                onClick={() => GetGeneratePdf(filters)}
+                style={{
+                  width: "2rem",
+                  height: "2rem",
+                  cursor: "pointer",
+                  color: "#279AF1",
+                }}
+              />
+            )}
+          </div>
+
           <FlexContaier>
-            <AddNewButton
-              onClick={clearFilters}
-              style={{ marginBottom: "20px" }}
-              disabled={!areFiltersEmpty}
-            >
-              Clear
-            </AddNewButton>
             <AddNewButton
               onClick={handleFilterButtonClick}
               style={{ marginBottom: "20px" }}
@@ -341,6 +356,15 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
             >
               Filter
             </AddNewButton>
+            {areFiltersEmpty && (
+              <AddNewButton
+                onClick={clearFilters}
+                style={{ marginBottom: "20px" }}
+                disabled={!areFiltersEmpty}
+              >
+                Clear
+              </AddNewButton>
+            )}
           </FlexContaier>
         </FlexColumn>
       </FlexSpaceBetweenmobile>

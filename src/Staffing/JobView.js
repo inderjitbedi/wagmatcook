@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
@@ -18,6 +18,8 @@ import Selection from "./Selection";
 import { DisciplinaryHeading } from "../Disciplinary/DisciplinaryStyles";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import axios, { AxiosResponse } from "axios";
+
 import {
   FlexSpaceBetween,
   FlexColumn,
@@ -54,6 +56,8 @@ const JobView = () => {
   const [valueTab, setValueTab] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [pdf, setPdf] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
   const steps = [
     {
       title: "Applicant List",
@@ -137,25 +141,35 @@ const JobView = () => {
         setIsLoading(false);
       });
   };
+
   const GetGeneratePdf = () => {
+    setIsUploading(true);
+
     let url = API_URLS.generatePdf.replace(":id", jobid);
     httpClient({
       method: "get",
       url,
+      responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
       .then(({ result, error }) => {
         if (result) {
           const blob = new Blob([result], { type: "application/pdf" });
           const pdfURL = URL.createObjectURL(blob);
+          setIsUploading(false);
 
           window.open(pdfURL, "_blank");
         } else {
           //toast.warn("something went wrong ");
+          setIsUploading(false);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         toast.error("Error creating department. Please try again.");
+        setIsUploading(false);
       });
   };
   useEffect(() => {
@@ -194,15 +208,27 @@ const JobView = () => {
                   <IconsEmployee src="/images/icons/ArrowLeft.svg" />
                 </BackArrowButton> */}
               <DisciplinaryHeading> Basic Information </DisciplinaryHeading>
-              <AiOutlinePrinter
-                onClick={GetGeneratePdf}
-                style={{
-                  width: "2rem",
-                  height: "2rem",
-                  cursor: "pointer",
-                  color: "#279AF1",
-                }}
-              />
+
+              {isUploading ? (
+                <ThreeDots
+                  height="8"
+                  width="80"
+                  radius="9"
+                  color="#279AF1"
+                  ariaLabel="three-dots-loading"
+                  visible={true}
+                />
+              ) : (
+                <AiOutlinePrinter
+                  onClick={GetGeneratePdf}
+                  style={{
+                    width: "2rem",
+                    height: "2rem",
+                    cursor: "pointer",
+                    color: "#279AF1",
+                  }}
+                />
+              )}
             </FlexSpaceBetween>
             <FlexSpaceBetween>
               <FlexColumn>
