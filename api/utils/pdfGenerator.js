@@ -1,8 +1,12 @@
-const puppeteer = require("puppeteer"); // local
+const puppeteerCore = require("puppeteer-core"); // server
+// const puppeteer = require("puppeteer"); // local
 const fs = require("fs");
 
 async function generatePDFFromHTML(htmlContent, outputPath, header) {
-  const browser = await puppeteer.launch({ headless: "new" }); // local
+  process.env.PUPPETEER_EXECUTABLE_PATH = '/usr/bin/google-chrome-stable';
+
+  const browser = await puppeteerCore.launch({ headless: "new",executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,args: ['--no-sandbox']}); // server
+  // const browser = await puppeteer.launch({ headless: "new" }); // local
   const page = await browser.newPage();
 
   await page.setContent(htmlContent, { waitUntil: "load" });

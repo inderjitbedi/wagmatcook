@@ -98,7 +98,7 @@ const OADashBoard = ({ screenWidth }) => {
   const [employeeData, setEmployeeData] = useState([]);
   const [departmentData, setDepartmentData] = useState([]);
   const [leavesData, setLeavesData] = useState([]);
-
+  const [totalDepartments, setTotalDepartments] = useState("");
   const [status, setStatus] = useState("Active");
   const HandelClick = () => {
     setStatus(status === "Active" ? "Inactive" : "Active");
@@ -243,6 +243,7 @@ const OADashBoard = ({ screenWidth }) => {
           if (result) {
             // setResult(result);
             setDepartmentData(result.departmentEmployees);
+            setTotalDepartments(result.totalDepartments);
             resolve(result);
           } else {
             //toast.warn("something went wrong ");
@@ -373,9 +374,7 @@ const OADashBoard = ({ screenWidth }) => {
                 {" "}
                 <div>
                   <SectionCardTitle>Total Departments</SectionCardTitle>
-                  <SectionCardNumber>
-                    {departmentData.totalDepartments || 0}
-                  </SectionCardNumber>
+                  <SectionCardNumber>{totalDepartments || 0}</SectionCardNumber>
                 </div>
                 <SectionCardImg src="/svg/Department.svg" />
               </SectionCardContainer4>

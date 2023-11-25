@@ -3,7 +3,7 @@ const EmployeeCertificates = require("../models/employeeCertificates");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const EmployeePositionHistory = require("../models/employeePositionHistory");
 const UserOrganization = require("../models/userOrganization");
-
+const Department = require("../models/department");
 const dashboardController = {
   async departments(req, res) {
     try {
@@ -162,9 +162,13 @@ const dashboardController = {
         },
       ]);
       console.log(departmentEmployees);
-
+      const totalDepartments = await Department.countDocuments({
+        organization: organizationID,
+        isDeleted: false,
+      });
       res.status(200).json({
         departmentEmployees,
+        totalDepartments,
         message: "Dashboard data fetched successfully",
       });
     } catch (error) {
