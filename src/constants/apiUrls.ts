@@ -39,7 +39,7 @@ const API_URLS = {
   // Leave Type oa route
   getLeaveType: `/leave-type/list?page=Page&limit=10&searchKey=searchValue`,
   getSALeaveType: `/leave-type/list/defaults?page=Page&limit=10&searchKey=searchValue`,
-
+  getLeaveTypeList: `leave-type/list`,
   createLeaveType: `/leave-type/create`,
   updateLeaveType: `/leave-type/update/:id`,
   deleteLeaveType: `/leave-type/delete/:id`,
@@ -87,8 +87,7 @@ const API_URLS = {
   deleteEmployeePerformance: `/employee/review/:employeeid/delete/:id`,
   suggestionList: `/employee/completed-by-list`,
   // employee leave hsitory
-  getLeaveTypeList: `/leave-type/list`,
-  submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request`,
+  submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request?`,
   getLeaveHistory: `/employee/leave-history/:employeeid?page=Page&limit=10&searchKey=searchValue`,
   //employee allocation
   submitEmployeeAllocation: `/employee/leave-allocation/:employeeid`,
@@ -101,7 +100,10 @@ const API_URLS = {
   getEmployeeDocuments: `/employee/documents/:employeeid`,
   deleteEmployeeDocument: `/employee/documents/:employeeid/delete/:id`,
   // leaves api
-  getLeaves: `/leave/history?page=Page&limit=10`,
+  getLeaves: `/leave/history?page=Page&limit=10&searchKey=searchValue`,
+  getALLLeaves: `/leave/history/all?page=Page&limit=10&searchKey=searchValue`,
+  generateLeavePdf: `/leave/generate/pdf?`,
+
   getLeaveDetails: `/leave/history/:employeeid/:requestid`,
   respondLeave: `/leave/history/:employeeid/:requestid/respond`,
   //notification api
@@ -119,8 +121,12 @@ const API_URLS = {
   // employee list api
   getEmployeeList: `/employee/list?page=Page&limit=10&searchKey=searchValue`,
   deleteEmployeeList: `/employee/delete/Id`,
+  getManagerEmployeeList: `/employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
+  getBebEligibleEmployeeList: `/employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
+  generateBEBPdf: `/employee/BebEligible/generatePdf`,
   //task apis
-  getTaskList: `/task/list?page=Page&limit=10&searchKey=searchValue`,
+  getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
+`,
   updateTask: `/task/update/:id`,
   deleteTask: `/task/delete/:id`,
   createTask: `/task/create`,
@@ -146,7 +152,7 @@ const API_URLS = {
   updateDocument: `/document/update/:id`,
   deleteDocument: `/document/delete/:id`,
   getDocuments: `/document/list?page=Page&limit=10&searchKey=searchValue`,
-  getDocumentDetails: `/document/detail/:id`,
+  getDocumentDetails: `/document/detail/:id?page=Page&limit=10`,
   // offboarding  apis routes
   getOffboardingList: `/employee/offboarding-list?page=Page&limit=10&searchKey=searchValue`,
   updateOffboarding: `/employee/offboard`,
@@ -156,6 +162,7 @@ const API_URLS = {
   deleteJobs: `/job/delete/:id`,
   listJobs: `/job/list?page=Page&limit=10&searchKey=searchValue`,
   detailsJobs: `/job/detail/:id`,
+  generatePdf: `/job/generateJobPDF/:id`,
   // applicants routes
   createApplicants: `/job/:jobid/applicant/create`,
   updateApplicants: `/job/:jobid/applicant/update/:id`,
@@ -165,6 +172,7 @@ const API_URLS = {
   reorderApplicants: `/job/:jobid/applicant/reorder`,
   // manager Dashboard apis
   getDashboardData: `/dashboard/data`,
+  getDashboardDepartmentList: `/dashboard/department/list`,
   // annoncemnet apis
   getAnnouncement: `/announcement/list?page=Page&limit=10&searchKey=searchValue`,
   createAnnouncement: `/announcement/create`,

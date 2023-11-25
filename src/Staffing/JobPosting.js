@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Table from "@mui/material/Table";
@@ -14,7 +13,7 @@ import { useNavigate, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import DeleteModal from "../Modals/DeleteModal";
 import API_URLS from "../constants/apiUrls";
@@ -22,6 +21,7 @@ import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
 import { AiOutlinePrinter } from "react-icons/ai";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import {
   DisciplinaryDiv,
@@ -47,7 +47,12 @@ import {
   ApproveStyle,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
-import { TabelDarkPara } from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import {
+  TabelDarkPara,
+  ButtonIcon,
+  LightPara,
+  EditButton,
+} from "../Employee/ViewEmployee/ViewEmployeeStyle";
 
 const UnderlineHoverEffect = styled.div`
   cursor: pointer;
@@ -98,6 +103,8 @@ const CellStyle2 = {
   lineHeight: "1.5rem",
 };
 const JobPosting = () => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const Navigate = useNavigate();
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
@@ -113,6 +120,8 @@ const JobPosting = () => {
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
   const [departmentData, setDepartmentData] = useState([]);
+  const [file, setFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
@@ -124,6 +133,7 @@ const JobPosting = () => {
     handleSubmit,
     reset,
     getValues,
+    setValue,
     setError,
     formState: { errors },
   } = useForm({
@@ -136,6 +146,7 @@ const JobPosting = () => {
     setDetailsLength(500);
     clearErrors();
     reset({});
+    setFile(null);
   };
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
@@ -150,8 +161,18 @@ const JobPosting = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
       HandleSubmit(data);
     } else if (update && isEmptyObject(errors)) {
+      if (file) {
+        data.file = file._id;
+      } else {
+        data.file = null;
+      }
       HandleUpdate(data);
     }
   };
@@ -168,16 +189,22 @@ const JobPosting = () => {
         ? new Date(data.postingDate).toISOString().split("T")[0]
         : null,
       boardMembers: data.boardMembers,
+      disciplinary: data.disciplinary?._id,
+      file: data?.file ? data?.file?._id : null,
     });
+    if (data.file) {
+      setFile(data.file);
+    }
     HandleOpen();
   };
 
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
-    HandleOpen();
     reset({});
     clearErrors();
     setDetailsLength(500);
+    setFile(null);
+    HandleOpen();
   };
   const GetDepartments = () => {
     setIsLoading(true);
@@ -324,6 +351,79 @@ const JobPosting = () => {
       .finally(() => {
         setIsDeleting(false);
       });
+  };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    // const inputString = e.target.files[0].type;
+    // const parts = inputString?.split("/");
+    // const type = parts[parts?.length - 1];
+
+    let type = await getFileType(e.target.files[0]);
+    if (type != "unknown") {
+      handleUpload(file, type);
+    } else {
+      toast.error("Unsuported file type.");
+    }
+  };
+  const handleUpload = (file, type) => {
+    setIsUploading(true);
+
+    if (file) {
+      const binary = new FormData();
+      binary.append("file", file);
+
+      httpClient({
+        method: "post",
+        url: API_URLS.uploadDocuments.replace(":type", type),
+        data: binary,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+        .then((data) => {
+          if (data?.result) {
+            setFile(data?.result?.file);
+            //  insert(index, { file: data?.result?.file?._id });
+            // setFormData({ ...formData, file: data?.result.file._id });
+            setIsUploading(false);
+          } else {
+            //console.log(data.error);
+            toast.error(data.error.error);
+            // setErrors({ ...errors, fileError: data?.error?.error });
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setIsUploading(false);
+        })
+        .finally(() => {
+          setIsUploading(false);
+        });
+    }
+  };
+  const getFileType = (file) => {
+    if (file) {
+      const fileExtension = file?.name?.split(".").pop().toLowerCase();
+
+      if (["jpg", "jpeg", "png", "gif", "tiff"].includes(fileExtension)) {
+        return "image";
+      } else if (["mp4", "ogg", "webm"].includes(fileExtension)) {
+        return "video";
+      } else if (fileExtension === "pdf") {
+        return "pdf";
+      } else if (fileExtension === "xlsx" || fileExtension === "xls") {
+        return "xlsx";
+      } else if (fileExtension === "doc" || fileExtension === "docx") {
+        return "doc";
+      } else {
+        return "unknown";
+      }
+    }
+  };
+
+  const removeFile = (e) => {
+    setFile(null);
+    setValue("file", null);
   };
   useEffect(() => {
     GetJobPostings();
@@ -517,6 +617,58 @@ const JobPosting = () => {
                         },
                       })}
                     />
+                    <input
+                      style={{ width: "50%" }}
+                      type="file"
+                      // accept="image/*,capture=camera"
+                      {...register(`file`, {
+                        // required: {
+                        //   value: update ? false : true,
+                        //   message: "Required",
+                        // },
+                        onChange: (e) => {
+                          handleFileChange(e);
+                        },
+                      })}
+                      id="upload"
+                      className="custom"
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "1.6rem",
+                        alignItems: "center",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <EditButton
+                        htmlFor="upload"
+                        style={{ width: "max-content" }}
+                      >
+                        {" "}
+                        <ButtonIcon src="/images/icons/BlueUpload.svg" />{" "}
+                        {isUploading ? (
+                          <ThreeDots
+                            height="8"
+                            width="80"
+                            radius="9"
+                            color="#279AF1"
+                            ariaLabel="three-dots-loading"
+                            visible={true}
+                          />
+                        ) : !file ? (
+                          "Upload Document "
+                        ) : file?.originalName.length <= 32 ? (
+                          file?.originalName
+                        ) : (
+                          file?.originalName.substring(0, 30) + "..."
+                        )}
+                      </EditButton>
+                      {file && (
+                        <LightPara onClick={removeFile}>Remove</LightPara>
+                      )}
+                    </div>
+                    {errors.file && <Errors> {errors.file?.message} </Errors>}
 
                     {<Errors>{errors.boardMembers?.message}</Errors>}
 
@@ -732,7 +884,7 @@ const JobPosting = () => {
                       {data.boardMembers || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
-                      {data.applicants || " 25"}
+                      {data.applicants?.length || " - "}
                     </TableCell>
 
                     <TableCell sx={CellStyle2} align="left">
@@ -790,6 +942,19 @@ const JobPosting = () => {
                             }}
                             src="/images/icons/Trash-2.svg"
                           />
+                        )}
+                        {data?.file && (
+                          <Link
+                            to={API_URL + data?.file?.path}
+                            target="_blank"
+                            download
+                            style={{
+                              textDecoration: "none",
+                              marginTop: ".6rem",
+                            }}
+                          >
+                            <ActionIcons src="/images/icons/Download.svg" />
+                          </Link>
                         )}
                       </ActionIconDiv>
                     </TableCell>

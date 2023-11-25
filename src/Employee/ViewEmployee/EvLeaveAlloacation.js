@@ -95,6 +95,8 @@ const EvLeaveAlloacation = () => {
   const [update, setUpdate] = useState(false);
   const [result, setResult] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
+
   const [leaveType, setLeaveType] = useState([]);
   const rows = [1, 2, 3, 4];
   const [openDelete, setOpenDelete] = useState(false);
@@ -132,7 +134,7 @@ const EvLeaveAlloacation = () => {
   };
   const GetLeavesType = () => {
     return new Promise((resolve, reject) => {
-      setIsLoading(true);
+      setIsBuffering(true);
       let url = API_URLS.getEmployeeLeaveList.replace(
         ":employeeid",
         employeeid
@@ -152,11 +154,11 @@ const EvLeaveAlloacation = () => {
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error creating department. Please try again.");
-          setIsLoading(false);
+          setIsBuffering(false);
           reject(error);
         })
         .finally(() => {
-          setIsLoading(false);
+          setIsBuffering(false);
         });
     });
   };
@@ -293,7 +295,7 @@ const EvLeaveAlloacation = () => {
       });
   };
   useEffect(() => {
-    Promise.all([GetLeavesType(), GetLeaveAllocation()]);
+    Promise.all([GetLeaveAllocation()]);
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -320,6 +322,7 @@ const EvLeaveAlloacation = () => {
     handleOpen();
     reset({});
     clearErrors();
+    GetLeavesType();
   };
 
   return (
@@ -349,7 +352,7 @@ const EvLeaveAlloacation = () => {
           </FlexSpaceBetween>
           <LeaveDiv>
             Leave Alloactions
-            {userType === ROLES.EMPLOYEE  ||  userType === ROLES.MANAGER ? (
+            {userType === ROLES.EMPLOYEE || userType === ROLES.MANAGER ? (
               " "
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
@@ -382,15 +385,23 @@ const EvLeaveAlloacation = () => {
                     Total&nbsp;Allocation (Hrs)
                   </TableCell>
 
-                  <TableCell sx={{ ...CellStyle }} align="left">
-                    Actions
-                  </TableCell>
+                  {userType === ROLES.MANAGER ? (
+                    " "
+                  ) : (
+                    <TableCell sx={{ ...CellStyle }} align="left">
+                      Actions
+                    </TableCell>
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
-                { !result?.allocations?.length && (
+                {!result?.allocations?.length && (
                   <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={Celllstyle2} colSpan={4}>
+                    <TableCell
+                      align="center"
+                      sx={Celllstyle2}
+                      colSpan={userType === ROLES.MANAGER ? 3 : 4}
+                    >
                       No leave allocations found
                     </TableCell>
                   </TableRow>
@@ -413,9 +424,12 @@ const EvLeaveAlloacation = () => {
                       {data.totalAllocation}
                     </TableCell>
 
-                    <TableCell align="center" sx={Celllstyle2}>
-                      <IconContainer>
-                        {/* {userType === ROLES.EMPLOYEE || isAccount ? (
+                    {userType === ROLES.MANAGER ? (
+                      " "
+                    ) : (
+                      <TableCell align="center" sx={Celllstyle2}>
+                        <IconContainer>
+                          {/* {userType === ROLES.EMPLOYEE || isAccount ? (
                           ""
                         ) : (
                           <Icons
@@ -426,21 +440,22 @@ const EvLeaveAlloacation = () => {
                             src="/images/icons/Pendown.svg"
                           />
                         )} */}
-                        {userType === ROLES.EMPLOYEE ||
-                        userType === ROLES.MANAGER ||
-                        isAccount ? (
-                          " "
-                        ) : (
-                          <Icons
-                            onClick={() => {
-                              setId(data._id);
-                              HandleOpenDelete();
-                            }}
-                            src="/images/icons/Trash-2.svg"
-                          />
-                        )}
-                      </IconContainer>
-                    </TableCell>
+                          {userType === ROLES.EMPLOYEE ||
+                          userType === ROLES.MANAGER ||
+                          isAccount ? (
+                            " "
+                          ) : (
+                            <Icons
+                              onClick={() => {
+                                setId(data._id);
+                                HandleOpenDelete();
+                              }}
+                              src="/images/icons/Trash-2.svg"
+                            />
+                          )}
+                        </IconContainer>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -459,7 +474,7 @@ const EvLeaveAlloacation = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              {isLoading ? (
+              {isBuffering ? (
                 <div
                   style={{
                     display: "flex",

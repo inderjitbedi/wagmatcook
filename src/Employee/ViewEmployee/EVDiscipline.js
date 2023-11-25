@@ -336,11 +336,12 @@ const EVDiscipline = () => {
   };
   const HandleOpenAddNewAction = () => {
     setUpdate(false);
-    handleOpen();
     reset({});
     clearErrors();
     setDetailsLength(500);
     setFile(null);
+    handleOpen();
+
   };
   const HandleUpdate = (data) => {
     setIsLoading(true);

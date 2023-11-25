@@ -21,7 +21,10 @@ const Notifications = require("../models/notification");
 const notificationType = require("../enum/notificationType");
 const notificationConstants = require("../constants/notificationConstants");
 const Offboarding = require("../models/offboarding");
-
+const pdfTemplate = require("../utils/pdfTemplate");
+const pdfGenerator = require("../utils/pdfGenerator");
+const path = require("path");
+const fs = require("fs");
 const employeeController = {
   async list(req, res) {
     try {
@@ -30,6 +33,160 @@ const employeeController = {
       const startIndex = (page - 1) * limit;
 
       let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+
+      console.log(req.user._id);
+      if (req.query.searchKey) {
+        filters.$or = [
+          { name: { $regex: req.query.searchKey, $options: "i" } },
+          { email: { $regex: req.query.searchKey, $options: "i" } },
+          { role: { $regex: req.query.searchKey, $options: "i" } },
+          // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        ];
+      }
+      const employees = await User.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        // {
+        //     $match: {
+        //         $or: [
+        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        //         ],
+        //     },
+        // },
+
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photoInfo",
+          },
+        },
+        {
+          $sort: {
+            "positions.startDate": -1, // Sort by startDate in descending order
+          },
+        },
+
+        {
+          $skip: startIndex,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
+
+      let totalEmployees = await UserOrganization.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "userData",
+          },
+        },
+        {
+          $unwind: "$userData",
+        },
+        {
+          $match: {
+            "userData.isActive": true,
+            "userData.isDeleted": false,
+            organization: req.organization?._id || null,
+            "userData.role": { $ne: roles.ORG_ADMIN },
+          },
+        },
+      ]).count("user");
+      totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0;
+      const totalPages = Math.ceil(totalEmployees / req.query.limit);
+      res.status(200).json({
+        employees,
+        totalEmployees,
+        currentPage: page,
+        totalPages,
+        message: "Employees fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async listForManager(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+
+      let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+
+      console.log(req.user._id);
       if (req.query.searchKey) {
         filters.$or = [
           { name: { $regex: req.query.searchKey, $options: "i" } },
@@ -134,6 +291,192 @@ const employeeController = {
           $limit: limit,
         },
       ]);
+      const filteredEmployees = employees.filter((employee) => {
+        return employee.positions.some(
+          (position) =>
+            position.reportsTo.toString() === req.user._id.toString()
+        );
+      });
+      let totalEmployees = await UserOrganization.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "userData",
+          },
+        },
+        {
+          $unwind: "$userData",
+        },
+        {
+          $match: {
+            "userData.isActive": true,
+            "userData.isDeleted": false,
+            organization: req.organization?._id || null,
+            "userData.role": { $ne: roles.ORG_ADMIN },
+          },
+        },
+      ]).count("user");
+      totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0;
+      const totalPages = Math.ceil(totalEmployees / req.query.limit);
+      res.status(200).json({
+        employees: filteredEmployees,
+        totalEmployees,
+        currentPage: page,
+        totalPages,
+        message: "Employees fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+  async listBebEligible(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 9999;
+      const startIndex = (page - 1) * limit;
+
+      let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+
+      console.log(req.user._id);
+      if (req.query.searchKey) {
+        filters.$or = [
+          { name: { $regex: req.query.searchKey, $options: "i" } },
+          { email: { $regex: req.query.searchKey, $options: "i" } },
+          { role: { $regex: req.query.searchKey, $options: "i" } },
+          // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+          // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        ];
+      }
+      const employees = await User.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        // {
+        //     $match: {
+        //         $or: [
+        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        //         ],
+        //     },
+        // },
+
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $addFields: {
+            positions: {
+              $filter: {
+                input: "$positions",
+                as: "position",
+                cond: {
+                  $eq: ["$$position.isDeleted", false],
+                },
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $in: [true, "$positions.isBebEligible"],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photoInfo",
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department", // Adjust field names as per your data model
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$departmentInfo",
+        },
+        {
+          $sort: {
+            "positions.startDate": -1, // Sort by startDate in descending order
+          },
+        },
+
+        {
+          $skip: startIndex,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
 
       let totalEmployees = await UserOrganization.aggregate([
         {
@@ -167,6 +510,134 @@ const employeeController = {
       });
     } catch (error) {
       console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
+  async generatePdf(req, res) {
+    try {
+      let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
+      const employees = await User.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        // {
+        //     $match: {
+        //         $or: [
+        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+        //         ],
+        //     },
+        // },
+
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $addFields: {
+            positions: {
+              $filter: {
+                input: "$positions",
+                as: "position",
+                cond: {
+                  $eq: ["$$position.isDeleted", false],
+                },
+              },
+            },
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $in: [true, "$positions.isBebEligible"],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "personalInfo.photo",
+            foreignField: "_id",
+            as: "photoInfo",
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department", // Adjust field names as per your data model
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$departmentInfo",
+        },
+        {
+          $sort: {
+            "positions.startDate": -1, // Sort by startDate in descending order
+          },
+        },
+      ]);
+      // console.log("this is employee ebe list ", employees);
+      const htmlTemplate = await pdfTemplate.bebEligibleReports(employees);
+      // console.log("this is my template", htmlTemplate);
+      const pdfOutputPath = path.join(__dirname, `BEB_report.pdf`);
+      await pdfGenerator(htmlTemplate, pdfOutputPath, `<p></p>`);
+
+      // Send the generated PDF as a response
+      res.status(200).sendFile(pdfOutputPath, () => {
+        // Remove the generated PDF file after sending
+        //  fs.unlinkSync(pdfOutputPath);
+      });
+    } catch (error) {
+      console.error("jobController:list:error -", error);
       res.status(400).json(error);
     }
   },
@@ -1595,90 +2066,172 @@ const employeeController = {
       const user = await User.findOne({ _id: req.params.id }).populate(
         "personalInfo"
       );
+      const isLiueTime = req.query.lieuTime;
+      console.log("this is value in prams ", isLiueTime);
       if (!user) {
         return res
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
       let { leaveType, hours: requestedHours } = req.body;
-      let allocation = await EmployeeLeaveAllocation.findOne({
-        leaveType,
-        employee: req.params.id,
-        isDeleted: false,
-      }).populate("leaveType");
-      if (!allocation)
-        return res.status(400).json({ message: "Leave type not allocated." });
+      if (isLiueTime) {
+        // If isLieuTime is true, add a leave in leave allocation with name 'lieu time'
 
-      let burnedHours = 0;
-      let leaves = await EmployeeLeaveHistory.find({
-        leaveType: leaveType,
-        employee: req.params.id,
-        isDeleted: false,
-        status: { $ne: leaveStatus.REJECTED },
-      }).select("hours");
+        // Add the requested hours to leave allocation
+        const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+          {
+            leaveType: leaveType,
+            employee: req.params.id,
+            isDeleted: false,
+          },
+          { $inc: { totalAllocation: requestedHours } },
+          { upsert: true, new: true }
+        ).populate("leaveType");
 
-      for (const leave of leaves) {
-        burnedHours += leave.hours;
-      }
+        // Create a leave history record for lieu time
+        let lieuRequest = new EmployeeLeaveHistory({
+          leaveType: lieuAllocation.leaveType._id,
+          hours: requestedHours,
 
-      if (requestedHours > allocation?.totalAllocation - burnedHours) {
-        return res.status(400).json({ message: "Insufficent balance" });
-      }
+          employee: req.params.id,
+          status: leaveStatus.PENDING,
+        });
+        await lieuRequest.save();
 
-      let request = new EmployeeLeaveHistory({
-        ...req.body,
-        employee: req.params.id,
-        status: leaveStatus.PENDING,
-      });
-      await request.save();
-      request = await request.populate([
-        {
-          path: "employee",
-          populate: {
-            path: "personalInfo",
+        // Populate the leave history record
+        lieuRequest = await lieuRequest.populate([
+          {
+            path: "employee",
             populate: {
-              path: "photo",
+              path: "personalInfo",
+              populate: {
+                path: "photo",
+              },
             },
           },
-        },
-        {
-          path: "responder",
-          populate: {
-            path: "personalInfo",
+          {
+            path: "responder",
             populate: {
-              path: "photo",
+              path: "personalInfo",
+              populate: {
+                path: "photo",
+              },
             },
           },
-        },
-        {
-          path: "leaveType",
-        },
-      ]);
-
-      const notification = new Notifications({
-        title:
-          notificationConstants[notificationType.LEAVE_REQUEST].title
-            ?.replace(
-              "{sender}",
-              [user.personalInfo.firstName, user.personalInfo.lastName].join(
-                " "
+          {
+            path: "leaveType",
+          },
+        ]);
+        console.log("this is lieuRequest", lieuRequest);
+        // Send notification for lieu time leave request
+        const notification = new Notifications({
+          title:
+            notificationConstants[notificationType.LEAVE_REQUEST].title
+              ?.replace(
+                "{sender}",
+                [user.personalInfo.firstName, user.personalInfo.lastName].join(
+                  " "
+                )
               )
-            )
-            .replace("{leavetype}", allocation.leaveType.name) || "",
-        description:
-          notificationConstants[notificationType.LEAVE_REQUEST].description ||
-          "",
-        type: notificationType.LEAVE_REQUEST,
-        sender: req.params.id,
-        receiver: req.body.responder,
-      });
-      await notification.save();
+              .replace("{leavetype}", lieuAllocation.leaveType.name) || "",
+          description:
+            notificationConstants[notificationType.LEAVE_REQUEST].description ||
+            "",
+          type: notificationType.LEAVE_REQUEST,
+          sender: req.params.id,
+          receiver: req.body.responder,
+          dataId: lieuRequest._id,
+        });
+        await notification.save();
 
-      sendGrid.send(request.responder.email, "leaveRequest", { request });
+        sendGrid.send(req.body.responder.email, "leaveRequest", {
+          request: lieuRequest,
+        });
 
-      res.status(200).json({
-        message: "Employee leave request sent successfully",
-      });
+        return res.status(200).json({
+          message: "Lieu time leave request sent successfully",
+        });
+      } else {
+        let allocation = await EmployeeLeaveAllocation.findOne({
+          leaveType,
+          employee: req.params.id,
+          isDeleted: false,
+        }).populate("leaveType");
+        if (!allocation)
+          return res.status(400).json({ message: "Leave type not allocated." });
+
+        let burnedHours = 0;
+        let leaves = await EmployeeLeaveHistory.find({
+          leaveType: leaveType,
+          employee: req.params.id,
+          isDeleted: false,
+          status: { $ne: leaveStatus.REJECTED },
+        }).select("hours");
+
+        for (const leave of leaves) {
+          burnedHours += leave.hours;
+        }
+
+        if (requestedHours > allocation?.totalAllocation - burnedHours) {
+          return res.status(400).json({ message: "Insufficent balance" });
+        }
+
+        let request = new EmployeeLeaveHistory({
+          ...req.body,
+          employee: req.params.id,
+          status: leaveStatus.PENDING,
+        });
+        await request.save();
+        request = await request.populate([
+          {
+            path: "employee",
+            populate: {
+              path: "personalInfo",
+              populate: {
+                path: "photo",
+              },
+            },
+          },
+          {
+            path: "responder",
+            populate: {
+              path: "personalInfo",
+              populate: {
+                path: "photo",
+              },
+            },
+          },
+          {
+            path: "leaveType",
+          },
+        ]);
+
+        const notification = new Notifications({
+          title:
+            notificationConstants[notificationType.LEAVE_REQUEST].title
+              ?.replace(
+                "{sender}",
+                [user.personalInfo.firstName, user.personalInfo.lastName].join(
+                  " "
+                )
+              )
+              .replace("{leavetype}", allocation.leaveType.name) || "",
+          description:
+            notificationConstants[notificationType.LEAVE_REQUEST].description ||
+            "",
+          type: notificationType.LEAVE_REQUEST,
+          sender: req.params.id,
+          receiver: req.body.responder,
+          dataId: request._id,
+        });
+        await notification.save();
+
+        sendGrid.send(request.responder.email, "leaveRequest", { request });
+
+        res.status(200).json({
+          message: "Employee leave request sent successfully",
+        });
+      }
     } catch (error) {
       console.error("employeeController:update:error -", error);
       res.status(400).json(error);

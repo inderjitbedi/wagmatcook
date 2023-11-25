@@ -62,6 +62,7 @@ import {
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
+  FlexContaier,
 } from "../Disciplinary/DisciplinaryStyles";
 const CellStyle = {
   color: "#8F9BB3",
@@ -154,6 +155,7 @@ const LeaveHistory = () => {
     reset({});
     setOpen(false);
     setDetailsLength(500);
+    setLiueTime(false);
   };
   const [user, setUser] = useState();
 
@@ -168,9 +170,9 @@ const LeaveHistory = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
-
+  const [liueTime, setLiueTime] = useState(false);
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
-
+  const [lieuId, setLieuId] = useState();
   const handleShowMoreClick = () => {
     setShowAll(!showAll);
   };
@@ -221,6 +223,14 @@ const LeaveHistory = () => {
   };
   const HandleOpenAddNewAction = () => {
     handleOpen();
+    setLiueTime(false);
+    reset({});
+    clearErrors();
+    setDetailsLength(500);
+  };
+  const HandleOpenAddNewActionLiue = () => {
+    handleOpen();
+    setLiueTime(true);
     reset({});
     clearErrors();
     setDetailsLength(500);
@@ -338,6 +348,10 @@ const LeaveHistory = () => {
       ":employeeid",
       user?._id
     );
+    if (liueTime) {
+      url += `&lieuTime=${true}`;
+      data.leaveType = lieuId._id;
+    }
 
     let dataCopy = data;
     httpClient({
@@ -395,7 +409,38 @@ const LeaveHistory = () => {
         });
     });
   };
-
+  const GetLeaveTypesList = () => {
+    return new Promise((resolve, reject) => {
+      setIsLoading(true);
+      // const trimid = employeeid?.trim();
+      let url = API_URLS.getLeaveTypeList;
+      httpClient({
+        method: "get",
+        url,
+      })
+        .then(({ result, error }) => {
+          if (result) {
+            const LieuId = result.leaveTypes.find(
+              (obj) => obj.cantDelete === true
+            );
+            setLieuId(LieuId);
+            resolve(result);
+          } else {
+            //toast.warn("something went wrong ");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Error Adding Benefits. Please try again.");
+          setIsLoading(false);
+          reject(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+  console.log("this the leave type lieu:", lieuId);
   let API_URL = process.env.REACT_APP_API_URL;
   const userstyle = {
     padding: "1.6rem 2.0rem",
@@ -417,19 +462,23 @@ const LeaveHistory = () => {
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
-      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
-      GetLeaveAlloactionBalance();
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-      GetLeaveAlloactionBalance();
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
+
     if (user) {
-      Promise.all([GetReportList(), GetLeaveAlloaction(), GetLeaveHistory()]);
+      Promise.all([
+        GetReportList(),
+        GetLeaveAlloaction(),
+        GetLeaveHistory(),
+        GetLeaveAlloactionBalance(),
+        GetLeaveTypesList(),
+      ]);
     }
   }, [user, searchValue]);
   return (
@@ -465,11 +514,28 @@ const LeaveHistory = () => {
                 <FlexColumn100>
                   <Sectionlighttitle>
                     {" "}
-                    {data?.leaveTypeObj?.name || "- "}{" "}
+                    {data?.leaveTypeObj?.name || "- "} -{" "}
+                    <span
+                      style={{
+                        color: "#222b45",
+                        textAlign: "right",
+                        fontFamily: "Inter",
+                        fontSize: "1.4rem",
+                        fontStyle: "normal",
+                        fontWeight: 400,
+                        lineHeight: "1.8rem",
+                        margin: 0,
+                      }}
+                    >
+                      {data?.totalAllocation - data?.consumed || " - "} Hrs
+                      remaining
+                    </span>
                   </Sectionlighttitle>
                   <Sectionsmalltitle>
-                    {data?.consumed || " 0"} of {data?.totalAllocation || "-"}{" "}
-                    Hrs Consumed
+                    {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
+                  </Sectionsmalltitle>
+                  <Sectionsmalltitle>
+                    {data?.consumed} of {data?.totalAllocation} Hrs used
                   </Sectionsmalltitle>
                 </FlexColumn100>
               </SectionCardContainer>
@@ -484,10 +550,14 @@ const LeaveHistory = () => {
           </div>
           <DisciplinaryDiv>
             <DisciplinaryHeading> Leave History</DisciplinaryHeading>
-
-            <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-              Add New
-            </ButtonBlue>
+            <FlexContaier>
+              {/* <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
+                Add Lieu Time
+              </ButtonBlue> */}
+              <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+                Add New
+              </ButtonBlue>
+            </FlexContaier>
           </DisciplinaryDiv>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -652,7 +722,11 @@ const LeaveHistory = () => {
                 <>
                   <ModalContainer>
                     <ModalHeading>
-                      {!update ? "Applying for Leave" : "View Leave"}
+                      {!update
+                        ? liueTime
+                          ? "Applying for Liue Time"
+                          : "Applying for Leave"
+                        : "View Leave"}
                     </ModalHeading>
                     <ModalIcon
                       onClick={handleClose}
@@ -758,26 +832,37 @@ const LeaveHistory = () => {
                             Leave Type {update ? " " : <InputSpan>*</InputSpan>}{" "}
                           </InputLabel>
 
-                          <Controller
-                            name="leaveType"
-                            control={control}
-                            rules={{
-                              required: {
-                                value: true,
-                                message: "Required",
-                              },
-                            }}
-                            render={({ field }) => (
-                              <Select {...field} disabled={update}>
-                                <Option>Select</Option>
-                                {leaveType?.map((data) => (
-                                  <Option value={data.leaveType?._id}>
-                                    {data.leaveType?.name}
+                          {liueTime ? (
+                            <Input
+                              type="text"
+                              {...register("leaveType", {})}
+                              readOnly
+                              placeholder="Lieu Time"
+                            />
+                          ) : (
+                            <Controller
+                              name="leaveType"
+                              control={control}
+                              rules={{
+                                required: {
+                                  value: true,
+                                  message: "Required",
+                                },
+                              }}
+                              render={({ field }) => (
+                                <Select {...field} disabled={update}>
+                                  <Option disabled selected>
+                                    Select
                                   </Option>
-                                ))}
-                              </Select>
-                            )}
-                          />
+                                  {leaveType?.map((data) => (
+                                    <Option value={data.leaveType?._id}>
+                                      {data.leaveType?.name}
+                                    </Option>
+                                  ))}
+                                </Select>
+                              )}
+                            />
+                          )}
                           {<Errors>{errors.leaveType?.message}</Errors>}
                         </FlexColumnForm>
                         <FlexColumnForm>

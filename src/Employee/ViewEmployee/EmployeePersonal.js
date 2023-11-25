@@ -119,7 +119,10 @@ const EmployeePersonal = () => {
                   <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Basic Information</BasicHeading>
                     {isAccount || userType === ROLES.EMPLOYEE ? (
-                      ""
+                      <EditButton onClick={() => setIsEdit(true)}>
+                        <ButtonIcon src="/images/icons/Pen 2.svg" />
+                        Edit
+                      </EditButton>
                     ) : userType === ROLES.MANAGER ? (
                       <EditButton onClick={() => setIsEdit(true)}>
                         <ButtonIcon src="/images/icons/Pen 2.svg" />
@@ -244,7 +247,7 @@ const EmployeePersonal = () => {
                       </FlexColumn>
                     </FlexSpaceBetween>
                     <BasicHeading style={{ marginTop: "5.3rem" }}>
-                      Basic Information
+                      Personal Information
                     </BasicHeading>
                     <FlexSpaceBetween>
                       <FlexColumn>

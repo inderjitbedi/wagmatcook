@@ -173,19 +173,23 @@ const Employee = () => {
         setIsLoading(false);
       });
   };
-  // send welocme email
-  const SendWelcomeEmail = () => {
-    let url = API_URLS.sendWelcomeEmail;
+  const GetEmployeesManager = (user) => {
+    setIsLoading(true);
 
+    let url = API_URLS.getManagerEmployeeList
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
     httpClient({
-      method: "post",
+      method: "get",
       url,
     })
       .then(({ result, error }) => {
         if (result) {
-          toast.success(result.message, {
-            className: "toast",
-          });
+          setResult(result);
+          const filterData = result?.employees.filter(
+            (data) => data._id !== user?._id
+          );
+          setEmployeeList(filterData);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -194,8 +198,12 @@ const Employee = () => {
         // console.error("Error:", error);
         toast.error("Error creating Employee. Please try again.");
         setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
+  // send welocme email
 
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
@@ -212,7 +220,11 @@ const Employee = () => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
-      GetEmployees(parsedUser);
+      if (parsedUser.role == "MANAGER") {
+        GetEmployeesManager(parsedUser);
+      } else {
+        GetEmployees(parsedUser);
+      }
     }
   }, [page, searchValue]);
   const HandleSubmitData = (data) => {
@@ -301,13 +313,15 @@ const Employee = () => {
           " "
         ) : (
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          { userType === ROLES.ORG_ADMIN && <AddNewButton
-              onClick={() =>
-                Navigate("/organization-admin/employee/send-welcome")
-              }
-            >
-              Send Welcome Emails
-            </AddNewButton>}
+            {userType === ROLES.ORG_ADMIN && (
+              <AddNewButton
+                onClick={() =>
+                  Navigate("/organization-admin/employee/send-welcome")
+                }
+              >
+                Send Welcome Emails
+              </AddNewButton>
+            )}
             {<AddNewButton onClick={HandleOpenEmployee}>Add New</AddNewButton>}
           </div>
         )}

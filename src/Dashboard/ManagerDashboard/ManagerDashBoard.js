@@ -48,7 +48,8 @@ const ManagerDashBoard = () => {
   const [userType, setUserType] = useState("");
   const [dashboardData, setDashboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [user, setUser] = useState();
+  const [greeting, setGreeting] = useState("");
   const [anchorEl, setAnchorEl] = useState(false);
   const [Announcements, setAnnouncements] = useState([]);
   const [result, setResult] = useState([]);
@@ -139,6 +140,28 @@ const ManagerDashBoard = () => {
     } else if (location.pathname.indexOf("super-admin") > -1) {
       setUserType(ROLES.SUPER_ADMIN);
     }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
+    function getGreeting() {
+      const currentTime = new Date();
+      const currentHour = currentTime.getHours();
+
+      if (currentHour >= 5 && currentHour < 12) {
+        return "Good Morning";
+      } else if (currentHour >= 12 && currentHour < 17) {
+        return "Good Afternoon";
+      } else if (currentHour >= 17 && currentHour < 24) {
+        return "Good Evening";
+      } else {
+        return "Good Night";
+      }
+    }
+
+    // Set greeting when component mounts
+    setGreeting(getGreeting());
   }, []);
 
   return (
@@ -165,12 +188,31 @@ const ManagerDashBoard = () => {
         <>
           <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
 
-          <Heading_24> Good Evening</Heading_24>
+          <Heading_24> {greeting}</Heading_24>
           <CardContainer>
             <FlexColContainer>
               {userType === ROLES.EMPLOYEE ? (
                 <CardBody>
-                  <CardHeading>Applied Leave Request</CardHeading>
+                  <FlexSpaceBetween
+                    style={{ alignItems: "center", margin: "0" }}
+                  >
+                    <CardHeading>Applied Leave Request</CardHeading>
+                    <MainCardView
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(`/manager-management/announcements`);
+                        } else if (userType === ROLES.HR) {
+                          Navigate(`/hr-management/announcements`);
+                        } else if (userType === ROLES.EMPLOYEE) {
+                          Navigate(`/user-management/leaves/${user?._id}`);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      View All
+                    </MainCardView>
+                  </FlexSpaceBetween>
+
                   {!dashboardData?.leaves?.length && (
                     <div
                       style={{
@@ -184,17 +226,38 @@ const ManagerDashBoard = () => {
                   )}
                   {dashboardData?.leaves?.map((data) => (
                     <CardList style={{ width: "100%" }}>
-                      <FlexContainer>
+                      <FlexContainer
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/announcements`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(`/user-management/leaves/${user?._id}`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
                         <FlexColumn>
-                          <CardSubHeading>Lieu Time</CardSubHeading>
+                          <CardSubHeading>
+                            {data?.leaveType?.name || " - "}
+                          </CardSubHeading>
                           <FlexContainer style={{ flex: "1" }}>
                             <CardSubGrey>
-                              From:
-                              <CardSubBlack>30 Apr, 2020</CardSubBlack>
+                              From :
+                              <CardSubBlack>
+                                {data?.from
+                                  ? moment.utc(data?.from).format("D MMM, YYYY")
+                                  : " - "}
+                              </CardSubBlack>
                             </CardSubGrey>
                             <CardSubGrey>
-                              To:
-                              <CardSubBlack>30 Apr, 2020</CardSubBlack>
+                              To :
+                              <CardSubBlack>
+                                {data?.to
+                                  ? moment.utc(data?.to).format("D MMM, YYYY")
+                                  : " - "}
+                              </CardSubBlack>
                             </CardSubGrey>
                           </FlexContainer>
                         </FlexColumn>
@@ -205,7 +268,26 @@ const ManagerDashBoard = () => {
                 </CardBody>
               ) : (
                 <CardBody>
-                  <CardHeading>Leave Request</CardHeading>
+                  <FlexSpaceBetween
+                    style={{ alignItems: "center", margin: "0" }}
+                  >
+                    <CardHeading>Leave Request</CardHeading>
+                    <MainCardView
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(`/manager-management/leaves`);
+                        } else if (userType === ROLES.HR) {
+                          Navigate(`/hr-management/leaves`);
+                        } else {
+                          Navigate(`/user-management/leaves`);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      View All
+                    </MainCardView>
+                  </FlexSpaceBetween>
+
                   {!dashboardData?.leaves?.length && (
                     <div
                       style={{
@@ -219,7 +301,24 @@ const ManagerDashBoard = () => {
                   )}
                   {dashboardData?.leaves?.map((data) => (
                     <CardList>
-                      <FlexContainer>
+                      <FlexContainer
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/request/${data?.employee?._id}/${data._id}`
+                            );
+                          } else if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/request/${data?.employee?._id}/${data._id}`
+                            );
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(
+                              `/user-management/request/${data?.employee?._id}/${data._id}`
+                            );
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
                         <CardImg
                           src={
                             data?.employee?.personalInfo?.photo
@@ -237,6 +336,7 @@ const ManagerDashBoard = () => {
                                 ].join(" ")
                               : " - "}
                           </CardSubHeading>
+
                           <CardSubGrey>
                             {data?.employee ? data?.employee?.email : " - "}
                           </CardSubGrey>
@@ -263,7 +363,18 @@ const ManagerDashBoard = () => {
             <FlexColContainer>
               <CardBody>
                 <CardHeading>Upcoming Events</CardHeading>
-                {array5.map((data) => (
+                {!dashboardData?.upcoming?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No upcoming events </CardSubHeading>
+                  </div>
+                )}
+                {/* {array5.map((data) => (
                   <CardList style={{ border: "none", paddingBottom: "8px" }}>
                     <FlexColumn style={{ gap: "8px" }}>
                       <CardSubHeading>Dianne Russel</CardSubHeading>
@@ -275,7 +386,7 @@ const ManagerDashBoard = () => {
                       <Birthday> Birthday</Birthday>
                     )}
                   </CardList>
-                ))}
+                ))} */}
               </CardBody>
             </FlexColContainer>
             <FlexColContainer>
@@ -311,7 +422,27 @@ const ManagerDashBoard = () => {
                 {Announcements?.map((data) => (
                   <CardList>
                     <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading>{data.title || " - "}</CardSubHeading>
+                      <CardSubHeading
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/announcements/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/announcements/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(
+                              `/user-management/announcements/details/${data._id}`
+                            );
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {data.title || " - "}
+                      </CardSubHeading>
+
                       <CardSubGrey>
                         {data.updatedAt
                           ? moment(data.updatedAt).format("D MMM, YYYY")
@@ -337,12 +468,32 @@ const ManagerDashBoard = () => {
                 )}
                 {dashboardData?.certificates?.map((data) => (
                   <CardList>
-                    <FlexContainer style={{ alignItems: "flex-start" }}>
+                    <FlexContainer
+                      style={{ alignItems: "flex-start", cursor: "pointer" }}
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(
+                            `/manager-management/account/certificates/${data.employee}`
+                          );
+                        } else if (userType === ROLES.HR) {
+                          Navigate(
+                            `/hr-management/account/certificates/${data.employee}`
+                          );
+                        } else {
+                          Navigate(
+                            `/user-management/account/certificates/${data.employee}`
+                          );
+                        }
+                      }}
+                    >
                       <CardIcons src="/images/icons/Bell Off.svg" />
                       <FlexColumn style={{ gap: "8px" }}>
-                        <CardSubHeading>
-                          Hurry! Your {data.title} certificate is expirying
-                          soon.{" "}
+                        <CardSubHeading style={{ fontWeight: "400" }}>
+                          Hurry! Your{" "}
+                          <span style={{ fontWeight: "600" }}>
+                            {data.title}
+                          </span>{" "}
+                          certificate is expirying soon.{" "}
                         </CardSubHeading>
                         <CardSubGrey>
                           {data.expiryDate

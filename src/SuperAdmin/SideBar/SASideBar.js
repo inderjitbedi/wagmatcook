@@ -72,7 +72,7 @@ const SASideBar = ({ screenWidth, ToggleSidebar }) => {
           src="/images/icons/Alert-Circle.svg"
         />
       )}{" "}
-      <SidebarTitle>Wagmatcook</SidebarTitle>
+      <SidebarTitle>Your Community Portal</SidebarTitle>
       <span
         style={{
           width: "100%",

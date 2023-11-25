@@ -434,7 +434,11 @@ const CommenDashHeader = ({ onSearch, text }) => {
               )}
           <DashHeaderTitle>
             {" "}
-            {screenWidth < 1200 ? <span>Wagmatcook</span> : text}{" "}
+            {screenWidth < 1200 ? (
+              <span>Your Community Portal</span>
+            ) : (
+              text
+            )}{" "}
           </DashHeaderTitle>
         </FlexContaier>
 
@@ -645,7 +649,46 @@ const CommenDashHeader = ({ onSearch, text }) => {
                       }
                     />
 
-                    <NotificationFlexCol>
+                    <NotificationFlexCol
+                      onClick={() => {
+                        if (userType === ROLES.ORG_ADMIN) {
+                          if (data.type.includes("TASK")) {
+                            Navigate(
+                              `/organization-admin/tasks/details/${data.dataId}`
+                            );
+                          }
+                        } else if (userType === ROLES.Hr) {
+                          if (data.type.includes("TASK")) {
+                            Navigate(
+                              `/hr-management/tasks/details//${data.dataId}`
+                            );
+                          } else if (data.type.includes("LEAVE")) {
+                            Navigate(
+                              `/hr-management/request/${data.sender._id}/${data.dataId}`
+                            );
+                          }
+                        } else if (userType === ROLES.MANAGER) {
+                          if (data.type.includes("TASK")) {
+                            Navigate(
+                              `/manager-management/tasks/details/${data.dataId}`
+                            );
+                          } else if (data.type.includes("LEAVE")) {
+                            Navigate(
+                              `/manager-management/request/${data.sender._id}/${data.dataId}`
+                            );
+                          }
+                        } else if (userType === ROLES.EMPLOYEE) {
+                          if (data.type.includes("TASK")) {
+                            Navigate(
+                              `/user-management/tasks/details/${data.dataId}`
+                            );
+                          } else if (data.type.includes("LEAVE")) {
+                            Navigate(`/user-management/leaves/${user._id}`);
+                          }
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
                       <NotificationListText>{data.title}</NotificationListText>
                       <NotificationSapcebetween>
                         <NotificationListTextLight>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import { useForm, Controller } from "react-hook-form";
 import httpClient from "../api/httpClient";
 import API_URLS from "../constants/apiUrls";
 import Box from "@mui/material/Box";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation, useParams } from "react-router";
 import { toast } from "react-toastify";
 
 import Modal from "@mui/material/Modal";
@@ -48,6 +48,7 @@ import {
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 import { TabelDarkPara } from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import { FlexContaier } from "../Dashboard/OADashboard/OADashBoardStyles";
 
 const style = {
   position: "absolute",
@@ -113,7 +114,10 @@ const Task = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const [userType, setUserType] = useState("");
-
+  const [sort, setSort] = useState(false);
+  const HandleSort = () => {
+    setSort(!sort);
+  };
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
@@ -236,7 +240,8 @@ const Task = () => {
     setIsLoading(true);
     let url = API_URLS.getTaskList
       .replace("Page", page)
-      .replace("searchValue", searchValue);
+      .replace("searchValue", searchValue)
+      .replace("Sort", sort);
 
     httpClient({
       method: "get",
@@ -386,7 +391,7 @@ const Task = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
-  }, [page, searchValue]);
+  }, [page, searchValue, sort]);
   useEffect(() => {
     if (!(location.pathname.indexOf("user") > -1)) {
       GetAssignees();
@@ -396,18 +401,37 @@ const Task = () => {
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Tasks"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Tasks</DisciplinaryHeading>
-        {userType === ROLES.EMPLOYEE ? (
-          " "
-        ) : (
-          <AddNewButton
-            onClick={() => {
-              HandleOpenAddNewAction();
-            }}
-          >
-            Add New
+        <DisciplinaryHeading>
+          {sort ? "Completed" : "Pending"} Tasks
+        </DisciplinaryHeading>
+        <FlexContaier>
+          <AddNewButton onClick={() => HandleSort(true)} disabled={isLoading}>
+            {isLoading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : (
+              "View " + (sort ? "Pending" : "Completed")
+            )}
           </AddNewButton>
-        )}
+          {userType === ROLES.EMPLOYEE ? (
+            " "
+          ) : (
+            <AddNewButton
+              onClick={() => {
+                HandleOpenAddNewAction();
+              }}
+            >
+              Add New
+            </AddNewButton>
+          )}
+        </FlexContaier>
+
         <Modal
           open={open}
           sx={{
@@ -741,16 +765,6 @@ const Task = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>
-                        {userType === ROLES.EMPLOYEE ? (
-                          " "
-                        ) : (
-                          <ActionIcons
-                            onClick={() => {
-                              HandleUpdateAction(data);
-                            }}
-                            src="/images/icons/Pendown.svg"
-                          />
-                        )}
                         <ActionIcons
                           onClick={() => {
                             if (userType === ROLES.HR) {
@@ -773,6 +787,17 @@ const Task = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
+                        {userType === ROLES.EMPLOYEE ? (
+                          " "
+                        ) : (
+                          <ActionIcons
+                            onClick={() => {
+                              HandleUpdateAction(data);
+                            }}
+                            src="/images/icons/Pendown.svg"
+                          />
+                        )}
+
                         {userType === ROLES.EMPLOYEE ? (
                           " "
                         ) : (

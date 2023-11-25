@@ -145,7 +145,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
           src="/images/icons/Alert-Circle.svg"
         />
       )}{" "}
-      <SidebarTitle>Wagmatcook</SidebarTitle>
+      <SidebarTitle>Your Community Portal</SidebarTitle>
       <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
       <SideBarLogoContainer>
         <SideBarLogo

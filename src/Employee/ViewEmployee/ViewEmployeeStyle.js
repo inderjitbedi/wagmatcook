@@ -1086,3 +1086,27 @@ export const UploadFile = styled.div`
   line-height: 1.6rem;
   margin: 8px 0px;
 `;
+export const FilterDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  width: 100%;
+  padding: 1rem 0rem;
+  flex-wrap: wrap;
+`;
+export const FilterContainer = styled.div`
+  flex: 0 1 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: flex-start;
+  @media only screen and (max-width: 900px) {
+    flex: 0 1 25%;
+  }
+  @media only screen and (max-width: 600px) {
+    flex: 0 1 50%;
+  }
+  @media only screen and (max-width: 600px) {
+    flex: 0 1 100%;
+  }
+`;

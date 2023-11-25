@@ -222,8 +222,11 @@ const OALeaves = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
+      // data.cantDelete = true;
       HandleSubmitLeavesType(data);
     } else if (update && isEmptyObject(errors)) {
+      // data.cantDelete = true;
+
       HandleUpdate(data);
     }
   };
@@ -580,11 +583,13 @@ const OALeaves = () => {
                             message: "Please enter valid carry over",
                           },
                           validate: (fieldValue) => {
-                            return (
-                              (!isNaN(parseFloat(fieldValue)) &&
-                                isFinite(fieldValue)) ||
-                              "Must be a number "
-                            );
+                            if (fieldValue) {
+                              return (
+                                (!isNaN(parseFloat(fieldValue)) &&
+                                  isFinite(fieldValue)) ||
+                                "Must be a number "
+                              );
+                            }
                           },
                         })}
                         type="text"
@@ -800,23 +805,23 @@ const OALeaves = () => {
                                     src="/images/icons/Menu Dots.svg "
                                     style={{ cursor: "grab" }}
                                   />
-                                  {data.order}
+                                  {data.order || " - "}
                                 </MenuIconDiv>
                               </TableCell>
                               <TableCell sx={CellStyle} align="left">
                                 {" "}
-                                {data.name}{" "}
+                                {data.name || " - "}{" "}
                               </TableCell>
                               <TableCell sx={CellStyle2} align="left">
                                 {" "}
-                                {data.description}{" "}
+                                {data.description || " - "}{" "}
                               </TableCell>
                               {userType === ROLES.SUPER_ADMIN ? (
                                 " "
                               ) : (
                                 <TableCell sx={CellStyle} align="left">
                                   {" "}
-                                  {data.maxCarryOver}{" "}
+                                  {data.maxCarryOver || " - "}{" "}
                                 </TableCell>
                               )}
                               {userType === ROLES.SUPER_ADMIN ? (

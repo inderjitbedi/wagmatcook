@@ -35,8 +35,10 @@ const ManagerEmployeeSideBar = (props) => {
     color: #5c5c5c;
     font-size: 1.4rem;
     font-weight: 600;
-    line-height: 0rem;
+    line-height: 1.6rem;
     cursor: pointer;
+    margin: 0rem;
+
     @media only screen and (max-width: 600px) {
       width: max-content;
       /* text-decoration-line: underline; */

@@ -85,26 +85,27 @@ export default function VerifyUser() {
         <Grid item xs={3}>
           <div className="sidebar">
             <div className="content-box">
-              <div className="logo">Wagmatcook</div>
+              <div className="logo">Your Community Portal</div>
               <h4 className="mt-3">
-                Communicate to Employees via Feeds, SMS, Email
+                Access your employee and organizational information in one
+                location!
               </h4>
               <p>
-                Welcome to our website! We hope it provides you with a good
-                perspective about our community. Better yet, come visit us and
-                the experiences we are willing to share with you.
+                Welcome to your employee portal. Here you will be access all
+                your employment related information and organization documents
+                for greater information sharing.
               </p>
             </div>
             <div className="">
-              <img
+              {/* <img
                 src="../assets/login-image.svg"
                 alt="background-img"
                 width="100%"
-              />
+              /> */}
             </div>
           </div>
         </Grid>
-        <Grid item xs={9} >
+        <Grid item xs={9}>
           <div className="signup-form mt-8  mb-250">
             <h1>Check your inbox!</h1>
             <p className="gray-text">
@@ -113,7 +114,9 @@ export default function VerifyUser() {
             </p>
             <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mt: 1 }}>
-                <InputLabel>Temporary password <span className="astrick">*</span></InputLabel>
+                <InputLabel>
+                  Temporary password <span className="astrick">*</span>
+                </InputLabel>
                 <TextField
                   margin="normal"
                   required
@@ -133,25 +136,25 @@ export default function VerifyUser() {
                 </Button>
               </Box>
             </form>
-          
-          </div>  <Stack sx={{ width: "100%" }} spacing={2}>
-              <Alert severity="info">
-                Didn’t receive an email?
-                <div className="d-flex dir-row align-center">
-                  <p>
-                    If you can’t find the email in your inbox or spam folder,
-                    please click below and we will send you a new one. Button
-                  </p>
-                  <Button
-                    type="button"
-                    variant="contained"
-                    onClick={resendTempPassword}
-                  >
-                    Resend Email
-                  </Button>
-                </div>
-              </Alert>
-            </Stack>
+          </div>{" "}
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="info">
+              Didn’t receive an email?
+              <div className="d-flex dir-row align-center">
+                <p>
+                  If you can’t find the email in your inbox or spam folder,
+                  please click below and we will send you a new one. Button
+                </p>
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={resendTempPassword}
+                >
+                  Resend Email
+                </Button>
+              </div>
+            </Alert>
+          </Stack>
         </Grid>
       </Grid>
     </React.Fragment>

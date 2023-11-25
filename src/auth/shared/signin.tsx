@@ -85,22 +85,23 @@ export default function SignIn() {
         <Grid item xs={3}>
           <div className="sidebar">
             <div className="content-box">
-              <div className="logo">Wagmatcook</div>
+              <div className="logo">Your Community Portal</div>
               <h4 className="mt-6">
-                Communicate to Employees via Feeds, SMS, Email
+                Access your employee and organizational information in one
+                location!
               </h4>
               <p>
-                Welcome to our website! We hope it provides you with a good
-                perspective about our community. Better yet, come visit us and
-                the experiences we are willing to share with you.
+                Welcome to your employee portal. Here you will be access all
+                your employment related information and organization documents
+                for greater information sharing.
               </p>
             </div>
             <div className="">
-              <img
+              {/* <img
                 src="../assets/solar-bg.png"
                 alt="background-img"
                 width="100%"
-              />
+              /> */}
             </div>
           </div>
         </Grid>
@@ -109,7 +110,9 @@ export default function SignIn() {
 
           <div className="signup-form mt-8">
             <h1>Sign in</h1>
-            <p className="text">Welcome to Wagmatcook Employee Management. </p>
+            <p className="text">
+              Welcome to Your Community Portal Employee Management.{" "}
+            </p>
             <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mt: 1 }}>
                 <InputLabel>

@@ -10,6 +10,23 @@ const roles = require('../enum/roles');
 
 router.post('/add', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.add);
 router.get('/list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.list);
+router.get(
+  "/list/manager",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  employeeController.listForManager
+);
+router.get(
+  "/list/BebEligible",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  employeeController.listBebEligible
+);
+router.get(
+  "/BebEligible/generatePdf",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  employeeController.generatePdf
+);
+
+
 router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.delete);
 
 
@@ -97,7 +114,11 @@ router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeCont
  *       500:
  *         description: Internal Server Error
  */
-router.put('/personal-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updatePersonalInfo);
+router.put(
+  "/personal-info/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.updatePersonalInfo
+);
 router.get('/personal-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getPersonalInfo);
 
 router.get('/header-info/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getEmployeeHeaderInfo);
@@ -112,11 +133,27 @@ router.get('/completed-by-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.M
 router.put('/benefit/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.updateBenefit);
 router.get('/benefit/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getBenefit);
 
-router.put('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateCertificates);
+router.put(
+  "/certificates/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.updateCertificates
+);
 router.get('/certificates/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getCertificates);
-router.post('/certificate/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addCertificate);
-router.put('/certificate/:id/:certificateid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateCertificate);
-router.put('/certificate/:id/delete/:certificateid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.deleteDisciplinary);
+router.post(
+  "/certificate/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.addCertificate
+);
+router.put(
+  "/certificate/:id/:certificateid",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.updateCertificate
+);
+router.put(
+  "/certificate/:id/delete/:certificateid",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.deleteCertificate
+);
 
 router.post('/type', verifyToken([roles.ORG_ADMIN]), employeeController.addType);
 router.put('/type/:id', verifyToken([roles.ORG_ADMIN]), employeeController.updateType);
@@ -133,7 +170,13 @@ router.post('/disciplinary/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.M
 router.put('/disciplinary/:id/:disciplinaryid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.updateDisciplinary);
 router.put('/disciplinary/:id/delete/:disciplinaryid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteDisciplinary);
 
-router.post('/file/upload/:type', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), upload.single('file'), handleMulterError, fileController.upload);
+router.post(
+  "/file/upload/:type",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  upload.single("file"),
+  handleMulterError,
+  fileController.upload
+);
 
 router.get('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getDocuments);
 router.post('/documents/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.addDocument);
@@ -145,6 +188,8 @@ router.post('/leave-allocation/:id', verifyToken([roles.ORG_ADMIN, roles.HR]), e
 router.put('/leave-allocation/:id/delete/:allocationid', verifyToken([roles.ORG_ADMIN, roles.HR]), employeeController.deleteLeaveAllocation);
 
 router.get('/leave-history/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveHistory);
+
+
 router.get('/leave-history/:id/:requestid', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.getLeaveHistory);
 router.post('/leave-history/:id/request', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]), employeeController.addLeaveRequest);
 router.get('/active-list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), employeeController.getActiveList);

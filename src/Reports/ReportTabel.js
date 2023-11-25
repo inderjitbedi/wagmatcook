@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -6,7 +7,27 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { RotatingLines } from "react-loader-spinner";
+import { RotatingLines, ThreeDots } from "react-loader-spinner";
+import httpClient from "../api/httpClient";
+import ROLES from "../constants/roles";
+import API_URLS from "../constants/apiUrls";
+import { toast } from "react-toastify";
+import moment from "moment";
+import Pagination from "@mui/material/Pagination";
+import { AiOutlinePrinter } from "react-icons/ai";
+
+import {
+  TabelDarkPara,
+  TabelLightPara,
+  TabelImg,
+  TabelDiv,
+  TabelParaContainer,
+} from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import {
+  PaginationDiv,
+  DisciplinaryDiv,
+  DisciplinaryHeading,
+} from "../Disciplinary/DisciplinaryStyles";
 
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -32,11 +53,90 @@ const CellStyle2 = {
   lineHeight: "1.5rem",
 };
 
-const ReportTabel = () => {
+const ReportTabel = ({ searchValue, Tabvalue }) => {
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const [userType, setUserType] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState([]);
+  const [user, setUser] = useState();
+  const [isUploading, setIsUploading] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
+  const [employeeList, setEmployeeList] = useState([]);
+
+  const GetBebEligibleEmployeeList = (user) => {
+    setIsLoading(true);
+
+    let url = API_URLS.getBebEligibleEmployeeList
+      .replace("Page", page)
+      .replace("searchValue", searchValue);
+    httpClient({
+      method: "get",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          setResult(result);
+          const filterData = result?.employees.filter(
+            (data) => data._id !== user?._id
+          );
+          setEmployeeList(filterData);
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        // console.error("Error:", error);
+        toast.error("Error creating Employee. Please try again.");
+        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const GetGeneratePdf = () => {
+    setIsUploading(true);
+    let url = API_URLS.generateBEBPdf;
+    httpClient({
+      method: "get",
+      url,
+      responseType: "arraybuffer",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          const blob = new Blob([result], { type: "application/pdf" });
+          const pdfURL = URL.createObjectURL(blob);
+          setIsUploading(false);
+
+          window.open(pdfURL, "_blank");
+        } else {
+          //toast.warn("something went wrong ");
+          setIsUploading(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating department. Please try again.");
+        setIsUploading(false);
+      });
+  };
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+      if (parsedUser) {
+        GetBebEligibleEmployeeList(parsedUser);
+      }
+    }
+  }, [page, searchValue]);
   return (
     <div>
       {" "}
@@ -60,6 +160,30 @@ const ReportTabel = () => {
         </div>
       ) : (
         <>
+          <DisciplinaryDiv>
+            <DisciplinaryHeading>BEB Eligible Employees</DisciplinaryHeading>
+
+            {isUploading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : (
+              <AiOutlinePrinter
+                onClick={() => GetGeneratePdf()}
+                style={{
+                  width: "2rem",
+                  height: "2rem",
+                  cursor: "pointer",
+                  color: "#279AF1",
+                }}
+              />
+            )}
+          </DisciplinaryDiv>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -82,28 +206,36 @@ const ReportTabel = () => {
                   >
                     Name
                   </TableCell>
+
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
                     align="left"
                   >
-                    Leave Type
+                    Employee&nbsp;Id
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
-                    Start Date
+                    Phone
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
-                    End Date
-                  </TableCell>
+                    Join&nbsp;Date
+                  </TableCell> */}
 
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "12rem" }}
+                    align="left"
+                  >
+                    Role
+                  </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -114,29 +246,77 @@ const ReportTabel = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell sx={CellStyle2} align="left">
-                    1
-                  </TableCell>
-                  <TableCell sx={CellStyle} align="left">
-                    Lalit kumar
-                  </TableCell>
-                  <TableCell sx={CellStyle2} align="left">
-                    Vacations
-                  </TableCell>{" "}
-                  <TableCell sx={CellStyle2} align="left">
-                    7 Dec 2023
-                  </TableCell>{" "}
-                  <TableCell sx={CellStyle2} align="left">
-                    8 Dec 2023
-                  </TableCell>{" "}
-                  <TableCell sx={CellStyle2} align="left">
-                    IT Department
-                  </TableCell>{" "}
-                </TableRow>
+                {!employeeList?.length && (
+                  <TableRow sx={{ height: "20rem" }}>
+                    <TableCell align="center" sx={CellStyle2} colSpan={7}>
+                      No employee found
+                    </TableCell>
+                  </TableRow>
+                )}
+                {employeeList?.map((data, index) => (
+                  <TableRow>
+                    <TableCell sx={CellStyle2} align="left">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell sx={CellStyle} align="left">
+                      <TabelDiv>
+                        {/* <TabelImg
+                          src={
+                            data.photoInfo && data.photoInfo.length
+                              ? API_URL + data.photoInfo[0]?.path
+                              : "/images/User.jpg"
+                          }
+                        /> */}
+                        <TabelParaContainer>
+                          <TabelDarkPara>
+                            {data.personalInfo?.firstName}{" "}
+                            {data.personalInfo?.lastName}
+                          </TabelDarkPara>
+                          {/* <TabelLightPara style={{ textTransform: "none" }}>
+                            {data.email || " - "}
+                          </TabelLightPara> */}
+                        </TabelParaContainer>
+                      </TabelDiv>
+                    </TableCell>
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.personalInfo.employeeId || " - "}
+                    </TableCell>{" "}
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.personalInfo.homePhone || " - "}
+                    </TableCell>
+                    {/* <TableCell sx={CellStyle2} align="left">
+                      {data.positions[0]?.startDate
+                        ? moment
+                            .utc(data.positions[0]?.startDate)
+                            .format("D MMM, YYYY")
+                        : " - "}
+                    </TableCell>{" "} */}
+                    <TableCell sx={CellStyle2} align="left">
+                      {(data.role === ROLES.EMPLOYEE
+                        ? "USER"
+                        : data.role === ROLES.HR
+                        ? " HR"
+                        : data.role) || " - "}
+                    </TableCell>{" "}
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.departmentInfo?.name}
+                    </TableCell>{" "}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
         </>
       )}
     </div>

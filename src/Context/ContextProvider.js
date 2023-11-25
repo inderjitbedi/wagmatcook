@@ -10,6 +10,7 @@ export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [employeeId, setEmployeeId] = useState(null);
   const [refresh, setRefresh] = useState(false);
+  const [filter, setFilter] = useState("");
   useEffect(() => {
     let userData = localStorage.getItem("user");
     if (userData) {
@@ -32,6 +33,7 @@ export const ContextProvider = ({ children }) => {
     setHeaderData([]);
     setGlobalNotificationCount([]);
     setUser(null);
+    setFilter("")
   };
   const GetHeadersData = (id) => {
     // setIsLoading(true);
@@ -81,6 +83,8 @@ export const ContextProvider = ({ children }) => {
         clearContextData,
         setRefresh,
         setUser,
+        setFilter,
+        filter,
       }}
     >
       {children}

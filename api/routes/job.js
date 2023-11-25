@@ -9,6 +9,12 @@ router.put('/update/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]
 router.put('/delete/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), jobController.delete);
 router.get('/list', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), jobController.list);
 router.get('/detail/:id', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), jobController.detail);
+router.get(
+  "/generateJobPDF/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  jobController.generatePdf
+);
+
 
 
 router.post('/:jobid/applicant/create', verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]), jobController.createApplicant);
