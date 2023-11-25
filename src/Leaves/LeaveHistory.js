@@ -551,9 +551,9 @@ const LeaveHistory = () => {
           <DisciplinaryDiv>
             <DisciplinaryHeading> Leave History</DisciplinaryHeading>
             <FlexContaier>
-              <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
+              {/* <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
                 Add Lieu Time
-              </ButtonBlue>
+              </ButtonBlue> */}
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
                 Add New
               </ButtonBlue>

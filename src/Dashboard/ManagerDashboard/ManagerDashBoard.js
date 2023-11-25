@@ -49,8 +49,7 @@ const ManagerDashBoard = () => {
   const [dashboardData, setDashboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState();
-
-
+  const [greeting, setGreeting] = useState("");
   const [anchorEl, setAnchorEl] = useState(false);
   const [Announcements, setAnnouncements] = useState([]);
   const [result, setResult] = useState([]);
@@ -146,6 +145,23 @@ const ManagerDashBoard = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
+    function getGreeting() {
+      const currentTime = new Date();
+      const currentHour = currentTime.getHours();
+
+      if (currentHour >= 5 && currentHour < 12) {
+        return "Good Morning";
+      } else if (currentHour >= 12 && currentHour < 17) {
+        return "Good Afternoon";
+      } else if (currentHour >= 17 && currentHour < 24) {
+        return "Good Evening";
+      } else {
+        return "Good Night";
+      }
+    }
+
+    // Set greeting when component mounts
+    setGreeting(getGreeting());
   }, []);
 
   return (
@@ -172,7 +188,7 @@ const ManagerDashBoard = () => {
         <>
           <CommenDashHeader onSearch={HandleSearchCahnge} text="Dashboard" />
 
-          <Heading_24> Good Evening</Heading_24>
+          <Heading_24> {greeting}</Heading_24>
           <CardContainer>
             <FlexColContainer>
               {userType === ROLES.EMPLOYEE ? (
@@ -347,7 +363,18 @@ const ManagerDashBoard = () => {
             <FlexColContainer>
               <CardBody>
                 <CardHeading>Upcoming Events</CardHeading>
-                {array5.map((data) => (
+                {!dashboardData?.upcoming?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No upcoming events </CardSubHeading>
+                  </div>
+                )}
+                {/* {array5.map((data) => (
                   <CardList style={{ border: "none", paddingBottom: "8px" }}>
                     <FlexColumn style={{ gap: "8px" }}>
                       <CardSubHeading>Dianne Russel</CardSubHeading>
@@ -359,7 +386,7 @@ const ManagerDashBoard = () => {
                       <Birthday> Birthday</Birthday>
                     )}
                   </CardList>
-                ))}
+                ))} */}
               </CardBody>
             </FlexColContainer>
             <FlexColContainer>
