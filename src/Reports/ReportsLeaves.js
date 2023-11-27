@@ -418,13 +418,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                   >
                     Leave Type
                   </TableCell>
-                  <TableCell
-                    sx={CellHeadStyles}
-                    style={{ minWidth: "4rem" }}
-                    align="left"
-                  >
-                    Hours
-                  </TableCell>
+
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
@@ -439,7 +433,13 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                   >
                     End Date
                   </TableCell>
-
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "4rem" }}
+                    align="left"
+                  >
+                    Hours
+                  </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -487,9 +487,6 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                       {data?.leaveType?.name || " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
-                      {data?.hours || " - "}
-                    </TableCell>{" "}
-                    <TableCell sx={CellStyle2} align="left">
                       {data?.from
                         ? moment.utc(data.from).format("D MMM, YYYY")
                         : " - "}
@@ -498,6 +495,9 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                       {data?.to
                         ? moment.utc(data.to).format("D MMM, YYYY")
                         : " - "}
+                    </TableCell>{" "}
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.hours || " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
                       {data?.departmentsData?.name || " - "}

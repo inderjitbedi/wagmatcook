@@ -548,6 +548,8 @@ const templates = {
             <th>Leave Type</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Hours</th>
+
             <th>Department</th>
         
           </tr>
@@ -578,12 +580,16 @@ const templates = {
             <td>
             ${data?.leaveType?.name}
             </td>
+            
             <td>   ${
               data?.from ? moment.utc(data?.from).format("MMM DD yyyy") : " - "
             }</td>
             <td>  ${
               data?.to ? moment.utc(data?.to).format("MMM DD yyyy") : " - "
             }</td>
+             <td>
+            ${data?.hours}
+            </td>
               
               <td>${data?.departmentsData?.name} </td>
           </tr>
