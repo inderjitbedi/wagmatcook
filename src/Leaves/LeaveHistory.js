@@ -17,6 +17,8 @@ import API_URLS from "../constants/apiUrls";
 import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
+import Pagination from "@mui/material/Pagination";
+
 import {
   MainBodyContainer,
   PersonalInfo,
@@ -63,6 +65,7 @@ import {
   DisciplinaryDiv,
   DisciplinaryHeading,
   FlexContaier,
+  PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 const CellStyle = {
   color: "#8F9BB3",
@@ -141,7 +144,10 @@ const LeaveHistory = () => {
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [isAccount, setIsAccount] = useState(false);
-
+  const [page, setPage] = useState(1);
+  const HandleChangePage = (event, value) => {
+    setPage(value);
+  };
   const [open, setOpen] = useState(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -385,7 +391,10 @@ const LeaveHistory = () => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       // const trimid = employeeid?.trim();
-      let url = API_URLS.getLeaveHistory.replace(":employeeid", user?._id);
+      let url = API_URLS.getLeaveHistory
+        .replace(":employeeid", user?._id)
+        .replace("Page", page)
+        .replace("searchValue", searchValue);
       httpClient({
         method: "get",
         url,
@@ -458,8 +467,6 @@ const LeaveHistory = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
     }
-  }, []);
-  useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
@@ -470,17 +477,23 @@ const LeaveHistory = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-
+  }, []);
+  useEffect(() => {
     if (user) {
       Promise.all([
         GetReportList(),
         GetLeaveAlloaction(),
-        GetLeaveHistory(),
         GetLeaveAlloactionBalance(),
         GetLeaveTypesList(),
       ]);
     }
-  }, [user, searchValue]);
+  }, [user]);
+  useEffect(() => {
+    if (user) {
+      Promise.all([GetLeaveHistory()]);
+    }
+  }, [user, searchValue, page]);
+
   return (
     <>
       {isLoading ? (
@@ -687,6 +700,17 @@ const LeaveHistory = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          {result?.totalPages > 1 && (
+            <PaginationDiv>
+              <Pagination
+                count={result?.totalPages}
+                variant="outlined"
+                shape="rounded"
+                page={page}
+                onChange={HandleChangePage}
+              />
+            </PaginationDiv>
+          )}
           {/* modal applying leaves  */}
           <Modal
             open={open}

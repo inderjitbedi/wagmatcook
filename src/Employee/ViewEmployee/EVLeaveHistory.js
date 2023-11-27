@@ -486,7 +486,8 @@ const EVLeaveHistory = () => {
       // const trimid = employeeid?.trim();
       let url = API_URLS.getLeaveHistory
         .replace(":employeeid", employeeid)
-        .replace("Page", page);
+        .replace("Page", page)
+        .replace("searchValue", searchValue);
       httpClient({
         method: "get",
         url,

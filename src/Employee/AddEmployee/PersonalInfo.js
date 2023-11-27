@@ -730,6 +730,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     </InputLabel>
                     <Input
                       type="date"
+                      disabled={isEdit}
                       {...register("dob", {
                         required: {
                           value: true,
@@ -768,6 +769,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           {...field}
                           type="text"
                           name="sin"
+                          disabled={isEdit}
                           defaultValue={null}
                           style={{ ...inputStyles }}
                           mask="999-999-999"

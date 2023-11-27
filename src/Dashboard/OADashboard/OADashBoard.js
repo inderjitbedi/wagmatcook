@@ -512,7 +512,7 @@ const OADashBoard = ({ screenWidth }) => {
                         }
                       />
                       <CardLeavesDiv>
-                        <MainCardPara>
+                        <MainCardPara style={{ margin: "0px" }}>
                           {" "}
                           {[
                             data.personalInfo[0]?.firstName,
@@ -568,7 +568,9 @@ const OADashBoard = ({ screenWidth }) => {
                 {leavesData?.leaveTypes.map((data) => (
                   <CardLeavesList>
                     <CardLeavesDiv style={{ width: "48%" }}>
-                      <MainCardPara>{data.name}</MainCardPara>
+                      <MainCardPara style={{ margin: "0px" }}>
+                        {data.name}
+                      </MainCardPara>
                       <MainCardParaLight>
                         {data.description
                           ? data.description.length > 45

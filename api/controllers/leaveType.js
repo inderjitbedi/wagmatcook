@@ -120,7 +120,7 @@ const leaveTypeController = {
         isDeleted: false,
         isActive: true,
         organization: req.organization?._id || null,
-        cantDelete: false,
+        // cantDelete: false,
       };
 
       if (req.query.searchKey) {
@@ -134,6 +134,7 @@ const leaveTypeController = {
         employee: req.params.employeeid,
         isDeleted: false,
       }).distinct("leaveType");
+      console.log("this the already alloated leave types", existingLeaveTypes);
       if (existingLeaveTypes && existingLeaveTypes.length) {
         filters._id = { $nin: existingLeaveTypes };
       }

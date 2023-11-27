@@ -215,7 +215,7 @@ export const CardLeavesList = styled.div`
 export const CardLeavesDiv = styled.div`
   display: flex;
   flex-direction: column;
-  /* gap: 4px; */
+  gap: 4px;
     @media only screen and (max-width:600px) {
    width: 80% !important;
   }

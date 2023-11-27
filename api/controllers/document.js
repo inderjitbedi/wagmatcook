@@ -4,7 +4,7 @@ const DocumentTags = require("../models/documentTags");
 const DocumentVersion = require("../models/documentVersions");
 const fileController = require("../controllers/file");
 const File = require("../models/file");
-
+const mongoose = require("mongoose");
 const documentController = {
   async create(req, res) {
     try {
@@ -221,7 +221,11 @@ const documentController = {
       }
 
       if (req.query.keywords) {
-        filters["tags"] = { $in: req.query.keywords };
+        // Convert the keywords string to an array of ObjectIds
+        const keywordIds = req.query.keywords
+          .split(",")
+          .map((keyword) => new mongoose.Types.ObjectId(keyword.trim()));
+        filters["tags"] = { $in: keywordIds };
       }
       const document = await Document.find(filters)
         .populate([
