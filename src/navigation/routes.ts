@@ -180,15 +180,7 @@ const Routes: any = [
         index: true,
         meta: { allowedRoles: [ROLES.ORG_ADMIN] },
       },
-      {
-        component: Reports,
-        path: "reports",
-        title: "Reports",
-        to: "/",
-        type: "private",
-        index: true,
-        meta: { allowedRoles: [ROLES.ORG_ADMIN] },
-      },
+
       {
         component: Offboarding,
         path: "offboarding",
@@ -899,6 +891,15 @@ const Routes: any = [
         component: TaskView,
         path: "tasks/details/:taskid",
         title: "Tasks View",
+        to: "/",
+        type: "private",
+        index: true,
+        meta: { allowedRoles: [ROLES.HR] },
+      },
+      {
+        component: Reports,
+        path: "reports",
+        title: "Reports",
         to: "/",
         type: "private",
         index: true,

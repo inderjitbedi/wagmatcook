@@ -186,7 +186,33 @@ const employeeController = {
 
       let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
 
-      console.log(req.user._id);
+      const selectedEmployeeInfo = await User.aggregate([
+        {
+          $match: { _id: req.user._id },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $match: { "positions.isPrimary": true, "positions.isDeleted": false },
+        },
+        {
+          $project: {
+            primaryDepartment: "$positions.department",
+          },
+        },
+        {
+          $unwind: "$primaryDepartment",
+        },
+      ]);
+
+      const primaryDepartmentId = selectedEmployeeInfo[0]?.primaryDepartment;
+
       if (req.query.searchKey) {
         filters.$or = [
           { name: { $regex: req.query.searchKey, $options: "i" } },
@@ -212,6 +238,11 @@ const employeeController = {
           $match: filters,
         },
         {
+          $match: {
+            _id: { $ne: req.user._id }, // Exclude the selected user
+          },
+        },
+        {
           $lookup: {
             from: "userorganizations",
             localField: "_id",
@@ -235,26 +266,6 @@ const employeeController = {
         {
           $unwind: "$personalInfo",
         },
-        // {
-        //     $match: {
-        //         $or: [
-        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
-        //         ],
-        //     },
-        // },
-
         {
           $lookup: {
             from: "employeejobdetails",
@@ -269,6 +280,17 @@ const employeeController = {
             localField: "_id",
             foreignField: "employee",
             as: "positions",
+          },
+        },
+        {
+          $match: {
+            $or: [
+              {
+                "positions.isPrimary": true,
+                "positions.reportsTo": req.user._id,
+              },
+              { "positions.department": primaryDepartmentId },
+            ],
           },
         },
         {
@@ -291,37 +313,77 @@ const employeeController = {
           $limit: limit,
         },
       ]);
-      const filteredEmployees = employees.filter((employee) => {
-        return employee.positions.some(
-          (position) =>
-            position.reportsTo.toString() === req.user._id.toString()
-        );
-      });
-      let totalEmployees = await UserOrganization.aggregate([
+
+      let totalEmployees = await User.aggregate([
         {
-          $lookup: {
-            from: "users",
-            localField: "user",
-            foreignField: "_id",
-            as: "userData",
-          },
-        },
-        {
-          $unwind: "$userData",
+          $match: filters,
         },
         {
           $match: {
-            "userData.isActive": true,
-            "userData.isDeleted": false,
-            organization: req.organization?._id || null,
-            "userData.role": { $ne: roles.ORG_ADMIN },
+            _id: { $ne: req.user._id }, // Exclude the selected user
           },
         },
-      ]).count("user");
-      totalEmployees = totalEmployees.length > 0 ? totalEmployees[0].user : 0;
+        {
+          $lookup: {
+            from: "userorganizations",
+            localField: "_id",
+            foreignField: "user",
+            as: "userOrganizations",
+          },
+        },
+        {
+          $match: {
+            "userOrganizations.organization": req.organization?._id || null,
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepersonalinfos",
+            localField: "_id",
+            foreignField: "employee",
+            as: "personalInfo",
+          },
+        },
+        {
+          $unwind: "$personalInfo",
+        },
+        {
+          $lookup: {
+            from: "employeejobdetails",
+            localField: "_id",
+            foreignField: "employee",
+            as: "jobDetails",
+          },
+        },
+        {
+          $lookup: {
+            from: "employeepositionhistories",
+            localField: "_id",
+            foreignField: "employee",
+            as: "positions",
+          },
+        },
+        {
+          $match: {
+            $or: [
+              {
+                "positions.isPrimary": true,
+                "positions.reportsTo": req.user._id,
+              },
+
+              {
+                "positions.isPrimary": true,
+                "positions.department": primaryDepartmentId,
+              },
+            ],
+          },
+        },
+      ]);
+
+      totalEmployees = totalEmployees.length;
       const totalPages = Math.ceil(totalEmployees / req.query.limit);
       res.status(200).json({
-        employees: filteredEmployees,
+        employees,
         totalEmployees,
         currentPage: page,
         totalPages,

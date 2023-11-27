@@ -651,41 +651,44 @@ const CommenDashHeader = ({ onSearch, text }) => {
 
                     <NotificationFlexCol
                       onClick={() => {
-                        if (userType === ROLES.ORG_ADMIN) {
-                          if (data.type.includes("TASK")) {
-                            Navigate(
-                              `/organization-admin/tasks/details/${data.dataId}`
-                            );
-                          }
-                        } else if (userType === ROLES.Hr) {
-                          if (data.type.includes("TASK")) {
-                            Navigate(
-                              `/hr-management/tasks/details//${data.dataId}`
-                            );
-                          } else if (data.type.includes("LEAVE")) {
-                            Navigate(
-                              `/hr-management/request/${data.sender._id}/${data.dataId}`
-                            );
-                          }
-                        } else if (userType === ROLES.MANAGER) {
-                          if (data.type.includes("TASK")) {
-                            Navigate(
-                              `/manager-management/tasks/details/${data.dataId}`
-                            );
-                          } else if (data.type.includes("LEAVE")) {
-                            Navigate(
-                              `/manager-management/request/${data.sender._id}/${data.dataId}`
-                            );
-                          }
-                        } else if (userType === ROLES.EMPLOYEE) {
-                          if (data.type.includes("TASK")) {
-                            Navigate(
-                              `/user-management/tasks/details/${data.dataId}`
-                            );
-                          } else if (data.type.includes("LEAVE")) {
-                            Navigate(`/user-management/leaves/${user._id}`);
-                          }
+                        if (data.dataId) {
+                           if (userType === ROLES.ORG_ADMIN) {
+                             if (data.type.includes("TASK")) {
+                               Navigate(
+                                 `/organization-admin/tasks/details/${data.dataId}`
+                               );
+                             }
+                           } else if (userType === ROLES.Hr) {
+                             if (data.type.includes("TASK")) {
+                               Navigate(
+                                 `/hr-management/tasks/details//${data.dataId}`
+                               );
+                             } else if (data.type.includes("LEAVE")) {
+                               Navigate(
+                                 `/hr-management/request/${data.sender._id}/${data.dataId}`
+                               );
+                             }
+                           } else if (userType === ROLES.MANAGER) {
+                             if (data.type.includes("TASK")) {
+                               Navigate(
+                                 `/manager-management/tasks/details/${data.dataId}`
+                               );
+                             } else if (data.type.includes("LEAVE")) {
+                               Navigate(
+                                 `/manager-management/request/${data.sender._id}/${data.dataId}`
+                               );
+                             }
+                           } else if (userType === ROLES.EMPLOYEE) {
+                             if (data.type.includes("TASK")) {
+                               Navigate(
+                                 `/user-management/tasks/details/${data.dataId}`
+                               );
+                             } else if (data.type.includes("LEAVE")) {
+                               Navigate(`/user-management/leaves/${user._id}`);
+                             }
+                           }
                         }
+                       
                       }}
                       style={{ cursor: "pointer" }}
                     >

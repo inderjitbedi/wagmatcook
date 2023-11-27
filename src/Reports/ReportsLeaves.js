@@ -325,7 +325,7 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
           </FilterContainer>
         </FilterDiv>
         <FlexColumn style={{ width: "max-content", alignItems: "flex-end" }}>
-          <div style={{ marginBottom: "1rem",marginRight:"1rem"}}>
+          <div style={{ marginBottom: "1rem", marginRight: "1rem" }}>
             {isUploading ? (
               <ThreeDots
                 height="8"
@@ -420,6 +420,13 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
+                    style={{ minWidth: "4rem" }}
+                    align="left"
+                  >
+                    Hours
+                  </TableCell>
+                  <TableCell
+                    sx={CellHeadStyles}
                     style={{ minWidth: "10rem" }}
                     align="left"
                   >
@@ -478,6 +485,9 @@ const ReportsLeaves = ({ searchValue, Tabvalue, count, onObjectPassed }) => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data?.leaveType?.name || " - "}
+                    </TableCell>{" "}
+                    <TableCell sx={CellStyle2} align="left">
+                      {data?.hours || " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">
                       {data?.from
