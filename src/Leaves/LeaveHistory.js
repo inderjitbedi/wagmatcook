@@ -161,7 +161,7 @@ const LeaveHistory = () => {
     reset({});
     setOpen(false);
     setDetailsLength(500);
-    setLiueTime(false);
+    setLieuTime(false);
   };
   const [user, setUser] = useState();
 
@@ -176,7 +176,7 @@ const LeaveHistory = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
-  const [liueTime, setLiueTime] = useState(false);
+  const [lieuTime, setLieuTime] = useState(false);
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
   const [lieuId, setLieuId] = useState();
   const handleShowMoreClick = () => {
@@ -229,14 +229,14 @@ const LeaveHistory = () => {
   };
   const HandleOpenAddNewAction = () => {
     handleOpen();
-    setLiueTime(false);
+    setLieuTime(false);
     reset({});
     clearErrors();
     setDetailsLength(500);
   };
-  const HandleOpenAddNewActionLiue = () => {
+  const HandleOpenAddNewActionLieu = () => {
     handleOpen();
-    setLiueTime(true);
+    setLieuTime(true);
     reset({});
     clearErrors();
     setDetailsLength(500);
@@ -354,7 +354,7 @@ const LeaveHistory = () => {
       ":employeeid",
       user?._id
     );
-    if (liueTime) {
+    if (lieuTime) {
       url += `&lieuTime=${true}`;
       data.leaveType = lieuId._id;
     }
@@ -564,9 +564,9 @@ const LeaveHistory = () => {
           <DisciplinaryDiv>
             <DisciplinaryHeading> Leave History</DisciplinaryHeading>
             <FlexContaier>
-              {/* <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
+              <ButtonBlue onClick={() => HandleOpenAddNewActionLieu()}>
                 Add Lieu Time
-              </ButtonBlue> */}
+              </ButtonBlue>
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
                 Add New
               </ButtonBlue>
@@ -678,8 +678,8 @@ const LeaveHistory = () => {
                           data.status === "PENDING"
                             ? PendingStyle
                             : data.status === "APPROVED"
-                            ? ApprovedStyles
-                            : RejectedStyles
+                              ? ApprovedStyles
+                              : RejectedStyles
                         }
                       >
                         {" "}
@@ -747,8 +747,8 @@ const LeaveHistory = () => {
                   <ModalContainer>
                     <ModalHeading>
                       {!update
-                        ? liueTime
-                          ? "Applying for Liue Time"
+                        ? lieuTime
+                          ? "Applying for Lieu Time"
                           : "Applying for Leave"
                         : "View Leave"}
                     </ModalHeading>
@@ -856,7 +856,7 @@ const LeaveHistory = () => {
                             Leave Type {update ? " " : <InputSpan>*</InputSpan>}{" "}
                           </InputLabel>
 
-                          {liueTime ? (
+                          {lieuTime ? (
                             <Input
                               type="text"
                               {...register("leaveType", {})}
@@ -994,8 +994,8 @@ const LeaveHistory = () => {
                             isSatus === "PENDING"
                               ? PendingStyle
                               : isSatus === "APPROVED"
-                              ? ApprovedStyles
-                              : RejectedStyles
+                                ? ApprovedStyles
+                                : RejectedStyles
                             // isSatus === "PENDING"
                             //   ? PendingStyle
                             //   : ApprovedStyles

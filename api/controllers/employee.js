@@ -2128,15 +2128,16 @@ const employeeController = {
       const user = await User.findOne({ _id: req.params.id }).populate(
         "personalInfo"
       );
-      const isLiueTime = req.query.lieuTime;
-      console.log("this is value in prams ", isLiueTime);
+      const isLieuTime = req.query.lieuTime;
+      console.log("this is value in prams ", isLieuTime);
       if (!user) {
         return res
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
+      console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
-      if (isLiueTime) {
+      if (isLieuTime) {
         // If isLieuTime is true, add a leave in leave allocation with name 'lieu time'
 
         // Add the requested hours to leave allocation
@@ -2154,7 +2155,6 @@ const employeeController = {
         let lieuRequest = new EmployeeLeaveHistory({
           leaveType: lieuAllocation.leaveType._id,
           hours: requestedHours,
-
           employee: req.params.id,
           status: leaveStatus.PENDING,
         });
