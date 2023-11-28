@@ -22,7 +22,9 @@ import httpClient from "../api/httpClient";
 import { AiOutlinePrinter } from "react-icons/ai";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-
+import { BiSortAlt2 } from "react-icons/bi";
+import { FaLongArrowAltDown } from "react-icons/fa";
+import { FaLongArrowAltUp } from "react-icons/fa";
 import {
   DisciplinaryDiv,
   DisciplinaryHeading,
@@ -53,6 +55,7 @@ import {
   LightPara,
   EditButton,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
+import { FlexContaier } from "../Dashboard/OADashboard/OADashBoardStyles";
 
 const UnderlineHoverEffect = styled.div`
   cursor: pointer;
@@ -102,6 +105,12 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
+const SortArrow = {
+  fontSize: "2rem",
+};
+const UPDownArrow = {
+  color: "#222B45",
+};
 const JobPosting = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -122,10 +131,32 @@ const JobPosting = () => {
   const [departmentData, setDepartmentData] = useState([]);
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [sort, setSort] = useState(false);
 
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
+  // sorting variables
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  const HandleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder((prevOrder) => {
+        switch (prevOrder) {
+          case "asc":
+            return "desc";
+          case "desc":
+            return "";
+          default:
+            return "asc"; // Start with ascending if unsorted
+        }
+      });
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
+  console.log("sorting variables ", sortBy, sortOrder);
   const {
     register,
     control,
@@ -237,9 +268,20 @@ const JobPosting = () => {
   };
   const GetJobPostings = () => {
     setIsLoading(true);
+    const sortField =
+      sortBy === "title"
+        ? "title"
+        : sortBy === "department"
+        ? "department.name"
+        : "closingDate";
+
+    const sortOrders = sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
     let url = API_URLS.listJobs
       .replace("Page", page)
-      .replace("searchValue", searchValue);
+      .replace("searchValue", searchValue)
+      .replace("Sort", sort);
+    url += `&sortBy=${sortField}&sortOrder=${sortOrders}`;
+
     httpClient({
       method: "get",
       url,
@@ -427,7 +469,7 @@ const JobPosting = () => {
   };
   useEffect(() => {
     GetJobPostings();
-  }, [page, searchValue]);
+  }, [page, searchValue, sortBy, sortOrder, sort]);
   useEffect(() => {
     GetDepartments();
 
@@ -439,23 +481,47 @@ const JobPosting = () => {
       setUserType(ROLES.EMPLOYEE);
     }
   }, []);
-
+  const HandleSortActive = () => {
+    setSort(!sort);
+  };
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text={"Staffing"} />
       <DisciplinaryDiv>
-        <DisciplinaryHeading>All Jobs</DisciplinaryHeading>
-        {userType === ROLES.MANAGER ? (
-          " "
-        ) : (
+        <DisciplinaryHeading>
+          {" "}
+          {sort ? "Active" : "Inactive"} Jobs
+        </DisciplinaryHeading>
+        <FlexContaier>
           <AddNewButton
-            onClick={() => {
-              HandleOpenAddNewAction();
-            }}
+            onClick={() => HandleSortActive(true)}
+            disabled={isLoading}
           >
-            Add New
+            {isLoading ? (
+              <ThreeDots
+                height="8"
+                width="80"
+                radius="9"
+                color="#279AF1"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            ) : (
+              "View " + (sort ? "Inactive" : "Active")
+            )}
           </AddNewButton>
-        )}
+          {userType === ROLES.MANAGER ? (
+            " "
+          ) : (
+            <AddNewButton
+              onClick={() => {
+                HandleOpenAddNewAction();
+              }}
+            >
+              Add New
+            </AddNewButton>
+          )}
+        </FlexContaier>
 
         <Modal
           open={open}
@@ -733,10 +799,32 @@ const JobPosting = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "12rem" }}
                     align="left"
+                    style={{ width: "12rem", cursor: "pointer" }}
+                    onClick={() => HandleSort("title")}
                   >
-                    Job Title
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "title"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        Job Title
+                      </span>
+                      {result?.sortBy === "title" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   {/* <TableCell
                     sx={CellHeadStyles}
@@ -747,10 +835,32 @@ const JobPosting = () => {
                   </TableCell> */}
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "9rem" }}
+                    style={{ minWidth: "9rem", cursor: "pointer" }}
                     align="left"
+                    onClick={() => HandleSort("department")}
                   >
-                    Department
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "department.name"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        Department
+                      </span>
+                      {result?.sortBy === "department.name" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -761,10 +871,32 @@ const JobPosting = () => {
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
-                    style={{ minWidth: "6rem" }}
+                    style={{ minWidth: "6rem", cursor: "pointer" }}
                     align="left"
+                    onClick={() => HandleSort("closingDate")}
                   >
-                    Closing&nbsp;Date
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "closingDate"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        Closing&nbsp;Date
+                      </span>
+                      {result?.sortBy === "closingDate" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -795,7 +927,13 @@ const JobPosting = () => {
                   >
                     Description
                   </TableCell> */}
-
+                  <TableCell
+                    sx={CellHeadStyles}
+                    style={{ minWidth: "10rem" }}
+                    align="left"
+                  >
+                    Status
+                  </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem" }}
@@ -886,7 +1024,13 @@ const JobPosting = () => {
                     <TableCell sx={CellStyle2} align="left">
                       {data.applicants?.length || " - "}
                     </TableCell>
-
+                    <TableCell sx={CellStyle2} align="left">
+                      {data.isCompleted ? (
+                        <ApproveStyle>Active</ApproveStyle>
+                      ) : (
+                        <PendingStyle>Inactive</PendingStyle>
+                      )}
+                    </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {" "}
                       <ActionIconDiv>

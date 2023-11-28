@@ -52,6 +52,30 @@ const jobController = {
       res.status(400).json(error);
     }
   },
+  async markInactive(req, res) {
+    try {
+      let job = await Job.findOneAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        { isCompleted: !!req.body.isCompleted },
+        { new: true }
+      )
+        .populate("department")
+        .populate("file");
+
+      res.status(200).json({
+        job,
+        message:
+          "job marked as " +
+          (req.body.isCompleted ? "active" : "inactive") +
+          " successfully",
+      });
+    } catch (error) {
+      console.error("taskController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
   async detail(req, res) {
     try {
       let job = await Job.findOne({
@@ -84,11 +108,61 @@ const jobController = {
           { title: { $regex: req.query.searchKey, $options: "i" } },
         ];
       }
-      const jobs = await Job.find(filters)
-        .populate("department")
-        .populate("file")
-        .skip(startIndex)
-        .limit(limit);
+      let sortBy = req.query.sortBy || "createdAt";
+      let sortOrder = parseInt(req.query.sortOrder);
+      if (sortOrder === 0 || !sortOrder) {
+        sortBy = "createdAt";
+        sortOrder = -1;
+      }
+      // let activeSortField = "";
+      let sortOptions = {};
+      if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder;
+      }
+      console.log("this is my sort option", sortOptions);
+       if (req.query.sort) {
+         filters.isCompleted = req.query.sort === "true";
+       }
+      const jobs = await Job.aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "department",
+            foreignField: "_id",
+            as: "department",
+          },
+        },
+        {
+          $unwind: "$department",
+        },
+        {
+          $lookup: {
+            from: "files",
+            localField: "file",
+            foreignField: "_id",
+            as: "file",
+          },
+        },
+        {
+          $unwind: {
+            path: "$file",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+
+        {
+          $sort: sortOptions,
+        },
+        {
+          $skip: startIndex,
+        },
+        {
+          $limit: limit,
+        },
+      ]);
 
       const totalJobs = await Job.countDocuments(filters);
       const totalPages = Math.ceil(totalJobs / req.query.limit);
@@ -99,6 +173,8 @@ const jobController = {
         currentPage: page,
         totalPages,
         message: "Jobs fetched successfully",
+        sortBy,
+        sortOrder,
       });
     } catch (error) {
       console.error("jobController:list:error -", error);

@@ -503,6 +503,7 @@ const leaveController = {
         isDeleted: false,
         status: { $ne: leaveStatus.REJECTED },
       }).select("hours");
+
       for (const leave of leaves) {
         if (leave._id === req.params.requestid) {
           requestedHours = leave.hours;
@@ -572,7 +573,7 @@ const leaveController = {
         type: type,
         sender: req.user._id,
         receiver: req.params.id,
-        dataId: leaves._id,
+        dataId: req.params.requestid,
       });
       await notification.save();
 

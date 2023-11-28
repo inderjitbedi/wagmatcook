@@ -24,7 +24,10 @@ import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import API_URLS from "../../constants/apiUrls";
 import Pagination from "@mui/material/Pagination";
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
+import { BiSortAlt2 } from "react-icons/bi";
+import { FaLongArrowAltDown } from "react-icons/fa";
+import { FaLongArrowAltUp } from "react-icons/fa";
 import {
   DashHeader,
   DashHeaderSearch,
@@ -86,6 +89,12 @@ const Celllstyle2 = {
   fontWeight: "400",
   lineHeight: "15px",
 };
+const SortArrow = {
+  fontSize: "2rem",
+};
+const UPDownArrow = {
+  color: "#222B45",
+};
 const UnderlineHoverEffect = styled.div`
   cursor: pointer;
   display: flex;
@@ -129,6 +138,25 @@ const Employee = () => {
     clearErrors();
     setOpenWelcome(false);
   };
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  const HandleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder((prevOrder) => {
+        switch (prevOrder) {
+          case "asc":
+            return "desc";
+          case "desc":
+            return "";
+          default:
+            return "asc"; // Start with ascending if unsorted
+        }
+      });
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
   const {
     register,
     clearErrors,
@@ -149,6 +177,16 @@ const Employee = () => {
     let url = API_URLS.getEmployeeList
       .replace("Page", page)
       .replace("searchValue", searchValue);
+    const sortField =
+      sortBy === "name"
+        ? "personalInfo.firstName"
+        : sortBy === "department"
+        ? "departmentInfo.name"
+        : "role";
+
+    const sortOrders = sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
+
+    url += `&sortBy=${sortField}&sortOrder=${sortOrders}`;
     httpClient({
       method: "get",
       url,
@@ -179,6 +217,16 @@ const Employee = () => {
     let url = API_URLS.getManagerEmployeeList
       .replace("Page", page)
       .replace("searchValue", searchValue);
+    const sortField =
+      sortBy === "name"
+        ? "personalInfo.firstName"
+        : sortBy === "department"
+        ? "departmentInfo.name"
+        : "role";
+
+    const sortOrders = sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
+
+    url += `&sortBy=${sortField}&sortOrder=${sortOrders}`;
     httpClient({
       method: "get",
       url,
@@ -220,13 +268,14 @@ const Employee = () => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
+
       if (parsedUser.role == "MANAGER") {
         GetEmployeesManager(parsedUser);
       } else {
         GetEmployees(parsedUser);
       }
     }
-  }, [page, searchValue]);
+  }, [page, searchValue, sortBy, sortOrder]);
   const HandleSubmitData = (data) => {
     return data;
   };
@@ -452,10 +501,62 @@ const Employee = () => {
                     Sr.No
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "188" }}
+                    sx={{ ...CellStyle, minWidth: "8rem", cursor: "pointer" }}
                     align="left"
+                    onClick={() => HandleSort("name")}
                   >
-                    Name
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "personalInfo.firstName"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        {" "}
+                        Name
+                      </span>
+                      {result?.sortBy === "personalInfo.firstName" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell
+                    sx={{ ...CellStyle, minWidth: "10rem", cursor: "pointer" }}
+                    align="left"
+                    onClick={() => HandleSort("department")}
+                  >
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "departmentInfo.name"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        {" "}
+                        Department
+                      </span>
+                      {result?.sortBy === "departmentInfo.name" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={{ ...CellStyle, maxWidth: "84px" }}
@@ -476,10 +577,33 @@ const Employee = () => {
                     Join&nbsp;Date
                   </TableCell>
                   <TableCell
-                    sx={{ ...CellStyle, maxWidth: "105px" }}
+                    sx={{ ...CellStyle, maxWidth: "105px", cursor: "pointer" }}
                     align="left"
+                    onClick={() => HandleSort("role")}
                   >
-                    Role
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "role"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        {" "}
+                        Role
+                      </span>
+                      {result?.sortBy === "role" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell sx={{ ...CellStyle }} align="left">
                     Actions
@@ -545,6 +669,9 @@ const Employee = () => {
                       </UnderlineHoverEffect>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
+                      {data?.departmentInfo?.name || " - "}
+                    </TableCell>
+                    <TableCell align="left" sx={Celllstyle2}>
                       {data.personalInfo.employeeId || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
@@ -552,9 +679,9 @@ const Employee = () => {
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       {/* <Moment format="YYYY/MM/DD"> */}{" "}
-                      {data.positions[0]?.startDate
+                      {data.positions?.startDate
                         ? moment
-                            .utc(data.positions[0]?.startDate)
+                            .utc(data.positions?.startDate)
                             .format("D MMM, YYYY")
                         : " - "}
                       {/* </Moment> */}

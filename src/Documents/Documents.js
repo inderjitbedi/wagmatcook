@@ -24,6 +24,9 @@ import TextField from "@mui/material/TextField";
 import { WithContext as ReactTags } from "react-tag-input";
 import { DevTool } from "@hookform/devtools";
 import styled from "styled-components";
+import { BiSortAlt2 } from "react-icons/bi";
+import { FaLongArrowAltDown } from "react-icons/fa";
+import { FaLongArrowAltUp } from "react-icons/fa";
 
 import {
   DisciplinaryDiv,
@@ -100,7 +103,12 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "2rem",
 };
-
+const SortArrow = {
+  fontSize: "2rem",
+};
+const UPDownArrow = {
+  color: "#222B45",
+};
 const UnderlineHoverEffect = styled.div`
   cursor: pointer;
   display: flex;
@@ -112,20 +120,7 @@ const UnderlineHoverEffect = styled.div`
     }
   }
 `;
-const ArrowIcon = styled.span`
-  display: inline-block;
-  margin-left: 0.5rem;
-`;
 
-const SortArrowIcon = ({ ascending, descending }) => {
-  if (ascending) {
-    return <ArrowIcon>&#8593;</ArrowIcon>;
-  } else if (descending) {
-    return <ArrowIcon>&#8595;</ArrowIcon>;
-  } else {
-    return null;
-  }
-};
 const Documents = () => {
   let API_URL = process.env.REACT_APP_API_URL;
 
@@ -150,6 +145,26 @@ const Documents = () => {
 
   const HandleChangePage = (event, value) => {
     setPage(value);
+  };
+  // sorting variables
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+  const HandleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder((prevOrder) => {
+        switch (prevOrder) {
+          case "asc":
+            return "desc";
+          case "desc":
+            return "";
+          default:
+            return "asc"; // Start with ascending if unsorted
+        }
+      });
+    } else {
+      setSortBy(field);
+      setSortOrder("asc");
+    }
   };
   const {
     register,
@@ -325,7 +340,17 @@ const Documents = () => {
       if (filters?.department) {
         url += `&department=${filters.department}`;
       }
+      const sortField =
+        sortBy === "title"
+          ? "title"
+          : sortBy === "department"
+          ? "departments[0].name"
+          : "updatedAt";
 
+      const sortOrders =
+        sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
+
+      url += `&sortBy=${sortField}&sortOrder=${sortOrders}`;
       httpClient({
         method: "get",
         url,
@@ -451,7 +476,7 @@ const Documents = () => {
   };
   useEffect(() => {
     GetDocuments();
-  }, [page, searchValue]);
+  }, [page, searchValue, sortBy, sortOrder]);
   // //console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
     comma: 188,
@@ -534,6 +559,26 @@ const Documents = () => {
   const handleDepartmentChange = (event) => {
     setDepartment(event.target.value);
   };
+  const handleDelete = (i) => {
+    setKeywords(keywords.filter((tag, index) => index !== i));
+  };
+  const handleAddition = (tag) => {
+    const isTagInSuggestions = suggestions.some(
+      (suggestion) => suggestion.text === tag.text
+    );
+    if (isTagInSuggestions) {
+      setKeywords([...keywords, tag]);
+    }
+  };
+  const handleDrag = (tag, currPos, newPos) => {
+    const newTags = keywords.slice();
+
+    newTags.splice(currPos, 1);
+    newTags.splice(newPos, 0, tag);
+
+    // re-render
+    setKeywords(newTags);
+  };
   const handleKeywordsChange = (event, newValue) => {
     setSelectedKeywords(newValue);
     const selectedIds = newValue.map((item) => item.id);
@@ -541,8 +586,10 @@ const Documents = () => {
     setKeywords(selectedIds);
   };
   const handleFilterButtonClick = () => {
+    const selectedIds = keywords.map((item) => item.id);
+
     const filters = {
-      keywords: keywords,
+      keywords: selectedIds,
       department: department,
     };
 
@@ -558,76 +605,8 @@ const Documents = () => {
     };
     GetDocuments(filters);
   };
-  const areFiltersEmpty = !!(keywords || department);
-  const [sortColumns, setSortColumns] = useState([]);
-  const [sortOrders, setSortOrders] = useState({
-    title: "asc",
-    updatedAt: "asc",
-  });
-  // console.log("this is our order ", sortOrders);
-  const handleSort = (column) => {
-    setSortColumns([column]);
-    const newSortOrders = { ...sortOrders };
+  const areFiltersEmpty = !!(keywords.length || department);
 
-    if (newSortOrders[column] === "asc") {
-      newSortOrders[column] = "desc";
-    } else {
-      newSortOrders[column] = "asc";
-    }
-
-    setSortOrders(newSortOrders);
-  };
-
-  const getSortingOrder = (column) => {
-    return sortColumns.includes(column) ? sortOrders[column] : "asc";
-  };
-
-  const compareValues = (a, b, sortOrder) => {
-    if (a === undefined || a === null) {
-      return sortOrder === "asc" ? -1 : 1;
-    }
-    if (b === undefined || b === null) {
-      return sortOrder === "asc" ? 1 : -1;
-    }
-
-    if (isDate(a) && isDate(b)) {
-      const dateA = new Date(a);
-      const dateB = new Date(b);
-
-      // Compare dates
-      if (dateA < dateB) {
-        return sortOrder === "asc" ? -1 : 1;
-      }
-      if (dateA > dateB) {
-        return sortOrder === "asc" ? 1 : -1;
-      }
-      return 0;
-    }
-
-    return sortOrder === "asc" ? a.localeCompare(b) : b.localeCompare(a);
-  };
-
-  const isDate = (value) => {
-    // console.log(value);
-    return value instanceof Date || !isNaN(Date.parse(value));
-  };
-
-  // Sort the document array based on the current sorting criteria
-  const sortedDocuments = result?.document?.sort((a, b) => {
-    for (const column of sortColumns) {
-      const aValue = a[column];
-      const bValue = b[column];
-      const sortOrder = sortOrders[column];
-
-      const result = compareValues(aValue, bValue, sortOrder);
-
-      if (result !== 0) {
-        return result;
-      }
-    }
-
-    return 0;
-  });
   console.log("this the suggestions", suggestions);
   return (
     <>
@@ -947,7 +926,7 @@ const Documents = () => {
         }}
       >
         <FilterDiv style={{ alignItems: "flex-start" }}>
-          <FilterContainer>
+          <FilterContainer style={{ flex: " 0 1 35%" }}>
             <InputLabel>Department</InputLabel>
             <Select value={department} onChange={handleDepartmentChange}>
               <Option value="">Select</Option>
@@ -957,34 +936,22 @@ const Documents = () => {
               ))}
             </Select>
           </FilterContainer>
-          <FilterContainer>
+          <FilterContainer style={{ flex: " 0 1 35%" }}>
             <InputLabel>Keywords</InputLabel>
-            <Autocomplete
-              multiple
-              id="tags-standard"
-              limitTags={1}
-              filterSelectedOptions
-              value={selectedKeywords}
-              onChange={handleKeywordsChange}
-              sx={{ width: " 100% " }}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.text && `${option.text}`}
-              PaperComponent={(props) => (
-                <Paper
-                  sx={{
-                    fontSize: "1.6rem !important",
-                  }}
-                  {...props}
-                />
-              )}
-              options={suggestions}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  // inputRef={ref}
-                  placeholder={ selectedKeywords.length > 1 ?  "Add more" :"Select Keywords"}
-                />
-              )}
+            <ReactTags
+              name="completedBy"
+              tags={keywords}
+              autofocus={false}
+              suggestions={suggestions}
+              delimiters={delimiters}
+              handleDelete={handleDelete}
+              handleAddition={handleAddition}
+              handleDrag={handleDrag}
+              // handleTagClick={handleTagClick}
+              inputFieldPosition="top"
+              autocomplete
+              placeholder={keywords.length ? "Add More " : "Add"}
+              // editable
             />
           </FilterContainer>
         </FilterDiv>
@@ -1046,21 +1013,60 @@ const Documents = () => {
                     sx={CellHeadStyles}
                     style={{ minWidth: "12rem", cursor: "pointer" }}
                     align="left"
-                    onClick={() => handleSort("title")}
+                    onClick={() => HandleSort("title")}
                   >
-                    Title
-                    <SortArrowIcon
-                      ascending={sortOrders["title"] === "asc"}
-                      descending={sortOrders["title"] === "desc"}
-                    />
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "title"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        Title
+                      </span>
+                      {result?.sortBy === "title" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
                     style={{ minWidth: "15rem", cursor: "pointer" }}
                     align="left"
-                    onClick={() => handleSort("department")}
+                    onClick={() => HandleSort("department")}
                   >
-                    Department
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "departments[0].name"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        {" "}
+                        Department
+                      </span>
+                      {result?.sortBy === "departments[0].name" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -1094,13 +1100,31 @@ const Documents = () => {
                     sx={CellHeadStyles}
                     style={{ minWidth: "10rem", cursor: "pointer" }}
                     align="left"
-                    onClick={() => handleSort("updatedAt")}
+                    onClick={() => HandleSort("updatedAt")}
                   >
-                    Last Updated
-                    <SortArrowIcon
-                      ascending={sortOrders["updatedAt"] === "asc"}
-                      descending={sortOrders["updatedAt"] === "desc"}
-                    />
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span
+                        style={
+                          result?.sortBy === "updatedAt"
+                            ? result?.sortOrder
+                              ? { color: "#222B45" }
+                              : {}
+                            : {}
+                        }
+                      >
+                        {" "}
+                        Last Updated
+                      </span>
+                      {result?.sortBy === "updatedAt" ? (
+                        result?.sortOrder === 1 ? (
+                          <FaLongArrowAltUp style={UPDownArrow} />
+                        ) : (
+                          <FaLongArrowAltDown style={UPDownArrow} />
+                        )
+                      ) : (
+                        <BiSortAlt2 style={SortArrow} />
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell
                     sx={CellHeadStyles}
@@ -1120,7 +1144,7 @@ const Documents = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {sortedDocuments?.map((data, index) => (
+                {result?.document?.map((data, index) => (
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": {

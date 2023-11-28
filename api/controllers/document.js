@@ -227,6 +227,17 @@ const documentController = {
           .map((keyword) => new mongoose.Types.ObjectId(keyword.trim()));
         filters["tags"] = { $in: keywordIds };
       }
+      let sortBy = req.query.sortBy || "createdAt";
+      let sortOrder = parseInt(req.query.sortOrder);
+      if (sortOrder === 0 || !sortOrder) {
+        sortBy = "createdAt";
+        sortOrder = -1;
+      }
+      // let activeSortField = "";
+      let sortOptions = {};
+      if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder;
+      }
       const document = await Document.find(filters)
         .populate([
           {
@@ -253,7 +264,7 @@ const documentController = {
         ])
         .skip(startIndex)
         .limit(limit)
-        .sort({ createdAt: -1 });
+        .sort(sortOptions);
 
       const totalDocuments = await Document.countDocuments(filters);
       const totalPages = Math.ceil(totalDocuments / req.query.limit);
@@ -263,6 +274,8 @@ const documentController = {
         totalDocuments,
         currentPage: page,
         totalPages,
+        sortBy,
+        sortOrder,
         message: "Documents fetched successfully",
       });
     } catch (error) {

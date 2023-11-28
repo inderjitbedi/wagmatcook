@@ -160,9 +160,10 @@ const API_URLS = {
   createJobs: `/job/create`,
   updateJobs: `/job/update/:id`,
   deleteJobs: `/job/delete/:id`,
-  listJobs: `/job/list?page=Page&limit=10&searchKey=searchValue`,
+  listJobs: `/job/list?page=Page&limit=10&searchKey=searchValue&sort=Sort`,
   detailsJobs: `/job/detail/:id`,
   generatePdf: `/job/generateJobPDF/:id`,
+  markCompletedJob: `/job/mark-complete/:id`,
   // applicants routes
   createApplicants: `/job/:jobid/applicant/create`,
   updateApplicants: `/job/:jobid/applicant/update/:id`,

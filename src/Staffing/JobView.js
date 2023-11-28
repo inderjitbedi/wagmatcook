@@ -40,6 +40,10 @@ import {
   StepCircle,
   StepHr,
   StepText,
+  TaskStatus,
+  TaskSelect,
+  TaskOption,
+  TaskLi,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import { ActionIcons } from "../Disciplinary/DisciplinaryStyles";
 const JobView = () => {
@@ -57,7 +61,62 @@ const JobView = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [pdf, setPdf] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
 
+const toggleDropdown = () => {
+  setIsOpen(!isOpen);
+  };
+    const [isChecked, setIsChecked] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(isChecked);
+  const options = [
+    {
+      value: false,
+      text: "Inactive",
+    },
+    {
+      value: true,
+      text: "Active",
+    },
+  ];
+  const selectOption = (option) => {
+    const newValue = JSON.parse(option);
+    if (newValue !== selectedValue) {
+      HandleMarkComplete(newValue);
+      setSelectedValue(newValue);
+      setIsChecked(newValue);
+    }
+    setIsOpen(false);
+  };
+   const HandleMarkComplete = (data) => {
+     // setIsUploading(true);
+     let url = API_URLS.markCompletedJob.replace(":id", jobid);
+     let dataCopy = { isCompleted: data };
+     httpClient({
+       method: "put",
+       url,
+       data: dataCopy,
+     })
+       .then(({ result, error }) => {
+         if (result) {
+           GetJobPostings();
+
+           toast.success(result.message, {
+             className: "toast",
+           });
+           // setIsUploading(false);
+         } else {
+           //toast.warn("something went wrong ");
+         }
+       })
+       .catch((error) => {
+         //console.error("Error:", error);
+         toast.error("Error Updating Benefits . Please try again.");
+         // setIsUploading(false);
+       })
+       .finally(() => {
+         // setIsUploading(false);
+       });
+   };
   const steps = [
     {
       title: "Applicant List",
@@ -128,6 +187,8 @@ const JobView = () => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
+            setIsChecked(result.job.isCompleted);
+            setSelectedValue(result.job.isCompleted);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -286,6 +347,55 @@ const JobView = () => {
                   <TaskDescription>No attachment found</TaskDescription>
                 )}
               </FlexColumn>
+            </FlexSpaceBetween>
+            <FlexSpaceBetween
+              style={{
+                border: " 1px solid #eff4fa",
+                borderLeft: "none",
+                borderRight: "none",
+                padding: "1.4rem 0rem ",
+                alignItems: "center",
+              }}
+            >
+              <FlexContaier style={{ gap: "1.3rem" }}>
+                <TaskStatus>
+                  <TaskTitle>Job Status:&nbsp;</TaskTitle>
+                  <TaskSelect onClick={toggleDropdown} value={selectedValue}>
+                    {selectedValue ? " Active" : " Inactive"}
+                    {isOpen && (
+                      <TaskOption>
+                        {options.map((option) => (
+                          <TaskLi
+                            key={option.text}
+                            onClick={() => selectOption(option.value)}
+                          >
+                            {option.text}
+                          </TaskLi>
+                        ))}
+                      </TaskOption>
+                    )}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      style={{
+                        transform: isOpen ? "rotate(180deg)" : undefined,
+                        marginTop: "2px",
+                      }}
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.5894 0.244078C10.9149 0.569515 10.9149 1.09715 10.5894 1.42259L6.00609 6.00592C5.68065 6.33136 5.15301 6.33136 4.82757 6.00592L0.244242 1.42259C-0.0811958 1.09715 -0.0811958 0.569515 0.244242 0.244078C0.569678 -0.0813591 1.09732 -0.0813591 1.42275 0.244078L5.41683 4.23816L9.41091 0.244078C9.73634 -0.0813592 10.264 -0.0813592 10.5894 0.244078Z"
+                        fill={selectedValue ? "#0d7d0b" : "#E88B00"}
+                      />
+                    </svg>
+                  </TaskSelect>
+                </TaskStatus>
+                {/* <AddNewButton>Update</AddNewButton> */}
+              </FlexContaier>
             </FlexSpaceBetween>
             {/* <FlexSpaceBetween>
                 <FlexColumnNoWidth>
