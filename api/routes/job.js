@@ -14,6 +14,11 @@ router.get(
   verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
   jobController.generatePdf
 );
+router.put(
+  "/mark-complete/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER]),
+  jobController.markInactive
+);
 
 
 

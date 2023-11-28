@@ -55,6 +55,18 @@ const employeeController = {
           // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
         ];
       }
+      let sortBy = req.query.sortBy || "createdAt";
+      let sortOrder = parseInt(req.query.sortOrder);
+      if (sortOrder === 0 || !sortOrder) {
+        sortBy = "createdAt";
+        sortOrder = -1;
+      }
+
+      let sortOptions = {};
+      if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder;
+      }
+      console.log(sortOptions);
       const employees = await User.aggregate([
         {
           $match: filters,
@@ -119,7 +131,41 @@ const employeeController = {
             as: "positions",
           },
         },
-
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department",
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$positions",
+        },
+        {
+          $match: {
+            "positions.isPrimary": true,
+            "positions.isDeleted": false,
+          },
+        },
+        {
+          $addFields: {
+            departmentInfo: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$departmentInfo",
+                    as: "dept",
+                    cond: {
+                      $eq: ["$$dept._id", "$positions.department"],
+                    },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
         {
           $lookup: {
             from: "files",
@@ -128,10 +174,9 @@ const employeeController = {
             as: "photoInfo",
           },
         },
+
         {
-          $sort: {
-            "positions.startDate": -1, // Sort by startDate in descending order
-          },
+          $sort: sortOptions,
         },
 
         {
@@ -170,6 +215,8 @@ const employeeController = {
         totalEmployees,
         currentPage: page,
         totalPages,
+        sortBy,
+        sortOrder,
         message: "Employees fetched successfully",
       });
     } catch (error) {
@@ -233,6 +280,17 @@ const employeeController = {
           // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
         ];
       }
+      let sortBy = req.query.sortBy || "createdAt";
+      let sortOrder = parseInt(req.query.sortOrder);
+      if (sortOrder === 0 || !sortOrder) {
+        sortBy = "createdAt";
+        sortOrder = -1;
+      }
+
+      let sortOptions = {};
+      if (sortBy && sortOrder) {
+        sortOptions[sortBy] = sortOrder;
+      }
       const employees = await User.aggregate([
         {
           $match: filters,
@@ -289,8 +347,46 @@ const employeeController = {
                 "positions.isPrimary": true,
                 "positions.reportsTo": req.user._id,
               },
-              { "positions.department": primaryDepartmentId },
+              {
+                "positions.department": primaryDepartmentId,
+                "positions.isPrimary": true,
+              },
             ],
+          },
+        },
+        {
+          $lookup: {
+            from: "departments",
+            localField: "positions.department",
+            foreignField: "_id",
+            as: "departmentInfo",
+          },
+        },
+        {
+          $unwind: "$positions",
+        },
+        {
+          $match: {
+            "positions.isPrimary": true,
+            "positions.isDeleted": false,
+          },
+        },
+        {
+          $addFields: {
+            departmentInfo: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$departmentInfo",
+                    as: "dept",
+                    cond: {
+                      $eq: ["$$dept._id", "$positions.department"],
+                    },
+                  },
+                },
+                0,
+              ],
+            },
           },
         },
         {
@@ -302,9 +398,7 @@ const employeeController = {
           },
         },
         {
-          $sort: {
-            "positions.startDate": -1, // Sort by startDate in descending order
-          },
+          $sort: sortOptions,
         },
         {
           $skip: startIndex,
@@ -387,6 +481,8 @@ const employeeController = {
         totalEmployees,
         currentPage: page,
         totalPages,
+        sortBy,
+        sortOrder,
         message: "Employees fetched successfully",
       });
     } catch (error) {
