@@ -2262,26 +2262,24 @@ const employeeController = {
       }
       let { leaveType, hours: requestedHours } = req.body;
       if (isLiueTime) {
-        // If isLieuTime is true, add a leave in leave allocation with name 'lieu time'
-
-        // Add the requested hours to leave allocation
-        const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
-          {
-            leaveType: leaveType,
-            employee: req.params.id,
-            isDeleted: false,
-          },
-          { $inc: { totalAllocation: requestedHours } },
-          { upsert: true, new: true }
-        ).populate("leaveType");
+        // const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+        //   {
+        //     leaveType: leaveType,
+        //     employee: req.params.id,
+        //     isDeleted: false,
+        //   },
+        //   { $inc: { totalAllocation: requestedHours } },
+        //   { upsert: true, new: true }
+        // ).populate("leaveType");
 
         // Create a leave history record for lieu time
         let lieuRequest = new EmployeeLeaveHistory({
-          leaveType: lieuAllocation.leaveType._id,
+          leaveType: leaveType._id,
           hours: requestedHours,
 
           employee: req.params.id,
           status: leaveStatus.PENDING,
+          ...req.body,
         });
         await lieuRequest.save();
 
@@ -2320,7 +2318,7 @@ const employeeController = {
                   " "
                 )
               )
-              .replace("{leavetype}", lieuAllocation.leaveType.name) || "",
+              .replace("{leavetype}", leaveType.name) || "",
           description:
             notificationConstants[notificationType.LEAVE_REQUEST].description ||
             "",

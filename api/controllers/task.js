@@ -12,14 +12,14 @@ const taskController = {
       req.body.assigner = req.user?._id;
       let task = new Tasks(req.body);
       await task.save();
-      
+
       task = await task.populate([
         { path: "assignee", populate: { path: "personalInfo" } },
         { path: "assigner", populate: { path: "personalInfo" } },
       ]);
-      console.log("this is task",task)
+      console.log("this is task", task);
       let type = "TASK_ASSIGNED";
-      const notification = new Notifications({
+    
         title: notificationConstants[type].title?.replace(
           "{assigner}",
           req.user?.personalInfo
@@ -64,6 +64,14 @@ const taskController = {
         { isDeleted: true },
         { new: true }
       );
+      const notification = await Notifications.findOneAndUpdate(
+        {
+          dataId: req.params.id,
+        },
+        { isDeleted: true },
+        { new: true }
+      );
+
       res.status(200).json({ task, message: "Task deleted successfully" });
     } catch (error) {
       console.error("taskController:update:error -", error);

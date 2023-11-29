@@ -658,7 +658,7 @@ const CommenDashHeader = ({ onSearch, text }) => {
                                  `/organization-admin/tasks/details/${data.dataId}`
                                );
                              }
-                           } else if (userType === ROLES.Hr) {
+                           } else if (userType === ROLES.HR) {
                              if (data.type.includes("TASK")) {
                                Navigate(
                                  `/hr-management/tasks/details//${data.dataId}`
