@@ -71,11 +71,11 @@ const toggleDropdown = () => {
   const options = [
     {
       value: false,
-      text: "Inactive",
+      text: "Completed",
     },
     {
       value: true,
-      text: "Active",
+      text: "Ongoing",
     },
   ];
   const selectOption = (option) => {
@@ -361,7 +361,7 @@ const toggleDropdown = () => {
                 <TaskStatus>
                   <TaskTitle>Job Status:&nbsp;</TaskTitle>
                   <TaskSelect onClick={toggleDropdown} value={selectedValue}>
-                    {selectedValue ? " Active" : " Inactive"}
+                    {selectedValue ? " Ongoing" : " Completed"}
                     {isOpen && (
                       <TaskOption>
                         {options.map((option) => (

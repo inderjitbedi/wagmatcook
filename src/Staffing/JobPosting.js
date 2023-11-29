@@ -490,7 +490,7 @@ const JobPosting = () => {
       <DisciplinaryDiv>
         <DisciplinaryHeading>
           {" "}
-          {sort ? "Active" : "Inactive"} Jobs
+          {sort ? "Ongoing" : "Completed"} Jobs
         </DisciplinaryHeading>
         <FlexContaier>
           <AddNewButton
@@ -507,7 +507,7 @@ const JobPosting = () => {
                 visible={true}
               />
             ) : (
-              "View " + (sort ? "Inactive" : "Active")
+              "View " + (sort ? "Completed" : "Ongoing")
             )}
           </AddNewButton>
           {userType === ROLES.MANAGER ? (
@@ -1026,9 +1026,9 @@ const JobPosting = () => {
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">
                       {data.isCompleted ? (
-                        <ApproveStyle>Active</ApproveStyle>
+                        <ApproveStyle>Ongoing</ApproveStyle>
                       ) : (
-                        <PendingStyle>Inactive</PendingStyle>
+                        <PendingStyle>Completed</PendingStyle>
                       )}
                     </TableCell>
                     <TableCell sx={CellStyle2} align="left">

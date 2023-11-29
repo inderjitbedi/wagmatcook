@@ -68,7 +68,7 @@ const jobController = {
         job,
         message:
           "job marked as " +
-          (req.body.isCompleted ? "active" : "inactive") +
+          (req.body.isCompleted ? "ongoing" : "completed") +
           " successfully",
       });
     } catch (error) {

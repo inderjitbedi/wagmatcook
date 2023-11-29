@@ -19,7 +19,7 @@ const taskController = {
       ]);
       console.log("this is task", task);
       let type = "TASK_ASSIGNED";
-    
+      const notification = new Notifications({
         title: notificationConstants[type].title?.replace(
           "{assigner}",
           req.user?.personalInfo
