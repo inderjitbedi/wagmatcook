@@ -142,6 +142,7 @@ const Documents = () => {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [filter, setFilter] = useState();
 
   const HandleChangePage = (event, value) => {
     setPage(value);
@@ -151,6 +152,13 @@ const Documents = () => {
   const [sortOrder, setSortOrder] = useState("");
   const HandleSort = (field) => {
     if (sortBy === field) {
+      const selectedIds = keywords.map((item) => item.id);
+
+      const filters = {
+        keywords: selectedIds,
+        department: department,
+      };
+      setFilter(filters);
       setSortOrder((prevOrder) => {
         switch (prevOrder) {
           case "asc":
@@ -334,23 +342,43 @@ const Documents = () => {
       let url = API_URLS.getDocuments
         .replace("searchValue", searchValue)
         .replace("Page", page);
-      if (filters?.keywords) {
-        url += `&keywords=${filters.keywords}`;
-      }
-      if (filters?.department) {
-        url += `&department=${filters.department}`;
-      }
-      const sortField =
-        sortBy === "title"
-          ? "title"
-          : sortBy === "department"
-          ? "departments[0].name"
-          : "updatedAt";
 
-      const sortOrders =
-        sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
+      const hasKeywords = filters?.keywords;
+      const hasDepartment = filters?.department;
+      const hasSort = sortBy && sortOrder;
+      console.log("ths is the filter ", filters);
+      if (hasKeywords || hasDepartment || hasSort) {
+        // At least one of keywords, department, or sort is present
+        url += "&";
 
-      url += `&sortBy=${sortField}&sortOrder=${sortOrders}`;
+        if (hasKeywords) {
+          url += `keywords=${filters.keywords}`;
+          if (hasDepartment || hasSort) {
+            url += "&";
+          }
+        }
+
+        if (hasDepartment) {
+          url += `department=${filters.department}`;
+          if (hasSort) {
+            url += "&";
+          }
+        }
+
+        if (hasSort) {
+          const sortField =
+            sortBy === "title"
+              ? "title"
+              : sortBy === "department"
+              ? "departments[0].name"
+              : "updatedAt";
+
+          const sortOrders =
+            sortOrder === "asc" ? 1 : sortOrder === "desc" ? -1 : 0;
+
+          url += `sortBy=${sortField}&sortOrder=${sortOrders}`;
+        }
+      }
       httpClient({
         method: "get",
         url,
@@ -475,7 +503,7 @@ const Documents = () => {
       });
   };
   useEffect(() => {
-    GetDocuments();
+    GetDocuments(filter);
   }, [page, searchValue, sortBy, sortOrder]);
   // //console.log("this is our suggestions :", suggestions);
   const KeyCodes = {
@@ -592,7 +620,7 @@ const Documents = () => {
       keywords: selectedIds,
       department: department,
     };
-
+    setFilter(filters);
     GetDocuments(filters);
   };
   const clearFilters = () => {
@@ -603,11 +631,13 @@ const Documents = () => {
       keywords: null,
       department: null,
     };
+    setFilter(filters);
+
     GetDocuments(filters);
   };
   const areFiltersEmpty = !!(keywords.length || department);
 
-  console.log("this the suggestions", suggestions);
+  console.log("this the suggestions", keywords, department, sortBy, sortOrder);
   return (
     <>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Documents" />

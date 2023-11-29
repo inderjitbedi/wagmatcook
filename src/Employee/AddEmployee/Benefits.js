@@ -290,22 +290,36 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                 &nbsp;&#62;&nbsp;
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
-                  onClick={() =>
-                    Navigate(
-                      `/organization-admin/employee/personal-info/${employeeid}`
-                    )
-                  }
+                  onClick={() => {
+                    if (userType === ROLES.ORG_ADMIN) {
+                      Navigate(
+                        `/organization-admin/employee/personal-info/${employeeid}`
+                      );
+                    } else if (userType === ROLES.HR) {
+                      Navigate(`/hr-management/personal-info/${employeeid}`);
+                    } else if (userType === ROLES.MANAGER) {
+                      Navigate(
+                        `/manager-management/personal-info/${employeeid}`
+                      );
+                    }
+                  }}
                 >
                   {" "}
                   Personal Information &#62;{" "}
                 </span>{" "}
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
-                  onClick={() =>
-                    Navigate(
-                      `/organization-admin/employee/job-details/${employeeid}`
-                    )
-                  }
+                  onClick={() => {
+                    if (userType === ROLES.ORG_ADMIN) {
+                      Navigate(
+                        `/organization-admin/employee/job-details/${employeeid}`
+                      );
+                    } else if (userType === ROLES.HR) {
+                      Navigate(`/hr-management/job-details/${employeeid}`);
+                    } else if (userType === ROLES.MANAGER) {
+                      Navigate(`/manager-management/job-details/${employeeid}`);
+                    }
+                  }}
                 >
                   Job Details &#62;
                 </span>{" "}
@@ -441,9 +455,7 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                   </FlexColumnForm>
 
                   <FlexColumnForm>
-                    <InputLabel>
-                      Description 
-                    </InputLabel>
+                    <InputLabel>Description</InputLabel>
                     <TextArea
                       style={{ height: "14rem" }}
                       type="text"

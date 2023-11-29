@@ -156,6 +156,7 @@ const taskController = {
     try {
       const task = await Tasks.findOne({
         _id: req.params.id,
+        isDeleted: false,
       }).populate([
         {
           path: "assignee",
@@ -166,6 +167,20 @@ const taskController = {
           populate: { path: "personalInfo", populate: { path: "photo" } },
         },
       ]);
+      if (!task) {
+        // Check if the task is deleted or not found
+        const deletedTask = await Tasks.findOne({
+          _id: req.params.id,
+          isDeleted: true,
+        });
+
+        if (deletedTask) {
+          return res.status(400).json({ message: "The task is deleted." });
+        }
+
+        return res.status(400).json({ message: "Task not found." });
+      }
+
       res
         .status(200)
         .json({ task, message: "Task details fetched successfully" });

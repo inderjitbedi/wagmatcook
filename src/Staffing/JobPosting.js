@@ -502,7 +502,7 @@ const JobPosting = () => {
                 height="8"
                 width="80"
                 radius="9"
-                color="#279AF1"
+                color="#fff"
                 ariaLabel="three-dots-loading"
                 visible={true}
               />

@@ -49,7 +49,7 @@ import {
 import LeaveActionModal from "./LeaveActionModal";
 
 const ManagerLeaveAction = () => {
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
   const location = useLocation();
   const [userType, setUserType] = useState("");
 
@@ -96,11 +96,7 @@ const ManagerLeaveAction = () => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-  const HandleLogout = () => {
-    localStorage.clear();
-    handleCloseMenu();
-    navigate("/");
-  };
+
   const HandleChange = (e) => {
     const value = e.target.value;
     setDetailsLength(500 - value.length);
@@ -113,7 +109,7 @@ const ManagerLeaveAction = () => {
   };
   const [isLoading, setIsLoading] = useState(false);
 
-  const GetLeaveDetails = () => {
+  const GetLeaveDetails = (userType) => {
     setIsLoading(true);
     let url = API_URLS.getLeaveDetails
       .replace(":employeeid", employeeid)
@@ -125,9 +121,17 @@ const ManagerLeaveAction = () => {
       .then(({ result, error }) => {
         if (result) {
           setLeaveDetails(result.request);
+          console.log("when its true");
         } else {
-          //toast.warn("something went wrong ");
+          if (userType === ROLES.MANAGER) {
+            Navigate("/manager-management/dashboard");
+          } else if (userType === ROLES.HR) {
+            Navigate("/hr-management/dashboard");
+          } else if (userType === ROLES.EMPLOYEE) {
+            Navigate("/user-management/dashboard");
+          }
         }
+        console.log("when its false");
       })
       .catch((error) => {
         //console.error("Error:", error);
@@ -139,13 +143,15 @@ const ManagerLeaveAction = () => {
       });
   };
   useEffect(() => {
-    GetLeaveDetails();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
+      GetLeaveDetails(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+      GetLeaveDetails(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+      GetLeaveDetails(ROLES.EMPLOYEE);
     }
   }, []);
   let API_URL = process.env.REACT_APP_API_URL;

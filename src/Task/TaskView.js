@@ -289,7 +289,7 @@ const TaskView = () => {
         setIsDeleting(false);
       });
   };
-  const GetTaskDetails = () => {
+  const GetTaskDetails = (userType) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       let url = API_URLS.getTaskDetails.replace(":id", taskid);
@@ -305,6 +305,13 @@ const TaskView = () => {
             setSelectedValue(result.task.isCompleted);
           } else {
             //toast.warn("something went wrong ");
+            if (userType === ROLES.MANAGER) {
+              Navigate("/manager-management/dashboard");
+            } else if (userType === ROLES.HR) {
+              Navigate("/hr-management/dashboard");
+            } else if (userType === ROLES.EMPLOYEE) {
+              Navigate("/user-management/dashboard");
+            }
           }
         })
         .catch((error) => {
@@ -325,14 +332,16 @@ const TaskView = () => {
       let parsedUser = JSON.parse(user);
       setUserData(parsedUser);
     }
-    GetTaskDetails();
     GetTaskComments();
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
+      GetTaskDetails(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+      GetTaskDetails(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+      GetTaskDetails(ROLES.EMPLOYEE);
     }
   }, []);
 

@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import httpClient from "../../api/httpClient";
 import { useNavigate } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
-
+import ROLES from "../../constants/roles";
 import {
   Input,
   ButtonBlue,
@@ -58,7 +58,11 @@ const ModalFormContainer = styled.div`
   width: 100%;
   box-sizing: border-box;
 `;
-const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
+const AddNewEmployeeModal = ({
+  openEmployee,
+  HandleCloseEmployee,
+  userType,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const Navigate = useNavigate();
@@ -86,10 +90,15 @@ const AddNewEmployeeModal = ({ openEmployee, HandleCloseEmployee }) => {
       .then(({ result, error }) => {
         if (result) {
           HandleCloseEmployee();
-          Navigate(
-            `/organization-admin/employee/personal-info/${result.employee._id}`
-          );
-          reset();
+          if (userType === ROLES.ORG_ADMIN) {
+              Navigate(
+                `/organization-admin/employee/personal-info/${result.employee._id}`
+              );
+          } else if (userType === ROLES.HR) {
+                Navigate(
+                  `/hr-management/personal-info/${result.employee._id}`
+                );
+          } reset();
         } else {
           //toast.warn("something went wrong ");
         }

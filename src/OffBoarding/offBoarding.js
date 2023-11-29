@@ -341,7 +341,7 @@ const Offboarding = () => {
                         onChange: (e) => {
                           const userId = e.target.value;
                           const userName = employeeList.find(
-                            (user) => user._id === userId
+                            (user) => user.user === userId
                           );
                           const fullName = [
                             userName?.personalInfo[0]?.firstName,

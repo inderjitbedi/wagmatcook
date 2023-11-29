@@ -190,6 +190,8 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
   }, []);
 
@@ -217,7 +219,6 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
             setIsEdit(false);
             setRefresh(refresh + 1);
             window.location.reload();
-
 
             toast.success(result.message, {
               className: "toast",
@@ -395,11 +396,17 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                 &nbsp;&#62;&nbsp;
                 <span
                   style={{ color: "#8B8B8B", cursor: "pointer" }}
-                  onClick={() =>
-                    Navigate(
-                      `/organization-admin/employee/personal-info/${employeeid}`
-                    )
-                  }
+                  onClick={() => {
+                    if (userType === ROLES.ORG_ADMIN) {
+                      Navigate(
+                        `/organization-admin/employee/personal-info/${employeeid}`
+                      );
+                    } else if (userType === ROLES.HR) {
+                      Navigate(`/hr-management/personal-info/${employeeid}`);
+                    } else if (userType === ROLES.MANAGER) {
+                      Navigate(`/manager-management/personal-info/${employeeid}`);
+                    }
+                  }}
                 >
                   {" "}
                   Personal Information{" "}
@@ -591,15 +598,13 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                               message: " Required",
                             },
                             onChange: (e) => {
-
-                            
                               const endDateValue = getValues(
                                 `positions.${index}.endDate`
                               );
                               const startDateValue = getValues(
                                 `positions.${index}.startDate`
                               );
-                             
+
                               // const startDate = e.target.value;
 
                               if (endDateValue && startDateValue) {

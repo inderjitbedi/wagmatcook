@@ -773,6 +773,7 @@ const Employee = () => {
         openEmployee={openEmployee}
         HandleCloseEmployee={HandleCloseEmployee}
         HandleSubmitData={HandleSubmitData}
+        userType={userType}
       />
     </>
   );
