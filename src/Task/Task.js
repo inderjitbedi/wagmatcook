@@ -411,7 +411,7 @@ const Task = () => {
                 height="8"
                 width="80"
                 radius="9"
-                color="#279AF1"
+                color="#FFFFFF"
                 ariaLabel="three-dots-loading"
                 visible={true}
               />

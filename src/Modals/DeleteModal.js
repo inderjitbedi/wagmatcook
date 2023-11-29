@@ -79,7 +79,7 @@ const DeleteModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={Option ? { ...style, width: " 44.6rem" } : { ...style }}>
         {isLoading ? (
           <div
             style={{
@@ -109,7 +109,9 @@ const DeleteModal = ({
             <ModalThanksHeading>
               {Option
                 ? "Are you sure you want to transfer the responsibilities of " +
-                  selectedName + " to " + transferTo
+                  selectedName +
+                  " to " +
+                  transferTo
                 : message}
             </ModalThanksHeading>
             <DeleteButton

@@ -306,7 +306,10 @@ const SendWelcome = () => {
               </TableHead>
               <TableBody>
                 {!unwelcomedUser?.length && (
-                  <TableRow sx={{ height: "20rem" }}>
+                  <TableRow
+                    sx={{ height: "20rem" }}
+                    style={{ background: "#fff" }}
+                  >
                     <TableCell align="center" sx={CellStyle2} colSpan={7}>
                       No employee found
                     </TableCell>

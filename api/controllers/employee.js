@@ -25,6 +25,7 @@ const pdfTemplate = require("../utils/pdfTemplate");
 const pdfGenerator = require("../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
+
 const employeeController = {
   async list(req, res) {
     try {
@@ -1031,10 +1032,25 @@ const employeeController = {
   async delete(req, res) {
     try {
       let user = await User.findOne({ _id: req.params.id });
+      console.log("++++this is user : ", user, " +++++++++++++++++");
       if (!user) {
         return res
           .status(400)
           .json({ message: "Provided invalid employee id." });
+      }
+      if (user.role === roles.HR || user.role === roles.MANAGER) {
+        const hasDirectReports = await EmployeePositionHistory.find({
+          isPrimary: true,
+          isDeleted: false,
+          reportsTo: req.params.id,
+        });
+        if (hasDirectReports.length > 1) {
+          return res.status(400).json({
+            message: `Cannot delete the ${
+              user.role === roles.HR ? "Hr" : " Manager"
+            } as they have other employees under them.`,
+          });
+        }
       }
 
       user = await User.findOneAndUpdate(
@@ -2176,6 +2192,7 @@ const employeeController = {
   async getLeaveRequest(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.id });
+
       if (!user) {
         return res
           .status(400)
@@ -2209,6 +2226,18 @@ const employeeController = {
           path: "leaveType",
         },
       ]);
+      if (!request) {
+        const deletedLeave = await EmployeeLeaveHistory.findOne({
+          _id: req.params.requestid,
+          isDeleted: true,
+        });
+
+        if (deletedLeave) {
+          return res.status(400).json({ message: "The leave is deleted." });
+        }
+
+        return res.status(400).json({ message: "Leave not found." });
+      }
       res.status(200).json({
         request,
         message: "Employee leave request fetched successfully",
@@ -2632,20 +2661,19 @@ const employeeController = {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 9999;
       const startIndex = (page - 1) * limit;
-
-      let users = await User.find({
-        // organization: req.organization?._id || null,
-        // isActive: true,
-        // isDeleted: false,
+      let filters = {
+        organization: req.organization?._id || null,
+        isActive: true,
+        isDeleted: false,
         receivedWelcomeEmail: false,
-      })
+        role: { $ne: roles.ORG_ADMIN },
+      };
+      let users = await User.find(filters)
         .populate("personalInfo")
         .skip(startIndex)
         .limit(limit);
 
-      const totalUsers = await User.countDocuments({
-        receivedWelcomeEmail: false,
-      });
+      const totalUsers = await User.countDocuments(filters);
       const totalPages = Math.ceil(totalUsers / req.query.limit);
       res.status(200).json({
         users,
