@@ -1093,7 +1093,7 @@ const emailTemplates = {
   },
   leaveRejected(data) {
     return {
-      subject: "Wagmatcook | Leave Rejected",
+      subject: "Wagmatcook | Leave Not Approved",
       html: `
       <!DOCTYPE html>
 <html lang="en">
@@ -1192,7 +1192,7 @@ height: 152px; background-color: #FFEDED;; border-radius: 50%;">
               width: 80%;
               margin: 20px auto;
             ">
-                    Leave Request Rejected!
+                    Leave Request Not Approved!
                   </p>
                 </td>
               </tr>

@@ -357,6 +357,9 @@ const LeaveHistory = () => {
     if (lieuTime) {
       url += `&lieuTime=${true}`;
       data.leaveType = lieuId._id;
+      data.nature = "ADDITION";
+    } else {
+      data.nature = "SUBSTRACTION";
     }
 
     let dataCopy = data;
@@ -564,7 +567,7 @@ const LeaveHistory = () => {
           <DisciplinaryDiv>
             <DisciplinaryHeading> Leave History</DisciplinaryHeading>
             <FlexContaier>
-              <ButtonBlue onClick={() => HandleOpenAddNewActionLieu()}>
+              <ButtonBlue onClick={() => HandleOpenAddNewActionLiue()}>
                 Add Lieu Time
               </ButtonBlue>
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>

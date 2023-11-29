@@ -24,7 +24,7 @@ module.exports = Object.freeze({
     description: "",
   },
   LEAVE_REJECTED: {
-    title: "{responder} has not approved  your {leavetype} leave request.",
+    title: "{responder} has not approved your {leavetype} leave request.",
     description: "",
   },
   TASK_ASSIGNED: {

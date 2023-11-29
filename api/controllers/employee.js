@@ -1046,9 +1046,8 @@ const employeeController = {
         });
         if (hasDirectReports.length > 1) {
           return res.status(400).json({
-            message: `Cannot delete the ${
-              user.role === roles.HR ? "Hr" : " Manager"
-            } as they have other employees under them.`,
+            message: `Cannot delete the ${user.role === roles.HR ? "Hr" : " Manager"
+              } as they have other employees under them.`,
           });
         }
       }
@@ -2262,26 +2261,24 @@ const employeeController = {
       }
       console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
-      if (isLieuTime) {
-        // If isLieuTime is true, add a leave in leave allocation with name 'lieu time'
-
-        // Add the requested hours to leave allocation
-        const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
-          {
-            leaveType: leaveType,
-            employee: req.params.id,
-            isDeleted: false,
-          },
-          { $inc: { totalAllocation: requestedHours } },
-          { upsert: true, new: true }
-        ).populate("leaveType");
+      if (isLiueTime) {
+        // const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+        //   {
+        //     leaveType: leaveType,
+        //     employee: req.params.id,
+        //     isDeleted: false,
+        //   },
+        //   { $inc: { totalAllocation: requestedHours } },
+        //   { upsert: true, new: true }
+        // ).populate("leaveType");
 
         // Create a leave history record for lieu time
         let lieuRequest = new EmployeeLeaveHistory({
-          leaveType: lieuAllocation.leaveType._id,
+          leaveType: leaveType._id,
           hours: requestedHours,
           employee: req.params.id,
           status: leaveStatus.PENDING,
+          ...req.body,
         });
         await lieuRequest.save();
 
@@ -2320,7 +2317,7 @@ const employeeController = {
                   " "
                 )
               )
-              .replace("{leavetype}", lieuAllocation.leaveType.name) || "",
+              .replace("{leavetype}", leaveType.name) || "",
           description:
             notificationConstants[notificationType.LEAVE_REQUEST].description ||
             "",

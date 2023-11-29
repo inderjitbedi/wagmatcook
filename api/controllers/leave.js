@@ -487,35 +487,59 @@ const leaveController = {
       }
 
       let { leaveType } = req.body;
-      let allocation = await EmployeeLeaveAllocation.findOne({
-        leaveType,
-        employee: req.params.id,
-        isDeleted: false,
-      }).populate("leaveType");
-      if (!allocation)
-        return res.status(400).json({ message: "Leave type not allocated." });
+      const leaveTypeDoc = await LeaveType.findOne({ _id: leaveType });
+      console.log("this is our leave type:", leaveTypeDoc);
+      if (leaveTypeDoc.nature === "SUBSTRACTION") {
+        var allocation = await EmployeeLeaveAllocation.findOne({
+          leaveType,
+          employee: req.params.id,
+          isDeleted: false,
+        }).populate("leaveType");
+        if (!allocation)
+          return res.status(400).json({ message: "Leave type not allocated." });
 
-      let burnedHours = 0;
-      let requestedHours = 0;
-      let leaves = await EmployeeLeaveHistory.find({
-        leaveType: leaveType,
-        employee: req.params.id,
-        isDeleted: false,
-        status: { $ne: leaveStatus.REJECTED },
-      }).select("hours");
+        let burnedHours = 0;
+        let requestedHours = 0;
 
-      for (const leave of leaves) {
-        if (leave._id === req.params.requestid) {
-          requestedHours = leave.hours;
+        let leaves = await EmployeeLeaveHistory.find({
+          leaveType: leaveType,
+          employee: req.params.id,
+          isDeleted: false,
+          status: { $ne: leaveStatus.REJECTED },
+        }).select("hours");
+
+        for (const leave of leaves) {
+          if (leave._id === req.params.requestid) {
+            requestedHours = leave.hours;
+          }
+          burnedHours += leave.hours;
         }
-        burnedHours += leave.hours;
-      }
 
-      if (
-        req.body.isApproved &&
-        requestedHours > allocation?.totalAllocation - burnedHours
-      ) {
-        return res.status(400).json({ message: "Insufficent balance" });
+        if (
+          req.body.isApproved &&
+          requestedHours > allocation?.totalAllocation - burnedHours
+        ) {
+          return res.status(400).json({ message: "Insufficent balance" });
+        }
+      } else if (leaveTypeDoc.nature === "ADDITION") {
+        if (req.body.isApproved) {
+          let leaves = await EmployeeLeaveHistory.find({
+            leaveType: leaveType,
+            employee: req.params.id,
+            isDeleted: false,
+            status: { $ne: leaveStatus.REJECTED },
+          }).select("hours");
+          console.log("-------------", leaves);
+          //   const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+          //     {
+          //       leaveType: leaveType,
+          //       employee: req.params.id,
+          //       isDeleted: false,
+          //     },
+          //     // { $inc: { totalAllocation: requestedHours } },
+          //     { upsert: true, new: true }
+          //   ).populate("leaveType");
+        }
       }
 
       let payload = {
@@ -529,9 +553,10 @@ const leaveController = {
 
       let request = await EmployeeLeaveHistory.findOneAndUpdate(
         { _id: req.params.requestid },
-        payload
+        payload,
+        { new: true }
       );
-      await request.save();
+      // await request.save();
       request = await request.populate([
         {
           path: "employee",

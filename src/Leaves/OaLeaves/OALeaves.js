@@ -303,6 +303,7 @@ const OALeaves = () => {
     if (userType === ROLES.SUPER_ADMIN) {
       data.isDefault = true;
     }
+    // data.nature = "ADDITION"
     let dataCopy = data;
 
     let url = API_URLS.updateLeaveType.replace(":id", Id);
