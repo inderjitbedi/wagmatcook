@@ -24,9 +24,9 @@ const taskController = {
           "{assigner}",
           req.user?.personalInfo
             ? [
-                req.user?.personalInfo.firstName,
-                req.user?.personalInfo.lastName,
-              ].join(" ")
+              req.user?.personalInfo.firstName,
+              req.user?.personalInfo.lastName,
+            ].join(" ")
             : "Someone"
         ),
         type,
@@ -133,10 +133,10 @@ const taskController = {
           ?.replace(
             "{user}",
             req.user?.name ||
-              [
-                req.user?.personalInfo?.firstName,
-                req.user?.personalInfo?.lastName,
-              ].join(" ")
+            [
+              req.user?.personalInfo?.firstName,
+              req.user?.personalInfo?.lastName,
+            ].join(" ")
           )
           .replace("{taskName}", task?.title),
         type,
@@ -340,10 +340,10 @@ const taskController = {
           ?.replace(
             "{commenter}",
             comment.commenter?.name ||
-              [
-                comment.commenter?.personalInfo?.firstName,
-                comment.commenter?.personalInfo?.lastName,
-              ].join(" ")
+            [
+              comment.commenter?.personalInfo?.firstName,
+              comment.commenter?.personalInfo?.lastName,
+            ].join(" ")
           )
           .replace("{taskName}", task?.title),
         type,

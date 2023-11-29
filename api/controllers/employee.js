@@ -1046,9 +1046,8 @@ const employeeController = {
         });
         if (hasDirectReports.length > 1) {
           return res.status(400).json({
-            message: `Cannot delete the ${
-              user.role === roles.HR ? "Hr" : " Manager"
-            } as they have other employees under them.`,
+            message: `Cannot delete the ${user.role === roles.HR ? "Hr" : " Manager"
+              } as they have other employees under them.`,
           });
         }
       }
@@ -2253,13 +2252,14 @@ const employeeController = {
       const user = await User.findOne({ _id: req.params.id }).populate(
         "personalInfo"
       );
-      const isLiueTime = req.query.lieuTime;
-      console.log("this is value in prams ", isLiueTime);
+      const isLieuTime = req.query.lieuTime;
+      console.log("this is value in prams ", isLieuTime);
       if (!user) {
         return res
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
+      console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
       if (isLiueTime) {
         // const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
@@ -2276,7 +2276,6 @@ const employeeController = {
         let lieuRequest = new EmployeeLeaveHistory({
           leaveType: leaveType._id,
           hours: requestedHours,
-
           employee: req.params.id,
           status: leaveStatus.PENDING,
           ...req.body,
