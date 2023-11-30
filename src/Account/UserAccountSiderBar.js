@@ -6,7 +6,7 @@ const SideBarList = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0rem 2.4rem;
-  gap: 1.2rem;
+  gap: 1.8rem;
   @media only screen and (max-width: 600px) {
     flex-direction: row;
     box-sizing: border-box;
