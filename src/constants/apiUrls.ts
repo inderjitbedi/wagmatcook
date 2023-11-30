@@ -87,6 +87,7 @@ const API_URLS = {
   deleteEmployeePerformance: `/employee/review/:employeeid/delete/:id`,
   suggestionList: `/employee/completed-by-list`,
   // employee leave hsitory
+  deleteLeaveHistroy: `/employee/leave-history/:id/delete/:leaveid`,
   submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request`,
   getLeaveHistory: `/employee/leave-history/:employeeid?page=Page&limit=10&searchKey=searchValue`,
   //employee allocation
@@ -105,6 +106,7 @@ const API_URLS = {
   generateLeavePdf: `/leave/generate/pdf?`,
 
   getLeaveDetails: `/leave/history/:employeeid/:requestid`,
+
   respondLeave: `/leave/history/:employeeid/:requestid/respond`,
   //notification api
   getNotificationList: `/notification/list`,

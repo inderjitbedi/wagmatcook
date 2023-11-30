@@ -324,12 +324,8 @@ const Departments = () => {
         <CommenDashHeader onSearch={HandleSearchCahnge} text="Departments" />
 
         <DisciplinaryDiv>
-          <DisciplinaryHeading>Departments</DisciplinaryHeading>
-          {/* <DepartmentFilterdiv>
-            {FilterData.map((data) => (
-              <DepartmentFilterButton>{data}</DepartmentFilterButton>
-            ))}
-          </DepartmentFilterdiv> */}
+          <DisciplinaryHeading>All Departments</DisciplinaryHeading>
+
           <AddNewButton onClick={() => HandleOpenAddNewAction()}>
             Add New
           </AddNewButton>

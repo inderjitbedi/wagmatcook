@@ -197,20 +197,22 @@ const ManagerDashBoard = () => {
                     style={{ alignItems: "center", margin: "0" }}
                   >
                     <CardHeading>Applied Leave Request</CardHeading>
-                    <MainCardView
-                      onClick={() => {
-                        if (userType === ROLES.MANAGER) {
-                          Navigate(`/manager-management/announcements`);
-                        } else if (userType === ROLES.HR) {
-                          Navigate(`/hr-management/announcements`);
-                        } else if (userType === ROLES.EMPLOYEE) {
-                          Navigate(`/user-management/leaves/${user?._id}`);
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View All
-                    </MainCardView>
+                    {!dashboardData?.leaves?.length < 1 && (
+                      <MainCardView
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/announcements`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(`/user-management/leaves/${user?._id}`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        View All
+                      </MainCardView>
+                    )}
                   </FlexSpaceBetween>
 
                   {!dashboardData?.leaves?.length && (
@@ -272,20 +274,22 @@ const ManagerDashBoard = () => {
                     style={{ alignItems: "center", margin: "0" }}
                   >
                     <CardHeading>Leave Request</CardHeading>
-                    <MainCardView
-                      onClick={() => {
-                        if (userType === ROLES.MANAGER) {
-                          Navigate(`/manager-management/leaves`);
-                        } else if (userType === ROLES.HR) {
-                          Navigate(`/hr-management/leaves`);
-                        } else {
-                          Navigate(`/user-management/leaves`);
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View All
-                    </MainCardView>
+                    {!dashboardData?.leaves?.length < 1 && (
+                      <MainCardView
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/leaves`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/leaves`);
+                          } else {
+                            Navigate(`/user-management/leaves`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        View All
+                      </MainCardView>
+                    )}
                   </FlexSpaceBetween>
 
                   {!dashboardData?.leaves?.length && (
@@ -362,51 +366,24 @@ const ManagerDashBoard = () => {
             </FlexColContainer>
             <FlexColContainer>
               <CardBody>
-                <CardHeading>Upcoming Events</CardHeading>
-                {!dashboardData?.upcoming?.length && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      margin: "3rem 0rem",
-                    }}
-                  >
-                    <CardSubHeading>No upcoming events </CardSubHeading>
-                  </div>
-                )}
-                {/* {array5.map((data) => (
-                  <CardList style={{ border: "none", paddingBottom: "8px" }}>
-                    <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading>Dianne Russel</CardSubHeading>
-                      <CardSubGrey>Design</CardSubGrey>
-                    </FlexColumn>
-                    {data === 1 ? (
-                      <WorkAnniversary>Work Anniversary</WorkAnniversary>
-                    ) : (
-                      <Birthday> Birthday</Birthday>
-                    )}
-                  </CardList>
-                ))} */}
-              </CardBody>
-            </FlexColContainer>
-            <FlexColContainer>
-              <CardBody>
                 <FlexSpaceBetween style={{ alignItems: "center", margin: "0" }}>
                   <CardHeading> Announcements</CardHeading>
-                  <MainCardView
-                    onClick={() => {
-                      if (userType === ROLES.MANAGER) {
-                        Navigate(`/manager-management/announcements`);
-                      } else if (userType === ROLES.HR) {
-                        Navigate(`/hr-management/announcements`);
-                      } else {
-                        Navigate(`/user-management/announcements`);
-                      }
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    View All
-                  </MainCardView>
+                  {!Announcements?.length < 1 && (
+                    <MainCardView
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(`/manager-management/announcements`);
+                        } else if (userType === ROLES.HR) {
+                          Navigate(`/hr-management/announcements`);
+                        } else {
+                          Navigate(`/user-management/announcements`);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      View All
+                    </MainCardView>
+                  )}
                 </FlexSpaceBetween>
                 {!Announcements?.length && (
                   <div
@@ -504,6 +481,35 @@ const ManagerDashBoard = () => {
                     </FlexContainer>
                   </CardList>
                 ))}
+              </CardBody>
+            </FlexColContainer>
+            <FlexColContainer>
+              <CardBody>
+                <CardHeading>Upcoming Events</CardHeading>
+                {!dashboardData?.upcoming?.length && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      margin: "3rem 0rem",
+                    }}
+                  >
+                    <CardSubHeading>No upcoming events </CardSubHeading>
+                  </div>
+                )}
+                {/* {array5.map((data) => (
+                  <CardList style={{ border: "none", paddingBottom: "8px" }}>
+                    <FlexColumn style={{ gap: "8px" }}>
+                      <CardSubHeading>Dianne Russel</CardSubHeading>
+                      <CardSubGrey>Design</CardSubGrey>
+                    </FlexColumn>
+                    {data === 1 ? (
+                      <WorkAnniversary>Work Anniversary</WorkAnniversary>
+                    ) : (
+                      <Birthday> Birthday</Birthday>
+                    )}
+                  </CardList>
+                ))} */}
               </CardBody>
             </FlexColContainer>
           </CardContainer>
