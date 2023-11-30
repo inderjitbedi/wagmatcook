@@ -355,11 +355,8 @@ const LeaveHistory = () => {
       user?._id
     );
     if (lieuTime) {
-      url += `&lieuTime=${true}`;
-      data.leaveType = lieuId._id;
+      data.leaveType = lieuId;
       data.nature = "ADDITION";
-    } else {
-      data.nature = "SUBSTRACTION";
     }
 
     let dataCopy = data;

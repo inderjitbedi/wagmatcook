@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const leaveStatus = require('../enum/leaveStatus');
+const leaveNature = require('../enum/leaveNature');
 
 const schema = new mongoose.Schema({
     employee: {
@@ -47,6 +48,11 @@ const schema = new mongoose.Schema({
     respondedOn: {
         type: Date,
         default: null,
+    },
+    nature: {
+        type: String,
+        default: leaveNature.SUBSTRACTION,
+        enum: Object.values(leaveNature),
     }
 }, {
     timestamps: true,
