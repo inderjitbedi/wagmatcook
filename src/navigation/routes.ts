@@ -65,6 +65,7 @@ import Announcements from "../Announcements/Announcements";
 import AnnouncementDetails from "../Announcements/AnnouncementDetails";
 import SendWelcome from "../Employee/SendWelcome";
 import Reports from "../Reports/Reports";
+import EvChart from "../Employee/ViewEmployee/EvChart";
 const Routes: any = [
   {
     component: signup,
@@ -339,6 +340,14 @@ const Routes: any = [
                 component: EVCertificates,
                 path: "certificates/:employeeid",
                 title: "EVCertificates ",
+                to: "/",
+                type: "private",
+                meta: { allowedRoles: [ROLES.ORG_ADMIN] },
+              },
+              {
+                component: EvChart,
+                path: "chart/:employeeid",
+                title: "EvChart ",
                 to: "/",
                 type: "private",
                 meta: { allowedRoles: [ROLES.ORG_ADMIN] },
@@ -690,6 +699,14 @@ const Routes: any = [
             meta: { allowedRoles: [ROLES.MANAGER] },
           },
           {
+            component: EvChart,
+            path: "chart/:employeeid",
+            title: "EvChart ",
+            to: "/",
+            type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
+          },
+          {
             component: EVDiscipline,
             path: "discipline/:employeeid",
             title: "EVDiscipline ",
@@ -802,6 +819,14 @@ const Routes: any = [
             component: EVCertificates,
             path: "certificates/:employeeid",
             title: "EVCertificates ",
+            to: "/",
+            type: "private",
+            meta: { allowedRoles: [ROLES.MANAGER] },
+          },
+          {
+            component: EvChart,
+            path: "chart/:employeeid",
+            title: "EvChart ",
             to: "/",
             type: "private",
             meta: { allowedRoles: [ROLES.MANAGER] },
@@ -1055,6 +1080,14 @@ const Routes: any = [
             meta: { allowedRoles: [ROLES.HR] },
           },
           {
+            component: EvChart,
+            path: "chart/:employeeid",
+            title: "EvChart ",
+            to: "/",
+            type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
+          },
+          {
             component: EVDiscipline,
             path: "discipline/:employeeid",
             title: "EVDiscipline ",
@@ -1167,6 +1200,14 @@ const Routes: any = [
             component: EVCertificates,
             path: "certificates/:employeeid",
             title: "EVCertificates ",
+            to: "/",
+            type: "private",
+            meta: { allowedRoles: [ROLES.HR] },
+          },
+          {
+            component: EvChart,
+            path: "chart/:employeeid",
+            title: "EvChart ",
             to: "/",
             type: "private",
             meta: { allowedRoles: [ROLES.HR] },
@@ -1367,6 +1408,14 @@ const Routes: any = [
             component: EVCertificates,
             path: "certificates/:employeeid",
             title: "EVCertificates ",
+            to: "/",
+            type: "private",
+            meta: { allowedRoles: [ROLES.EMPLOYEE] },
+          },
+          {
+            component: EvChart,
+            path: "chart/:employeeid",
+            title: "EvChart ",
             to: "/",
             type: "private",
             meta: { allowedRoles: [ROLES.EMPLOYEE] },

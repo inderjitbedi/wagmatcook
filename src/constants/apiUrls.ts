@@ -126,6 +126,8 @@ const API_URLS = {
   getManagerEmployeeList: `/employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
   getBebEligibleEmployeeList: `/employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
   generateBEBPdf: `/employee/BebEligible/generatePdf`,
+  //employee chart api 
+  getChartData:`/employee/org-chart/:id`,
   //task apis
   getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
 `,

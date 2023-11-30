@@ -37,8 +37,8 @@ const ModalIconDelete = styled.img`
   height: 2.4rem;
   cursor: pointer;
   position: absolute;
-  right: 1rem;
-  top: 0rem;
+  right: 1.4rem;
+  top: 1.4rem;
 `;
 const ModalThanksHeading = styled.p`
   color: #222b45;
