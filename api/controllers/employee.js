@@ -25,6 +25,7 @@ const pdfTemplate = require("../utils/pdfTemplate");
 const pdfGenerator = require("../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
+const leaveNature = require("../enum/leaveNature");
 
 const employeeController = {
   async list(req, res) {
@@ -2249,93 +2250,13 @@ const employeeController = {
 
   async addLeaveRequest(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.id }).populate(
-        "personalInfo"
-      );
-      const isLieuTime = req.query.lieuTime;
-      console.log("this is value in prams ", isLieuTime);
+      const user = await User.findOne({ _id: req.params.id }).populate("personalInfo");
       if (!user) {
-        return res
-          .status(400)
-          .json({ message: "Provided invalid employee id." });
+        return res.status(400).json({ message: "Provided invalid employee id." });
       }
       console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
-      if (isLiueTime) {
-        // const lieuAllocation = await EmployeeLeaveAllocation.findOneAndUpdate(
-        //   {
-        //     leaveType: leaveType,
-        //     employee: req.params.id,
-        //     isDeleted: false,
-        //   },
-        //   { $inc: { totalAllocation: requestedHours } },
-        //   { upsert: true, new: true }
-        // ).populate("leaveType");
-
-        // Create a leave history record for lieu time
-        let lieuRequest = new EmployeeLeaveHistory({
-          leaveType: leaveType._id,
-          hours: requestedHours,
-          employee: req.params.id,
-          status: leaveStatus.PENDING,
-          ...req.body,
-        });
-        await lieuRequest.save();
-
-        // Populate the leave history record
-        lieuRequest = await lieuRequest.populate([
-          {
-            path: "employee",
-            populate: {
-              path: "personalInfo",
-              populate: {
-                path: "photo",
-              },
-            },
-          },
-          {
-            path: "responder",
-            populate: {
-              path: "personalInfo",
-              populate: {
-                path: "photo",
-              },
-            },
-          },
-          {
-            path: "leaveType",
-          },
-        ]);
-        console.log("this is lieuRequest", lieuRequest);
-        // Send notification for lieu time leave request
-        const notification = new Notifications({
-          title:
-            notificationConstants[notificationType.LEAVE_REQUEST].title
-              ?.replace(
-                "{sender}",
-                [user.personalInfo.firstName, user.personalInfo.lastName].join(
-                  " "
-                )
-              )
-              .replace("{leavetype}", leaveType.name) || "",
-          description:
-            notificationConstants[notificationType.LEAVE_REQUEST].description ||
-            "",
-          type: notificationType.LEAVE_REQUEST,
-          sender: req.params.id,
-          receiver: req.body.responder,
-          dataId: lieuRequest._id,
-        });
-        await notification.save();
-
-        sendGrid.send(req.body.responder.email, "leaveRequest", {
-          request: lieuRequest,
-        });
-
-        return res.status(200).json({
-          message: "Lieu time leave request sent successfully",
-        });
-      } else {
+      if (!req.body.nature || req.body.nature != leaveNature.ADDITION) {
         let allocation = await EmployeeLeaveAllocation.findOne({
           leaveType,
           employee: req.params.id,
@@ -2359,63 +2280,62 @@ const employeeController = {
         if (requestedHours > allocation?.totalAllocation - burnedHours) {
           return res.status(400).json({ message: "Insufficent balance" });
         }
-
-        let request = new EmployeeLeaveHistory({
-          ...req.body,
-          employee: req.params.id,
-          status: leaveStatus.PENDING,
-        });
-        await request.save();
-        request = await request.populate([
-          {
-            path: "employee",
-            populate: {
-              path: "personalInfo",
-              populate: {
-                path: "photo",
-              },
-            },
-          },
-          {
-            path: "responder",
-            populate: {
-              path: "personalInfo",
-              populate: {
-                path: "photo",
-              },
-            },
-          },
-          {
-            path: "leaveType",
-          },
-        ]);
-
-        const notification = new Notifications({
-          title:
-            notificationConstants[notificationType.LEAVE_REQUEST].title
-              ?.replace(
-                "{sender}",
-                [user.personalInfo.firstName, user.personalInfo.lastName].join(
-                  " "
-                )
-              )
-              .replace("{leavetype}", allocation.leaveType.name) || "",
-          description:
-            notificationConstants[notificationType.LEAVE_REQUEST].description ||
-            "",
-          type: notificationType.LEAVE_REQUEST,
-          sender: req.params.id,
-          receiver: req.body.responder,
-          dataId: request._id,
-        });
-        await notification.save();
-
-        sendGrid.send(request.responder.email, "leaveRequest", { request });
-
-        res.status(200).json({
-          message: "Employee leave request sent successfully",
-        });
       }
+      let request = new EmployeeLeaveHistory({
+        ...req.body,
+        employee: req.params.id,
+        status: leaveStatus.PENDING,
+      });
+      await request.save();
+      request = await request.populate([
+        {
+          path: "employee",
+          populate: {
+            path: "personalInfo",
+            populate: {
+              path: "photo",
+            },
+          },
+        },
+        {
+          path: "responder",
+          populate: {
+            path: "personalInfo",
+            populate: {
+              path: "photo",
+            },
+          },
+        },
+        {
+          path: "leaveType",
+        },
+      ]);
+
+      const notification = new Notifications({
+        title:
+          notificationConstants[notificationType.LEAVE_REQUEST].title
+            ?.replace(
+              "{sender}",
+              [user.personalInfo.firstName, user.personalInfo.lastName].join(
+                " "
+              )
+            )
+            .replace("{leavetype}", allocation.leaveType.name) || "",
+        description:
+          notificationConstants[notificationType.LEAVE_REQUEST].description ||
+          "",
+        type: notificationType.LEAVE_REQUEST,
+        sender: req.params.id,
+        receiver: req.body.responder,
+        dataId: request._id,
+      });
+      await notification.save();
+
+      sendGrid.send(request.responder.email, "leaveRequest", { request });
+
+      res.status(200).json({
+        message: "Employee leave request sent successfully",
+      });
     } catch (error) {
       console.error("employeeController:update:error -", error);
       res.status(400).json(error);

@@ -52,11 +52,6 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    nature: {
-      type: String,
-      default: leaveNature.SUBSTRACTION,
-      enum: Object.values(leaveNature),
-    },
   },
   {
     timestamps: true,

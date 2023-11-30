@@ -87,7 +87,7 @@ const API_URLS = {
   deleteEmployeePerformance: `/employee/review/:employeeid/delete/:id`,
   suggestionList: `/employee/completed-by-list`,
   // employee leave hsitory
-  submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request?`,
+  submitEmployeeLeaveHistory: `/employee/leave-history/:employeeid/request`,
   getLeaveHistory: `/employee/leave-history/:employeeid?page=Page&limit=10&searchKey=searchValue`,
   //employee allocation
   submitEmployeeAllocation: `/employee/leave-allocation/:employeeid`,
