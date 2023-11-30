@@ -487,14 +487,16 @@ const leaveController = {
         _id: req.params.requestid,
       });
       const { leaveType } = req.body;
+
       var allocation = await EmployeeLeaveAllocation.findOne({
         leaveType,
         employee: req.params.id,
         isDeleted: false,
       }).populate("leaveType");
+      console.log("11111111", allocation, "at top");
       if (leaveRequest.nature === "ADDITION") {
         if (req.body.isApproved) {
-          await EmployeeLeaveAllocation.findOneAndUpdate(
+          allocation = await EmployeeLeaveAllocation.findOneAndUpdate(
             {
               leaveType: leaveType,
               employee: req.params.id,
@@ -503,6 +505,19 @@ const leaveController = {
             { $inc: { totalAllocation: leaveRequest.hours } },
             { upsert: true, new: true }
           );
+          allocation = await allocation.populate("leaveType");
+          console.log("2222222", allocation, "new allocation added ");
+        } else {
+          if (!allocation) {
+            allocation = new EmployeeLeaveAllocation({
+              leaveType: leaveType,
+              employee: req.params.id,
+              totalAllocation: 0,
+            });
+            await allocation.save();
+            allocation = await allocation.populate("leaveType");
+            console.log("333333", allocation, "new allocation added ");
+          }
         }
       } else {
         if (!allocation)
@@ -516,6 +531,7 @@ const leaveController = {
           employee: req.params.id,
           isDeleted: false,
           status: { $ne: leaveStatus.REJECTED },
+          nature: "SUBSTRACTION",
         }).select("hours");
 
         for (const leave of leaves) {
@@ -524,7 +540,13 @@ const leaveController = {
           }
           burnedHours += leave.hours;
         }
-
+        console.log(
+          "this ----",
+          allocation?.totalAllocation,
+          burnedHours,
+          requestedHours,
+          "-------"
+        );
         if (
           req.body.isApproved &&
           requestedHours > allocation?.totalAllocation - burnedHours

@@ -26,6 +26,7 @@ const pdfGenerator = require("../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
 const leaveNature = require("../enum/leaveNature");
+const LeaveType = require("../models/leaveType");
 
 const employeeController = {
   async list(req, res) {
@@ -2297,6 +2298,10 @@ const employeeController = {
       }
       console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
+      let leaveDoc = await LeaveType.findOne({
+        _id: leaveType,
+        isDeleted: false,
+      });
       var allocation = await EmployeeLeaveAllocation.findOne({
         leaveType,
         employee: req.params.id,
@@ -2362,7 +2367,7 @@ const employeeController = {
                 " "
               )
             )
-            .replace("{leavetype}", allocation.leaveType.name) || "",
+            .replace("{leavetype}", leaveDoc.name) || "",
         description:
           notificationConstants[notificationType.LEAVE_REQUEST].description ||
           "",
@@ -2401,32 +2406,35 @@ const employeeController = {
         {
           $lookup: {
             from: "employeeleavehistories",
-            localField: "leaveType",
-            foreignField: "leaveType",
+            let: { leaveType: "$leaveType", userId: req.user._id },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$leaveType", "$$leaveType"] },
+                      { $eq: ["$employee", "$$userId"] },
+                      { $ne: ["$status", leaveStatus.REJECTED] },
+                      { $eq: ["$isDeleted", false] },
+                    ],
+                  },
+                },
+              },
+            ],
             as: "history",
           },
         },
-        { $unwind: "$history" },
         {
-          $match: {
-            "history.status": { $ne: leaveStatus.REJECTED },
-            "history.isDeleted": false,
-            "history.employee": req.user._id,
-            // "history.nature": "SUBSTRACTION",s
-          },
-        },
-
-        {
-          $addFields: {
-            consumed: {
-              $cond: {
-                if: { $eq: ["$history.nature", "SUBSTRACTION"] },
-                then: "$history.hours",
-                else: 0,
-              },
+        $addFields: {
+          consumed: {
+            $cond: {
+              if: { $eq: ["$history.nature", "SUBSTRACTION"] },
+              then: "$history.hours",
+              else: 0,
             },
           },
         },
+      },
         {
           $group: {
             _id: "$leaveType", // Group by leave type
@@ -2688,7 +2696,38 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
+  async orgChartData(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id }).populate();
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const employeeId = req.params.id;
+      const employeePosition = await EmployeePositionHistory.findOne({
+        employee: employeeId,
+        isPrimary: true,
+        isDeleted: false,
+      });
+      console.log("----", employeePosition, "-----------");
+      const reportsTo = [];
+      // reportsTo.push({ name:  });
+      if (!employeePosition) {
+        return res.status(404).json({ message: "Employee not found." });
+      }
+
+      res.status(200).json({
+        // orgChart,
+        message: "Organization chart fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:list:error -", error);
+      res.status(400).json(error);
+    }
+  },
 };
+
 async function processUsers(users) {
   for (let user of users) {
     console.log(user);
@@ -2701,4 +2740,5 @@ async function processUsers(users) {
     console.log("Welcome email sent to ", employee.email);
   }
 }
+
 module.exports = employeeController;

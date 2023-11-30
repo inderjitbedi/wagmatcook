@@ -93,6 +93,10 @@ const ManagerEmployeeSideBar = (props) => {
       Title: "Documents",
       to: "/manager-management/employee-details/documents/" + props.employeeId,
     },
+    {
+      Title: "Organization chart",
+      to: "/manager-management/employee-details/chart/" + props.employeeId,
+    },
   ];
   const style = {
     textDecoration: "none",

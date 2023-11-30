@@ -360,5 +360,10 @@ router.get(
   verifyToken([roles.ORG_ADMIN]),
   employeeController.unwelcomedList
 );
+router.get(
+  "/org-chart/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.orgChartData
+);
 
 module.exports = router;
