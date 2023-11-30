@@ -222,10 +222,10 @@ const OALeaves = () => {
       return true;
     }
     if (isEmptyObject(errors) && !update) {
-      // data.cantDelete = true;
+      // data.isLieuTime = true;
       HandleSubmitLeavesType(data);
     } else if (update && isEmptyObject(errors)) {
-      // data.cantDelete = true;
+      // data.isLieuTime = true;
 
       HandleUpdate(data);
     }
@@ -431,55 +431,9 @@ const OALeaves = () => {
     <div>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
 
-      <Menu
-        sx={{ margin: "0rem" }}
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleCloseMenu}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      >
-        <MenuItem
-          style={{
-            color: "#222B45",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Settings
-        </MenuItem>
-        <MenuItem
-          onClick={HandleLogout}
-          style={{
-            color: "#EA4335",
-            fontFamily: "Inter",
-            fontSize: "1.4rem",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "2rem",
-          }}
-        >
-          Logout
-        </MenuItem>
-      </Menu>
-      <DepartmentFilterContainer style={{ marginBottom: "2rem" }}>
-        <DisciplinaryHeading>Leave Types</DisciplinaryHeading>
-        {/* <DepartmentFilterdiv>
-            {FilterData.map((data) => (
-              <DepartmentFilterButton>{data}</DepartmentFilterButton>
-            ))}
-          </DepartmentFilterdiv> */}
+      <DisciplinaryDiv>
+        <DisciplinaryHeading>All Leave Types </DisciplinaryHeading>
+
         <AddNewButton onClick={() => HandleOpenAddNewAction()}>
           Add New
         </AddNewButton>
@@ -644,38 +598,8 @@ const OALeaves = () => {
             )}
           </Box>
         </Modal>
+      </DisciplinaryDiv>
 
-        <Modal
-          open={openThanks}
-          // onClose={HandleCloseThanks}
-          sx={{
-            backgroundColor: "rgb(27, 27, 27, 0.75)",
-            backdropFilter: "blur(8px)",
-          }}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <ModalThanks>
-              <ModalThanksImg src="/images/success.jpg" />
-              <ModalThanksHeading>
-                Department added successfully.
-              </ModalThanksHeading>
-              <AddNewButton
-                onClick={() => {
-                  HandleCloseThanks();
-                }}
-              >
-                {" "}
-                Thanks
-              </AddNewButton>
-            </ModalThanks>
-          </Box>
-        </Modal>
-      </DepartmentFilterContainer>
-      <HeaderDiv>
-        <HeaderTitle>Leaves List</HeaderTitle>
-      </HeaderDiv>
       {isLoading ? (
         <div
           style={{
@@ -850,19 +774,23 @@ const OALeaves = () => {
                                 <ActionIconDiv
                                   style={{ justifyContent: "center" }}
                                 >
-                                  <ActionIcons
-                                    onClick={() => {
-                                      HandleUpdateAction(data);
-                                    }}
-                                    src="/images/icons/Pendown.svg"
-                                  />
-                                  <ActionIcons
-                                    onClick={() => {
-                                      HandleOpenDelete();
-                                      setId(data._id);
-                                    }}
-                                    src="/images/icons/Trash-2.svg"
-                                  />
+                                  {!data.isLieuTime && (
+                                    <ActionIcons
+                                      onClick={() => {
+                                        HandleUpdateAction(data);
+                                      }}
+                                      src="/images/icons/Pendown.svg"
+                                    />
+                                  )}
+                                  {!data.isLieuTime && (
+                                     <ActionIcons
+                                      onClick={() => {
+                                        HandleOpenDelete();
+                                        setId(data._id);
+                                      }}
+                                      src="/images/icons/Trash-2.svg"
+                                    />
+                                  )}
                                 </ActionIconDiv>
                               </TableCell>
                               {provided.placeholder}

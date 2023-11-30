@@ -138,7 +138,7 @@ const orgController = {
             isActive: { $first: "$isActive" },
             isDeleted: { $first: "$isDeleted" },
             primaryUser: { $first: "$users.user" },
-            createdAt: { $first: "$createdAt" }
+            createdAt: { $first: "$createdAt" },
           },
         },
         {
@@ -155,12 +155,12 @@ const orgController = {
         {
           $sort: { createdAt: -1 }, // Add the $sort stage to sort by createdAt in descending order
         },
-      ]).skip(startIndex)
-        .limit(limit)
+      ])
+        .skip(startIndex)
+        .limit(limit);
       // .sort({ createdAt: -1 });
 
       // const totalOrganizations = await Organization.countDocuments(filters);
-
 
       const totalOrganizations = await Organization.aggregate([
         {
@@ -203,7 +203,7 @@ const orgController = {
         {
           $unwind: "$primaryUser", // Unwind the populated primaryUser
         },
-      ])
+      ]);
       const totalPages = Math.ceil(totalOrganizations.length / req.query.limit);
 
       res.status(200).json({
@@ -308,6 +308,7 @@ const orgController = {
           description: leaveType.description,
           createdBy: req.user._id,
           order,
+          isLieuTime: leaveType.isLieuTime,
         });
         await newLeaveType.save();
         order++;
@@ -411,7 +412,7 @@ const orgController = {
         req.body,
         { new: true }
       );
-      org = await org.populate("logo")
+      org = await org.populate("logo");
       res.status(200).json({
         org,
         message: "Organization profile updated successfully.",
@@ -437,5 +438,5 @@ const orgController = {
       res.status(400).json(error);
     }
   },
-}
+};
 module.exports = orgController;

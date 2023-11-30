@@ -52,12 +52,10 @@ const leaveTypeController = {
         isDeleted: false,
       }).populate("organization");
       await leaveType.save();
-      res
-        .status(200)
-        .json({
-          leaveType,
-          message: "Leave type details fetched successfully.",
-        });
+      res.status(200).json({
+        leaveType,
+        message: "Leave type details fetched successfully.",
+      });
     } catch (error) {
       console.error("leaveTypeController:detail:error -", error);
       res.status(400).json(error);
@@ -120,7 +118,7 @@ const leaveTypeController = {
         isDeleted: false,
         isActive: true,
         organization: req.organization?._id || null,
-        // cantDelete: false,
+        isLieuTime: false,
       };
 
       if (req.query.searchKey) {

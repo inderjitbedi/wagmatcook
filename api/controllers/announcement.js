@@ -130,12 +130,10 @@ const announcementController = {
         isDeleted: false,
       }).populate("organization departments attachment");
       await announcement.save();
-      res
-        .status(201)
-        .json({
-          announcement,
-          message: "Announcement details fetched successfully.",
-        });
+      res.status(201).json({
+        announcement,
+        message: "Announcement details fetched successfully.",
+      });
     } catch (error) {
       console.error("announcementController:detail:error -", error);
       res.status(400).json(error);

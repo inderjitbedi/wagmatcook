@@ -18,6 +18,7 @@ import ROLES from "../constants/roles";
 import httpClient from "../api/httpClient";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
+import DeleteModal from "../Modals/DeleteModal";
 
 import {
   MainBodyContainer,
@@ -60,6 +61,7 @@ import {
   ShowMore,
   FlexColumn100,
   ButtonBlue,
+  IconContainer,
 } from "../Employee/ViewEmployee/ViewEmployeeStyle";
 import {
   DisciplinaryDiv,
@@ -152,8 +154,10 @@ const LeaveHistory = () => {
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
   const [detailsLength, setDetailsLength] = useState(500);
-  const { employeeid } = useParams();
+
   const Navigate = useNavigate();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setUpdate(false);
@@ -355,7 +359,7 @@ const LeaveHistory = () => {
       user?._id
     );
     if (lieuTime) {
-      data.leaveType = lieuId;
+      data.leaveType = lieuId._id;
       data.nature = "ADDITION";
     }
 
@@ -430,7 +434,7 @@ const LeaveHistory = () => {
         .then(({ result, error }) => {
           if (result) {
             const LieuId = result.leaveTypes.find(
-              (obj) => obj.cantDelete === true
+              (obj) => obj.isLieuTime === true
             );
             setLieuId(LieuId);
             resolve(result);
@@ -448,6 +452,41 @@ const LeaveHistory = () => {
           setIsLoading(false);
         });
     });
+  };
+
+  const [openDelete, setOpenDelete] = useState(false);
+  const HandleOpenDelete = () => setOpenDelete(true);
+  const HandleCloseDelete = () => setOpenDelete(false);
+  const HandleDelete = () => {
+    setIsDeleting(true);
+    let url = API_URLS.deleteLeaveHistroy
+      .replace(":id", user._id)
+      .replace(":leaveid", Id);
+    httpClient({
+      method: "put",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleCloseDelete();
+          GetLeaveHistory();
+          GetLeaveAlloactionBalance();
+          setId("");
+          toast.success(result.message, {
+            className: "toast",
+          });
+        } else {
+          //toast.warn("something went wrong ");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error Deleting Benefits. Please try again.");
+        setIsDeleting(false);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+      });
   };
   console.log("this the leave type lieu:", lieuId);
   let API_URL = process.env.REACT_APP_API_URL;
@@ -540,8 +579,7 @@ const LeaveHistory = () => {
                         margin: 0,
                       }}
                     >
-                      {data?.totalAllocation - data?.consumed || " - "} Hrs
-                      remaining
+                      {data?.totalAllocation - data?.consumed} Hrs remaining
                     </span>
                   </Sectionlighttitle>
                   <Sectionsmalltitle>
@@ -678,8 +716,8 @@ const LeaveHistory = () => {
                           data.status === "PENDING"
                             ? PendingStyle
                             : data.status === "APPROVED"
-                              ? ApprovedStyles
-                              : RejectedStyles
+                            ? ApprovedStyles
+                            : RejectedStyles
                         }
                       >
                         {" "}
@@ -687,13 +725,24 @@ const LeaveHistory = () => {
                       </span>
                     </TableCell>
                     <TableCell align="center" sx={Celllstyle2}>
-                      <Icons
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          HandleUpdateAction(data);
-                        }}
-                        src="/images/icons/eye.svg"
-                      />
+                      <IconContainer>
+                        <Icons
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            HandleUpdateAction(data);
+                          }}
+                          src="/images/icons/eye.svg"
+                        />
+                        {data.status === "PENDING" && (
+                          <Icons
+                            onClick={() => {
+                              setId(data._id);
+                              HandleOpenDelete();
+                            }}
+                            src="/images/icons/Trash-2.svg"
+                          />
+                        )}
+                      </IconContainer>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -994,8 +1043,8 @@ const LeaveHistory = () => {
                             isSatus === "PENDING"
                               ? PendingStyle
                               : isSatus === "APPROVED"
-                                ? ApprovedStyles
-                                : RejectedStyles
+                              ? ApprovedStyles
+                              : RejectedStyles
                             // isSatus === "PENDING"
                             //   ? PendingStyle
                             //   : ApprovedStyles
@@ -1036,6 +1085,13 @@ const LeaveHistory = () => {
               </ModalThanks>
             </Box>
           </Modal>
+          <DeleteModal
+            openDelete={openDelete}
+            message="Are you sure you want to delete this leave request?"
+            HandleCloseDelete={HandleCloseDelete}
+            isLoading={isDeleting}
+            HandleDelete={HandleDelete}
+          />
         </MainBodyContainer>
       )}
     </>

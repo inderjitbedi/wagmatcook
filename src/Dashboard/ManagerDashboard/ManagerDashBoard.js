@@ -197,20 +197,22 @@ const ManagerDashBoard = () => {
                     style={{ alignItems: "center", margin: "0" }}
                   >
                     <CardHeading>Applied Leave Request</CardHeading>
-                    <MainCardView
-                      onClick={() => {
-                        if (userType === ROLES.MANAGER) {
-                          Navigate(`/manager-management/announcements`);
-                        } else if (userType === ROLES.HR) {
-                          Navigate(`/hr-management/announcements`);
-                        } else if (userType === ROLES.EMPLOYEE) {
-                          Navigate(`/user-management/leaves/${user?._id}`);
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View All
-                    </MainCardView>
+                    {!dashboardData?.leaves?.length < 1 && (
+                      <MainCardView
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/announcements`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.EMPLOYEE) {
+                            Navigate(`/user-management/leaves/${user?._id}`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        View All
+                      </MainCardView>
+                    )}
                   </FlexSpaceBetween>
 
                   {!dashboardData?.leaves?.length && (
@@ -272,20 +274,22 @@ const ManagerDashBoard = () => {
                     style={{ alignItems: "center", margin: "0" }}
                   >
                     <CardHeading>Leave Request</CardHeading>
-                    <MainCardView
-                      onClick={() => {
-                        if (userType === ROLES.MANAGER) {
-                          Navigate(`/manager-management/leaves`);
-                        } else if (userType === ROLES.HR) {
-                          Navigate(`/hr-management/leaves`);
-                        } else {
-                          Navigate(`/user-management/leaves`);
-                        }
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      View All
-                    </MainCardView>
+                    {!dashboardData?.leaves?.length < 1 && (
+                      <MainCardView
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(`/manager-management/leaves`);
+                          } else if (userType === ROLES.HR) {
+                            Navigate(`/hr-management/leaves`);
+                          } else {
+                            Navigate(`/user-management/leaves`);
+                          }
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        View All
+                      </MainCardView>
+                    )}
                   </FlexSpaceBetween>
 
                   {!dashboardData?.leaves?.length && (
@@ -364,20 +368,22 @@ const ManagerDashBoard = () => {
               <CardBody>
                 <FlexSpaceBetween style={{ alignItems: "center", margin: "0" }}>
                   <CardHeading> Announcements</CardHeading>
-                  <MainCardView
-                    onClick={() => {
-                      if (userType === ROLES.MANAGER) {
-                        Navigate(`/manager-management/announcements`);
-                      } else if (userType === ROLES.HR) {
-                        Navigate(`/hr-management/announcements`);
-                      } else {
-                        Navigate(`/user-management/announcements`);
-                      }
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    View All
-                  </MainCardView>
+                  {!Announcements?.length < 1 && (
+                    <MainCardView
+                      onClick={() => {
+                        if (userType === ROLES.MANAGER) {
+                          Navigate(`/manager-management/announcements`);
+                        } else if (userType === ROLES.HR) {
+                          Navigate(`/hr-management/announcements`);
+                        } else {
+                          Navigate(`/user-management/announcements`);
+                        }
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      View All
+                    </MainCardView>
+                  )}
                 </FlexSpaceBetween>
                 {!Announcements?.length && (
                   <div

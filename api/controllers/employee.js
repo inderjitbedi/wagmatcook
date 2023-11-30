@@ -1047,8 +1047,9 @@ const employeeController = {
         });
         if (hasDirectReports.length > 1) {
           return res.status(400).json({
-            message: `Cannot delete the ${user.role === roles.HR ? "Hr" : " Manager"
-              } as they have other employees under them.`,
+            message: `Cannot delete the ${
+              user.role === roles.HR ? "Hr" : " Manager"
+            } as they have other employees under them.`,
           });
         }
       }
@@ -2188,7 +2189,43 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
+  async deleteLeaveHistory(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const leaveHistoryId = req.params.leaveid;
+      const leaveHistory = await EmployeeLeaveHistory.findOne({
+        _id: leaveHistoryId,
+        status: leaveStatus.PENDING,
+      });
+      if (!leaveHistory) {
+        return res.status(404).json({ message: "Leave history not found." });
+      }
 
+      await EmployeeLeaveHistory.findOneAndUpdate(
+        { _id: leaveHistoryId },
+        { isDeleted: true }
+      );
+      await Notifications.findOneAndUpdate(
+        {
+          dataId: leaveHistoryId,
+        },
+        { isDeleted: true },
+        { new: true }
+      );
+
+      res.status(200).json({
+        message: "Employee leave history deleted successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:deleteLeaveHistory:error -", error);
+      res.status(400).json(error);
+    }
+  },
   async getLeaveRequest(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.id });
@@ -2250,18 +2287,22 @@ const employeeController = {
 
   async addLeaveRequest(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.id }).populate("personalInfo");
+      const user = await User.findOne({ _id: req.params.id }).populate(
+        "personalInfo"
+      );
       if (!user) {
-        return res.status(400).json({ message: "Provided invalid employee id." });
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
       }
       console.log(" req.body = ", req.body);
       let { leaveType, hours: requestedHours } = req.body;
+      var allocation = await EmployeeLeaveAllocation.findOne({
+        leaveType,
+        employee: req.params.id,
+        isDeleted: false,
+      }).populate("leaveType");
       if (!req.body.nature || req.body.nature != leaveNature.ADDITION) {
-        let allocation = await EmployeeLeaveAllocation.findOne({
-          leaveType,
-          employee: req.params.id,
-          isDeleted: false,
-        }).populate("leaveType");
         if (!allocation)
           return res.status(400).json({ message: "Leave type not allocated." });
 
@@ -2271,6 +2312,7 @@ const employeeController = {
           employee: req.params.id,
           isDeleted: false,
           status: { $ne: leaveStatus.REJECTED },
+          nature: { $ne: leaveNature.ADDITION },
         }).select("hours");
 
         for (const leave of leaves) {
@@ -2344,6 +2386,7 @@ const employeeController = {
 
   async getLeaveBalance(req, res) {
     try {
+      // console.log(req.user._id);
       let leaves = await EmployeeLeaveAllocation.aggregate([
         { $match: { employee: req.user._id, isDeleted: false } },
         {
@@ -2363,8 +2406,36 @@ const employeeController = {
             as: "history",
           },
         },
-        { $match: { "history.status": { $ne: leaveStatus.REJECTED } } },
-        { $addFields: { consumed: { $sum: "$history.hours" } } },
+        { $unwind: "$history" },
+        {
+          $match: {
+            "history.status": { $ne: leaveStatus.REJECTED },
+            "history.isDeleted": false,
+            "history.employee": req.user._id,
+            // "history.nature": "SUBSTRACTION",s
+          },
+        },
+
+        {
+          $addFields: {
+            consumed: {
+              $cond: {
+                if: { $eq: ["$history.nature", "SUBSTRACTION"] },
+                then: "$history.hours",
+                else: 0,
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "$leaveType", // Group by leave type
+            consumed: { $sum: "$consumed" }, // Take the consumed value from the first document in the group
+            totalAllocation: { $first: "$totalAllocation" }, // Take the totalAllocation value from the first document in the group
+            leaveType: { $first: "$leaveType" }, // Take the leaveType value from the first document in the group
+            leaveTypeObj: { $first: "$leaveTypeObj" }, // Take the leaveTypeObj value from the first document in the group
+          },
+        },
         {
           $project: {
             consumed: 1,
@@ -2375,7 +2446,7 @@ const employeeController = {
         },
         { $sort: { "leaveTypeObj.order": 1 } },
       ]);
-
+      // console.log("+++++++++++", leaves);
       res.status(200).json({
         leaves,
         message: "Employee leave balance fetched successfully",

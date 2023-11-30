@@ -48,7 +48,7 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    cantDelete: {
+    isLieuTime: {
       type: Boolean,
       default: false,
     },

@@ -481,31 +481,30 @@ const leaveController = {
         "personalInfo"
       );
       if (!user) {
-        return res
-          .status(400)
-          .json({ message: "User not found." });
+        return res.status(400).json({ message: "User not found." });
       }
       let leaveRequest = await EmployeeLeaveHistory.findOne({
         _id: req.params.requestid,
-      })
-
+      });
+      const { leaveType } = req.body;
+      var allocation = await EmployeeLeaveAllocation.findOne({
+        leaveType,
+        employee: req.params.id,
+        isDeleted: false,
+      }).populate("leaveType");
       if (leaveRequest.nature === "ADDITION") {
         if (req.body.isApproved) {
-          const allocation = await EmployeeLeaveAllocation.findOneAndUpdate({
-            leaveType: leaveType,
-            employee: req.params.id,
-            isDeleted: false,
-          },
+          await EmployeeLeaveAllocation.findOneAndUpdate(
+            {
+              leaveType: leaveType,
+              employee: req.params.id,
+              isDeleted: false,
+            },
             { $inc: { totalAllocation: leaveRequest.hours } },
             { upsert: true, new: true }
           );
         }
       } else {
-        var allocation = await EmployeeLeaveAllocation.findOne({
-          leaveType,
-          employee: req.params.id,
-          isDeleted: false,
-        }).populate("leaveType");
         if (!allocation)
           return res.status(400).json({ message: "Leave type not allocated." });
 
@@ -526,7 +525,10 @@ const leaveController = {
           burnedHours += leave.hours;
         }
 
-        if (req.body.isApproved && requestedHours > allocation?.totalAllocation - burnedHours) {
+        if (
+          req.body.isApproved &&
+          requestedHours > allocation?.totalAllocation - burnedHours
+        ) {
           return res.status(400).json({ message: "Insufficent balance" });
         }
       }
@@ -568,11 +570,19 @@ const leaveController = {
           path: "leaveType",
         },
       ]);
-      let type = req.body.isApproved ? notificationType.LEAVE_APPROVED : notificationType.LEAVE_REJECTED;
+      let type = req.body.isApproved
+        ? notificationType.LEAVE_APPROVED
+        : notificationType.LEAVE_REJECTED;
       const notification = new Notifications({
         title:
-          notificationConstants[type].title?.replace(
-            "{responder}", [req.user?.personalInfo.firstName, req.user?.personalInfo.lastName,].join(" "))
+          notificationConstants[type].title
+            ?.replace(
+              "{responder}",
+              [
+                req.user?.personalInfo.firstName,
+                req.user?.personalInfo.lastName,
+              ].join(" ")
+            )
             .replace("{leavetype}", allocation.leaveType.name) || "",
         description: notificationConstants[type].description || "",
         type: type,
@@ -596,8 +606,9 @@ const leaveController = {
       );
 
       res.status(200).json({
-        message: `Employee leave request ${req.body.isApproved ? "approved" : "rejected"
-          } successfully`,
+        message: `Employee leave request ${
+          req.body.isApproved ? "approved" : "rejected"
+        } successfully`,
       });
     } catch (error) {
       console.error("employeeController:update:error -", error);

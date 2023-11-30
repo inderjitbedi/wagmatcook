@@ -374,24 +374,23 @@ const SendWelcome = () => {
               </TableBody>
             </Table>
           </TableContainer>
-
-          <PaginationDivExpand>
-            <FlexContaier style={{ alignItems: "center" }}>
-              <PaginationPara>Items per page</PaginationPara>
-              <PaginationSelect
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-              >
-                <PaginationOption value={5}>5</PaginationOption>
-                <PaginationOption value={10}>10</PaginationOption>
-                <PaginationOption value={15}>15</PaginationOption>
-                <PaginationOption value={20}>20</PaginationOption>
-              </PaginationSelect>
-              <PaginationPara>{`${startItem}-${endItem} of ${
-                result?.totalUsers || 0
-              }`}</PaginationPara>
-            </FlexContaier>
-            {result?.totalPages > 1 && (
+          {result?.totalPages > 1 && (
+            <PaginationDivExpand>
+              <FlexContaier style={{ alignItems: "center" }}>
+                <PaginationPara>Items per page</PaginationPara>
+                <PaginationSelect
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                >
+                  <PaginationOption value={5}>5</PaginationOption>
+                  <PaginationOption value={10}>10</PaginationOption>
+                  <PaginationOption value={15}>15</PaginationOption>
+                  <PaginationOption value={20}>20</PaginationOption>
+                </PaginationSelect>
+                <PaginationPara>{`${startItem}-${endItem} of ${
+                  result?.totalUsers || 0
+                }`}</PaginationPara>
+              </FlexContaier>
               <Pagination
                 count={result?.totalPages}
                 variant="outlined"
@@ -399,8 +398,8 @@ const SendWelcome = () => {
                 page={page}
                 onChange={HandleChangePage}
               />
-            )}
-          </PaginationDivExpand>
+            </PaginationDivExpand>
+          )}
         </>
       )}
     </>

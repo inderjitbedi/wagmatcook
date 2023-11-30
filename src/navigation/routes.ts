@@ -1225,7 +1225,7 @@ const Routes: any = [
         meta: { allowedRoles: [ROLES.EMPLOYEE] },
       },
       {
-        component: EVLeaveHistory,
+        component: LeaveHistory,
         path: "leaves/:employeeid?",
         title: "Leaves",
         to: "/",
