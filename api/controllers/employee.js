@@ -1048,9 +1048,8 @@ const employeeController = {
         });
         if (hasDirectReports.length > 1) {
           return res.status(400).json({
-            message: `Cannot delete the ${
-              user.role === roles.HR ? "Hr" : " Manager"
-            } as they have other employees under them.`,
+            message: `Cannot delete the ${user.role === roles.HR ? "Hr" : " Manager"
+              } as they have other employees under them.`,
           });
         }
       }
@@ -2415,6 +2414,7 @@ const employeeController = {
                       { $eq: ["$leaveType", "$$leaveType"] },
                       { $eq: ["$employee", "$$userId"] },
                       { $ne: ["$status", leaveStatus.REJECTED] },
+                      { $ne: ["$nature", leaveNature.ADDITION] },
                       { $eq: ["$isDeleted", false] },
                     ],
                   },
@@ -2425,23 +2425,32 @@ const employeeController = {
           },
         },
         {
-        $addFields: {
-          consumed: {
-            $cond: {
-              if: { $eq: ["$history.nature", "SUBSTRACTION"] },
-              then: "$history.hours",
-              else: 0,
-            },
-          },
+          $addFields: {
+            consumed: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $isArray: "$history" }, // Check if history is an array
+                    { $ne: [{ $size: "$history" }, 0] }, // Check if the array is not empty
+                    { $ne: ["$history.nature", "ADDITION"] } // Check if nature is not "ADDITION"
+                  ]
+                },
+                then: "$history.hours", // If conditions are met, use history.hours
+                else: 0 // Otherwise, set consumed to 0
+              }
+            }
+          }
         },
-      },
+        {
+          $unwind: "$consumed" // Unwind consumed if it is an array
+        },
         {
           $group: {
-            _id: "$leaveType", // Group by leave type
-            consumed: { $sum: "$consumed" }, // Take the consumed value from the first document in the group
-            totalAllocation: { $first: "$totalAllocation" }, // Take the totalAllocation value from the first document in the group
-            leaveType: { $first: "$leaveType" }, // Take the leaveType value from the first document in the group
-            leaveTypeObj: { $first: "$leaveTypeObj" }, // Take the leaveTypeObj value from the first document in the group
+            _id: "$leaveType",
+            consumed: { $sum: "$consumed" },
+            totalAllocation: { $first: "$totalAllocation" },
+            leaveType: { $first: "$leaveType" },
+            leaveTypeObj: { $first: "$leaveTypeObj" },
           },
         },
         {

@@ -579,14 +579,14 @@ const LeaveHistory = () => {
                         margin: 0,
                       }}
                     >
-                      {data?.totalAllocation - data?.consumed} Hrs remaining
+                      {data?.totalAllocation - data?.consumed} hours left
                     </span>
                   </Sectionlighttitle>
                   <Sectionsmalltitle>
                     {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
                   </Sectionsmalltitle>
                   <Sectionsmalltitle>
-                    {data?.consumed} of {data?.totalAllocation} Hrs used
+                    {data?.consumed} of {data?.totalAllocation} hours used
                   </Sectionsmalltitle>
                 </FlexColumn100>
               </SectionCardContainer>
@@ -708,7 +708,16 @@ const LeaveHistory = () => {
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.hours || " - "}
+                      <span
+                        style={
+                          data.nature == 'ADDITION'
+                            ? ApprovedStyles
+                            : RejectedStyles
+                        }
+                      >
+                        {data.hours ? (data.nature == 'ADDITION' ? '+ ' : '- ') + data.hours : " - "}
+
+                      </span>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <span
@@ -716,8 +725,8 @@ const LeaveHistory = () => {
                           data.status === "PENDING"
                             ? PendingStyle
                             : data.status === "APPROVED"
-                            ? ApprovedStyles
-                            : RejectedStyles
+                              ? ApprovedStyles
+                              : RejectedStyles
                         }
                       >
                         {" "}
@@ -1043,8 +1052,8 @@ const LeaveHistory = () => {
                             isSatus === "PENDING"
                               ? PendingStyle
                               : isSatus === "APPROVED"
-                              ? ApprovedStyles
-                              : RejectedStyles
+                                ? ApprovedStyles
+                                : RejectedStyles
                             // isSatus === "PENDING"
                             //   ? PendingStyle
                             //   : ApprovedStyles
