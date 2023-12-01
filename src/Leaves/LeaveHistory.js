@@ -711,11 +711,11 @@ const LeaveHistory = () => {
                       <span
                         style={
                           data.nature == 'ADDITION'
-                            ? ApprovedStyles
-                            : RejectedStyles
+                            ? { color: "var(--green-90, #0D7D0B)" }
+                            : (data.status === 'REJECTED' ? { color: "#E88B00", } : { color: "#EA4335" })
                         }
                       >
-                        {data.hours ? (data.nature == 'ADDITION' ? '+ ' : '- ') + data.hours : " - "}
+                        {data.hours ? (data.nature == 'ADDITION' ? '+ ' : (data.status === 'REJECTED' ? `  ` : '- ')) + data.hours : " - "}
 
                       </span>
                     </TableCell>
