@@ -2430,19 +2430,19 @@ const employeeController = {
               $cond: {
                 if: {
                   $and: [
-                    { $isArray: "$history" }, // Check if history is an array
-                    { $ne: [{ $size: "$history" }, 0] }, // Check if the array is not empty
-                    { $ne: ["$history.nature", "ADDITION"] } // Check if nature is not "ADDITION"
+                    { $isArray: "$history" },
+                    { $ne: [{ $size: "$history" }, 0] },
+                    { $ne: ["$history.nature", "ADDITION"] }
                   ]
                 },
-                then: "$history.hours", // If conditions are met, use history.hours
-                else: 0 // Otherwise, set consumed to 0
+                then: "$history.hours",
+                else: 0
               }
             }
           }
         },
         {
-          $unwind: "$consumed" // Unwind consumed if it is an array
+          $unwind: "$consumed"
         },
         {
           $group: {
@@ -2708,23 +2708,9 @@ const employeeController = {
   async orgChartData(req, res) {
     try {
       const employeeId = req.params.id;
-      const user = await User.findOne({ _id: employeeId });
-      if (!user) {
-        return res
-          .status(400)
-          .json({ message: "Provided invalid employee id." });
-      }
 
-      const employeePosition = await EmployeePositionHistory.findOne({
-        employee: employeeId,
-        isPrimary: true,
-        isDeleted: false,
-      });
-
-      if (!employeePosition) {
-        return res.status(400).json({ message: "Employee position not found." });
-      }
-      const orgChart = await findReportingHierarchy(employeeId);
+      let orgChart = await findReportingHierarchy({}, employeeId)
+      orgChart = await reverseOrgChart(orgChart);
 
       res.status(200).json({
         orgChart,
@@ -2736,6 +2722,21 @@ const employeeController = {
     }
   },
 };
+async function reverseOrgChart(node, parent = null) {
+  const reversedNode = {
+    id: node.id,
+    personalInfo: node.personalInfo,
+    role: node.role,
+    position: node.position,
+    child: parent ? [parent] : [],
+  };
+
+  if (node.reportsTo) {
+    return await reverseOrgChart(node.reportsTo, reversedNode);
+  }
+
+  return reversedNode;
+}
 
 // async function findReportingHierarchy(employeeId) {
 //   const positionHistory = await EmployeePositionHistory.findOne({
@@ -2811,46 +2812,62 @@ const employeeController = {
 //     ...(reportingHierarchy || []),
 //   ];
 // }
-async function findReportingHierarchy(employeeId) {
-  const positionHistory = await EmployeePositionHistory.findOne({
-    employee: employeeId,
-    isPrimary: true,
-    isDeleted: false,
+
+
+
+
+
+
+
+
+// {
+//  NAME: EMP1,
+//  REPORTSTO: {
+//   NAME: MGR2,
+//   REPORTSTO:{
+//     NAME:MGR1
+//     REPORTSTO:{
+//       NAME:ORG_ADMIN
+//     }
+//   }
+//  } 
+// }
+async function findReportingHierarchy(data, employeeId) {
+  const user = await User.findOne({ _id: employeeId })
+    .populate({
+      path: "personalInfo",
+      populate: { path: "photo" },
+    });
+  const employeePosition = await EmployeePositionHistory.findOne({
+    employee: employeeId, isPrimary: true, isDeleted: false,
   });
 
-  if (!positionHistory) {
-    return null;
+  data = {
+    id: employeeId,
+    personalInfo: user.personalInfo,
+    role: user.role,
+    position: employeePosition?.title,
+    reportsTo: employeePosition?.reportsTo
+  };
+
+  if (data.reportsTo) {
+    data.reportsTo = {
+      id: employeePosition.reportsTo,
+      personalInfo: user.personalInfo,
+      role: user.role,
+      position: employeePosition?.title,
+      reportsTo: null // Set to null initially, will be updated in the recursive call
+    };
+
+    if (employeePosition && employeePosition?.reportsTo) {
+      console.log(data);
+      const res = await findReportingHierarchy(data.reportsTo, employeePosition.reportsTo);
+      console.log(res);
+      data.reportsTo = res;
+    }
   }
 
-  const managerId = positionHistory.reportsTo;
-
-  const managerInfo = await User.findOne({
-    _id: managerId,
-    isDeleted: false,
-  }).populate({
-    path: "personalInfo",
-    model: "EmployeePersonalInfo",
-    populate: { path: "photo", model: "File" },
-  });
-
-  if (!managerInfo) {
-    return null;
-  }
-
-  const reportingHierarchy = await findReportingHierarchy(managerId);
-  return [
-    {
-      employeeId: managerInfo._id,
-      firstName: managerInfo.personalInfo.firstName,
-      lastName: managerInfo.personalInfo.lastName,
-      position: positionHistory.title,
-      reportsTo: positionHistory.reportsTo,
-      photo: managerInfo.personalInfo.photo
-        ? managerInfo.personalInfo.photo
-        : null,
-    },
-    ...(reportingHierarchy || []),
-  ];
+  return data;
 }
 async function processUsers(users) {
   for (let user of users) {
