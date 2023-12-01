@@ -708,7 +708,15 @@ const LeaveHistory = () => {
                         : " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {data.hours || " - "}
+                      <span
+                        style={
+                          data.nature === "ADDITION"
+                            ? { color: "#0D7D0B" }
+                            : { color: "#EA4335" }
+                        }
+                      >
+                        {data.hours || " - "}
+                      </span>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
                       <span

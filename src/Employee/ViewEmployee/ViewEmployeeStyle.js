@@ -1110,3 +1110,36 @@ export const FilterContainer = styled.div`
     flex: 0 1 100%;
   }
 `;
+export const ChartBox = styled.div`
+  border: 1px solid #279af1;
+  display: inline-block;
+  /* display: flex; */
+  align-items: center;
+  gap: 4px;
+  /* width: max-content; */
+  padding: 1rem;
+  border-radius: 8px;
+`;
+export const ChartImg = styled.img`
+width: 2.5rem;
+height: 2.5rem;
+border-radius: 50%;
+display: inline-block;
+`;
+export const ChartName = styled.p`
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.4rem;
+  margin: 0;
+`;
+export const ChartLight = styled.p`
+  font-family: Inter;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4rem;
+  margin: 0;
+`;
+

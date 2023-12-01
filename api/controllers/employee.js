@@ -2425,16 +2425,16 @@ const employeeController = {
           },
         },
         {
-        $addFields: {
-          consumed: {
-            $cond: {
-              if: { $eq: ["$history.nature", "SUBSTRACTION"] },
-              then: "$history.hours",
-              else: 0,
+          $addFields: {
+            consumed: {
+              $cond: {
+                if: { $eq: ["$history.nature", "SUBSTRACTION"] },
+                then: "$history.hours",
+                else: 0,
+              },
             },
           },
         },
-      },
         {
           $group: {
             _id: "$leaveType", // Group by leave type
@@ -2710,15 +2710,14 @@ const employeeController = {
         isPrimary: true,
         isDeleted: false,
       });
-      console.log("----", employeePosition, "-----------");
-      const reportsTo = [];
-      // reportsTo.push({ name:  });
+
       if (!employeePosition) {
         return res.status(404).json({ message: "Employee not found." });
       }
+      const orgChart = await findReportingHierarchy(employeeId);
 
       res.status(200).json({
-        // orgChart,
+        orgChart,
         message: "Organization chart fetched successfully",
       });
     } catch (error) {
@@ -2727,6 +2726,81 @@ const employeeController = {
     }
   },
 };
+
+async function findReportingHierarchy(employeeId) {
+  const positionHistory = await EmployeePositionHistory.findOne({
+    employee: employeeId,
+    isPrimary: true,
+    isDeleted: false,
+  });
+
+  if (!positionHistory) {
+    return null;
+  }
+
+  const managerId = positionHistory.reportsTo;
+
+  const managerInfo = await User.findOne({
+    _id: managerId,
+    isDeleted: false,
+  }).populate({
+    path: "personalInfo",
+    model: "EmployeePersonalInfo",
+    populate: { path: "photo", model: "File" },
+  });
+
+  if (!managerInfo) {
+    return null;
+  }
+
+  const subordinates = await EmployeePositionHistory.find({
+    reportsTo: managerId,
+    isDeleted: false,
+    isPrimary: true,
+  }).populate({
+    path: "employee",
+    model: "User",
+    populate: {
+      path: "personalInfo",
+      model: "EmployeePersonalInfo",
+      populate: { path: "photo", model: "File" },
+    },
+  });
+  console.log(subordinates, "++++++");
+  const subordinateInfo = subordinates
+    .map((subordinate) => {
+      if (subordinate.employee) {
+        return {
+          employeeId: subordinate.employee._id,
+          firstName: subordinate.employee.personalInfo.firstName,
+          lastName: subordinate.employee.personalInfo.lastName,
+          position: subordinate.title,
+          reportsTo: positionHistory.title,
+
+          photo: subordinate.employee.personalInfo.photo
+            ? subordinate.employee.personalInfo.photo
+            : null,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+  const reportingHierarchy = await findReportingHierarchy(managerId);
+  return [
+    {
+      employeeId: managerInfo._id,
+      firstName: managerInfo.personalInfo.firstName,
+      lastName: managerInfo.personalInfo.lastName,
+      position: positionHistory.title,
+      reportsTo: positionHistory.reportsTo,
+      photo: managerInfo.personalInfo.photo
+        ? managerInfo.personalInfo.photo
+        : null,
+      subordinates: subordinateInfo,
+    },
+    ...(reportingHierarchy || []),
+  ];
+}
 
 async function processUsers(users) {
   for (let user of users) {

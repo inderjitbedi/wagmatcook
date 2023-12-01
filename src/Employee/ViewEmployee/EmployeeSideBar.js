@@ -93,12 +93,15 @@ const EmployeeSideBar = (props) => {
       Title: "Documents",
       to: "/organization-admin/employee/details/documents/" + props.employeeId,
     },
+    {
+      Title: "Organization chart",
+      to: "/organization-admin/employee/details/chart/" + props.employeeId,
+    },
   ];
   const style = {
     textDecoration: "none",
     color: "#279AF1",
     // textDecoration: props.screenWidth < 600 ? "underline" : "none",
-  
   };
 
   return (
@@ -110,7 +113,7 @@ const EmployeeSideBar = (props) => {
             <SideBarListContainer style={{ zIndex: "56" }}>
               <SideBarListTitle
                 style={
-                  location.pathname === data.to ? style : { color: "#5C5C5C"  }
+                  location.pathname === data.to ? style : { color: "#5C5C5C" }
                 }
               >
                 {" "}

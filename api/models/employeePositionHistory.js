@@ -1,86 +1,87 @@
+const mongoose = require("mongoose");
+const roles = require("../enum/roles");
 
-
-const mongoose = require('mongoose');
-const roles = require('../enum/roles');
-
-const infoSchema = new mongoose.Schema({
+const infoSchema = new mongoose.Schema(
+  {
     employee: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     employeeType: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'EmployeeType',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "EmployeeType",
     },
     role: {
-        type: String,
-        default: null,
-        enum: Object.values(roles),
+      type: String,
+      default: null,
+      enum: Object.values(roles),
     },
     jurisdiction: {
-        type: String,
-        default: null,
+      type: String,
+      default: null,
     },
     department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Department',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
     },
     title: {
-        type: String,
-        default: null
+      type: String,
+      default: null,
     },
     reportsTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: null
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
     startDate: {
-        type: Date,
-        default: null
+      type: Date,
+      default: null,
     },
     endDate: {
-        type: Date,
-        default: null
+      type: Date,
+      default: null,
     },
     salaryScaleFrom: {
-        type: Number,
-        default: null
+      type: Number,
+      default: null,
     },
     salaryScaleTo: {
-        type: Number,
-        default: null
+      type: Number,
+      default: null,
     },
     salary: {
-        type: Number,
-        default: null
+      type: Number,
+      default: null,
     },
     ratePer: {
-        type: Number,
-        default: null
+      type: Number,
+      default: null,
     },
     hoursPerWeek: {
-        type: Number,
-        default: null
+      type: Number,
+      default: null,
     },
     isBebEligible: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     isPrimary: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     isDeleted: {
-        type: Boolean,
-        default: false
-    }
-}, {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
-
-
-
-const EmployeePositionHistory = mongoose.model('EmployeePositionHistory', infoSchema);
+const EmployeePositionHistory = mongoose.model(
+  "EmployeePositionHistory",
+  infoSchema
+);
 
 module.exports = EmployeePositionHistory;
