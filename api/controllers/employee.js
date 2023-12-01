@@ -2713,7 +2713,7 @@ const employeeController = {
       orgChart = await reverseOrgChart(orgChart);
 
       res.status(200).json({
-        orgChart,
+        orgChart: [orgChart],
         message: "Organization chart fetched successfully",
       });
     } catch (error) {

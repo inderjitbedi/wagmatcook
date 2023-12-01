@@ -35,8 +35,9 @@ const EvChart = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setResult(result.orgChart.reverse());
-          console.log(buildTree(result.orgChart));
+          setResult(result.orgChart);
+
+          // console.log(buildTree(result.orgChart));
         } else {
           //toast.warn("something went wrong ");
         }
@@ -64,52 +65,83 @@ const EvChart = () => {
     }
     GetEmployeesChartData();
   }, []);
-  function buildTree(orgChart) {
-    const employeeMap = {};
+  // function buildTree(orgChart) {
+  //   const employeeMap = {};
 
-    // Create a map of employees using their IDs for quick access
-    orgChart.forEach((employee) => {
-      employeeMap[employee.employeeId] = {
-        ...employee,
-        children: [],
-      };
-    });
+  //   // Create a map of employees using their IDs for quick access
+  //   orgChart.forEach((employee) => {
+  //     employeeMap[employee.employeeId] = {
+  //       ...employee,
+  //       children: [],
+  //     };
+  //   });
 
-    // Build the tree structure
-    orgChart.forEach((employee) => {
-      if (employee.subordinates) {
-        employee.subordinates.forEach((subordinateId) => {
-          const subordinate = employeeMap[subordinateId];
-          if (subordinate) {
-            employeeMap[employee.employeeId].children.push(subordinate);
-          }
-        });
-      }
-    });
+  //   // Build the tree structure
+  //   orgChart.forEach((employee) => {
+  //     if (employee.subordinates) {
+  //       employee.subordinates.forEach((subordinateId) => {
+  //         const subordinate = employeeMap[subordinateId];
+  //         if (subordinate) {
+  //           employeeMap[employee.employeeId].children.push(subordinate);
+  //         }
+  //       });
+  //     }
+  //   });
 
-    // Find the root node(s) by checking which employee doesn't have a manager
-    const roots = orgChart.filter(
-      (employee) =>
-        !employeeMap[employee.employeeId].hasOwnProperty("firstName")
-    );
+  //   // Find the root node(s) by checking which employee doesn't have a manager
+  //   const roots = orgChart.filter(
+  //     (employee) =>
+  //       !employeeMap[employee.employeeId].hasOwnProperty("firstName")
+  //   );
 
-    return roots.map((root) => employeeMap[root.employeeId]);
-  }
+  //   return roots.map((root) => employeeMap[root.employeeId]);
+  // }
+  // function buildTree(orgChart) {
+  //   const employeeMap = {};
+
+  //   // Create a map of employees using their IDs for quick access
+  //   orgChart.forEach((employee) => {
+  //     employeeMap[employee.id] = {
+  //       ...employee,
+  //       child: [],
+  //     };
+  //   });
+
+  //   // Build the tree structure
+  //   orgChart.forEach((employee) => {
+  //     if (employee.child) {
+  //       employee.child.forEach((subordinate) => {
+  //         const subordinateNode = employeeMap[subordinate.id];
+  //         if (subordinateNode) {
+  //           employeeMap[employee.id].child.push(subordinateNode);
+  //         }
+  //       });
+  //     }
+  //   });
+
+  //   // Find the root node(s) by checking which employee doesn't have a manager
+  //   const roots = orgChart.filter(
+  //     (employee) => !employeeMap[employee.id].hasOwnProperty("firstName")
+  //   );
+
+  //   return roots.map((root) => employeeMap[root.id]);
+  // }
   const EmployeeNode = ({ employee }) => (
     <ChartBox>
       <FlexContaier>
         <ChartImg
           src={
-            employee.photo 
-              ? API_URL + employee.photo.path
+            employee.personalInfo?.photo
+              ? API_URL + employee.personalInfo?.photo.path
               : "/images/User.jpg"
           }
         />
         <div>
           <ChartName>
             {" "}
-            {employee.firstName} {employee.lastName}{" "}
+            {employee.personalInfo.firstName} {employee.personalInfo.lastName}{" "}
           </ChartName>
+          <ChartLight>{employee.role}</ChartLight>
           <ChartLight>{employee.position}</ChartLight>
         </div>
       </FlexContaier>
@@ -118,12 +150,12 @@ const EvChart = () => {
   const renderTreeNodes = (employees) => {
     return employees.map((employee) => (
       <TreeNode
-        key={employee.employeeId}
+        key={employee.id}
         label={<EmployeeNode employee={employee} />}
       >
-        {employee.subordinates &&
-          employee.subordinates.length > 0 &&
-          renderTreeNodes(employee.subordinates)}
+        {employee.child &&
+          employee.child.length > 0 &&
+          renderTreeNodes(employee.child)}
       </TreeNode>
     ));
   };
