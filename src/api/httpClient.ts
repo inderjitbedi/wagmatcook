@@ -18,18 +18,20 @@ async function httpClient(payload: any) {
     };
   } catch (error: any) {
     if (error?.response?.status === 401) {
-      toast.error("Session Expired. Please login again.");
+      toast.error("Session Expired. Please login again.", { autoClose: 5000 });
     }
     let myError = error?.response ? error?.response?.data : error;
 
     if (myError?.status) {
       if (myError.status === 401) {
-        toast.error("Session Expired. Please login again.");
+        toast.error("Session Expired. Please login again.", {
+          autoClose: 5000,
+        });
       } else {
-        toast.error(myError.message);
+        toast.error(myError.message,{autoClose: 5000});
       }
     } else {
-      toast.error(myError.message);
+      toast.error(myError.message, { autoClose: 5000 });
     }
     return {
       error: myError,

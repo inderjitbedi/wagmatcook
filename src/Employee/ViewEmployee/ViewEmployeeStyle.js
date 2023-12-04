@@ -1119,6 +1119,7 @@ export const ChartBox = styled.div`
   /* width: max-content; */
   padding: 1rem;
   border-radius: 8px;
+  
 `;
 export const ChartImg = styled.img`
 width: 2.5rem;

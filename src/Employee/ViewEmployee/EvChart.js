@@ -59,73 +59,15 @@ const EvChart = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
     GetEmployeesChartData();
   }, []);
-  // function buildTree(orgChart) {
-  //   const employeeMap = {};
 
-  //   // Create a map of employees using their IDs for quick access
-  //   orgChart.forEach((employee) => {
-  //     employeeMap[employee.employeeId] = {
-  //       ...employee,
-  //       children: [],
-  //     };
-  //   });
-
-  //   // Build the tree structure
-  //   orgChart.forEach((employee) => {
-  //     if (employee.subordinates) {
-  //       employee.subordinates.forEach((subordinateId) => {
-  //         const subordinate = employeeMap[subordinateId];
-  //         if (subordinate) {
-  //           employeeMap[employee.employeeId].children.push(subordinate);
-  //         }
-  //       });
-  //     }
-  //   });
-
-  //   // Find the root node(s) by checking which employee doesn't have a manager
-  //   const roots = orgChart.filter(
-  //     (employee) =>
-  //       !employeeMap[employee.employeeId].hasOwnProperty("firstName")
-  //   );
-
-  //   return roots.map((root) => employeeMap[root.employeeId]);
-  // }
-  // function buildTree(orgChart) {
-  //   const employeeMap = {};
-
-  //   // Create a map of employees using their IDs for quick access
-  //   orgChart.forEach((employee) => {
-  //     employeeMap[employee.id] = {
-  //       ...employee,
-  //       child: [],
-  //     };
-  //   });
-
-  //   // Build the tree structure
-  //   orgChart.forEach((employee) => {
-  //     if (employee.child) {
-  //       employee.child.forEach((subordinate) => {
-  //         const subordinateNode = employeeMap[subordinate.id];
-  //         if (subordinateNode) {
-  //           employeeMap[employee.id].child.push(subordinateNode);
-  //         }
-  //       });
-  //     }
-  //   });
-
-  //   // Find the root node(s) by checking which employee doesn't have a manager
-  //   const roots = orgChart.filter(
-  //     (employee) => !employeeMap[employee.id].hasOwnProperty("firstName")
-  //   );
-
-  //   return roots.map((root) => employeeMap[root.id]);
-  // }
   const EmployeeNode = ({ employee }) => (
     <ChartBox>
       <FlexContaier>
@@ -141,7 +83,17 @@ const EvChart = () => {
             {" "}
             {employee.personalInfo.firstName} {employee.personalInfo.lastName}{" "}
           </ChartName>
-          <ChartLight>{employee.role}</ChartLight>
+          <ChartLight>
+            {employee.role === "HUMAN_RESOURCE"
+              ? "Hr"
+              : employee.role === "EMPLOYEE"
+              ? "User"
+              : employee.role === "ORGANIZATION_ADMIN"
+              ? "Organization Admin"
+              : employee.role === "MANAGER"
+              ? "Manager"
+              : " - "}
+          </ChartLight>
           <ChartLight>{employee.position}</ChartLight>
         </div>
       </FlexContaier>
@@ -149,13 +101,8 @@ const EvChart = () => {
   );
   const renderTreeNodes = (employees) => {
     return employees.map((employee) => (
-      <TreeNode
-        key={employee.id}
-        label={<EmployeeNode employee={employee} />}
-      >
-        {employee.child &&
-          employee.child.length > 0 &&
-          renderTreeNodes(employee.child)}
+      <TreeNode key={employee.id} label={<EmployeeNode employee={employee} />}>
+        {employee.child && renderTreeNodes(employee.child)}
       </TreeNode>
     ));
   };

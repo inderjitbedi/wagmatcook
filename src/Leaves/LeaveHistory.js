@@ -246,7 +246,7 @@ const LeaveHistory = () => {
     setDetailsLength(500);
   };
 
-  const GetReportList = () => {
+  const GetReportList = (user) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       let url = API_URLS.getReporttoList;
@@ -297,7 +297,7 @@ const LeaveHistory = () => {
     });
   };
 
-  const GetLeaveAlloaction = () => {
+  const GetLeaveAlloaction = (user) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       // GetLeavesType();
@@ -326,7 +326,7 @@ const LeaveHistory = () => {
         });
     });
   };
-  const GetLeaveAlloactionBalance = () => {
+  const GetLeaveAlloactionBalance = (user) => {
     // setIsLoading(true);
     // GetLeavesType();
     // const trimid = employeeid.trim();
@@ -391,7 +391,7 @@ const LeaveHistory = () => {
         setIsLoading(false);
       });
   };
-  const GetLeaveHistory = () => {
+  const GetLeaveHistory = (user) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       // const trimid = employeeid?.trim();
@@ -422,7 +422,7 @@ const LeaveHistory = () => {
         });
     });
   };
-  const GetLeaveTypesList = () => {
+  const GetLeaveTypesList = (user) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       // const trimid = employeeid?.trim();
@@ -505,6 +505,28 @@ const LeaveHistory = () => {
     if (user) {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
+      GetLeaveHistory(parsedUser);
+    }
+    if (location.pathname.indexOf("manager") > -1) {
+      setUserType(ROLES.MANAGER);
+    } else if (location.pathname.indexOf("hr") > -1) {
+      setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("user") > -1) {
+      setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
+    }
+  }, [searchValue, page]);
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+      GetReportList(parsedUser);
+      GetLeaveAlloaction(parsedUser);
+      GetLeaveAlloactionBalance(parsedUser);
+      GetLeaveTypesList(parsedUser);
     }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -517,24 +539,11 @@ const LeaveHistory = () => {
       setIsAccount(true);
     }
   }, []);
-  useEffect(() => {
-    if (user) {
-      Promise.all([
-        GetReportList(),
-        GetLeaveAlloaction(),
-        GetLeaveAlloactionBalance(),
-        GetLeaveTypesList(),
-      ]);
-    }
-  }, [user]);
-  useEffect(() => {
-    if (user) {
-      Promise.all([GetLeaveHistory()]);
-    }
-  }, [user, searchValue, page]);
 
   return (
     <>
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Histroy" />
+
       {isLoading ? (
         <div
           style={{
@@ -555,11 +564,6 @@ const LeaveHistory = () => {
         </div>
       ) : (
         <MainBodyContainer>
-          <CommenDashHeader
-            onSearch={HandleSearchCahnge}
-            text="Leave Histroy"
-          />
-
           <SectionCard>
             {limitedData?.map((data) => (
               <SectionCardContainer>
@@ -710,13 +714,20 @@ const LeaveHistory = () => {
                     <TableCell align="left" sx={Celllstyle2}>
                       <span
                         style={
-                          data.nature == 'ADDITION'
+                          data.nature == "ADDITION"
                             ? { color: "var(--green-90, #0D7D0B)" }
-                            : (data.status === 'REJECTED' ? { color: "#E88B00", } : { color: "#EA4335" })
+                            : data.status === "REJECTED"
+                            ? { color: "#E88B00" }
+                            : { color: "#EA4335" }
                         }
                       >
-                        {data.hours ? (data.nature == 'ADDITION' ? '+ ' : (data.status === 'REJECTED' ? `  ` : '- ')) + data.hours : " - "}
-
+                        {data.hours
+                          ? (data.nature == "ADDITION"
+                              ? "+ "
+                              : data.status === "REJECTED"
+                              ? `  `
+                              : "- ") + data.hours
+                          : " - "}
                       </span>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
@@ -725,8 +736,8 @@ const LeaveHistory = () => {
                           data.status === "PENDING"
                             ? PendingStyle
                             : data.status === "APPROVED"
-                              ? ApprovedStyles
-                              : RejectedStyles
+                            ? ApprovedStyles
+                            : RejectedStyles
                         }
                       >
                         {" "}
@@ -1052,8 +1063,8 @@ const LeaveHistory = () => {
                             isSatus === "PENDING"
                               ? PendingStyle
                               : isSatus === "APPROVED"
-                                ? ApprovedStyles
-                                : RejectedStyles
+                              ? ApprovedStyles
+                              : RejectedStyles
                             // isSatus === "PENDING"
                             //   ? PendingStyle
                             //   : ApprovedStyles
