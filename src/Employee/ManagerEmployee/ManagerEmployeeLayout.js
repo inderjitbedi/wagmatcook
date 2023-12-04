@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import ManagerEmployeeSideBar from "./ManagerEmployeeSideBar";
 import { Outlet } from "react-router-dom";
 import Menu from "@mui/material/Menu";
@@ -47,6 +47,8 @@ const BackButtonContainer = styled.div`
 
 const ManagerEmployeeLayout = () => {
   const Navigate = useNavigate();
+  const location = useLocation();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const { employeeid } = useParams();
@@ -111,8 +113,11 @@ const ManagerEmployeeLayout = () => {
             </SideBarContainer>
           )}
           <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
-            <CommenHeader employeeid={employeeid} />
-
+            {location.pathname.includes("/chart") ? (
+              " "
+            ) : (
+              <CommenHeader employeeid={employeeid} />
+            )}
             <Outlet />
           </div>
         </BodyContainer>
