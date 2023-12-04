@@ -1034,7 +1034,7 @@ const employeeController = {
   async delete(req, res) {
     try {
       let user = await User.findOne({ _id: req.params.id });
-      console.log("++++this is user : ", user, " +++++++++++++++++");
+      // console.log("++++this is user : ", user, " +++++++++++++++++");
       if (!user) {
         return res
           .status(400)
@@ -1046,10 +1046,15 @@ const employeeController = {
           isDeleted: false,
           reportsTo: req.params.id,
         });
-        if (hasDirectReports.length > 1) {
+        if (hasDirectReports.length >= 1) {
           return res.status(400).json({
-            message: `Cannot delete the ${user.role === roles.HR ? "Hr" : " Manager"
-              } as they have other employees under them.`,
+            message: `Cannot delete the ${
+              user.role === roles.HR ? "HR" : "MANAGER"
+            } as they have ${hasDirectReports.length} ${
+              hasDirectReports.length > 1 ? "employees" : "employee"
+            } under them. Please first offboard the employee${
+              hasDirectReports.length > 1 ? "s" : ""
+            } before attempting to delete.`,
           });
         }
       }
@@ -2159,6 +2164,7 @@ const employeeController = {
       const limit = parseInt(req.query.limit) || 9999;
       const startIndex = (page - 1) * limit;
       let filters = { employee: req.params.id, isDeleted: false };
+
       const history = await EmployeeLeaveHistory.find(filters)
         .populate({
           path: "responder",
@@ -2432,17 +2438,17 @@ const employeeController = {
                   $and: [
                     { $isArray: "$history" },
                     { $ne: [{ $size: "$history" }, 0] },
-                    { $ne: ["$history.nature", "ADDITION"] }
-                  ]
+                    { $ne: ["$history.nature", "ADDITION"] },
+                  ],
                 },
                 then: "$history.hours",
-                else: 0
-              }
-            }
-          }
+                else: 0,
+              },
+            },
+          },
         },
         {
-          $unwind: "$consumed"
+          $unwind: "$consumed",
         },
         {
           $group: {
@@ -2709,7 +2715,7 @@ const employeeController = {
     try {
       const employeeId = req.params.id;
 
-      let orgChart = await findReportingHierarchy({}, employeeId)
+      let orgChart = await findReportingHierarchy({}, employeeId);
       orgChart = await reverseOrgChart(orgChart);
 
       res.status(200).json({
@@ -2813,13 +2819,6 @@ async function reverseOrgChart(node, parent = null) {
 //   ];
 // }
 
-
-
-
-
-
-
-
 // {
 //  NAME: EMP1,
 //  REPORTSTO: {
@@ -2830,16 +2829,17 @@ async function reverseOrgChart(node, parent = null) {
 //       NAME:ORG_ADMIN
 //     }
 //   }
-//  } 
+//  }
 // }
 async function findReportingHierarchy(data, employeeId) {
-  const user = await User.findOne({ _id: employeeId })
-    .populate({
-      path: "personalInfo",
-      populate: { path: "photo" },
-    });
+  const user = await User.findOne({ _id: employeeId }).populate({
+    path: "personalInfo",
+    populate: { path: "photo" },
+  });
   const employeePosition = await EmployeePositionHistory.findOne({
-    employee: employeeId, isPrimary: true, isDeleted: false,
+    employee: employeeId,
+    isPrimary: true,
+    isDeleted: false,
   });
 
   data = {
@@ -2847,7 +2847,7 @@ async function findReportingHierarchy(data, employeeId) {
     personalInfo: user.personalInfo,
     role: user.role,
     position: employeePosition?.title,
-    reportsTo: employeePosition?.reportsTo
+    reportsTo: employeePosition?.reportsTo,
   };
 
   if (data.reportsTo) {
@@ -2856,12 +2856,15 @@ async function findReportingHierarchy(data, employeeId) {
       personalInfo: user.personalInfo,
       role: user.role,
       position: employeePosition?.title,
-      reportsTo: null // Set to null initially, will be updated in the recursive call
+      reportsTo: null, // Set to null initially, will be updated in the recursive call
     };
 
     if (employeePosition && employeePosition?.reportsTo) {
       console.log(data);
-      const res = await findReportingHierarchy(data.reportsTo, employeePosition.reportsTo);
+      const res = await findReportingHierarchy(
+        data.reportsTo,
+        employeePosition.reportsTo
+      );
       console.log(res);
       data.reportsTo = res;
     }

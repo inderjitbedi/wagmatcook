@@ -85,6 +85,10 @@ const HREmployeeSidebar = (props) => {
       Title: "Documents",
       to: "/hr-management/employee-details/documents/" + props.employeeId,
     },
+    {
+      Title: "Organization chart",
+      to: "/hr-management/employee-details/chart/" + props.employeeId,
+    },
   ];
   const style = {
     textDecoration: "none",
