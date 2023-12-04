@@ -70,7 +70,7 @@ const EvChart = () => {
 
   const EmployeeNode = ({ employee }) => (
     <ChartBox>
-      <FlexContaier>
+      <FlexContaier style={{width:"200px"}}>
         <ChartImg
           src={
             employee.personalInfo?.photo
@@ -78,14 +78,14 @@ const EvChart = () => {
               : "/images/User.jpg"
           }
         />
-        <div>
+        <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
           <ChartName>
             {" "}
             {employee.personalInfo.firstName} {employee.personalInfo.lastName}{" "}
           </ChartName>
           <ChartLight>
             {employee.role === "HUMAN_RESOURCE"
-              ? "Hr"
+              ? "HR"
               : employee.role === "EMPLOYEE"
               ? "User"
               : employee.role === "ORGANIZATION_ADMIN"

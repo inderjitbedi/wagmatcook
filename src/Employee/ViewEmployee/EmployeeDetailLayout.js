@@ -47,7 +47,6 @@ const BackButtonContainer = styled.div`
 const EmployeeDetailLayout = () => {
   const Navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   const { employeeid } = useParams();
 
   const [searchValue, setSearchValue] = useState("");

@@ -1122,8 +1122,8 @@ export const ChartBox = styled.div`
   
 `;
 export const ChartImg = styled.img`
-width: 2.5rem;
-height: 2.5rem;
+width: 4rem;
+height: 4rem;
 border-radius: 50%;
 display: inline-block;
 `;
@@ -1139,8 +1139,9 @@ export const ChartLight = styled.p`
   font-family: Inter;
   font-size: 1.2rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.4rem;
   margin: 0;
+  color: #8f9bb3;
 `;
 
