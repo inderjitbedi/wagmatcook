@@ -311,6 +311,8 @@ const TaskView = () => {
               Navigate("/hr-management/dashboard");
             } else if (userType === ROLES.EMPLOYEE) {
               Navigate("/user-management/dashboard");
+            } else if (userType === ROLES.ORG_ADMIN) {
+              Navigate("/organization-admin/dashboard");
             }
           }
         })
@@ -342,6 +344,9 @@ const TaskView = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetTaskDetails(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
+      GetTaskDetails(ROLES.ORG_ADMIN);
     }
   }, []);
 

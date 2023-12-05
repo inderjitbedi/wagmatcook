@@ -579,7 +579,7 @@ const OADashBoard = ({ screenWidth }) => {
                           : " - "}
                       </MainCardParaLight>
                       <CardLeavesParaMobile>
-                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver}
+                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver || " - "}
                       </CardLeavesParaMobile>
                     </CardLeavesDiv>
 
