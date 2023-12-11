@@ -52,6 +52,22 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    renew: {
+      type: Boolean,
+      default: false,
+    },
+    interval: {
+      type: String,
+      default: null,
+    },
+    renewalDate: {
+      type: Date,
+      default: null,
+    },
+    renewalOption: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

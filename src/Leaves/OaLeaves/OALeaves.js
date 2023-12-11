@@ -20,7 +20,8 @@ import { useForm, Controller } from "react-hook-form";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
 import ROLES from "../../constants/roles";
-
+import LeaveInterval from "../../constants/leaveInterval";
+import RenewalOption from "../../constants/renewalOption";
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
@@ -53,6 +54,15 @@ import {
   PaginationDiv,
 } from "../../Disciplinary/DisciplinaryStyles";
 import API_URLS from "../../constants/apiUrls";
+import {
+  FlexContaierForm,
+  Select,
+  Option,
+} from "../../Employee/AddEmployee/AddEmployeeStyles";
+import {
+  ModalContainer,
+  ModalFormContainer,
+} from "../../Employee/ViewEmployee/ViewEmployeeStyle";
 const style = {
   position: "absolute",
   top: "50%",
@@ -64,6 +74,8 @@ const style = {
   boxShadow: 45,
   padding: "0rem 0rem",
   borderRadius: "8px",
+  height: "50rem",
+  overflowY: "scroll",
 };
 const CellHeadStyles = {
   color: "#8F9BB3",
@@ -131,6 +143,9 @@ const OALeaves = () => {
     setdescriptionLength(500);
     clearErrors();
     reset({});
+    setIsRenew(false);
+    setIsRenewalOption(false);
+    setIsRenewal(false);
   };
   //Delete Modal Delete
   const [openDelete, setOpenDelete] = useState(false);
@@ -143,6 +158,13 @@ const OALeaves = () => {
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
+  const [isRenew, setIsRenew] = useState(false);
+  const [isRenewal, setIsRenewal] = useState(false);
+
+  const [isRenewalOption, setIsRenewalOption] = useState(false);
+
+  // const [isInterval, setIsInterval] = useState(false);
+
   const [result, setResult] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -399,7 +421,23 @@ const OALeaves = () => {
       description: data.description,
       maxCarryOver: data.maxCarryOver,
       isActive: data.isActive,
+      renew: data.renew,
+      interval: data.interval,
+      renewalDate: data.renewalDate
+        ? new Date(data.renewalDate).toISOString().split("T")[0]
+        : null,
+      renewalOption: data.renewalOption,
     });
+    if (data.renew) {
+      setIsRenew(true);
+    }
+    if (data.interval === LeaveInterval.ANNUALLY) {
+      setIsRenewal(true);
+      setIsRenewalOption(false);
+    } else {
+      setIsRenewal(false);
+      setIsRenewalOption(true);
+    }
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -408,6 +446,9 @@ const OALeaves = () => {
     reset({});
     clearErrors();
     setdescriptionLength(500);
+    setIsRenew(false);
+    setIsRenewalOption(false);
+    setIsRenewal(false);
   };
   useEffect(() => {
     if (location.pathname.indexOf("manager") > -1) {
@@ -468,7 +509,7 @@ const OALeaves = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalUpperDiv style={{ padding: " 1rem 16px 1rem 35px" }}>
+                <ModalContainer>
                   <ModalHeading>
                     {!update ? "Add New Leave" : "Update Leave Type"}
                   </ModalHeading>
@@ -478,9 +519,8 @@ const OALeaves = () => {
                     }}
                     src="/images/icons/Alert-Circle.svg"
                   />
-                </ModalUpperDiv>
-
-                <ModalUpperMid style={{ border: "none" }}>
+                </ModalContainer>
+                <ModalFormContainer>
                   <InputLabel>
                     Leave Type <InputSpan>*</InputSpan>
                   </InputLabel>
@@ -550,29 +590,165 @@ const OALeaves = () => {
                         type="text"
                       />
                       <Errors>{errors.maxCarryOver?.message}</Errors>
-
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "1rem",
-                          marginBottom: "25px",
-                          marginTop: "1rem",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          {...register("isActive", {})}
-                          id="isEligible"
-                          defaultChecked={true}
-                        />
-                        <InputLabel
-                          htmlFor="isEligible"
-                          style={{ marginBottom: "0rem" }}
+                      <FlexContaierForm>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "1rem",
+                            marginBottom: "25px",
+                            marginTop: "1rem",
+                          }}
                         >
-                          Is Active
-                        </InputLabel>
-                      </div>
+                          <input
+                            type="checkbox"
+                            {...register("isActive", {})}
+                            id="isEligible"
+                            defaultChecked={true}
+                          />
+                          <InputLabel
+                            htmlFor="isEligible"
+                            style={{
+                              marginBottom: "0rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Is Active
+                          </InputLabel>
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "1rem",
+                            marginBottom: "25px",
+                            marginTop: "1rem",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            {...register("renew", {})}
+                            id="renew"
+                            // defaultChecked={true}
+
+                            onChange={(e) => {
+                              let Value = e.target.checked;
+
+                              if (Value) {
+                                setIsRenew(true);
+                                console.log(Value, "this is the checkbox");
+                              } else {
+                                setIsRenew(false);
+                                setValue("interval", null);
+                                setValue("renewalDate", null);
+                                setValue("renewalOption", null);
+                                setIsRenewalOption(false);
+                                setIsRenewal(false);
+                              }
+                            }}
+                          />
+                          <InputLabel
+                            htmlFor="renew"
+                            style={{
+                              marginBottom: "0rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Renew
+                          </InputLabel>
+                        </div>
+                      </FlexContaierForm>
+                      {isRenew && (
+                        <>
+                          <InputLabel>
+                            Interval <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Controller
+                            name={`interval`}
+                            control={control}
+                            rules={{
+                              required: {
+                                value: isRenew,
+                                message: "Required",
+                              },
+                              onChange: (e) => {
+                                let Value = e.target.value;
+                                console.log(Value, "this is the value");
+                                if (Value === LeaveInterval.ANNUALLY) {
+                                  setIsRenewal(true);
+                                  setIsRenewalOption(false);
+                                  setValue("renewalOption", null);
+                                } else {
+                                  setIsRenewal(false);
+                                  setIsRenewalOption(true);
+                                  setValue("renewalDate", null);
+                                }
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field}>
+                                <Option value="">Select</Option>
+                                <Option value={LeaveInterval.ANNUALLY}>
+                                  Annually
+                                </Option>
+                                <Option value={LeaveInterval.MONTHLY}>
+                                  Monthly
+                                </Option>
+                              </Select>
+                            )}
+                          />
+                          {<Errors> {errors.interval?.message}</Errors>}
+                        </>
+                      )}
+
+                      {isRenewal && (
+                        <>
+                          <InputLabel>
+                            Renewal Date <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Input
+                            // readOnly={update}
+                            type="date"
+                            {...register("renewalDate", {
+                              required: {
+                                value: isRenew,
+                                message: "Required",
+                              },
+                            })}
+                          />
+                          {<Errors>{errors.renewalDate?.message}</Errors>}
+                        </>
+                      )}
+                      {isRenewalOption && (
+                        <>
+                          <InputLabel>
+                            Select Renewal Option: <InputSpan>*</InputSpan>
+                          </InputLabel>
+                          <Controller
+                            name={`renewalOption`}
+                            control={control}
+                            rules={{
+                              required: {
+                                value: isRenew,
+                                message: "Required",
+                              },
+                            }}
+                            render={({ field }) => (
+                              <Select {...field}>
+                                <Option value="">Select</Option>
+                                <Option value={RenewalOption.BEGINNING}>
+                                  First of the Month
+                                </Option>
+                                <Option value={RenewalOption.END}>
+                                  End of the Month
+                                </Option>
+                              </Select>
+                            )}
+                          />
+                          {<Errors>{errors.renewalOption?.message}</Errors>}
+                        </>
+                      )}
                     </>
                   )}
 
@@ -593,7 +769,7 @@ const OALeaves = () => {
                       Update
                     </AddNewButton>
                   )}
-                </ModalUpperMid>
+                </ModalFormContainer>
               </form>
             )}
           </Box>
@@ -783,7 +959,7 @@ const OALeaves = () => {
                                     />
                                   )}
                                   {!data.isLieuTime && (
-                                     <ActionIcons
+                                    <ActionIcons
                                       onClick={() => {
                                         HandleOpenDelete();
                                         setId(data._id);
