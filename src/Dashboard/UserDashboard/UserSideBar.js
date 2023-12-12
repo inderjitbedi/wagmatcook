@@ -174,7 +174,7 @@ const UserSideBar = ({ ToggleSidebar, screenWidth }) => {
 
         <Link
           style={{ textDecoration: "none" }}
-          to={`/user-management/leaves/${userData?._id}`}
+          to={`/user-management/leave/history/${userData?._id}`}
           onMouseEnter={() => handleMouseEnter("leaves")}
           onMouseLeave={() => handleMouseLeave("leaves")}
         >

@@ -205,7 +205,9 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
-                            Navigate(`/user-management/leaves/${user?._id}`);
+                            Navigate(
+                              `/user-management/leave/history/${user?._id}`
+                            );
                           }
                         }}
                         style={{ cursor: "pointer" }}
@@ -235,7 +237,7 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
-                            Navigate(`/user-management/leaves/${user?._id}`);
+                            Navigate(`/user-management/leave/history/${user?._id}`);
                           }
                         }}
                         style={{ cursor: "pointer" }}

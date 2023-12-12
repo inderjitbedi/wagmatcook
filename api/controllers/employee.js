@@ -2165,6 +2165,13 @@ const employeeController = {
       const startIndex = (page - 1) * limit;
       let filters = { employee: req.params.id, isDeleted: false };
 
+      // Get the search query from request parameters
+      const searchQuery = req.query.searchKey || "";
+      // if (searchQuery) {
+      //   filters.$or = [
+      //     { "leaveType.name": { $regex: new RegExp(searchQuery, "i") } },
+      //   ];
+      // }
       const history = await EmployeeLeaveHistory.find(filters)
         .populate({
           path: "responder",
@@ -2179,6 +2186,7 @@ const employeeController = {
         .sort({ createdAt: -1 })
         .skip(startIndex)
         .limit(limit);
+    
       const totalLeaveHistory = await EmployeeLeaveHistory.countDocuments(
         filters
       );

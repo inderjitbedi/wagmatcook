@@ -69,6 +69,7 @@ import {
   FlexContaier,
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
+import userEvent from "@testing-library/user-event";
 const CellStyle = {
   color: "#8F9BB3",
   padding: "1.6rem 0.8rem",
@@ -373,7 +374,7 @@ const LeaveHistory = () => {
         if (result) {
           handleClose();
           reset();
-          GetLeaveHistory();
+          GetLeaveHistory(user);
           toast.success(result.message, {
             className: "toast",
           });
@@ -469,8 +470,8 @@ const LeaveHistory = () => {
       .then(({ result, error }) => {
         if (result) {
           HandleCloseDelete();
-          GetLeaveHistory();
-          GetLeaveAlloactionBalance();
+          GetLeaveHistory(user);
+          GetLeaveAlloactionBalance(user);
           setId("");
           toast.success(result.message, {
             className: "toast",
