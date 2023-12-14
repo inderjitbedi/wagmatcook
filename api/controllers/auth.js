@@ -97,6 +97,7 @@ const authController = {
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
         isDeleted: false,
+        isSignedup:true,
       });
       if (!user) {
         return res.status(400).json({ message: "User not found." });
