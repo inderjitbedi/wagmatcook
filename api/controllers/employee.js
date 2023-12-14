@@ -996,7 +996,11 @@ const employeeController = {
           .json({ message: "User email already registered" });
       }
 
-      let user = new User({ email: req.body.email, role: roles.EMPLOYEE });
+      let user = new User({
+        email: req.body.email,
+        role: roles.EMPLOYEE,
+        // isSignedup: true,
+      });
       // const token = crypto.randomBytes(20).toString('hex');
       // user.invitationToken = token;
       // user.invitationTokenExpiry = Date.now() + (3600000 * 24);

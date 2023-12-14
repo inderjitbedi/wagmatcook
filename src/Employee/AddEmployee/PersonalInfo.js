@@ -752,6 +752,30 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                 <FlexContaierForm>
                   <FlexColumnForm>
                     <InputLabel>
+                      Gender <InputSpan>*</InputSpan>
+                    </InputLabel>
+                    <Controller
+                      name="gender"
+                      control={control}
+                      rules={{
+                        required: {
+                          value: true,
+                          message: "Required",
+                        },
+                      }}
+                      render={({ field }) => (
+                        <Select {...field}>
+                          <Option value="">Select</Option>
+                          <Option value={1}>Male</Option>
+                          <Option value={2}>Female</Option>
+                          <Option value={3}>Non-Binary</Option>
+                        </Select>
+                      )}
+                    />
+                    {<Errors>{errors.gender?.message} </Errors>}
+                  </FlexColumnForm>
+                  <FlexColumnForm>
+                    {/* <InputLabel>
                       SIN <InputSpan>*</InputSpan>
                     </InputLabel>
                     <Controller
@@ -792,40 +816,19 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                         />
                       )}
                     />
-                    {<Errors> {errors.sin?.message} </Errors>}
-                  </FlexColumnForm>
-                  <FlexColumnForm>
-                    <InputLabel>
-                      Gender <InputSpan>*</InputSpan>
-                    </InputLabel>
-                    <Controller
-                      name="gender"
-                      control={control}
-                      rules={{
-                        required: {
-                          value: true,
-                          message: "Required",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <Select {...field}>
-                          <Option value="">Select</Option>
-                          <Option value={1}>Male</Option>
-                          <Option value={2}>Female</Option>
-                          <Option value={3}>Non-Binary</Option>
-                        </Select>
-                      )}
-                    />
-                    {<Errors>{errors.gender?.message} </Errors>}
+                    {<Errors> {errors.sin?.message} </Errors>} */}
+                    <InputLabel>Pronouns</InputLabel>
+                    <Input type="text" {...register("pronouns", {})} />
+                    {<Errors> {errors.pronouns?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
-                <FlexContaierForm>
+                {/* <FlexContaierForm>
                   <FlexColumnForm50>
                     <InputLabel>Pronouns</InputLabel>
                     <Input type="text" {...register("pronouns", {})} />
                     {<Errors> {errors.pronouns?.message} </Errors>}
                   </FlexColumnForm50>
-                </FlexContaierForm>
+                </FlexContaierForm> */}
               </FormContainer>
               <ButtonBlue
                 type="submit"

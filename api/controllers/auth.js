@@ -97,7 +97,7 @@ const authController = {
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
         isDeleted: false,
-        isSignedup:true,
+        isSignedup: true,
       });
       if (!user) {
         return res.status(400).json({ message: "User not found." });
@@ -184,8 +184,17 @@ const authController = {
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
       }).populate("personalInfo");
+      console.log("user data:", user);
       if (!user) {
         return res.status(400).json({ message: "User not registered." });
+      }
+      if (user.role === "ORGANIZATION_ADMIN") {
+        if (!user.isSignedup) {
+          return res.status(400).json({
+            message:
+              "Registration required. Check your email for the registration link.",
+          });
+        }
       }
 
       const token = crypto.randomBytes(3).toString("hex");
@@ -228,6 +237,7 @@ const authController = {
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
         otp,
+        isSignedup: true,
         otpExpiry: { $gt: Date.now() },
       }).populate({
         path: "personalInfo",
