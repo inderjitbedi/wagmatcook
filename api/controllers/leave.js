@@ -615,7 +615,7 @@ const leaveController = {
       await notification.save();
 
       if (request.employee.role === roles.EMPLOYEE)
-        request.redirectUrl = `${process.env.FRONTEND_URL}user-management/leaves/${request.employee._id}`;
+        request.redirectUrl = `${process.env.FRONTEND_URL}user-management/leave/history/${request.employee._id}`;
       else if (request.employee.role === roles.MANAGER)
         request.redirectUrl = `${process.env.FRONTEND_URL}manager-management/leave/history`;
       else if (request.employee.role === roles.HR)

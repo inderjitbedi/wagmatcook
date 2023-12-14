@@ -269,10 +269,6 @@ const EmployeePersonal = () => {
                     </FlexSpaceBetween>
                     <FlexSpaceBetween>
                       <FlexColumn>
-                        <TitlePara>SIN</TitlePara>
-                        <ViewPara>{result.personalInfo?.sin || " - "}</ViewPara>
-                      </FlexColumn>
-                      <FlexColumn>
                         <TitlePara>Gender</TitlePara>
                         {result.personalInfo?.gender === 1 ? (
                           <ViewPara> Male</ViewPara>
@@ -284,16 +280,24 @@ const EmployeePersonal = () => {
                           <ViewPara> - </ViewPara>
                         )}
                       </FlexColumn>
-                    </FlexSpaceBetween>
-
-                    {/* band number and is status */}
-                    <FlexSpaceBetween>
                       <FlexColumn>
+                        {/* <TitlePara>SIN</TitlePara>
+                        <ViewPara>{result.personalInfo?.sin || " - "}</ViewPara> */}
                         <TitlePara>Pronouns </TitlePara>
                         <ViewPara>
                           {result.personalInfo?.pronouns || " - "}
                         </ViewPara>
                       </FlexColumn>
+                    </FlexSpaceBetween>
+
+                    {/* band number and is status */}
+                    <FlexSpaceBetween>
+                      {/* <FlexColumn>
+                        <TitlePara>Pronouns </TitlePara>
+                        <ViewPara>
+                          {result.personalInfo?.pronouns || " - "}
+                        </ViewPara>
+                      </FlexColumn> */}
                       {/* <FlexColumn>
                     <TitlePara>Band Number</TitlePara>
                     <ViewPara>JHGTRYSG4542DES</ViewPara>

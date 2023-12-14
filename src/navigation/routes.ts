@@ -1267,7 +1267,7 @@ const Routes: any = [
       },
       {
         component: LeaveHistory,
-        path: "leaves/:employeeid?",
+        path: "leave/history/:employeeid?",
         title: "Leaves",
         to: "/",
         type: "private",
