@@ -237,7 +237,6 @@ const authController = {
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
         otp,
-        isSignedup: true,
         otpExpiry: { $gt: Date.now() },
       }).populate({
         path: "personalInfo",

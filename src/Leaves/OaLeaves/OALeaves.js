@@ -430,14 +430,15 @@ const OALeaves = () => {
     });
     if (data.renew) {
       setIsRenew(true);
+      if (data.interval === LeaveInterval.ANNUALLY) {
+        setIsRenewal(true);
+        setIsRenewalOption(false);
+      } else {
+        setIsRenewal(false);
+        setIsRenewalOption(true);
+      }
     }
-    if (data.interval === LeaveInterval.ANNUALLY) {
-      setIsRenewal(true);
-      setIsRenewalOption(false);
-    } else {
-      setIsRenewal(false);
-      setIsRenewalOption(true);
-    }
+
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {

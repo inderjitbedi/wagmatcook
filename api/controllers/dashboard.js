@@ -5,72 +5,179 @@ const EmployeePositionHistory = require("../models/employeePositionHistory");
 const UserOrganization = require("../models/userOrganization");
 const Department = require("../models/department");
 const dashboardController = {
+  // async departments(req, res) {
+  //   try {
+  //     // let users = await EmployeePositionHistory.aggregate([
+  //     //     {
+  //     //         $match: {
+  //     //             department: {
+  //     //                 $in: req.body.departments.map(departmentId => new mongoose.Types.ObjectId(departmentId))
+  //     //             },
+  //     //             isDeleted: false
+  //     //         },
+  //     //     },
+  //     //     {
+  //     //         $lookup: {
+  //     //             from: 'users',
+  //     //             localField: 'employee',
+  //     //             foreignField: '_id',
+  //     //             as: 'employeeData'
+  //     //         }
+  //     //     },
+  //     //     {
+  //     //         $unwind: '$employeeData'
+  //     //     },
+  //     //     {
+  //     //         $match: {
+  //     //             "employeeData.isActive": true,
+  //     //             "employeeData.isDeleted": false,
+  //     //         }
+  //     //     },
+  //     //     {
+  //     //         $lookup: {
+  //     //             from: 'userorganizations',
+  //     //             localField: 'employee',
+  //     //             foreignField: 'user',
+  //     //             as: 'relation'
+  //     //         }
+  //     //     },
+  //     //     {
+  //     //         $unwind: '$relation'
+  //     //     },
+  //     //     {
+  //     //         $match: {
+  //     //             "relation.organization": req.body.organization,
+  //     //         }
+  //     //     },
+  //     //     {
+  //     //         $lookup: {
+  //     //             from: 'employeepersonalinfos',
+  //     //             localField: 'employeeData.personalInfo',
+  //     //             foreignField: '_id',
+  //     //             as: 'personalInfoData'
+  //     //         }
+  //     //     },
+
+  //     //     {
+  //     //         $unwind: '$personalInfoData'
+  //     //     },
+  //     //     {
+  //     //         $group: {
+  //     //             _id: '$employeeData._id',
+  //     //             document: { $first: '$$ROOT' }
+  //     //         }
+  //     //     },
+  //     //     {
+  //     //         $replaceRoot: { newRoot: '$document' }
+  //     //     }
+  //     // ])
+  //     console.log("org details", req.user._id);
+  //     const userOrganization = await UserOrganization.findOne({
+  //       user: req.user._id,
+  //     });
+  //     if (!userOrganization) {
+  //       return res.status(400).json({ message: "User organization not found" });
+  //     }
+  //     const organizationID = userOrganization.organization;
+
+  //     let departmentEmployees = await EmployeePositionHistory.aggregate([
+  //       {
+  //         $match: {
+  //           isDeleted: false,
+  //         },
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "users",
+  //           localField: "employee",
+  //           foreignField: "_id",
+  //           as: "employeeData",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$employeeData",
+  //       },
+  //       {
+  //         $match: {
+  //           "employeeData.isActive": true,
+  //           "employeeData.isDeleted": false,
+  //         },
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "userorganizations",
+  //           localField: "employee",
+  //           foreignField: "user",
+  //           as: "relation",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$relation",
+  //       },
+  //       {
+  //         $match: {
+  //           "relation.organization": organizationID,
+  //         },
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "employeepersonalinfos",
+  //           localField: "employeeData.personalInfo",
+  //           foreignField: "_id",
+  //           as: "personalInfoData",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$personalInfoData",
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: "departments", // Adjust this based on your actual department collection name
+  //           localField: "department",
+  //           foreignField: "_id",
+  //           as: "departmentInfo",
+  //         },
+  //       },
+  //       {
+  //         $unwind: "$departmentInfo",
+  //       },
+  //       {
+  //         $group: {
+  //           _id: "$department",
+  //           totalEmployees: { $sum: 1 },
+  //           departmentDetails: { $first: "$departmentInfo" }, // Include department details
+  //           documents: { $push: "$$ROOT" },
+  //         },
+  //       },
+  //       {
+  //         $project: {
+  //           _id: 1,
+  //           totalEmployees: 1,
+  //           departmentDetails: 1,
+  //           documents: 1,
+  //         },
+  //       },
+  //       {
+  //         $limit: 3,
+  //       },
+  //     ]);
+  //     console.log(departmentEmployees);
+  //     const totalDepartments = await Department.countDocuments({
+  //       organization: organizationID,
+  //       isDeleted: false,
+  //     });
+  //     res.status(200).json({
+  //       departmentEmployees,
+  //       totalDepartments,
+  //       message: "Dashboard data fetched successfully",
+  //     });
+  //   } catch (error) {
+  //     console.error("departmentController:list:error -", error);
+  //     res.status(400).json(error);
+  //   }
+  // },
   async departments(req, res) {
     try {
-      // let users = await EmployeePositionHistory.aggregate([
-      //     {
-      //         $match: {
-      //             department: {
-      //                 $in: req.body.departments.map(departmentId => new mongoose.Types.ObjectId(departmentId))
-      //             },
-      //             isDeleted: false
-      //         },
-      //     },
-      //     {
-      //         $lookup: {
-      //             from: 'users',
-      //             localField: 'employee',
-      //             foreignField: '_id',
-      //             as: 'employeeData'
-      //         }
-      //     },
-      //     {
-      //         $unwind: '$employeeData'
-      //     },
-      //     {
-      //         $match: {
-      //             "employeeData.isActive": true,
-      //             "employeeData.isDeleted": false,
-      //         }
-      //     },
-      //     {
-      //         $lookup: {
-      //             from: 'userorganizations',
-      //             localField: 'employee',
-      //             foreignField: 'user',
-      //             as: 'relation'
-      //         }
-      //     },
-      //     {
-      //         $unwind: '$relation'
-      //     },
-      //     {
-      //         $match: {
-      //             "relation.organization": req.body.organization,
-      //         }
-      //     },
-      //     {
-      //         $lookup: {
-      //             from: 'employeepersonalinfos',
-      //             localField: 'employeeData.personalInfo',
-      //             foreignField: '_id',
-      //             as: 'personalInfoData'
-      //         }
-      //     },
-
-      //     {
-      //         $unwind: '$personalInfoData'
-      //     },
-      //     {
-      //         $group: {
-      //             _id: '$employeeData._id',
-      //             document: { $first: '$$ROOT' }
-      //         }
-      //     },
-      //     {
-      //         $replaceRoot: { newRoot: '$document' }
-      //     }
-      // ])
       console.log("org details", req.user._id);
       const userOrganization = await UserOrganization.findOne({
         user: req.user._id,
@@ -131,43 +238,43 @@ const dashboardController = {
           $unwind: "$personalInfoData",
         },
         {
-          $lookup: {
-            from: "departments", // Adjust this based on your actual department collection name
-            localField: "department",
-            foreignField: "_id",
-            as: "departmentInfo",
-          },
-        },
-        {
-          $unwind: "$departmentInfo",
-        },
-        {
           $group: {
             _id: "$department",
             totalEmployees: { $sum: 1 },
-            departmentDetails: { $first: "$departmentInfo" }, // Include department details
             documents: { $push: "$$ROOT" },
           },
         },
-        {
-          $project: {
-            _id: 1,
-            totalEmployees: 1,
-            departmentDetails: 1,
-            documents: 1,
-          },
-        },
-        {
-          $limit: 3,
-        },
       ]);
-      console.log(departmentEmployees);
-      const totalDepartments = await Department.countDocuments({
+
+      // Retrieve all departments from the departments collection
+      const allDepartments = await Department.find({
         organization: organizationID,
         isDeleted: false,
       });
+
+      // Use $map to combine the employee data and department data
+      const departmentData = allDepartments.map((department) => {
+        const matchedDepartment = departmentEmployees.find(
+          (dep) => dep._id && dep._id.toString() === department._id.toString()
+        );
+
+        return {
+          _id: department._id,
+          totalEmployees: matchedDepartment
+            ? matchedDepartment.totalEmployees
+            : 0,
+          departmentDetails: department,
+          documents: matchedDepartment ? matchedDepartment.documents : [],
+        };
+      });
+      departmentData.sort((a, b) => b.totalEmployees - a.totalEmployees);
+
+      // Limit the result to 3 departments
+      const limitedDepartments = departmentData.slice(0, 3);
+      const totalDepartments = departmentData.length;
+
       res.status(200).json({
-        departmentEmployees,
+        departmentEmployees: limitedDepartments,
         totalDepartments,
         message: "Dashboard data fetched successfully",
       });

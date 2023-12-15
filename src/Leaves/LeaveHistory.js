@@ -228,6 +228,7 @@ const LeaveHistory = () => {
       requesterComment: data.requesterComment,
       responder: data.responder?._id,
       status: data.status,
+     
     });
     setIsSatus(data.status);
     handleOpen();
