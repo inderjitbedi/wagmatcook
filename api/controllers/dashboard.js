@@ -2,8 +2,10 @@ const leaveStatus = require("../enum/leaveStatus");
 const EmployeeCertificates = require("../models/employeeCertificates");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const EmployeePositionHistory = require("../models/employeePositionHistory");
+const EmployeePersonalInfo = require("../models/employeePersonalInfo");
 const UserOrganization = require("../models/userOrganization");
 const Department = require("../models/department");
+const moment = require("moment");
 const dashboardController = {
   // async departments(req, res) {
   //   try {
@@ -329,10 +331,87 @@ const dashboardController = {
           $lt: oneWeekFromNow,
         },
       });
+      const upcomingBirthdays = await EmployeePersonalInfo.find({
+        dob: {
+          $gte: moment().startOf("day").toDate(),
+          $lte: moment().add(7, "days").endOf("day").toDate(),
+        },
+        isDeleted: false,
+      }).populate({
+        path: "employeePositionHistory",
+        match: { isDeleted: false, isPrimary: true },
+      });
+      console.log("birthday", upcomingBirthdays);
+      const formattedUpcomingBirthdays = upcomingBirthdays.map((employee) => ({
+        type: "Birthday",
+        date: moment(employee.dob).format("YYYY-MM-DD"),
+        employee: {
+          id: employee._id,
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          positionTitle: employee.employeePositionHistory.title,
+        },
+      }));
+      const upcomingWorkAnniversaries = await EmployeePositionHistory.aggregate(
+        [
+          {
+            $match: {
+              startDate: {
+                $gte: moment().startOf("day").toDate(),
+                $lte: moment().add(7, "days").endOf("day").toDate(),
+              },
+              isDeleted: false,
+            },
+          },
+          {
+            $group: {
+              _id: "$employee",
+              earliestStartDate: { $min: "$startDate" },
+              title: { $first: "$title" },
+            },
+          },
+          {
+            $lookup: {
+              from: "employeepersonalinfos",
+              localField: "_id",
+              foreignField: "employee",
+              as: "personalInfo",
+            },
+          },
+          {
+            $project: {
+              type: "Work Anniversary",
+              date: {
+                $dateToString: {
+                  format: "%Y-%m-%d",
+                  date: "$earliestStartDate",
+                },
+              },
+              employee: {
+                id: "$_id",
+                firstName: { $arrayElemAt: ["$personalInfo.firstName", 0] },
+                lastName: { $arrayElemAt: ["$personalInfo.lastName", 0] },
+                positionTitle: "$title",
+              },
+            },
+          },
+        ]
+      );
 
+      const formattedUpcomingWorkAnniversaries = upcomingWorkAnniversaries.map(
+        (workAnniversary) => ({
+          type: workAnniversary.type,
+          date: workAnniversary.date,
+          employee: workAnniversary.employee,
+        })
+      );
+      const upcomingEvents = formattedUpcomingBirthdays.concat(
+        formattedUpcomingWorkAnniversaries
+      );
       res.status(200).json({
         leaves,
         certificates,
+        upcomingEvents,
         // usersWithUpcomingBirthdays,
 
         message: "Dashboard data fetched successfully",

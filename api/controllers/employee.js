@@ -2190,7 +2190,7 @@ const employeeController = {
         .sort({ createdAt: -1 })
         .skip(startIndex)
         .limit(limit);
-    
+
       const totalLeaveHistory = await EmployeeLeaveHistory.countDocuments(
         filters
       );
@@ -2728,7 +2728,7 @@ const employeeController = {
       const employeeId = req.params.id;
 
       let orgChart = await findReportingHierarchy({}, employeeId);
-      orgChart = await reverseOrgChart(orgChart);
+      // orgChart = await reverseOrgChart(orgChart);
 
       res.status(200).json({
         orgChart: [orgChart],
@@ -2755,6 +2755,113 @@ async function reverseOrgChart(node, parent = null) {
 
   return reversedNode;
 }
+
+async function findReportingHierarchy(data, employeeId) {
+  const user = await User.findOne({ _id: employeeId }).populate({
+    path: "personalInfo",
+    populate: { path: "photo" },
+  });
+  const employeePosition = await EmployeePositionHistory.findOne({
+    employee: employeeId,
+    isPrimary: true,
+    isDeleted: false,
+  });
+
+  data = {
+    id: employeeId,
+    personalInfo: user.personalInfo,
+    role: user.role,
+    position: employeePosition?.title,
+    reportsTo: employeePosition?.reportsTo,
+    directReports: [], // Add an array to store direct reports
+  };
+
+  // Find all employees who report to the same person
+  if (employeePosition && employeePosition?.reportsTo) {
+    const directReports = await EmployeePositionHistory.find({
+      reportsTo: employeePosition.reportsTo,
+      isPrimary: true,
+      isDeleted: false,
+    }).populate({
+      path: "employee",
+      populate: { path: "personalInfo", populate: { path: "photo" } },
+    });
+
+    data.directReports = directReports.map((report) => ({
+      id: report.employee._id,
+      personalInfo: report.employee.personalInfo,
+      role: report.employee.role,
+      position: report.title,
+      reportsTo: null, // Set to null initially, will be updated in the recursive call
+      directReports: [], // Initialize an empty array for direct reports of each direct report
+    }));
+  }
+
+  if (data.reportsTo) {
+    data.reportsTo = {
+      id: employeePosition.reportsTo,
+      personalInfo: user.personalInfo,
+      role: user.role,
+      position: employeePosition?.title,
+      reportsTo: null, // Set to null initially, will be updated in the recursive call
+      directReports: data.directReports, // Pass direct reports to the reportsTo object
+    };
+
+    if (employeePosition && employeePosition?.reportsTo) {
+      console.log(data);
+      const res = await findReportingHierarchy(
+        data.reportsTo,
+        employeePosition.reportsTo
+      );
+      console.log(res);
+      data.reportsTo = res;
+    }
+  }
+
+  return data;
+}
+
+// async function findReportingHierarchy(data, employeeId) {
+//   const user = await User.findOne({ _id: employeeId }).populate({
+//     path: "personalInfo",
+//     populate: { path: "photo" },
+//   });
+//   const employeePosition = await EmployeePositionHistory.findOne({
+//     employee: employeeId,
+//     isPrimary: true,
+//     isDeleted: false,
+//   });
+
+//   data = {
+//     id: employeeId,
+//     personalInfo: user.personalInfo,
+//     role: user.role,
+//     position: employeePosition?.title,
+//     reportsTo: employeePosition?.reportsTo,
+//   };
+
+//   if (data.reportsTo) {
+//     data.reportsTo = {
+//       id: employeePosition.reportsTo,
+//       personalInfo: user.personalInfo,
+//       role: user.role,
+//       position: employeePosition?.title,
+//       reportsTo: null, // Set to null initially, will be updated in the recursive call
+//     };
+
+//     if (employeePosition && employeePosition?.reportsTo) {
+//       console.log(data);
+//       const res = await findReportingHierarchy(
+//         data.reportsTo,
+//         employeePosition.reportsTo
+//       );
+//       console.log(res);
+//       data.reportsTo = res;
+//     }
+//   }
+
+//   return data;
+// }
 
 // async function findReportingHierarchy(employeeId) {
 //   const positionHistory = await EmployeePositionHistory.findOne({
@@ -2843,47 +2950,7 @@ async function reverseOrgChart(node, parent = null) {
 //   }
 //  }
 // }
-async function findReportingHierarchy(data, employeeId) {
-  const user = await User.findOne({ _id: employeeId }).populate({
-    path: "personalInfo",
-    populate: { path: "photo" },
-  });
-  const employeePosition = await EmployeePositionHistory.findOne({
-    employee: employeeId,
-    isPrimary: true,
-    isDeleted: false,
-  });
 
-  data = {
-    id: employeeId,
-    personalInfo: user.personalInfo,
-    role: user.role,
-    position: employeePosition?.title,
-    reportsTo: employeePosition?.reportsTo,
-  };
-
-  if (data.reportsTo) {
-    data.reportsTo = {
-      id: employeePosition.reportsTo,
-      personalInfo: user.personalInfo,
-      role: user.role,
-      position: employeePosition?.title,
-      reportsTo: null, // Set to null initially, will be updated in the recursive call
-    };
-
-    if (employeePosition && employeePosition?.reportsTo) {
-      console.log(data);
-      const res = await findReportingHierarchy(
-        data.reportsTo,
-        employeePosition.reportsTo
-      );
-      console.log(res);
-      data.reportsTo = res;
-    }
-  }
-
-  return data;
-}
 async function processUsers(users) {
   for (let user of users) {
     console.log(user);
