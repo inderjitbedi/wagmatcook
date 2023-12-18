@@ -70,6 +70,7 @@ import {
   PaginationDiv,
 } from "../Disciplinary/DisciplinaryStyles";
 import userEvent from "@testing-library/user-event";
+import { OtherHouses } from "@mui/icons-material";
 const CellStyle = {
   color: "#8F9BB3",
   padding: "1.6rem 0.8rem",
@@ -158,7 +159,7 @@ const LeaveHistory = () => {
 
   const Navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
-
+  const [isOpening, setIsOpening] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setUpdate(false);
@@ -184,6 +185,7 @@ const LeaveHistory = () => {
   const [lieuTime, setLieuTime] = useState(false);
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
   const [lieuId, setLieuId] = useState();
+  const [other, setOther] = useState();
   const handleShowMoreClick = () => {
     setShowAll(!showAll);
   };
@@ -228,7 +230,6 @@ const LeaveHistory = () => {
       requesterComment: data.requesterComment,
       responder: data.responder?._id,
       status: data.status,
-     
     });
     setIsSatus(data.status);
     handleOpen();
@@ -239,6 +240,7 @@ const LeaveHistory = () => {
     reset({});
     clearErrors();
     setDetailsLength(500);
+    GetLeaveAlloaction(user);
   };
   const HandleOpenAddNewActionLieu = () => {
     handleOpen();
@@ -301,7 +303,7 @@ const LeaveHistory = () => {
 
   const GetLeaveAlloaction = (user) => {
     return new Promise((resolve, reject) => {
-      setIsLoading(true);
+      setIsOpening(true);
       // GetLeavesType();
       //   const trimid = employeeid.trim();
       let url = API_URLS.EmployeeAllocation.replace(":employeeid", user?._id);
@@ -311,7 +313,10 @@ const LeaveHistory = () => {
       })
         .then(({ result, error }) => {
           if (result) {
-            setLeaveType(result.allocations);
+            const newResult = [...result.allocations, { leaveType: other }];
+            console.log("this is the new Result:", newResult);
+            setLeaveType(newResult);
+
             resolve(result);
           } else {
             //toast.warn("something went wrong ");
@@ -320,11 +325,11 @@ const LeaveHistory = () => {
         .catch((error) => {
           console.error("Error:", error);
           toast.error("Error Adding Benefits. Please try again.");
-          setIsLoading(false);
+          setIsOpening(false);
           reject(error);
         })
         .finally(() => {
-          setIsLoading(false);
+          setIsOpening(false);
         });
     });
   };
@@ -438,6 +443,11 @@ const LeaveHistory = () => {
             const LieuId = result.leaveTypes.find(
               (obj) => obj.isLieuTime === true
             );
+            const other = result.leaveTypes.find(
+              (obj) => obj.isSpecial === true
+            );
+            console.log("this is other:", other);
+            setOther(other);
             setLieuId(LieuId);
             resolve(result);
           } else {
@@ -526,7 +536,7 @@ const LeaveHistory = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
       GetReportList(parsedUser);
-      GetLeaveAlloaction(parsedUser);
+      // GetLeaveAlloaction(parsedUser);
       GetLeaveAlloactionBalance(parsedUser);
       GetLeaveTypesList(parsedUser);
     }
@@ -794,12 +804,12 @@ const LeaveHistory = () => {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              {isLoading ? (
+              {isLoading || isOpening ? (
                 <div
                   style={{
                     display: "flex",
                     width: "100%",
-                    height: "38rem",
+                    height: "48rem",
                     justifyContent: "center",
                     alignItems: "center",
                     zIndex: 999,

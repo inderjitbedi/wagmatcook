@@ -113,7 +113,8 @@ const ManagerEmployeeLayout = () => {
             </SideBarContainer>
           )}
           <div style={screenWidth < 600 ? { width: "100%" } : { width: "80%" }}>
-            {location.pathname.includes("/chart") ? (
+            {location.pathname.includes("/chart") ||
+            location.pathname.includes("/personal-info") ? (
               " "
             ) : (
               <CommenHeader employeeid={employeeid} />

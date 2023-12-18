@@ -587,7 +587,7 @@ const OADashBoard = ({ screenWidth }) => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "5rem",
+                        gap: "1rem",
                         justifyContent: "space-between",
                         width:"45%",
                       }}

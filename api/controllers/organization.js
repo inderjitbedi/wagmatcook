@@ -309,6 +309,7 @@ const orgController = {
           createdBy: req.user._id,
           order,
           isLieuTime: leaveType.isLieuTime,
+          isSpecial: leaveType.isSpecial,
         });
         await newLeaveType.save();
         order++;

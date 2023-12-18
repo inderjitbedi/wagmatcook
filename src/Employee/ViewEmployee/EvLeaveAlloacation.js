@@ -145,7 +145,10 @@ const EvLeaveAlloacation = () => {
       })
         .then(({ result, error }) => {
           if (result) {
-            setLeaveType(result.leaveTypes);
+            const filterResult = result.leaveTypes.filter(
+              (leaveType) => !leaveType.isSpecial
+            );
+            setLeaveType(filterResult);
             resolve(result);
           } else {
             //toast.warn("something went wrong ");

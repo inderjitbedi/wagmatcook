@@ -245,6 +245,8 @@ const OALeaves = () => {
     }
     if (isEmptyObject(errors) && !update) {
       // data.isLieuTime = true;
+      // data.isSpecial = true;
+
       HandleSubmitLeavesType(data);
     } else if (update && isEmptyObject(errors)) {
       // data.isLieuTime = true;
@@ -951,15 +953,17 @@ const OALeaves = () => {
                                 <ActionIconDiv
                                   style={{ justifyContent: "center" }}
                                 >
-                                  {!data.isLieuTime && (
+                                  {!data.isLieuTime && !data.isSpecial ? (
                                     <ActionIcons
                                       onClick={() => {
                                         HandleUpdateAction(data);
                                       }}
                                       src="/images/icons/Pendown.svg"
                                     />
+                                  ) : (
+                                    " "
                                   )}
-                                  {!data.isLieuTime && (
+                                  {!data.isLieuTime && !data.isSpecial ? (
                                     <ActionIcons
                                       onClick={() => {
                                         HandleOpenDelete();
@@ -967,6 +971,8 @@ const OALeaves = () => {
                                       }}
                                       src="/images/icons/Trash-2.svg"
                                     />
+                                  ) : (
+                                    " "
                                   )}
                                 </ActionIconDiv>
                               </TableCell>

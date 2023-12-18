@@ -53,6 +53,8 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const location = useLocation();
   const [userType, setUserType] = useState("");
   const [file, setFile] = useState(null);
+  const [isAccount, setIsAccount] = useState(false);
+
   const [formData, setFormData] = useState({
     file: "",
   });
@@ -164,6 +166,9 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    }
+    if (location.pathname.indexOf("account") > -1) {
+      setIsAccount(true);
     }
   }, []);
 
@@ -690,7 +695,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                         {...register(`isActive`, {})}
                         id={`isBebEligible`}
                         defaultChecked={true}
-                        disabled={isEdit}
+                        disabled={isAccount}
                       />
                       <InputLabel
                         htmlFor={`isBebEligible`}
@@ -714,7 +719,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     <InputLabel>Employee ID</InputLabel>
                     <Input
                       type="text"
-                      readOnly={isEdit}
+                      readOnly={isAccount}
                       {...register("employeeId", {
                         // required: {
                         //   value: true,
@@ -730,7 +735,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     </InputLabel>
                     <Input
                       type="date"
-                      disabled={isEdit}
+                      disabled={isAccount}
                       {...register("dob", {
                         required: {
                           value: true,
@@ -793,7 +798,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           {...field}
                           type="text"
                           name="sin"
-                          disabled={isEdit}
+                          disabled={isAccount}
                           defaultValue={null}
                           style={{ ...inputStyles }}
                           mask="999-999-999"

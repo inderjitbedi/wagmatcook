@@ -331,43 +331,100 @@ const dashboardController = {
           $lt: oneWeekFromNow,
         },
       });
-      const upcomingBirthdays = await EmployeePersonalInfo.find({
-        dob: {
-          $gte: moment().startOf("day").toDate(),
-          $lte: moment().add(7, "days").endOf("day").toDate(),
+      const upcomingBirthdays = await EmployeePersonalInfo.aggregate([
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $gte: [{ $dayOfMonth: "$dob" }, moment().date()] },
+                {
+                  $lt: [
+                    { $dayOfMonth: "$dob" },
+                    moment().add(7, "days").date(),
+                  ],
+                },
+                { $eq: [{ $month: "$dob" }, moment().month() + 1] }, // Months are zero-based, so add 1
+              ],
+            },
+            isDeleted: false,
+          },
         },
-        isDeleted: false,
-      }).populate({
-        path: "employeePositionHistory",
-        match: { isDeleted: false, isPrimary: true },
+        {
+          $lookup: {
+            from: "employeepositionhistories", // Assuming this is your collection name for EmployeePositionHistory
+            localField: "employee",
+            foreignField: "employee",
+            as: "employeePositionHistory",
+          },
+        },
+        {
+          $unwind: "$employeePositionHistory",
+        },
+        {
+          $match: {
+            "employeePositionHistory.isDeleted": false,
+            "employeePositionHistory.isPrimary": true,
+          },
+        },
+      ]);
+
+      const formattedUpcomingBirthdays = upcomingBirthdays.map((employee) => {
+        const dob = moment(employee.dob);
+        const currentYear = moment().year();
+        const newDate = moment([currentYear, dob.month(), dob.date()]);
+
+        return {
+          type: "Birthday",
+          date: dob.format("DD MMM"),
+          newDate: newDate.format("YYYY-MM-DD"),
+          employee: {
+            id: employee._id,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            positionTitle: employee.employeePositionHistory.title,
+          },
+        };
       });
-      console.log("birthday", upcomingBirthdays);
-      const formattedUpcomingBirthdays = upcomingBirthdays.map((employee) => ({
-        type: "Birthday",
-        date: moment(employee.dob).format("YYYY-MM-DD"),
-        employee: {
-          id: employee._id,
-          firstName: employee.firstName,
-          lastName: employee.lastName,
-          positionTitle: employee.employeePositionHistory.title,
-        },
-      }));
+
       const upcomingWorkAnniversaries = await EmployeePositionHistory.aggregate(
         [
           {
             $match: {
-              startDate: {
-                $gte: moment().startOf("day").toDate(),
-                $lte: moment().add(7, "days").endOf("day").toDate(),
+              $expr: {
+                $and: [
+                  {
+                    $gte: [
+                      { $dayOfMonth: "$startDate" },
+                      { $dayOfMonth: moment().toDate() },
+                    ],
+                  },
+                  {
+                    $lt: [
+                      { $dayOfMonth: "$startDate" },
+                      { $dayOfMonth: moment().add(7, "days").toDate() },
+                    ],
+                  },
+                  {
+                    $eq: [
+                      { $month: "$startDate" },
+                      { $month: moment().toDate() },
+                    ],
+                  },
+                ],
               },
               isDeleted: false,
             },
           },
           {
+            $sort: {
+              startDate: 1, // Sort by startDate in ascending order
+            },
+          },
+          {
             $group: {
               _id: "$employee",
-              earliestStartDate: { $min: "$startDate" },
-              title: { $first: "$title" },
+              earliestStartDate: { $first: "$startDate" },
+              title: { $last: "$title" },
             },
           },
           {
@@ -399,15 +456,38 @@ const dashboardController = {
       );
 
       const formattedUpcomingWorkAnniversaries = upcomingWorkAnniversaries.map(
-        (workAnniversary) => ({
-          type: workAnniversary.type,
-          date: workAnniversary.date,
-          employee: workAnniversary.employee,
-        })
+        (workAnniversary) => {
+          const anniversaryDate = moment(workAnniversary.date);
+          const currentYear = moment().year();
+          const newDate = moment([
+            currentYear,
+            anniversaryDate.month(),
+            anniversaryDate.date(),
+          ]);
+
+          return {
+            type: workAnniversary.type,
+            date: anniversaryDate.format("DD MMM"),
+            newDate: newDate.format("YYYY-MM-DD"),
+            employee: workAnniversary.employee,
+          };
+        }
       );
       const upcomingEvents = formattedUpcomingBirthdays.concat(
         formattedUpcomingWorkAnniversaries
       );
+      upcomingEvents.sort((a, b) => {
+        const dateA = moment(a.newDate);
+        const dateB = moment(b.newDate);
+
+        if (dateA.isBefore(dateB)) {
+          return -1;
+        } else if (dateA.isAfter(dateB)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
       res.status(200).json({
         leaves,
         certificates,

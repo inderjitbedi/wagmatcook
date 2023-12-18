@@ -237,7 +237,9 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
-                            Navigate(`/user-management/leave/history/${user?._id}`);
+                            Navigate(
+                              `/user-management/leave/history/${user?._id}`
+                            );
                           }
                         }}
                         style={{ cursor: "pointer" }}
@@ -488,7 +490,7 @@ const ManagerDashBoard = () => {
             <FlexColContainer>
               <CardBody>
                 <CardHeading>Upcoming Events</CardHeading>
-                {!dashboardData?.upcoming?.length && (
+                {!dashboardData?.upcomingEvents?.length ? (
                   <div
                     style={{
                       display: "flex",
@@ -498,20 +500,28 @@ const ManagerDashBoard = () => {
                   >
                     <CardSubHeading>No upcoming events </CardSubHeading>
                   </div>
+                ) : (
+                  dashboardData?.upcomingEvents?.map((data) => (
+                    <CardList style={{ border: "none", paddingBottom: "8px" }}>
+                      <FlexColumn style={{ gap: "8px" }}>
+                        <CardSubHeading>
+                          {data.employee
+                            ? [
+                                data.employee.firstName,
+                                data.employee.lastName,
+                              ].join(" ")
+                            : " - "}
+                        </CardSubHeading>
+                        <CardSubGrey>{data.date}</CardSubGrey>
+                      </FlexColumn>
+                      {data.type === "Work Anniversary" ? (
+                        <WorkAnniversary>Work Anniversary</WorkAnniversary>
+                      ) : (
+                        <Birthday> Birthday</Birthday>
+                      )}
+                    </CardList>
+                  ))
                 )}
-                {/* {array5.map((data) => (
-                  <CardList style={{ border: "none", paddingBottom: "8px" }}>
-                    <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading>Dianne Russel</CardSubHeading>
-                      <CardSubGrey>Design</CardSubGrey>
-                    </FlexColumn>
-                    {data === 1 ? (
-                      <WorkAnniversary>Work Anniversary</WorkAnniversary>
-                    ) : (
-                      <Birthday> Birthday</Birthday>
-                    )}
-                  </CardList>
-                ))} */}
               </CardBody>
             </FlexColContainer>
           </CardContainer>
