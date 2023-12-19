@@ -60,6 +60,7 @@ import {
   Option,
 } from "../../Employee/AddEmployee/AddEmployeeStyles";
 import {
+  FlexSpaceBetween,
   ModalContainer,
   ModalFormContainer,
 } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
@@ -245,6 +246,8 @@ const OALeaves = () => {
     }
     if (isEmptyObject(errors) && !update) {
       // data.isLieuTime = true;
+      // data.isSpecial = true;
+
       HandleSubmitLeavesType(data);
     } else if (update && isEmptyObject(errors)) {
       // data.isLieuTime = true;
@@ -430,14 +433,15 @@ const OALeaves = () => {
     });
     if (data.renew) {
       setIsRenew(true);
+      if (data.interval === LeaveInterval.YEARLY) {
+        setIsRenewal(true);
+        setIsRenewalOption(false);
+      } else {
+        setIsRenewal(false);
+        setIsRenewalOption(true);
+      }
     }
-    if (data.interval === LeaveInterval.ANNUALLY) {
-      setIsRenewal(true);
-      setIsRenewalOption(false);
-    } else {
-      setIsRenewal(false);
-      setIsRenewalOption(true);
-    }
+
     HandleOpen();
   };
   const HandleOpenAddNewAction = () => {
@@ -590,33 +594,7 @@ const OALeaves = () => {
                         type="text"
                       />
                       <Errors>{errors.maxCarryOver?.message}</Errors>
-                      <FlexContaierForm>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "1rem",
-                            marginBottom: "25px",
-                            marginTop: "1rem",
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            {...register("isActive", {})}
-                            id="isEligible"
-                            defaultChecked={true}
-                          />
-                          <InputLabel
-                            htmlFor="isEligible"
-                            style={{
-                              marginBottom: "0rem",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Is Active
-                          </InputLabel>
-                        </div>
-
+                      <FlexSpaceBetween style={{ margin: "0rem" }}>
                         <div
                           style={{
                             display: "flex",
@@ -655,14 +633,39 @@ const OALeaves = () => {
                               cursor: "pointer",
                             }}
                           >
-                            Renew
+                            Is Accruing?
                           </InputLabel>
                         </div>
-                      </FlexContaierForm>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "1rem",
+                            marginBottom: "25px",
+                            marginTop: "1rem",
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            {...register("isActive", {})}
+                            id="isEligible"
+                            defaultChecked={true}
+                          />
+                          <InputLabel
+                            htmlFor="isEligible"
+                            style={{
+                              marginBottom: "0rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Is Active
+                          </InputLabel>
+                        </div>
+                      </FlexSpaceBetween>
                       {isRenew && (
                         <>
                           <InputLabel>
-                            Interval <InputSpan>*</InputSpan>
+                            Accrual Type <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Controller
                             name={`interval`}
@@ -675,7 +678,7 @@ const OALeaves = () => {
                               onChange: (e) => {
                                 let Value = e.target.value;
                                 console.log(Value, "this is the value");
-                                if (Value === LeaveInterval.ANNUALLY) {
+                                if (Value === LeaveInterval.YEARLY) {
                                   setIsRenewal(true);
                                   setIsRenewalOption(false);
                                   setValue("renewalOption", null);
@@ -689,8 +692,8 @@ const OALeaves = () => {
                             render={({ field }) => (
                               <Select {...field}>
                                 <Option value="">Select</Option>
-                                <Option value={LeaveInterval.ANNUALLY}>
-                                  Annually
+                                <Option value={LeaveInterval.YEARLY}>
+                                  Yearly
                                 </Option>
                                 <Option value={LeaveInterval.MONTHLY}>
                                   Monthly
@@ -701,11 +704,10 @@ const OALeaves = () => {
                           {<Errors> {errors.interval?.message}</Errors>}
                         </>
                       )}
-
                       {isRenewal && (
                         <>
                           <InputLabel>
-                            Renewal Date <InputSpan>*</InputSpan>
+                            Yearly Leave Accrual Date <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Input
                             // readOnly={update}
@@ -723,7 +725,7 @@ const OALeaves = () => {
                       {isRenewalOption && (
                         <>
                           <InputLabel>
-                            Select Renewal Option: <InputSpan>*</InputSpan>
+                            Monthly Leave Accrual Day <InputSpan>*</InputSpan>
                           </InputLabel>
                           <Controller
                             name={`renewalOption`}
@@ -950,15 +952,17 @@ const OALeaves = () => {
                                 <ActionIconDiv
                                   style={{ justifyContent: "center" }}
                                 >
-                                  {!data.isLieuTime && (
+                                  {!data.isLieuTime && !data.isSpecial ? (
                                     <ActionIcons
                                       onClick={() => {
                                         HandleUpdateAction(data);
                                       }}
                                       src="/images/icons/Pendown.svg"
                                     />
+                                  ) : (
+                                    " "
                                   )}
-                                  {!data.isLieuTime && (
+                                  {!data.isLieuTime && !data.isSpecial ? (
                                     <ActionIcons
                                       onClick={() => {
                                         HandleOpenDelete();
@@ -966,6 +970,8 @@ const OALeaves = () => {
                                       }}
                                       src="/images/icons/Trash-2.svg"
                                     />
+                                  ) : (
+                                    " "
                                   )}
                                 </ActionIconDiv>
                               </TableCell>

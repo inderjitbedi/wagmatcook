@@ -112,7 +112,7 @@ const EmployeePersonal = () => {
             />
           ) : (
             <MainBodyContainer>
-              {/* <CommenHeader employeeid={employeeid} /> */}
+              {!isEdit && <CommenHeader employeeid={employeeid} />}
 
               <BasicInfoContainer>
                 <BasicInfoDiv>

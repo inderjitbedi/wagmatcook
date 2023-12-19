@@ -38,6 +38,7 @@ import {
   CardIcons,
   MainCardView,
   CardSubBlack,
+  CardSubHeadingEffect,
 } from "./ManagerStyles";
 import moment from "moment";
 import { FlexSpaceBetween } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
@@ -237,15 +238,17 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
-                            Navigate(`/user-management/leave/history/${user?._id}`);
+                            Navigate(
+                              `/user-management/leave/history/${user?._id}`
+                            );
                           }
                         }}
                         style={{ cursor: "pointer" }}
                       >
                         <FlexColumn>
-                          <CardSubHeading>
+                          <CardSubHeadingEffect>
                             {data?.leaveType?.name || " - "}
-                          </CardSubHeading>
+                          </CardSubHeadingEffect>
                           <FlexContainer style={{ flex: "1" }}>
                             <CardSubGrey>
                               From :
@@ -334,14 +337,14 @@ const ManagerDashBoard = () => {
                           }
                         />
                         <FlexColumn>
-                          <CardSubHeading>
+                          <CardSubHeadingEffect>
                             {data?.employee?.personalInfo
                               ? [
                                   data?.employee?.personalInfo?.firstName,
                                   data?.employee?.personalInfo?.lastName,
                                 ].join(" ")
                               : " - "}
-                          </CardSubHeading>
+                          </CardSubHeadingEffect>
 
                           <CardSubGrey>
                             {data?.employee ? data?.employee?.email : " - "}
@@ -401,7 +404,7 @@ const ManagerDashBoard = () => {
                 {Announcements?.map((data) => (
                   <CardList>
                     <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading
+                      <CardSubHeadingEffect
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
                             Navigate(
@@ -420,7 +423,7 @@ const ManagerDashBoard = () => {
                         style={{ cursor: "pointer" }}
                       >
                         {data.title || " - "}
-                      </CardSubHeading>
+                      </CardSubHeadingEffect>
 
                       <CardSubGrey>
                         {data.updatedAt
@@ -488,7 +491,7 @@ const ManagerDashBoard = () => {
             <FlexColContainer>
               <CardBody>
                 <CardHeading>Upcoming Events</CardHeading>
-                {!dashboardData?.upcoming?.length && (
+                {!dashboardData?.upcomingEvents?.length ? (
                   <div
                     style={{
                       display: "flex",
@@ -498,20 +501,28 @@ const ManagerDashBoard = () => {
                   >
                     <CardSubHeading>No upcoming events </CardSubHeading>
                   </div>
+                ) : (
+                  dashboardData?.upcomingEvents?.map((data) => (
+                    <CardList style={{ border: "none", paddingBottom: "8px" }}>
+                      <FlexColumn style={{ gap: "8px" }}>
+                        <CardSubHeading>
+                          {data.employee
+                            ? [
+                                data.employee.firstName,
+                                data.employee.lastName,
+                              ].join(" ")
+                            : " - "}
+                        </CardSubHeading>
+                        <CardSubGrey>{data.date}</CardSubGrey>
+                      </FlexColumn>
+                      {data.type === "Work Anniversary" ? (
+                        <WorkAnniversary>Work Anniversary</WorkAnniversary>
+                      ) : (
+                        <Birthday> Birthday</Birthday>
+                      )}
+                    </CardList>
+                  ))
                 )}
-                {/* {array5.map((data) => (
-                  <CardList style={{ border: "none", paddingBottom: "8px" }}>
-                    <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading>Dianne Russel</CardSubHeading>
-                      <CardSubGrey>Design</CardSubGrey>
-                    </FlexColumn>
-                    {data === 1 ? (
-                      <WorkAnniversary>Work Anniversary</WorkAnniversary>
-                    ) : (
-                      <Birthday> Birthday</Birthday>
-                    )}
-                  </CardList>
-                ))} */}
               </CardBody>
             </FlexColContainer>
           </CardContainer>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import UserAccountSiderBar from "./UserAccountSiderBar";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import CommenHeader from "../Employee/ViewEmployee/CommenHeader";
@@ -39,6 +39,7 @@ const BackArrowButton = styled.div`
   margin: 10px 10px;
 `;
 const UserAccountLayout = () => {
+  const location = useLocation();
   const Navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
@@ -105,7 +106,12 @@ const UserAccountLayout = () => {
                 : { width: "80%", paddingTop: "3.5rem" }
             }
           >
-            <CommenHeader employeeid={employeeid} />
+            {location.pathname.includes("/chart") ||
+            location.pathname.includes("/personal-info") ? (
+              " "
+            ) : (
+              <CommenHeader employeeid={employeeid} />
+            )}
 
             <Outlet />
           </div>

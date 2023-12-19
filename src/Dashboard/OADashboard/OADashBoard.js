@@ -587,11 +587,13 @@ const OADashBoard = ({ screenWidth }) => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "5rem",
+                        gap: "1rem",
+                        justifyContent: "space-between",
+                        width:"45%",
                       }}
                     >
                       <CardLeavesPara>
-                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver}
+                        Max&nbsp;Carry&nbsp;Over: {data.maxCarryOver || " - "}
                       </CardLeavesPara>
 
                       <CardLeavesButton
@@ -599,7 +601,7 @@ const OADashBoard = ({ screenWidth }) => {
                         style={
                           data.isActive
                             ? { backgroundColor: "#c8ffc7", color: "#0d7d0b" }
-                            : { backgroundColor: "#FF6666", color: "#FF0000" }
+                            : { backgroundColor: "#FFE6E3", color: "#EA4335" }
                         }
                       >
                         {data.isActive ? "Active" : "Inactive"}{" "}

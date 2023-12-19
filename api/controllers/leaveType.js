@@ -119,6 +119,7 @@ const leaveTypeController = {
         isActive: true,
         organization: req.organization?._id || null,
         isLieuTime: false,
+        // isSpecial: false,
       };
 
       if (req.query.searchKey) {
