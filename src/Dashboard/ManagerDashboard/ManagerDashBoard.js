@@ -38,6 +38,7 @@ import {
   CardIcons,
   MainCardView,
   CardSubBlack,
+  CardSubHeadingEffect,
 } from "./ManagerStyles";
 import moment from "moment";
 import { FlexSpaceBetween } from "../../Employee/ViewEmployee/ViewEmployeeStyle";
@@ -245,9 +246,9 @@ const ManagerDashBoard = () => {
                         style={{ cursor: "pointer" }}
                       >
                         <FlexColumn>
-                          <CardSubHeading>
+                          <CardSubHeadingEffect>
                             {data?.leaveType?.name || " - "}
-                          </CardSubHeading>
+                          </CardSubHeadingEffect>
                           <FlexContainer style={{ flex: "1" }}>
                             <CardSubGrey>
                               From :
@@ -336,14 +337,14 @@ const ManagerDashBoard = () => {
                           }
                         />
                         <FlexColumn>
-                          <CardSubHeading>
+                          <CardSubHeadingEffect>
                             {data?.employee?.personalInfo
                               ? [
                                   data?.employee?.personalInfo?.firstName,
                                   data?.employee?.personalInfo?.lastName,
                                 ].join(" ")
                               : " - "}
-                          </CardSubHeading>
+                          </CardSubHeadingEffect>
 
                           <CardSubGrey>
                             {data?.employee ? data?.employee?.email : " - "}
@@ -403,7 +404,7 @@ const ManagerDashBoard = () => {
                 {Announcements?.map((data) => (
                   <CardList>
                     <FlexColumn style={{ gap: "8px" }}>
-                      <CardSubHeading
+                      <CardSubHeadingEffect
                         onClick={() => {
                           if (userType === ROLES.MANAGER) {
                             Navigate(
@@ -422,7 +423,7 @@ const ManagerDashBoard = () => {
                         style={{ cursor: "pointer" }}
                       >
                         {data.title || " - "}
-                      </CardSubHeading>
+                      </CardSubHeadingEffect>
 
                       <CardSubGrey>
                         {data.updatedAt

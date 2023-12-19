@@ -33,8 +33,8 @@ export const FlexColContainer = styled.div`
   gap: 1.3rem;
   flex: 1 1 37.2rem;
   @media only screen and (max-width: 600px) {
-   flex: 1;
-   width: 100%;
+    flex: 1;
+    width: 100%;
   }
 `;
 export const CardBody = styled.div`
@@ -76,6 +76,20 @@ export const CardSubHeading = styled.p`
   font-weight: 600;
   line-height: 1.6rem; /* 114.286% */
   margin: 0;
+`;
+export const CardSubHeadingEffect = styled.p`
+  color: #222b45;
+  font-family: Inter;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6rem; /* 114.286% */
+  margin: 0;
+  transition: text-decoration 0.3s; /* Add transition for a smooth effect */
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 export const CardSubGrey = styled.p`
   color: #8f9bb3;

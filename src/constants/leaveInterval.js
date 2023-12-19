@@ -1,4 +1,4 @@
 module.exports = Object.freeze({
-  ANNUALLY: "ANNUALLY",
+  YEARLY: "YEARLY",
   MONTHLY: "MONTHLY",
 });
