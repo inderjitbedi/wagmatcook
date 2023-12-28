@@ -18,7 +18,11 @@ import DeleteModal from "../Modals/DeleteModal";
 import styled from "styled-components";
 import CommenDashHeader from "../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
-
+import { GrSend } from "react-icons/gr";
+import { FiSend } from "react-icons/fi";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Fade from "@mui/material/Fade";
 import {
   Dashboard,
   DashNav,
@@ -174,7 +178,7 @@ const SAOrganization = () => {
   const HandleUpdate = (data) => {
     setIsLoading(true);
     let dataCopy = data;
-
+     dataCopy.email = dataCopy.email.toLowerCase();
     let url = API_URLS.updateSuperAdmin
       .replace(":organizationid", Id)
       .replace(":userid", userId);
@@ -214,6 +218,7 @@ const SAOrganization = () => {
     setIsLoading(true);
 
     let dataCopy = data;
+    dataCopy.email = dataCopy.email.toLowerCase();
     httpClient({
       method: "post",
       url,
@@ -223,6 +228,36 @@ const SAOrganization = () => {
         if (result) {
           HandleClose();
           GetOrganizationList();
+          toast.success(result.message, {
+            className: "toast",
+          });
+          setIsLoading(false);
+        } else {
+          //toast.warn("Something went wrong.");
+          setIsLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        toast.error("Error creating Disciplinary. Please try again.");
+        setIsLoading(false);
+      });
+  };
+  const HandleResendInvite = (ordId, userId) => {
+    let url = API_URLS.resendInvite
+      .replace(":organizationid", ordId)
+      .replace(":userid", userId);
+
+    setIsLoading(true);
+
+    httpClient({
+      method: "post",
+      url,
+    })
+      .then(({ result, error }) => {
+        if (result) {
+          HandleClose();
+          // GetOrganizationList();
           toast.success(result.message, {
             className: "toast",
           });
@@ -261,7 +296,11 @@ const SAOrganization = () => {
   useEffect(() => {
     GetOrganizationList();
   }, [page, searchValue]);
-
+  const iconStyle = {
+    color: "#279AF1",
+    fontSize: "1.7rem",
+    cursor: "pointer",
+  };
   return (
     <>
       {isLoading ? (
@@ -476,6 +515,32 @@ const SAOrganization = () => {
                           src="/images/icons/Pendown.svg"
                         />
 
+                        {!data.primaryUser?.isSignedup && (
+                          <Tooltip
+                            title={
+                              <p
+                                style={{ fontSize: "1.2rem", margin: "0.75px" }}
+                                TransitionComponent={Fade}
+                                TransitionProps={{ timeout: 600 }}
+                              >
+                                {" "}
+                                Resend Invite
+                              </p>
+                            }
+                          >
+                            <IconButton>
+                              <FiSend
+                                style={iconStyle}
+                                onClick={() =>
+                                  HandleResendInvite(
+                                    data._id,
+                                    data.primaryUser?._id
+                                  )
+                                }
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                         {/* <ActionIcons
                           onClick={() => {
                             HandleOpenDelete();

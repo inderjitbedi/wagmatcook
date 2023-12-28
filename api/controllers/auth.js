@@ -188,11 +188,13 @@ const authController = {
       if (!user) {
         return res.status(400).json({ message: "User not registered." });
       }
+      console.log("this is user details:", user);
       if (user.role === "ORGANIZATION_ADMIN") {
+
         if (!user.isSignedup) {
           return res.status(400).json({
             message:
-              "Registration required. Check your email for the registration link.",
+              "User not registered. Check your email for the registration link. If not received, contact Admin.",
           });
         }
       }
@@ -234,6 +236,7 @@ const authController = {
   async loginWithOtp(req, res) {
     try {
       const { email, otp } = req.body;
+      
       let user = await User.findOne({
         email: { $regex: new RegExp(email, "i") },
         otp,

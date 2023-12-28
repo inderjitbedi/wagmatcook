@@ -54,7 +54,7 @@ const SharedSignin = () => {
     if (formData.email && validateEmail(formData.email)) {
       let data: any = { ...formData };
       let url = API_URLS.loginWithOtp;
-
+      data.email = formData.email.toLowerCase();
       httpClient({
         method: "post",
         url,

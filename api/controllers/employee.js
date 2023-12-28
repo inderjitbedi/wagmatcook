@@ -2737,9 +2737,9 @@ const employeeController = {
 
       let orgChart = await findReportingHierarchy(employeeId);
       // orgChart = await reverseOrgChart(orgChart);
-
+      console.log("this is the resultig array org chart ", orgChart);
       res.status(200).json({
-        orgChart: [orgChart],
+        orgChart: orgChart,
         message: "Organization chart fetched successfully",
       });
     } catch (error) {
@@ -2763,7 +2763,6 @@ async function reverseOrgChart(node, parent = null) {
 
   return reversedNode;
 }
-
 
 // async function findReportingHierarchy(employeeId) {
 //   const positionHistory = await EmployeePositionHistory.findOne({
@@ -2928,17 +2927,14 @@ async function findReportingHierarchy(employeeId) {
     position: employeePosition?.title,
     reportsTo: employeePosition?.reportsTo,
   };
-
+  var coworkers = [];
   // Checking if the employee position history has a reportsTo field
   if (employeePosition && employeePosition?.reportsTo) {
     // Fetching co-workers (employees reporting to the same manager)
-    const coworkers = await findCoworkers(
-      employeePosition.reportsTo,
-      employeeId
-    );
+    coworkers = await findCoworkers(employeePosition.reportsTo, employeeId);
 
-    // Adding coworkers only if the reportsTo field exists
-    data.coworkers = coworkers;
+    // // Adding coworkers only if the reportsTo field exists
+    // data.coworkers = coworkers;
 
     // Recursive call to find reporting hierarchy for the reportsTo employee
     const res = await findReportingHierarchy(employeePosition.reportsTo);
@@ -2947,7 +2943,7 @@ async function findReportingHierarchy(employeeId) {
   }
 
   // Create an array of objects with the employee and their coworkers (if any)
-  const resultArray = data;
+  const resultArray = [data, ...coworkers];
 
   return resultArray;
 }

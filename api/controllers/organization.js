@@ -439,5 +439,46 @@ const orgController = {
       res.status(400).json(error);
     }
   },
+  async resendInvitation(req, res) {
+    try {
+      // Retrieve the user ID from the request parameters
+      const userId = req.params.userid;
+      const orgId = req.params.organizationid;
+      // Find the user by ID
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Check if the user has already signed up
+      if (user.isSignedUp) {
+        return res.status(400).json({ message: "User has already signed up" });
+      }
+
+      // Generate a new invitation token and update the expiry
+      const token = crypto.randomBytes(20).toString("hex");
+      user.invitationToken = token;
+      user.invitationTokenExpiry = Date.now() + 3600000 * 24;
+      await user.save();
+
+      // Retrieve organization information if needed (assuming orgId is provided in the params)
+      const org = await Organization.findById(orgId);
+      if (!org) {
+        return res.status(404).json({ message: "Organization not found" });
+      }
+
+      // Send the invitation email using SendGrid
+      sendGrid.send(user.email, "invite", { org, user });
+
+      // Respond with a success message
+      res.status(200).json({
+        message: "Invitation sent successfully",
+      });
+    } catch (error) {
+      // Handle errors and respond with an error status
+      console.error("resendInvitation:error -", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 module.exports = orgController;
