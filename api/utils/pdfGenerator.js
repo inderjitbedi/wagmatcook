@@ -3,9 +3,13 @@ const puppeteerCore = require("puppeteer-core"); // server
 const fs = require("fs");
 
 async function generatePDFFromHTML(htmlContent, outputPath, header) {
-  process.env.PUPPETEER_EXECUTABLE_PATH = '/usr/bin/google-chrome-stable';
+  process.env.PUPPETEER_EXECUTABLE_PATH = "/usr/bin/google-chrome-stable";
 
-  const browser = await puppeteerCore.launch({ headless: "new",executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,args: ['--no-sandbox']}); // server
+  const browser = await puppeteerCore.launch({
+    headless: "new",
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+    args: ["--no-sandbox"],
+  }); // server
   // const browser = await puppeteer.launch({ headless: "new" }); // local
   const page = await browser.newPage();
 

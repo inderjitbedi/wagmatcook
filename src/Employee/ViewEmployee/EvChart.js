@@ -70,7 +70,7 @@ const EvChart = () => {
 
   const EmployeeNode = ({ employee }) => (
     <ChartBox>
-      <FlexContaier style={{width:"200px"}}>
+      <FlexContaier style={{ width: "200px" }}>
         <ChartImg
           src={
             employee.personalInfo?.photo
@@ -78,7 +78,7 @@ const EvChart = () => {
               : "/images/User.jpg"
           }
         />
-        <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           <ChartName>
             {" "}
             {employee.personalInfo.firstName} {employee.personalInfo.lastName}{" "}
@@ -102,7 +102,8 @@ const EvChart = () => {
   const renderTreeNodes = (employees) => {
     return employees.map((employee) => (
       <TreeNode key={employee.id} label={<EmployeeNode employee={employee} />}>
-        {employee.child && renderTreeNodes(employee.child)}
+        {Array.isArray(employee.reportsTo) &&
+          renderTreeNodes(employee.reportsTo)}
       </TreeNode>
     ));
   };

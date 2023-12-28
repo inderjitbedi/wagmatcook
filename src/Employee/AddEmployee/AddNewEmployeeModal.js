@@ -79,7 +79,7 @@ const AddNewEmployeeModal = ({
     setIsLoading(true);
 
     let dataCopy = data;
-
+  dataCopy.email = dataCopy.email.toLowerCase();
     let url = `/employee/add`;
 
     httpClient({
