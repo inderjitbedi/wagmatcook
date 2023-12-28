@@ -1119,13 +1119,12 @@ export const ChartBox = styled.div`
   /* width: max-content; */
   padding: 1rem;
   border-radius: 8px;
-  
 `;
 export const ChartImg = styled.img`
-width: 4rem;
-height: 4rem;
-border-radius: 50%;
-display: inline-block;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: inline-block;
 `;
 export const ChartName = styled.p`
   font-family: Inter;
@@ -1144,4 +1143,12 @@ export const ChartLight = styled.p`
   margin: 0;
   color: #8f9bb3;
 `;
-
+export const OrgChart = styled.div`
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+  padding-bottom: 4rem;
+  padding-top: 1rem;
+`;

@@ -2764,6 +2764,13 @@ async function reverseOrgChart(node, parent = null) {
   return reversedNode;
 }
 
+
+
+
+
+
+
+
 // async function findReportingHierarchy(employeeId) {
 //   const positionHistory = await EmployeePositionHistory.findOne({
 //     employee: employeeId,
@@ -2934,7 +2941,7 @@ async function findReportingHierarchy(employeeId) {
     coworkers = await findCoworkers(employeePosition.reportsTo, employeeId);
 
     // // Adding coworkers only if the reportsTo field exists
-    // data.coworkers = coworkers;
+    data.coworkers = coworkers;
 
     // Recursive call to find reporting hierarchy for the reportsTo employee
     const res = await findReportingHierarchy(employeePosition.reportsTo);

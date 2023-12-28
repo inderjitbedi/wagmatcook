@@ -112,8 +112,7 @@ const ManagerAccountLayout = () => {
                 : { width: "80%", paddingTop: "3.5rem" }
             }
           >
-            {location.pathname.includes("/chart") ||
-            location.pathname.includes("/personal-info") ? (
+            {location.pathname.includes("/personal-info") ? (
               " "
             ) : (
               <CommenHeader employeeid={employeeid} />

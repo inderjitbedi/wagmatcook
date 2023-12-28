@@ -14,6 +14,10 @@ import {
   ChartName,
   ChartLight,
   FlexContaier,
+  BasicInfoContainer,
+  BasicInfoDiv,
+  BasicHeading,
+  OrgChart,
 } from "./ViewEmployeeStyle";
 import { MdDiversity2 } from "react-icons/md";
 const EvChart = () => {
@@ -102,8 +106,9 @@ const EvChart = () => {
   const renderTreeNodes = (employees) => {
     return employees.map((employee) => (
       <TreeNode key={employee.id} label={<EmployeeNode employee={employee} />}>
-        {Array.isArray(employee.reportsTo) &&
-          renderTreeNodes(employee.reportsTo)}
+        {Array.isArray(employee.reportsTo)
+          ? renderTreeNodes(employee.reportsTo)
+          : null}
       </TreeNode>
     ));
   };
@@ -130,17 +135,25 @@ const EvChart = () => {
         </div>
       ) : (
         <MainBodyContainer>
-          <Tree
-            lineColor={"#279af1"}
-            label={
-              <ChartBox>
-                {" "}
-                <ChartName>Your Community Portal</ChartName>
-              </ChartBox>
-            }
-          >
-            {renderTreeNodes(result)}
-          </Tree>
+          <BasicInfoContainer>
+            <BasicInfoDiv>
+              <BasicHeading> Organizational Chart</BasicHeading>
+              <hr style={{ color: "#E4E4E4", backgroundColor: "#E4E4E4" }}></hr>
+              <OrgChart>
+                <Tree
+                  lineColor={"#279af1"}
+                  label={
+                    <ChartBox>
+                      {" "}
+                      <ChartName>Your Community Portal</ChartName>
+                    </ChartBox>
+                  }
+                >
+                  {renderTreeNodes(result)}
+                </Tree>
+              </OrgChart>
+            </BasicInfoDiv>
+          </BasicInfoContainer>
         </MainBodyContainer>
       )}
     </div>
