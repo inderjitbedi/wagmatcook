@@ -290,7 +290,7 @@ const templates = {
           </tr>
         
         `
-        )}
+        ).join("")}
         </tbody>
       </table>
     </div>
@@ -555,8 +555,9 @@ const templates = {
           </tr>
         </thead>
         <tbody>
-        ${leaves.map(
-          (data, index) => `
+        ${leaves
+          .map(
+            (data, index) => `
          <tr>
             <td>${index + 1}</td>
             <td
@@ -595,7 +596,8 @@ const templates = {
           </tr>
         
         `
-        )}
+          )
+          .join("")}
         </tbody>
       </table>
     </div>
@@ -750,7 +752,7 @@ const templates = {
               
               <td>${data?.departmentInfo?.name} </td>
           </tr>`
-        )}
+        ).join("")}
         </tbody>
       </table>
     </div>

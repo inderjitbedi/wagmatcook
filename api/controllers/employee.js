@@ -2329,12 +2329,11 @@ const employeeController = {
           employee: req.params.id,
           isDeleted: false,
         }).populate("leaveType");
-        if (
-          !req.body.nature ||
-          req.body.nature != leaveNature.ADDITION 
-        ) {
+        if (!req.body.nature || req.body.nature != leaveNature.ADDITION) {
           if (!allocation)
-            return res.status(400).json({ message: "Leave type not allocated." });
+            return res
+              .status(400)
+              .json({ message: "Leave type not allocated." });
 
           let burnedHours = 0;
           let leaves = await EmployeeLeaveHistory.find({
@@ -2736,9 +2735,9 @@ const employeeController = {
     try {
       const employeeId = req.params.id;
 
-      let orgChart = await findReportingHierarchy({}, employeeId);
+      let orgChart = await findReportingHierarchy(employeeId);
       orgChart = await reverseOrgChart(orgChart);
-
+      console.log("this is the resultig array org chart ", orgChart);
       res.status(200).json({
         orgChart: [orgChart],
         message: "Organization chart fetched successfully",
@@ -2749,59 +2748,69 @@ const employeeController = {
     }
   },
 };
-async function reverseOrgChart(node, parent = null) {
-  const reversedNode = {
-    id: node.id,
-    personalInfo: node.personalInfo,
-    role: node.role,
-    position: node.position,
-    children: [], // Use 'children' property to hold an array of children
-  };
+// async function reverseOrgChart(node, parent = null) {
+//   const reversedNode = {
+//     id: node.id,
+//     personalInfo: node.personalInfo,
+//     role: node.role,
+//     position: node.position,
+//     child: parent ? [parent] : [],
+//   };
 
-  if (parent) {
-    parent.children.push(reversedNode); // Add the reversedNode as a child of the parent
+//   if (node.reportsTo) {
+//     return await reverseOrgChart(node.reportsTo, reversedNode);
+//   }
+
+//   return reversedNode;
+// }
+async function reverseOrgChart(node, parent = null) {
+  var nodeIntial = node.find((obj) => Array.isArray(obj.reportsTo));
+
+  if (!nodeIntial) {
+    nodeIntial = node[0];
   }
 
-  if (node.child && node.child.length > 0) {
-    // If the current node has children, reverse each child recursively
-    for (const childNode of node.child) {
-      await reverseOrgChart(childNode, reversedNode);
-    }
+  // console.log(nodeIntial)
+  const reversedNode = {
+    id: nodeIntial.id,
+    personalInfo: nodeIntial.personalInfo,
+    role: nodeIntial.role,
+    position: nodeIntial.position,
+    child: parent ? parent : [],
+  };
+  const index = node.indexOf(nodeIntial);
+
+  // Replace the original node with the reversed node at the found index
+  if (index !== -1) {
+    node[index] = reversedNode;
+  }
+  if (nodeIntial.reportsTo) {
+    return await reverseOrgChart(nodeIntial.reportsTo, node);
   }
 
   return reversedNode;
 }
+
+
+
+
+
+
+
+
 // async function findReportingHierarchy(employeeId) {
-//   const hierarchy = await buildHierarchy(employeeId);
-//   return hierarchy;
-// }
-// async function buildHierarchy(
-//   employeeId,
-//   level = 0,
-//   maxDepth = 10,
-//   visited = new Set()
-// ) {
-//   if (level > maxDepth || visited.has(employeeId)) {
-//     // Return null if maximum depth is reached or employee is already visited
-//     return null;
-//   }
-
-//   visited.add(employeeId);
-
-//   // Find the primary position history for the given employee
 //   const positionHistory = await EmployeePositionHistory.findOne({
 //     employee: employeeId,
 //     isPrimary: true,
 //     isDeleted: false,
 //   });
 
-//   // If no position history, return null (end of the hierarchy)
 //   if (!positionHistory) {
 //     return null;
 //   }
 
-//   // Extract manager's ID, manager's info, and subordinates' info
 //   const managerId = positionHistory.reportsTo;
+
 //   const managerInfo = await User.findOne({
 //     _id: managerId,
 //     isDeleted: false,
@@ -2811,12 +2820,10 @@ async function reverseOrgChart(node, parent = null) {
 //     populate: { path: "photo", model: "File" },
 //   });
 
-//   // If manager info doesn't exist, return null
 //   if (!managerInfo) {
 //     return null;
 //   }
 
-//   // Find all employees who report to the same manager
 //   const subordinates = await EmployeePositionHistory.find({
 //     reportsTo: managerId,
 //     isDeleted: false,
@@ -2830,83 +2837,96 @@ async function reverseOrgChart(node, parent = null) {
 //       populate: { path: "photo", model: "File" },
 //     },
 //   });
-
-//   // Extract information about subordinates
-//   const subordinateInfo = await Promise.all(
-//     subordinates.map(async (subordinate) => {
+//   console.log(subordinates, "++++++");
+//   const subordinateInfo = subordinates
+//     .map((subordinate) => {
 //       if (subordinate.employee) {
-//         // For subsequent levels, recursively build hierarchy for each subordinate
-//         const subHierarchy = await buildHierarchy(
-//           subordinate.employee._id,
-//           level + 1,
-//           maxDepth,
-//           visited
-//         );
 //         return {
-//           id: subordinate.employee._id,
-//           personalInfo: subordinate.employee.personalInfo,
-//           role: subordinate.employee.role,
+//           employeeId: subordinate.employee._id,
+//           firstName: subordinate.employee.personalInfo.firstName,
+//           lastName: subordinate.employee.personalInfo.lastName,
 //           position: subordinate.title,
 //           reportsTo: positionHistory.title,
-//           subordinates: subHierarchy ? [subHierarchy] : [], // Only add subordinates if they exist
+
+//           photo: subordinate.employee.personalInfo.photo
+//             ? subordinate.employee.personalInfo.photo
+//             : null,
 //         };
 //       }
 //       return null;
 //     })
-//   );
-
-//   // Return an object representing the current employee and its hierarchy
-//   return {
-//     id: managerInfo._id,
-//     personalInfo: managerInfo.personalInfo,
-//     role: managerInfo.role,
-//     position: positionHistory.title,
-//     reportsTo: positionHistory.reportsTo,
-//     subordinates: subordinateInfo.filter(Boolean),
-//   };
+//     .filter(Boolean);
+//   const reportingHierarchy = await findReportingHierarchy(managerId);
+//   return [
+//     {
+//       employeeId: managerInfo._id,
+//       firstName: managerInfo.personalInfo.firstName,
+//       lastName: managerInfo.personalInfo.lastName,
+//       position: positionHistory.title,
+//       reportsTo: positionHistory.reportsTo,
+//       photo: managerInfo.personalInfo.photo
+//         ? managerInfo.personalInfo.photo
+//         : null,
+//       subordinates: subordinateInfo,
+//     },
+//     ...(reportingHierarchy || []),
+//   ];
 // }
 
-async function findReportingHierarchy(data, employeeId) {
-  const user = await User.findOne({ _id: employeeId }).populate({
-    path: "personalInfo",
-    populate: { path: "photo" },
-  });
-  const employeePosition = await EmployeePositionHistory.findOne({
-    employee: employeeId,
-    isPrimary: true,
-    isDeleted: false,
-  });
+// {
+//  NAME: EMP1,
+//  REPORTSTO: {
+//   NAME: MGR2,
+//   REPORTSTO:{
+//     NAME:MGR1
+//     REPORTSTO:{
+//       NAME:ORG_ADMIN
+//     }
+//   }
+//  }
+// }
 
-  data = {
-    id: employeeId,
-    personalInfo: user.personalInfo,
-    role: user.role,
-    position: employeePosition?.title,
-    reportsTo: employeePosition?.reportsTo,
-  };
+// async function findReportingHierarchy(data, employeeId) {
+//   const user = await User.findOne({ _id: employeeId }).populate({
+//     path: "personalInfo",
+//     populate: { path: "photo" },
+//   });
+//   const employeePosition = await EmployeePositionHistory.findOne({
+//     employee: employeeId,
+//     isPrimary: true,
+//     isDeleted: false,
+//   });
 
-  if (data.reportsTo) {
-    data.reportsTo = {
-      id: employeePosition.reportsTo,
-      personalInfo: user.personalInfo,
-      role: user.role,
-      position: employeePosition?.title,
-      reportsTo: null, // Set to null initially, will be updated in the recursive call
-    };
+//   data = {
+//     id: employeeId,
+//     personalInfo: user.personalInfo,
+//     role: user.role,
+//     position: employeePosition?.title,
+//     reportsTo: employeePosition?.reportsTo,
+//   };
 
-    if (employeePosition && employeePosition?.reportsTo) {
-      console.log(data);
-      const res = await findReportingHierarchy(
-        data.reportsTo,
-        employeePosition.reportsTo
-      );
-      console.log(res);
-      data.reportsTo = res;
-    }
-  }
+//   if (data.reportsTo) {
+//     data.reportsTo = {
+//       id: employeePosition.reportsTo,
+//       personalInfo: user.personalInfo,
+//       role: user.role,
+//       position: employeePosition?.title,
+//       reportsTo: null, // Set to null initially, will be updated in the recursive call
+//     };
 
-  return data;
-}
+//     if (employeePosition && employeePosition?.reportsTo) {
+//       console.log(data);
+//       const res = await findReportingHierarchy(
+//         data.reportsTo,
+//         employeePosition.reportsTo
+//       );
+//       console.log(res);
+//       data.reportsTo = res;
+//     }
+//   }
+
+//   return data;
+// }
 
 async function processUsers(users) {
   for (let user of users) {
@@ -2919,6 +2939,68 @@ async function processUsers(users) {
     );
     console.log("Welcome email sent to ", employee.email);
   }
+}
+
+async function findReportingHierarchy(employeeId) {
+  // Fetching user information and primary employee position history
+  const user = await User.findOne({ _id: employeeId }).populate({
+    path: "personalInfo",
+    populate: { path: "photo" },
+  });
+  const employeePosition = await EmployeePositionHistory.findOne({
+    employee: employeeId,
+    isPrimary: true,
+    isDeleted: false,
+  });
+
+  // Creating initial data object with employee information
+  let data = {
+    id: employeeId,
+    personalInfo: user.personalInfo,
+    role: user.role,
+    position: employeePosition?.title,
+    reportsTo: employeePosition?.reportsTo,
+  };
+  var coworkers = [];
+  // Checking if the employee position history has a reportsTo field
+  if (employeePosition && employeePosition?.reportsTo) {
+    // Fetching co-workers (employees reporting to the same manager)
+    coworkers = await findCoworkers(employeePosition.reportsTo, employeeId);
+
+    // // Adding coworkers only if the reportsTo field exists
+    data.coworkers = coworkers;
+
+    // Recursive call to find reporting hierarchy for the reportsTo employee
+    const res = await findReportingHierarchy(employeePosition.reportsTo);
+    console.log(res);
+    data.reportsTo = res;
+  }
+
+  // Create an array of objects with the employee and their coworkers (if any)
+  const resultArray = [data, ...coworkers];
+
+  return resultArray;
+}
+
+// Asynchronous function to find co-workers (employees reporting to the same manager)
+async function findCoworkers(managerId, excludeEmployeeId) {
+  const coworkers = await EmployeePositionHistory.find({
+    reportsTo: managerId,
+    employee: { $ne: excludeEmployeeId }, // Exclude the given employee from coworkers
+    isPrimary: true,
+    isDeleted: false,
+  }).populate({
+    path: "employee",
+    populate: { path: "personalInfo" },
+  });
+
+  return coworkers.map((coworker) => ({
+    id: coworker.employee._id,
+    personalInfo: coworker.employee.personalInfo,
+    role: coworker.employee.role,
+    position: coworker.title,
+    reportsTo: managerId,
+  }));
 }
 
 module.exports = employeeController;

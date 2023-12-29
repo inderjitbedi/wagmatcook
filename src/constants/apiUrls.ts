@@ -11,6 +11,7 @@ const API_URLS = {
   updateSuperAdmin: `/super-admin/organization-admin/update/:organizationid/:userid`,
   adminOrganizationList: `/super-admin/organization-list?page=Page&limit=10&searchKey=searchValue`,
   adminInviteOrganizationAdmin: `/super-admin/invite`,
+  resendInvite: `/super-admin/resend-invite/:organizationid/:userid`,
 
   orgAdminCompleteSignup: `/organization-admin/complete-signup/:token`,
   // file upload documents api
@@ -126,8 +127,8 @@ const API_URLS = {
   getManagerEmployeeList: `/employee/list/manager?page=Page&limit=10&searchKey=searchValue`,
   getBebEligibleEmployeeList: `/employee/list/BebEligible?page=Page&limit=10&searchKey=searchValue`,
   generateBEBPdf: `/employee/BebEligible/generatePdf`,
-  //employee chart api 
-  getChartData:`/employee/org-chart/:id`,
+  //employee chart api
+  getChartData: `/employee/org-chart/:id`,
   //task apis
   getTaskList: `/task/list?page=Page&limit=10&sort=Sort&searchKey=searchValue
 `,

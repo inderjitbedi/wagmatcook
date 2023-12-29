@@ -28,10 +28,10 @@ async function httpClient(payload: any) {
           autoClose: 5000,
         });
       } else {
-        toast.error(myError.message,{autoClose: 5000});
+        toast.error(myError.message,{autoClose: 10000});
       }
     } else {
-      toast.error(myError.message, { autoClose: 5000 });
+      toast.error(myError.message, { autoClose: 10000 });
     }
     return {
       error: myError,

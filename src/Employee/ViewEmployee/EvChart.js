@@ -14,6 +14,11 @@ import {
   ChartName,
   ChartLight,
   FlexContaier,
+  BasicInfoContainer,
+  BasicInfoDiv,
+  BasicHeading,
+  OrgChart,
+  ChartFlex,
 } from "./ViewEmployeeStyle";
 import { MdDiversity2 } from "react-icons/md";
 const EvChart = () => {
@@ -70,15 +75,22 @@ const EvChart = () => {
 
   const EmployeeNode = ({ employee }) => (
     <ChartBox>
-      <FlexContaier style={{width:"200px"}}>
+      <ChartFlex style={{ width: "180px" }}>
         <ChartImg
           src={
             employee.personalInfo?.photo
-              ? API_URL + employee.personalInfo?.photo.path
+              ? API_URL + employee.personalInfo?.photo?.path
               : "/images/User.jpg"
           }
         />
-        <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            alignItems: "center",
+          }}
+        >
           <ChartName>
             {" "}
             {employee.personalInfo.firstName} {employee.personalInfo.lastName}{" "}
@@ -94,15 +106,17 @@ const EvChart = () => {
               ? "Manager"
               : " - "}
           </ChartLight>
-          <ChartLight>{employee.position}</ChartLight>
+          <ChartLight style={{ fontWeight: "400" }}>
+            {employee.position}
+          </ChartLight>
         </div>
-      </FlexContaier>
+      </ChartFlex>
     </ChartBox>
   );
   const renderTreeNodes = (employees) => {
     return employees.map((employee) => (
       <TreeNode key={employee.id} label={<EmployeeNode employee={employee} />}>
-        {employee.child && renderTreeNodes(employee.child)}
+        {employee?.child?.length > 0 ? renderTreeNodes(employee.child) : null}
       </TreeNode>
     ));
   };
@@ -129,17 +143,37 @@ const EvChart = () => {
         </div>
       ) : (
         <MainBodyContainer>
-          <Tree
-            lineColor={"#279af1"}
-            label={
-              <ChartBox>
+          <BasicInfoContainer>
+            <BasicInfoDiv>
+              <BasicHeading style={{ marginBottom: "2.5rem" }}>
                 {" "}
-                <ChartName>Your Community Portal</ChartName>
-              </ChartBox>
-            }
-          >
-            {renderTreeNodes(result)}
-          </Tree>
+                Organizational Chart
+              </BasicHeading>
+              <hr
+                style={{
+                  color: "#E4E4E4",
+                  backgroundColor: "#E4E4E4",
+                  marginTop: "1rem",
+                }}
+              ></hr>
+              <div style={{display:"flex",alignItems:"center"}}>
+                <OrgChart>
+                  <Tree
+                    lineColor={"#D8D8D8"}
+                    lineWidth={"2px"}
+                    label={
+                      <ChartBox>
+                        {" "}
+                        <ChartName>Your Community Portal</ChartName>
+                      </ChartBox>
+                    }
+                  >
+                    {renderTreeNodes(result)}
+                  </Tree>
+                </OrgChart>
+              </div>
+            </BasicInfoDiv>
+          </BasicInfoContainer>
         </MainBodyContainer>
       )}
     </div>

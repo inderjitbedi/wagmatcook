@@ -204,7 +204,7 @@ const emailTemplates = {
                           </table>
                           <table class="body-sub" role="presentation">
                           <tr>
-                              <td style=" padding: 20px 50px 0px 50px;">
+                              <td style=" padding: 20px 50px 0px 50px; font-family: 'Inter', sans-serif;">
                                   <p class="f-fallback sub">If you’re having trouble with the
                                       button above, copy and paste the URL below into your web
                                       browser.</p>
