@@ -1111,37 +1111,48 @@ export const FilterContainer = styled.div`
   }
 `;
 export const ChartBox = styled.div`
-  border: 1px solid #279af1;
+  border: 1px solid #dde4eb;
   display: inline-block;
   /* display: flex; */
   align-items: center;
   gap: 4px;
   /* width: max-content; */
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 1.6rem;
+  border-radius: 6px;
+  background-color: #fff;
+  z-index: 222;
+  position: relative;
+  margin-top: 30px;
 `;
 export const ChartImg = styled.img`
-  width: 4rem;
-  height: 4rem;
+  width: 4.2rem;
+  height: 4.2rem;
   border-radius: 50%;
   display: inline-block;
+  position: relative;
+  z-index: 222;
+  background-color: #fff;
+  
 `;
 export const ChartName = styled.p`
   font-family: Inter;
   font-size: 1.2rem;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4rem;
   margin: 0;
+  color: #222b45;
+
 `;
 export const ChartLight = styled.p`
-  font-family: Inter;
-  font-size: 1.2rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.4rem;
-  margin: 0;
   color: #8f9bb3;
+  /* text-align: center; */
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin: 0;
 `;
 export const OrgChart = styled.div`
   display: flex;
@@ -1151,4 +1162,12 @@ export const OrgChart = styled.div`
   width: 100%;
   padding-bottom: 4rem;
   padding-top: 1rem;
+  margin-top: -72px;
+`;
+export const ChartFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  margin-top: -47px;
 `;

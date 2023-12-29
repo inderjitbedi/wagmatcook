@@ -2736,10 +2736,10 @@ const employeeController = {
       const employeeId = req.params.id;
 
       let orgChart = await findReportingHierarchy(employeeId);
-      // orgChart = await reverseOrgChart(orgChart);
+      orgChart = await reverseOrgChart(orgChart);
       console.log("this is the resultig array org chart ", orgChart);
       res.status(200).json({
-        orgChart: orgChart,
+        orgChart: [orgChart],
         message: "Organization chart fetched successfully",
       });
     } catch (error) {
@@ -2748,17 +2748,44 @@ const employeeController = {
     }
   },
 };
-async function reverseOrgChart(node, parent = null) {
-  const reversedNode = {
-    id: node.id,
-    personalInfo: node.personalInfo,
-    role: node.role,
-    position: node.position,
-    child: parent ? [parent] : [],
-  };
+// async function reverseOrgChart(node, parent = null) {
+//   const reversedNode = {
+//     id: node.id,
+//     personalInfo: node.personalInfo,
+//     role: node.role,
+//     position: node.position,
+//     child: parent ? [parent] : [],
+//   };
 
-  if (node.reportsTo) {
-    return await reverseOrgChart(node.reportsTo, reversedNode);
+//   if (node.reportsTo) {
+//     return await reverseOrgChart(node.reportsTo, reversedNode);
+//   }
+
+//   return reversedNode;
+// }
+async function reverseOrgChart(node, parent = null) {
+  var nodeIntial = node.find((obj) => Array.isArray(obj.reportsTo));
+
+  if (!nodeIntial) {
+    nodeIntial = node[0];
+  }
+
+  // console.log(nodeIntial)
+  const reversedNode = {
+    id: nodeIntial.id,
+    personalInfo: nodeIntial.personalInfo,
+    role: nodeIntial.role,
+    position: nodeIntial.position,
+    child: parent ? parent : [],
+  };
+  const index = node.indexOf(nodeIntial);
+
+  // Replace the original node with the reversed node at the found index
+  if (index !== -1) {
+    node[index] = reversedNode;
+  }
+  if (nodeIntial.reportsTo) {
+    return await reverseOrgChart(nodeIntial.reportsTo, node);
   }
 
   return reversedNode;

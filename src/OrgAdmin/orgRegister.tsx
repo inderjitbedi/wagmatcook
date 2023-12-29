@@ -25,7 +25,7 @@ export default function RegisterOrganization() {
   const [formData, setFormData] = useState<any>({
     name: "",
     size: "",
-    file: "",
+    file: null ,
   });
   const [selectedFile, setSelectedFile] = useState(null);
   const [file, setFile] = useState<any>(null);
@@ -98,7 +98,7 @@ export default function RegisterOrganization() {
     event.preventDefault();
 
     if (
-      formData.file &&
+      // formData.file &&
       formData.name &&
       formData.size &&
       parseInt(formData.size) > 0
@@ -184,7 +184,8 @@ export default function RegisterOrganization() {
                         onChange={handleFileChange}
                       />
                       <label className="org-logo">
-                        Organization Logo <span className="astrick">*</span>
+                          Organization Logo
+                          {/* <span className="astrick">*</span> */}
                       </label>
                       <label className="upload-photo" htmlFor="photo">
                         <svg
