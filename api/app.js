@@ -24,7 +24,7 @@ const documentTagRoute = require("./routes/documentTag");
 const documentRoute = require("./routes/document");
 const jobRoute = require("./routes/job");
 const announcementRoute = require("./routes/announcement");
-
+const { startCron } = require("./controllers/cronJob");
 const swagger = require("./swagger");
 const swaggerUi = require("swagger-ui-express");
 
@@ -33,7 +33,7 @@ const loggerMiddleware = require("./middlewares/loggerMiddleware");
 dotenv.config();
 
 const app = express();
-
+// startCron();
 app.use(express.json());
 
 var originsWhitelist = ["*", "http://localhost:3001", "http://localhost:3000"];
@@ -87,5 +87,5 @@ app.use("/api/temp", express.static(path.join(__dirname, "temp")));
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(process.env.PORT, () => {
-  console.log('Server started on port ' + process.env.PORT);
+  console.log("Server started on port " + process.env.PORT);
 });
