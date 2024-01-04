@@ -5,7 +5,7 @@ const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const leaveInterval = require("../enum/leaveInterval");
 const renewOption = require("../enum/renewalOption");
 function startCron() {
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("*/5 * * * *", async () => {
     console.log("Running a task every day at midnight 0 0 * * *");
     // Fetch leave types that need renewal
     const leaveTypesToRenew = await LeaveType.find({
@@ -53,6 +53,25 @@ function isRenewalDayOfMonthStart(renewalOption) {
 }
 async function renewLeaveType(leaveType) {
   console.log(`Renewing leave type: ${leaveType.name}`);
+  const allocations = await EmployeeLeaveAllocation.find({
+    leaveType: leaveType._id,
+    isDeleted: false,
+  });
+
+  // Iterate through each allocation and update the balance
+  for (const allocation of allocations) {
+    // Calculate the new balance based on the smaller of (max carry over) and (old balance)
+    const newBalance =
+      allocation.totalAllocation +
+      Math.min(leaveType.maxCarryOver, allocation.balance);
+
+    // Update the allocation balance with the new balance
+    allocation.balance = newBalance;
+    allocation.initialBalance = newBalance;
+
+    // Save the updated allocation to the database
+    await allocation.save();
+  }
 }
 
 module.exports = {
