@@ -509,7 +509,12 @@ const leaveController = {
                 employee: req.params.id,
                 isDeleted: false,
               },
-              { $inc: { totalAllocation: leaveRequest.hours } },
+              {
+                $inc: {
+                  totalAllocation: leaveRequest.hours,
+                  balance: leaveRequest.hours,
+                },
+              },
               { upsert: true, new: true }
             );
             allocation = await allocation.populate("leaveType");
@@ -520,6 +525,7 @@ const leaveController = {
                 leaveType: leaveType,
                 employee: req.params.id,
                 totalAllocation: 0,
+                balance: 0,
               });
               await allocation.save();
               allocation = await allocation.populate("leaveType");
@@ -533,34 +539,45 @@ const leaveController = {
               .json({ message: "Leave type not allocated." });
 
           let burnedHours = 0;
-          let requestedHours = 0;
+          let requestedHours = leaveRequest.hours;
 
-          let leaves = await EmployeeLeaveHistory.find({
-            leaveType: leaveType,
-            employee: req.params.id,
-            isDeleted: false,
-            status: { $ne: leaveStatus.REJECTED },
-            nature: "SUBSTRACTION",
-          }).select("hours");
+          // let leaves = await EmployeeLeaveHistory.find({
+          //   leaveType: leaveType,
+          //   employee: req.params.id,
+          //   isDeleted: false,
+          //   status: { $ne: leaveStatus.REJECTED },
+          //   nature: "SUBSTRACTION",
+          // }).select("hours");
 
-          for (const leave of leaves) {
-            if (leave._id === req.params.requestid) {
-              requestedHours = leave.hours;
-            }
-            burnedHours += leave.hours;
-          }
-          console.log(
-            "this ----",
-            allocation?.totalAllocation,
-            burnedHours,
-            requestedHours,
-            "-------"
-          );
-          if (
-            req.body.isApproved &&
-            requestedHours > allocation?.totalAllocation - burnedHours
-          ) {
-            return res.status(400).json({ message: "Insufficent balance" });
+          // for (const leave of leaves) {
+          //   if (leave._id === req.params.requestid) {
+          //     requestedHours = leave.hours;
+          //   }
+          //   burnedHours += leave.hours;
+          // }
+          // console.log(
+          //   "this ----",
+          //   allocation?.totalAllocation,
+          //   burnedHours,
+          //   requestedHours,
+          //   "-------"
+          // );
+          // if (
+          //   req.body.isApproved &&
+          //   requestedHours > allocation?.balance
+          // ) {
+          //   return res.status(400).json({ message: "Insufficient balance" });
+          // }
+          if (!req.body.isApproved) {
+            allocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+              {
+                leaveType: leaveType,
+                employee: req.params.id,
+                isDeleted: false,
+              },
+              { $inc: { balance: requestedHours } },
+              { new: true }
+            ).populate("leaveType");
           }
         }
       }
