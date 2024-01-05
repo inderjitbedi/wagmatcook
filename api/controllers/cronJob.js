@@ -5,7 +5,7 @@ const EmployeeLeaveAllocation = require("../models/employeeLeaveAllocation");
 const leaveInterval = require("../enum/leaveInterval");
 const renewOption = require("../enum/renewalOption");
 function startCron() {
-  cron.schedule("*/5 * * * *", async () => {
+  cron.schedule("0 0 * * *", async () => {
     console.log("Running a task every day at midnight 0 0 * * *");
     // Fetch leave types that need renewal
     const leaveTypesToRenew = await LeaveType.find({

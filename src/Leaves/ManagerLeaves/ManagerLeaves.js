@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DevTool } from "@hookform/devtools";
+import styled from "styled-components";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -111,6 +112,17 @@ const CellStyle2 = {
   fontWeight: 400,
   lineHeight: "1.5rem",
 };
+const UnderlineHoverEffect = styled.div`
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  &:hover {
+    ${TabelDarkPara} {
+      text-decoration: underline;
+    }
+  }
+`;
 const ManagerLeaves = () => {
   const Navigate = useNavigate();
   const location = useLocation();
@@ -343,7 +355,11 @@ const ManagerLeaves = () => {
     })
       .then(({ result, error }) => {
         if (result) {
-          setOptions(result.employees);
+          const filteredEmployees = result?.employees?.filter(
+            (employee) => employee.user !== user._id
+          );
+          setOptions(filteredEmployees);
+          console.log(filteredEmployees);
         } else {
           //toast.warn("something went wrong ");
         }
@@ -358,7 +374,7 @@ const ManagerLeaves = () => {
         setOptionLoading(false);
       });
   };
-
+  console.log("this is the reports to list :", reportList);
   useEffect(() => {
     Promise.all([GetLeavesHistory(), GetReportList()]);
 
@@ -501,7 +517,19 @@ const ManagerLeaves = () => {
                       {index + 1}
                     </TableCell>
                     <TableCell align="left" sx={CellStyle2}>
-                      <TabelDiv>
+                      <UnderlineHoverEffect
+                        onClick={() => {
+                          if (userType === ROLES.MANAGER) {
+                            Navigate(
+                              `/manager-management/request/${data.employee._id}/${data._id}`
+                            );
+                          } else if (userType === ROLES.HR) {
+                            Navigate(
+                              `/hr-management/request/${data.employee._id}/${data._id}`
+                            );
+                          }
+                        }}
+                      >
                         <TabelImg
                           src={
                             data.employee?.personalInfo?.photo
@@ -513,6 +541,7 @@ const ManagerLeaves = () => {
                         <div>
                           <TabelDarkPara>
                             {data.employee?.personalInfo?.firstName +
+                              " " +
                               (data.employee?.personalInfo?.lastName
                                 ? data.employee?.personalInfo?.lastName
                                 : " ")}
@@ -521,7 +550,7 @@ const ManagerLeaves = () => {
                             {data.employee?.email}
                           </TabelLightPara>
                         </div>
-                      </TabelDiv>
+                      </UnderlineHoverEffect>
                     </TableCell>
                     <TableCell align="left" sx={CellStyle2}>
                       Design

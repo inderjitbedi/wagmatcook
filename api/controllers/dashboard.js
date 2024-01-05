@@ -3,6 +3,7 @@ const EmployeeCertificates = require("../models/employeeCertificates");
 const EmployeeLeaveHistory = require("../models/employeeLeaveHistory");
 const EmployeePositionHistory = require("../models/employeePositionHistory");
 const EmployeePersonalInfo = require("../models/employeePersonalInfo");
+const User = require("../models/user");
 const UserOrganization = require("../models/userOrganization");
 const Department = require("../models/department");
 const moment = require("moment");
@@ -347,6 +348,13 @@ const dashboardController = {
               ],
             },
             isDeleted: false,
+            employee: {
+              $in: (
+                await UserOrganization.find({
+                  organization: req.organization._id,
+                })
+              ).map((userOrg) => userOrg.user),
+            },
           },
         },
         {
@@ -385,7 +393,7 @@ const dashboardController = {
           },
         };
       });
-
+      console.log("this is the org id:", req.organization._id);
       const upcomingWorkAnniversaries = await EmployeePositionHistory.aggregate(
         [
           {
@@ -413,6 +421,13 @@ const dashboardController = {
                 ],
               },
               isDeleted: false,
+              employee: {
+                $in: (
+                  await UserOrganization.find({
+                    organization: req.organization._id,
+                  })
+                ).map((userOrg) => userOrg.user),
+              },
             },
           },
           {
