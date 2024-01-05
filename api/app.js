@@ -33,7 +33,7 @@ const loggerMiddleware = require("./middlewares/loggerMiddleware");
 dotenv.config();
 
 const app = express();
-// startCron();
+startCron();
 app.use(express.json());
 
 var originsWhitelist = ["*", "http://localhost:3001", "http://localhost:3000"];
