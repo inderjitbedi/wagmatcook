@@ -540,9 +540,7 @@ const LeaveHistory = () => {
       GetReportList(parsedUser);
 
       // GetLeaveAlloactionBalance(parsedUser);
-      GetLeaveTypesList(parsedUser).then(() => {
-        GetLeaveAlloaction(parsedUser);
-      });
+      GetLeaveTypesList(parsedUser);
     }
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -555,6 +553,13 @@ const LeaveHistory = () => {
       setIsAccount(true);
     }
   }, []);
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      GetLeaveAlloaction(parsedUser);
+    }
+  }, [other]);
 
   return (
     <>
