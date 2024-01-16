@@ -12,7 +12,7 @@ const sendGrid = {
       to: toEmail,
       from: {
         name: "<no-reply@wagmatcook>",
-        email: "info@easygolftour.com",
+        email: "info@integolf.com",
       },
       subject: emailTemplates[templateType](templateData).subject,
       html: emailTemplates[templateType](templateData).html,
