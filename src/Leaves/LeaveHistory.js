@@ -240,7 +240,7 @@ const LeaveHistory = () => {
     reset({});
     clearErrors();
     setDetailsLength(500);
-    GetLeaveAlloaction(user);
+    // GetLeaveAlloaction(user);
   };
   const HandleOpenAddNewActionLieu = () => {
     handleOpen();
@@ -316,6 +316,7 @@ const LeaveHistory = () => {
             const newResult = [...result.allocations, { leaveType: other }];
             console.log("this is the new Result:", newResult);
             setLeaveType(newResult);
+            setLeaveBalance(result.allocations);
 
             resolve(result);
           } else {
@@ -381,6 +382,7 @@ const LeaveHistory = () => {
           handleClose();
           reset();
           GetLeaveHistory(user);
+          GetLeaveAlloaction(user);
           toast.success(result.message, {
             className: "toast",
           });
@@ -471,7 +473,7 @@ const LeaveHistory = () => {
   const HandleCloseDelete = () => setOpenDelete(false);
   const HandleDelete = () => {
     setIsDeleting(true);
-    let url = API_URLS.deleteLeaveHistroy
+    let url = API_URLS.deleteLeaveHistory
       .replace(":id", user._id)
       .replace(":leaveid", Id);
     httpClient({
@@ -482,7 +484,7 @@ const LeaveHistory = () => {
         if (result) {
           HandleCloseDelete();
           GetLeaveHistory(user);
-          GetLeaveAlloactionBalance(user);
+          GetLeaveAlloaction(user);
           setId("");
           toast.success(result.message, {
             className: "toast",
@@ -536,8 +538,8 @@ const LeaveHistory = () => {
       let parsedUser = JSON.parse(user);
       setUser(parsedUser);
       GetReportList(parsedUser);
-      // GetLeaveAlloaction(parsedUser);
-      GetLeaveAlloactionBalance(parsedUser);
+
+      // GetLeaveAlloactionBalance(parsedUser);
       GetLeaveTypesList(parsedUser);
     }
     if (location.pathname.indexOf("manager") > -1) {
@@ -551,6 +553,13 @@ const LeaveHistory = () => {
       setIsAccount(true);
     }
   }, []);
+  useEffect(() => {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      GetLeaveAlloaction(parsedUser);
+    }
+  }, [other]);
 
   return (
     <>
@@ -582,7 +591,7 @@ const LeaveHistory = () => {
                 <FlexColumn100>
                   <Sectionlighttitle>
                     {" "}
-                    {data?.leaveTypeObj?.name || "- "} -{" "}
+                    {data?.leaveType?.name || "- "} -{" "}
                     <span
                       style={{
                         color: "#222b45",
@@ -595,14 +604,15 @@ const LeaveHistory = () => {
                         margin: 0,
                       }}
                     >
-                      {data?.totalAllocation - data?.consumed} hours left
+                      {data?.balance} hours left
                     </span>
                   </Sectionlighttitle>
                   <Sectionsmalltitle>
                     {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
                   </Sectionsmalltitle>
                   <Sectionsmalltitle>
-                    {data?.consumed} of {data?.totalAllocation} hours used
+                    {data?.initialBalance - data?.balance} of{" "}
+                    {data?.initialBalance} hours used
                   </Sectionsmalltitle>
                 </FlexColumn100>
               </SectionCardContainer>

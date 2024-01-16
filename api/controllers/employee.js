@@ -2077,6 +2077,8 @@ const employeeController = {
       const allocation = new EmployeeLeaveAllocation({
         ...req.body,
         employee: req.params.id,
+        balance: req.body.totalAllocation,
+        initialBalance: req.body.totalAllocation,
       });
       await allocation.save();
 
@@ -2120,10 +2122,23 @@ const employeeController = {
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
+      let allocation = await EmployeeLeaveAllocation.findOne({
+        _id: req.params.allocationid,
+      });
+      if (!allocation) {
+        return res.status(404).json({ message: "Leave allocation not found." });
+      }
+      const allocationDifference =
+        req.body.totalAllocation - allocation.totalAllocation;
 
-      let allocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+      allocation = await EmployeeLeaveAllocation.findOneAndUpdate(
         { _id: req.params.allocationid },
-        { ...req.body },
+        {
+          ...req.body,
+
+          initialBalance: allocation.initialBalance + allocationDifference,
+          $inc: { balance: allocationDifference },
+        },
         { new: true }
       );
       res.status(200).json({
@@ -2224,6 +2239,29 @@ const employeeController = {
       });
       if (!leaveHistory) {
         return res.status(404).json({ message: "Leave history not found." });
+      }
+      // Find the corresponding allocation
+      const allocation = await EmployeeLeaveAllocation.findOne({
+        leaveType: leaveHistory.leaveType,
+        employee: req.params.id,
+        isDeleted: false,
+      }).populate("leaveType");
+
+      // Update the allocation balance by adding the requested hours
+      if (allocation) {
+        await EmployeeLeaveAllocation.findOneAndUpdate(
+          {
+            leaveType: leaveHistory.leaveType,
+            employee: req.params.id,
+            isDeleted: false,
+          },
+          {
+            $inc: {
+              balance: leaveHistory.hours,
+            },
+          },
+          { new: true }
+        ).populate("leaveType");
       }
 
       await EmployeeLeaveHistory.findOneAndUpdate(
@@ -2329,28 +2367,38 @@ const employeeController = {
           employee: req.params.id,
           isDeleted: false,
         }).populate("leaveType");
+        console.log("this is the allocation :", allocation);
         if (!req.body.nature || req.body.nature != leaveNature.ADDITION) {
           if (!allocation)
             return res
               .status(400)
               .json({ message: "Leave type not allocated." });
 
-          let burnedHours = 0;
-          let leaves = await EmployeeLeaveHistory.find({
-            leaveType: leaveType,
-            employee: req.params.id,
-            isDeleted: false,
-            status: { $ne: leaveStatus.REJECTED },
-            nature: { $ne: leaveNature.ADDITION },
-          }).select("hours");
+          // let burnedHours = 0;
+          // let leaves = await EmployeeLeaveHistory.find({
+          //   leaveType: leaveType,
+          //   employee: req.params.id,
+          //   isDeleted: false,
+          //   status: { $ne: leaveStatus.REJECTED },
+          //   nature: { $ne: leaveNature.ADDITION },
+          // }).select("hours");
 
-          for (const leave of leaves) {
-            burnedHours += leave.hours;
-          }
+          // for (const leave of leaves) {
+          //   burnedHours += leave.hours;
+          // }
 
-          if (requestedHours > allocation?.totalAllocation - burnedHours) {
-            return res.status(400).json({ message: "Insufficent balance" });
+          if (requestedHours > allocation?.balance) {
+            return res.status(400).json({ message: "Insufficient balance" });
           }
+          allocation = await EmployeeLeaveAllocation.findOneAndUpdate(
+            {
+              leaveType: leaveType,
+              employee: req.params.id,
+              isDeleted: false,
+            },
+            { $inc: { balance: -requestedHours } },
+            { new: true }
+          ).populate("leaveType");
         }
       }
       let request = new EmployeeLeaveHistory({
@@ -2736,10 +2784,10 @@ const employeeController = {
       const employeeId = req.params.id;
 
       let orgChart = await findReportingHierarchy(employeeId);
-      // orgChart = await reverseOrgChart(orgChart);
+      orgChart = await reverseOrgChart(orgChart);
       console.log("this is the resultig array org chart ", orgChart);
       res.status(200).json({
-        orgChart: orgChart,
+        orgChart: [orgChart],
         message: "Organization chart fetched successfully",
       });
     } catch (error) {
@@ -2748,17 +2796,44 @@ const employeeController = {
     }
   },
 };
-async function reverseOrgChart(node, parent = null) {
-  const reversedNode = {
-    id: node.id,
-    personalInfo: node.personalInfo,
-    role: node.role,
-    position: node.position,
-    child: parent ? [parent] : [],
-  };
+// async function reverseOrgChart(node, parent = null) {
+//   const reversedNode = {
+//     id: node.id,
+//     personalInfo: node.personalInfo,
+//     role: node.role,
+//     position: node.position,
+//     child: parent ? [parent] : [],
+//   };
 
-  if (node.reportsTo) {
-    return await reverseOrgChart(node.reportsTo, reversedNode);
+//   if (node.reportsTo) {
+//     return await reverseOrgChart(node.reportsTo, reversedNode);
+//   }
+
+//   return reversedNode;
+// }
+async function reverseOrgChart(node, parent = null) {
+  var nodeIntial = node.find((obj) => Array.isArray(obj.reportsTo));
+
+  if (!nodeIntial) {
+    nodeIntial = node[0];
+  }
+
+  // console.log(nodeIntial)
+  const reversedNode = {
+    id: nodeIntial.id,
+    personalInfo: nodeIntial.personalInfo,
+    role: nodeIntial.role,
+    position: nodeIntial.position,
+    child: parent ? parent : [],
+  };
+  const index = node.indexOf(nodeIntial);
+
+  // Replace the original node with the reversed node at the found index
+  if (index !== -1) {
+    node[index] = reversedNode;
+  }
+  if (nodeIntial.reportsTo) {
+    return await reverseOrgChart(nodeIntial.reportsTo, node);
   }
 
   return reversedNode;
@@ -2934,7 +3009,7 @@ async function findReportingHierarchy(employeeId) {
     coworkers = await findCoworkers(employeePosition.reportsTo, employeeId);
 
     // // Adding coworkers only if the reportsTo field exists
-    // data.coworkers = coworkers;
+    data.coworkers = coworkers;
 
     // Recursive call to find reporting hierarchy for the reportsTo employee
     const res = await findReportingHierarchy(employeePosition.reportsTo);

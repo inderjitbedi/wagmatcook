@@ -178,10 +178,12 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       .then(({ result, error }) => {
         if (result) {
           setResult(result);
-          if (result.benefit.startDate || result.benefit.endDate) {
+          if (result.benefit.startDate) {
             result.benefit.startDate = new Date(result.benefit.startDate)
               .toISOString()
               .split("T")[0];
+          }
+          if (result.benefit.endDate) {
             result.benefit.endDate = new Date(result.benefit.endDate)
               .toISOString()
               .split("T")[0];
