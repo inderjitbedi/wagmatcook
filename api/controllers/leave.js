@@ -513,6 +513,7 @@ const leaveController = {
                 $inc: {
                   totalAllocation: leaveRequest.hours,
                   balance: leaveRequest.hours,
+                  initialBalance: leaveRequest.hours,
                 },
               },
               { upsert: true, new: true }
@@ -526,6 +527,7 @@ const leaveController = {
                 employee: req.params.id,
                 totalAllocation: 0,
                 balance: 0,
+                initialBalance: 0,
               });
               await allocation.save();
               allocation = await allocation.populate("leaveType");

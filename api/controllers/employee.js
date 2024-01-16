@@ -2248,7 +2248,7 @@ const employeeController = {
       }).populate("leaveType");
 
       // Update the allocation balance by adding the requested hours
-      if (allocation) {
+      if (allocation && leaveHistory.nature === leaveNature.SUBSTRACTION) {
         await EmployeeLeaveAllocation.findOneAndUpdate(
           {
             leaveType: leaveHistory.leaveType,
@@ -3032,7 +3032,13 @@ async function findCoworkers(managerId, excludeEmployeeId) {
     isDeleted: false,
   }).populate({
     path: "employee",
-    populate: { path: "personalInfo" },
+    populate: {
+      path: "personalInfo",
+      populate: {
+        path: "photo",
+        model: "File", 
+      },
+    },
   });
 
   return coworkers.map((coworker) => ({

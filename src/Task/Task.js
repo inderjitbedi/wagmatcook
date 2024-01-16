@@ -101,6 +101,8 @@ const Task = () => {
   const location = useLocation();
   const [searchValue, setSearchValue] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [user, setUser] = useState();
+
   const [isLoading, setIsLoading] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -383,6 +385,11 @@ const Task = () => {
 
   useEffect(() => {
     GetTaskList();
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+    }
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -787,7 +794,8 @@ const Task = () => {
                           }}
                           src="/images/icons/eye.svg"
                         />
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        data?.assignee?._id === user?._id ? (
                           " "
                         ) : (
                           <ActionIcons
@@ -798,7 +806,8 @@ const Task = () => {
                           />
                         )}
 
-                        {userType === ROLES.EMPLOYEE ? (
+                        {userType === ROLES.EMPLOYEE ||
+                        data?.assignee?._id === user?._id ? (
                           " "
                         ) : (
                           <ActionIcons
