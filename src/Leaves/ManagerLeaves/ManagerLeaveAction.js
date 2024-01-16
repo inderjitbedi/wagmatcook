@@ -63,7 +63,7 @@ const ManagerLeaveAction = () => {
   const HandleOpenDelete = (action) => {
     if (action === "Approve") {
       setModalProps({
-        src: "/svg/approve.svg",
+        src: "/images/Calendar Mark.png",
         message:
           "You have approved this leave request and the user will be notified.",
 

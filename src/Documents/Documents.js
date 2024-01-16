@@ -926,7 +926,7 @@ const Documents = () => {
                     {!update ? (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading || isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Submit
@@ -934,7 +934,7 @@ const Documents = () => {
                     ) : (
                       <AddNewButton
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading || isUploading}
                         style={{ marginTop: "2.5rem" }}
                       >
                         Update

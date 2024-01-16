@@ -28,10 +28,13 @@ async function httpClient(payload: any) {
           autoClose: 5000,
         });
       } else {
-        toast.error(myError.message,{autoClose: 10000});
+        toast.error(myError.message, { autoClose: 10000 });
       }
     } else {
       toast.error(myError.message, { autoClose: 10000 });
+      // localStorage.clear();
+      // window.location.href = "/";
+     
     }
     return {
       error: myError,
