@@ -14,16 +14,12 @@ const SharedSignin = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  console.log(process.env.REACT_APP_API_URL);
 
-  // useEffect(() => {
-  //     // localStorage.clear()
-  //     let isLoggedIn = localStorage.getItem('isLoggedIn');
-  //     if (isLoggedIn) {
-  //         // navigate("/OADashBoard");
-  //     } else {
-  //         // localStorage.clear()
-  //     }
-  // }, []);
+  useEffect(() => {
+    console.log(process.env.REACT_APP_API_URL);
+
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",
