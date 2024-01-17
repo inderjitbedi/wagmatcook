@@ -464,12 +464,12 @@ const ManagerLeaves = () => {
                   >
                     Name
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     sx={{ ...CellStyle, maxWidth: "84px" }}
                     align="left"
                   >
                     Department
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     sx={{ ...CellStyle, maxWidth: "11.4rem" }}
                     align="left"
@@ -552,9 +552,9 @@ const ManagerLeaves = () => {
                         </div>
                       </UnderlineHoverEffect>
                     </TableCell>
-                    <TableCell align="left" sx={CellStyle2}>
+                    {/* <TableCell align="left" sx={CellStyle2}>
                       Design
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell align="left" sx={CellStyle2}>
                       {data.from
                         ? moment.utc(data.from).format("D MMM, YYYY")
