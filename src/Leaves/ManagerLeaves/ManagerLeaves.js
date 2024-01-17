@@ -241,7 +241,7 @@ const ManagerLeaves = () => {
         setIsLoading(false);
       });
   };
-  const GetReportList = () => {
+  const GetReportList = (user) => {
     return new Promise((resolve, reject) => {
       setIsLoading(true);
       let url = API_URLS.getReporttoList;
@@ -277,6 +277,7 @@ const ManagerLeaves = () => {
               (obj) => obj.user !== user._id
             );
             setReportList(filteredArray);
+            console.log("manager leave reports to list:", filteredArray);
           } else {
             //toast.warn("something went wrong ");
           }
@@ -376,7 +377,12 @@ const ManagerLeaves = () => {
   };
   console.log("this is the reports to list :", reportList);
   useEffect(() => {
-    Promise.all([GetLeavesHistory(), GetReportList()]);
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUser(parsedUser);
+      Promise.all([GetLeavesHistory(), GetReportList(parsedUser)]);
+    }
 
     if (location.pathname.indexOf("manager") > -1) {
       setUserType(ROLES.MANAGER);
@@ -384,12 +390,6 @@ const ManagerLeaves = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-    }
-
-    let user = localStorage.getItem("user");
-    if (user) {
-      let parsedUser = JSON.parse(user);
-      setUser(parsedUser);
     }
   }, [searchValue, page]);
 
