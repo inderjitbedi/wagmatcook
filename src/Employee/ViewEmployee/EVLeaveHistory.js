@@ -107,80 +107,7 @@ const style = {
   height: "59.7rem",
   overflowY: "scroll",
 };
-const rows = [
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Approved",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Approved",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Pending",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Approved",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Approved",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "30 Apr,2020",
-    joindate: "30 Apr,2020",
-    role: "8",
-    status: "Approved",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    status: "Approved",
-    role: "8",
-  },
-  {
-    name: "Victoria perez",
-    email: "KumarName@gamil.com",
-    employeeid: "LA-0239",
-    phone: "28 Apr,2020",
-    joindate: "30 Apr,2020",
-    status: "Pending",
-    role: "8",
-  },
-];
+
 const PendingStyle = {
   borderRadius: "10rem",
   background: "#FFF1DD",
@@ -233,6 +160,9 @@ const EVLeaveHistory = () => {
   const HandleChangePage = (event, value) => {
     setPage(value);
   };
+
+  // const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
+
   const [open, setOpen] = useState(false);
   const [Id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -259,7 +189,7 @@ const EVLeaveHistory = () => {
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
+  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 3);
 
   const handleShowMoreClick = () => {
     setShowAll(!showAll);
@@ -402,7 +332,7 @@ const EVLeaveHistory = () => {
       })
         .then(({ result, error }) => {
           if (result) {
-            setLeaveType(result.allocations);
+            setLeaveBalance(result.allocations);
             resolve(result);
           } else {
             //toast.warn("something went wrong ");
@@ -419,31 +349,7 @@ const EVLeaveHistory = () => {
         });
     });
   };
-  const GetLeaveAlloactionBalance = () => {
-    // setIsLoading(true);
-    // GetLeavesType();
-    const trimid = employeeid.trim();
-    let url = API_URLS.userLeaveBalance;
-    httpClient({
-      method: "get",
-      url,
-    })
-      .then(({ result, error }) => {
-        if (result) {
-          setLeaveBalance(result.leaves);
-        } else {
-          //toast.warn("something went wrong ");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Error Adding Benefits. Please try again.");
-        // setIsLoading(false);
-      })
-      .finally(() => {
-        // setIsLoading(false);
-      });
-  };
+
   const HandleSubmit = (data) => {
     // e.preventDefault();
     setIsLoading(true);
@@ -518,9 +424,11 @@ const EVLeaveHistory = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
-      GetLeaveAlloactionBalance();
+      // GetLeaveAlloactionBalance();
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
@@ -570,15 +478,15 @@ const EVLeaveHistory = () => {
               {/* <CommenHeader employeeid={employeeid} /> */}
             </FlexSpaceBetween>
           )}
-          {userType === ROLES.EMPLOYEE && (
+          {[ROLES.EMPLOYEE, ROLES.MANAGER, ROLES.HR].includes(userType) && (
             <>
-              <SectionCard>
+              <SectionCard style={{ padding: "0px 1rem" }}>
                 {limitedData?.map((data) => (
                   <SectionCardContainer>
                     <FlexColumn100>
                       <Sectionlighttitle>
                         {" "}
-                        {data?.leaveTypeObj?.name || "- "} -{" "}
+                        {data?.leaveType?.name || "- "} -{" "}
                         <span
                           style={{
                             color: "#222b45",
@@ -591,22 +499,25 @@ const EVLeaveHistory = () => {
                             margin: 0,
                           }}
                         >
-                          {data?.totalAllocation - data?.consumed || " - "} Hrs
-                          remaining
+                          {data?.balance} hours left
                         </span>
                       </Sectionlighttitle>
                       <Sectionsmalltitle>
-                        {/* {data?.leaveTypeObj?.name || "- "} - {" "} */}
-                      </Sectionsmalltitle>
-                      <Sectionsmalltitle>
-                        {data?.consumed} of {data?.totalAllocation} Hrs used
+                        {data?.initialBalance - data?.balance} of{" "}
+                        {data?.initialBalance} hours used
                       </Sectionsmalltitle>
                     </FlexColumn100>
                   </SectionCardContainer>
                 ))}
               </SectionCard>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                {leaveBalance?.length > 4 && (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "0rem 2rem",
+                }}
+              >
+                {leaveBalance?.length > 3 && (
                   <ShowMore onClick={handleShowMoreClick}>
                     {showAll ? "Show Less" : "Show More "}
                   </ShowMore>

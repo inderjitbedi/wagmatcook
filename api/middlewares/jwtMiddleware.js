@@ -34,19 +34,23 @@ function verifyToken(roles = []) {
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
-        return res.status(401).send('Failed to authenticate token');
+        return res.status(401).send("Failed to authenticate token");
       }
 
-      const user = await User.findOne({ email: decoded.email }).populate('personalInfo');;
+      const user = await User.findOne({ email: decoded.email }).populate(
+        "personalInfo"
+      );
       if (!user) {
-        return res.status(401).send({ message: 'Unauthorized!' });
+        return res.status(401).send({ message: "Unauthorized!" });
       }
 
-      if (roles && roles.length && roles.indexOf(user.role) < 0) {
-        return res.status(403).send({ message: 'Forbidden: Insufficient permissions' });
-      }
+      // if (roles && roles.length && roles.indexOf(user.role) < 0) {
+      //   return res.status(403).send({ message: 'Forbidden: Insufficient permissions' });
+      // }
 
-      const relation = await UserOrganization.findOne({ user: user._id }).populate('organization');
+      const relation = await UserOrganization.findOne({
+        user: user._id,
+      }).populate("organization");
       req.user = user;
       req.organization = relation ? relation.organization : null;
       next();

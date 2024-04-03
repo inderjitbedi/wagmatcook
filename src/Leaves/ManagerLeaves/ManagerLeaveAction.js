@@ -321,11 +321,20 @@ const ManagerLeaveAction = () => {
                           </InputPara>
                         </>
                       ) : (
-                        <Titledark>
-                          {leaveDetails?.responderComment || "No Comments "}
-                        </Titledark>
+                        <TextArea
+                          type="text"
+                          name="responderComment"
+                          // onChange={HandleChange}
+                          disabled
+                          value={
+                            leaveDetails?.responderComment || "No Comment "
+                          }
+                        />
                       )}
                     </ColumnFlexDiv>
+                    {/* <Titledark>
+                          {leaveDetails?.responderComment || "No Comment "}
+                        </Titledark> */}
                   </FormContainer>
                   {leaveDetails?.status === "PENDING" && (
                     <FormContainer>
