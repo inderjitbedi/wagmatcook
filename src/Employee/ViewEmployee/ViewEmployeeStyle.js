@@ -348,7 +348,7 @@ export const SectionCardContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   border: 1px solid #eff4fa;
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 500px) {
     /* box-sizing: border-box; */
     /* width: 100%; */
     padding: 1rem;

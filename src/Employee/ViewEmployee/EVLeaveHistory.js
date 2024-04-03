@@ -189,7 +189,7 @@ const EVLeaveHistory = () => {
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
 
-  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 4);
+  const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 3);
 
   const handleShowMoreClick = () => {
     setShowAll(!showAll);
@@ -517,7 +517,7 @@ const EVLeaveHistory = () => {
                   padding: "0rem 2rem",
                 }}
               >
-                {leaveBalance?.length > 4 && (
+                {leaveBalance?.length > 3 && (
                   <ShowMore onClick={handleShowMoreClick}>
                     {showAll ? "Show Less" : "Show More "}
                   </ShowMore>
