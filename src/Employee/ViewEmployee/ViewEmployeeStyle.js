@@ -347,6 +347,13 @@ export const SectionCardContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: 1px solid #eff4fa;
+  @media only screen and (max-width: 600px) {
+    /* box-sizing: border-box; */
+    /* width: 100%; */
+    padding: 1rem;
+    flex: 0 1 35%;
+  }
 `;
 export const Sectionlighttitle = styled.h1`
   color: #8f9bb3;

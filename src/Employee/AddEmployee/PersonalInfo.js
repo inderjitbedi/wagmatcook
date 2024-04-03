@@ -166,6 +166,8 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
@@ -297,6 +299,11 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
+  console.log(
+    "this si the value of account and usertype:",
+    isAccount,
+    userType
+  );
   return (
     <>
       {!isEdit && (
@@ -363,33 +370,35 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                   ) : (
                     <PersonImg src="/images/User.jpg" alt="" />
                   )}
-                  <FlexColumn>
-                    <FlexContaier>
+                  {(isAccount ||
+                    [ROLES.HR, ROLES.ORG_ADMIN].includes(userType)) && (
+                    <FlexColumn>
                       <FlexContaier>
-                        <input
-                          type="file"
-                          accept="image/*,capture=camera"
-                          name="photo"
-                          id="photo"
-                          className="custom"
-                          onChange={handleFileChange}
-                        />
-                        <UploadImgButton htmlFor="photo">
-                          {" "}
-                          <IconsEmployee src="/images/icons/UploadIcon.svg" />{" "}
-                          Upload image
-                        </UploadImgButton>
+                        <FlexContaier>
+                          <input
+                            type="file"
+                            accept="image/*,capture=camera"
+                            name="photo"
+                            id="photo"
+                            className="custom"
+                            onChange={handleFileChange}
+                          />
+                          <UploadImgButton htmlFor="photo">
+                            {" "}
+                            <IconsEmployee src="/images/icons/UploadIcon.svg" />{" "}
+                            Upload image
+                          </UploadImgButton>
+                        </FlexContaier>
+                        {file && (
+                          <LightPara onClick={removeFile}>Remove</LightPara>
+                        )}
                       </FlexContaier>
-                      {file && (
-                        <LightPara onClick={removeFile}>Remove</LightPara>
-                      )}
-                    </FlexContaier>
-
-                    <UploadPara>
-                      *png *jpg *jpeg *gif *tiff up to 10MB at least 400px by
-                      400px
-                    </UploadPara>
-                  </FlexColumn>
+                      <UploadPara>
+                        *png *jpg *jpeg *gif *tiff up to 10MB at least 400px by
+                        400px
+                      </UploadPara>
+                    </FlexColumn>
+                  )}
                 </ImgUpload>
                 <Errors>{error?.fileError}</Errors>
                 {/* first name and last name  */}

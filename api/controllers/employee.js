@@ -118,15 +118,6 @@ const employeeController = {
         //         ],
         //     },
         // },
-
-        {
-          $lookup: {
-            from: "employeejobdetails",
-            localField: "_id",
-            foreignField: "employee",
-            as: "jobDetails",
-          },
-        },
         {
           $lookup: {
             from: "employeepositionhistories",
@@ -144,12 +135,17 @@ const employeeController = {
           },
         },
         {
-          $unwind: "$positions",
+          $unwind: {
+            path: "$positions",
+            preserveNullAndEmptyArrays: true, // Include documents even if they do not have corresponding positions
+          },
         },
         {
           $match: {
-            "positions.isPrimary": true,
-            "positions.isDeleted": false,
+            $or: [
+              { positions: { $exists: false } }, // Include documents where positions field does not exist
+              { "positions.isPrimary": true, "positions.isDeleted": false },
+            ],
           },
         },
         {
