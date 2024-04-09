@@ -95,6 +95,8 @@ const API_URLS = {
   submitEmployeeAllocation: `/employee/leave-allocation/:employeeid`,
   getEmployeeLeaveList: `/leave-type/employee-list/:employeeid`,
   EmployeeAllocation: `/employee/leave-allocations/:employeeid`,
+  // employee leave Adjustment
+  LeaveAdjustment: `/employee/leave-adjustment/:id`,
 
   getEmployeeAllocation: `/employee/leave-allocation/:employeeid/:id`,
   deleteEmployeeAllocation: `/employee/leave-allocation/:employeeid/delete/:id`,

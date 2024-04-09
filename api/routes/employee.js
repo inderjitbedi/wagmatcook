@@ -302,6 +302,16 @@ router.post(
   employeeController.addLeaveAllocation
 );
 router.put(
+  "/leave-adjustment/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR]),
+  employeeController.updateLeaveAllocationBalance
+);
+router.get(
+  "/leave-adjustment/:id",
+  verifyToken([roles.ORG_ADMIN, roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  employeeController.getLeaveAdjustment
+);
+router.put(
   "/leave-allocation/:id/delete/:allocationid",
   verifyToken([roles.ORG_ADMIN, roles.HR]),
   employeeController.deleteLeaveAllocation

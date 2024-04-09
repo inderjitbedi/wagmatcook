@@ -22,6 +22,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import CommenDashHeader from "../../Dashboard/CommenDashHeader";
 import Pagination from "@mui/material/Pagination";
+import { Stepper, Step } from "react-form-stepper";
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import LeaveAdjustmentTable from "./LeaveAdjusmentTable";
 
 import {
   DashHeader,
@@ -188,6 +193,7 @@ const EVLeaveHistory = () => {
   const [leaveType, setLeaveType] = useState([]);
   const [leaveBalance, setLeaveBalance] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [leaveAdjustment, setLeaveAdjustment] = useState([]);
 
   const limitedData = showAll ? leaveBalance : leaveBalance?.slice(0, 3);
 
@@ -445,6 +451,38 @@ const EVLeaveHistory = () => {
   const HandleSearchCahnge = (data) => {
     setSearchValue(data);
   };
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+        style={{ width: "100%" }}
+      >
+        {value === index && children}
+      </div>
+    );
+  }
+
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+  const [valueTab, setValueTab] = useState(0);
+  const HandleChangeTab = (event, newValue) => {
+    setValueTab(newValue);
+  };
 
   return (
     <>
@@ -525,157 +563,182 @@ const EVLeaveHistory = () => {
               </div>
             </>
           )}
+          <div style={{ width: "100%" }}>
+            <Tabs
+              value={valueTab}
+              onChange={HandleChangeTab}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Leave History" {...a11yProps(0)} />
+              <Tab label="Leave Adjustment" {...a11yProps(1)} />
+            </Tabs>
+          </div>
 
-          <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
-            Leave History
-            {isAccount ? (
-              ""
-            ) : (
-              <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
-                Add New
-              </ButtonBlue>
-            )}
-          </LeaveDiv>
-
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    background: "#FBFBFB",
-                  }}
-                >
-                  <TableCell sx={{ ...CellStyle, maxWidth: "2.5rem" }}>
-                    Sr.No
-                  </TableCell>
-                  <TableCell
-                    sx={{ ...CellStyle, maxWidth: "12.8rem" }}
-                    align="left"
-                  >
-                    Leave&nbsp;Type
-                  </TableCell>
-                  <TableCell
-                    sx={{ ...CellStyle, maxWidth: "18.4rem" }}
-                    align="left"
-                  >
-                    Applied&nbsp;to
-                  </TableCell>
-                  <TableCell
-                    sx={{ ...CellStyle, maxWidth: "10rem" }}
-                    align="left"
-                  >
-                    From
-                  </TableCell>
-                  <TableCell
-                    sx={{ ...CellStyle, maxWidth: "10rem" }}
-                    align="left"
-                  >
-                    To
-                  </TableCell>
-                  <TableCell
-                    sx={{ ...CellStyle, maxWidth: "40rem" }}
-                    align="left"
-                  >
-                    Hours
-                  </TableCell>
-                  <TableCell sx={{ ...CellStyle }} align="left">
-                    Status
-                  </TableCell>
-                  <TableCell sx={{ ...CellStyle }} align="left">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {!result.history?.length && (
-                  <TableRow sx={{ height: "20rem" }}>
-                    <TableCell align="center" sx={Celllstyle2} colSpan={8}>
-                      No Leave History Found
-                    </TableCell>
-                  </TableRow>
-                )}
-                {result?.history?.map((data, index) => (
+          <CustomTabPanel value={valueTab} index={0}>
+            <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
+              Leave History
+              {isAccount ? (
+                ""
+              ) : (
+                <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
+                  Add New
+                </ButtonBlue>
+              )}
+            </LeaveDiv>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
                   <TableRow
-                    key={data.index}
                     sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
+                      background: "#FBFBFB",
                     }}
-                    style={{ background: "#fff" }}
                   >
-                    <TableCell align="center" sx={Celllstyle2}>
-                      {index + 1}
+                    <TableCell sx={{ ...CellStyle, maxWidth: "2.5rem" }}>
+                      Sr.No
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      <TabelDiv>
-                        {/* <TabelImg src="/images/Oval Copy 2.jpg" /> */}
-                        <TabelParaContainer>
-                          <TabelDarkPara>
-                            {data?.leaveType?.name || " - "}
-                          </TabelDarkPara>
-                        </TabelParaContainer>
-                      </TabelDiv>
+                    <TableCell
+                      sx={{ ...CellStyle, maxWidth: "12.8rem" }}
+                      align="left"
+                    >
+                      Leave&nbsp;Type
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      {(data.responder?.personalInfo?.firstName
-                        ? data.responder?.personalInfo?.firstName
-                        : " - ") +
-                        " " +
-                        (data.responder?.personalInfo?.lastName
-                          ? data.responder?.personalInfo?.lastName
-                          : " ")}
+                    <TableCell
+                      sx={{ ...CellStyle, maxWidth: "18.4rem" }}
+                      align="left"
+                    >
+                      Applied&nbsp;to
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      {data.from
-                        ? moment.utc(data.from).format("D MMM, YYYY")
-                        : " - "}
+                    <TableCell
+                      sx={{ ...CellStyle, maxWidth: "10rem" }}
+                      align="left"
+                    >
+                      From
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      {data.to
-                        ? moment.utc(data.to).format("D MMM, YYYY")
-                        : " - "}
+                    <TableCell
+                      sx={{ ...CellStyle, maxWidth: "10rem" }}
+                      align="left"
+                    >
+                      To
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      {data.hours || " - "}
+                    <TableCell
+                      sx={{ ...CellStyle, maxWidth: "40rem" }}
+                      align="left"
+                    >
+                      Hours
                     </TableCell>
-                    <TableCell align="left" sx={Celllstyle2}>
-                      <span
-                        style={
-                          data.status === "PENDING"
-                            ? PendingStyle
-                            : data.status === "APPROVED"
-                            ? ApprovedStyles
-                            : RejectedStyles
-                        }
-                      >
-                        {" "}
-                        {data.status}{" "}
-                      </span>
+                    <TableCell sx={{ ...CellStyle }} align="left">
+                      Status
                     </TableCell>
-                    <TableCell align="center" sx={Celllstyle2}>
-                      <Icons
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                          HandleUpdateAction(data);
-                        }}
-                        src="/images/icons/eye.svg"
-                      />
+                    <TableCell sx={{ ...CellStyle }} align="left">
+                      Actions
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {result?.totalPages > 1 && (
-            <PaginationDiv>
-              <Pagination
-                count={result?.totalPages}
-                variant="outlined"
-                shape="rounded"
-                page={page}
-                onChange={HandleChangePage}
-              />
-            </PaginationDiv>
-          )}
+                </TableHead>
+                <TableBody>
+                  {!result.history?.length && (
+                    <TableRow sx={{ height: "20rem" }}>
+                      <TableCell align="center" sx={Celllstyle2} colSpan={8}>
+                        No Leave History Found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {result?.history?.map((data, index) => (
+                    <TableRow
+                      key={data.index}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                      style={{ background: "#fff" }}
+                    >
+                      <TableCell align="center" sx={Celllstyle2}>
+                        {index + 1}
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        <TabelDiv>
+                          {/* <TabelImg src="/images/Oval Copy 2.jpg" /> */}
+                          <TabelParaContainer>
+                            <TabelDarkPara>
+                              {data?.leaveType?.name || " - "}
+                            </TabelDarkPara>
+                          </TabelParaContainer>
+                        </TabelDiv>
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        {(data.responder?.personalInfo?.firstName
+                          ? data.responder?.personalInfo?.firstName
+                          : " - ") +
+                          " " +
+                          (data.responder?.personalInfo?.lastName
+                            ? data.responder?.personalInfo?.lastName
+                            : " ")}
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        {data.from
+                          ? moment.utc(data.from).format("D MMM, YYYY")
+                          : " - "}
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        {data.to
+                          ? moment.utc(data.to).format("D MMM, YYYY")
+                          : " - "}
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        {data.hours || " - "}
+                      </TableCell>
+                      <TableCell align="left" sx={Celllstyle2}>
+                        <span
+                          style={
+                            data.status === "PENDING"
+                              ? PendingStyle
+                              : data.status === "APPROVED"
+                              ? ApprovedStyles
+                              : RejectedStyles
+                          }
+                        >
+                          {" "}
+                          {data.status}{" "}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center" sx={Celllstyle2}>
+                        <Icons
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            HandleUpdateAction(data);
+                          }}
+                          src="/images/icons/eye.svg"
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {result?.totalPages > 1 && (
+              <PaginationDiv>
+                <Pagination
+                  count={result?.totalPages}
+                  variant="outlined"
+                  shape="rounded"
+                  page={page}
+                  onChange={HandleChangePage}
+                />
+              </PaginationDiv>
+            )}
+          </CustomTabPanel>
+          <CustomTabPanel value={valueTab} index={1}>
+            <LeaveAdjustmentTable
+              userType={userType}
+              userstyle={userstyle}
+              isAccount={isAccount}
+              HandleOpenAddNewAction={HandleOpenAddNewAction}
+              leaveAdjustment={leaveAdjustment}
+              HandleChangePage={HandleChangePage}
+              page={page}
+              leaveBalance={leaveBalance}
+              GetLeaveAlloaction={GetLeaveAlloaction}
+            />
+          </CustomTabPanel>
+
           {/* modal applying leaves  */}
           <Modal
             open={open}
