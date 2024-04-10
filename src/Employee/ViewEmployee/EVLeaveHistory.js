@@ -892,7 +892,7 @@ const EVLeaveHistory = () => {
                             render={({ field }) => (
                               <Select {...field} disabled={update}>
                                 <Option>Select</Option>
-                                {leaveType?.map((data) => (
+                                {leaveBalance.leaveType?.map((data) => (
                                   <Option value={data.leaveType?._id}>
                                     {data.leaveType?.name}
                                   </Option>

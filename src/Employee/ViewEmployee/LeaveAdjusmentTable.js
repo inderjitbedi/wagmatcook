@@ -71,7 +71,7 @@ const style = {
   boxShadow: 45,
   // padding: "2rem 0rem",
   borderRadius: "0.8rem",
-  height: "45rem",
+  height: "40rem",
   overflowY: "scroll",
 };
 
@@ -184,18 +184,7 @@ const LeaveAdjustmentTable = ({
   useEffect(() => {
     GetLeaveAdjustments();
   }, [page]);
-  const handleLeaveTypeChange = (event) => {
-    const selectedValue = event.target.value;
-    setValue("allocationId", selectedValue);
-    const selectedLeave = leaveBalance.find(
-      (item) => item._id === selectedValue
-    );
-    if (selectedLeave) {
-      setSelectedLeaveBalance(selectedLeave.balance);
-    } else {
-      setSelectedLeaveBalance(null);
-    }
-  };
+  const handleLeaveTypeChange = (e) => {};
 
   return (
     <>
@@ -387,7 +376,22 @@ const LeaveAdjustmentTable = ({
                         },
                       }}
                       render={({ field: { onChange, onBlur, value } }) => (
-                        <Select value={value} onChange={handleLeaveTypeChange}>
+                        <Select
+                          value={value}
+                          onChange={(e) => {
+                            onChange(e);
+                            const selectedValue = e.target.value;
+                            setValue("allocationId", selectedValue);
+                            const selectedLeave = leaveBalance.find(
+                              (item) => item._id === selectedValue
+                            );
+                            if (selectedLeave) {
+                              setSelectedLeaveBalance(selectedLeave.balance);
+                            } else {
+                              setSelectedLeaveBalance(null);
+                            }
+                          }}
+                        >
                           <Option value="" disabled selected>
                             Select
                           </Option>
@@ -399,7 +403,9 @@ const LeaveAdjustmentTable = ({
                         </Select>
                       )}
                     />
-                    {<Errors>{errors.leaveType?.message}</Errors>}
+                    {errors.allocationId && (
+                      <Errors>{errors.allocationId?.message}</Errors>
+                    )}
                   </FlexColumnForm>
                   {selectedLeaveBalance && (
                     <FlexColumnForm>
@@ -414,7 +420,7 @@ const LeaveAdjustmentTable = ({
 
                   <FlexColumnForm>
                     <InputLabel>
-                      Nature <InputSpan>*</InputSpan>
+                      Adjustment Type <InputSpan>*</InputSpan>
                     </InputLabel>
 
                     <Controller
@@ -426,17 +432,38 @@ const LeaveAdjustmentTable = ({
                           message: "Required",
                         },
                       }}
-                      render={({ field }) => (
-                        <Select {...field}>
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Select
+                          value={value}
+                          onChange={(e) => {
+                            onChange(e);
+                            const adType = e.target.value;
+                            setValue("nature", e.target.value);
+                            const Hrs = getValues("numberOfHr");
+                            if (
+                              adType === "subtraction" &&
+                              selectedLeaveBalance <= Hrs
+                            ) {
+                              setError("numberOfHr", {
+                                type: "manual",
+                                message:
+                                  "Number of hours cannot be greater than the selected leave balance",
+                              });
+                            } else {
+                              clearErrors("numberOfHr");
+                            }
+                          }}
+                        >
                           <Option value={null} disabled selected>
                             Select
                           </Option>
-                          <Option value="subtraction">Subtraction</Option>
                           <Option value="addition">Addition</Option>
+
+                          <Option value="subtraction">Subtraction</Option>
                         </Select>
                       )}
                     />
-                    {<Errors>{errors.nature?.message}</Errors>}
+                    {errors.nature && <Errors>{errors.nature?.message}</Errors>}
                   </FlexColumnForm>
                   <FlexColumnForm>
                     <InputLabel>
@@ -462,11 +489,33 @@ const LeaveAdjustmentTable = ({
                           message: "Please enter valid hours",
                         },
                       })}
+                      onChange={(e) => {
+                        const Hrs = e.target.value;
+                        const adType = getValues("nature");
+
+                        // Apply validation
+                        if (
+                          adType === "subtraction" &&
+                          selectedLeaveBalance <= Hrs
+                        ) {
+                          setError("numberOfHr", {
+                            type: "manual",
+                            message:
+                              "Number of hours cannot be greater than the selected leave balance",
+                          });
+                        } else {
+                          clearErrors("numberOfHr");
+                        }
+                      }}
                     />
-                    {<Errors>{errors.numberOfHr?.message}</Errors>}
+                    {errors.numberOfHr && (
+                      <Errors>{errors.numberOfHr?.message}</Errors>
+                    )}
                   </FlexColumnForm>
 
-                  <ButtonBlue type="submit">Submit</ButtonBlue>
+                  <ButtonBlue type="submit" style={{ marginTop: "2.5rem" }}>
+                    Submit
+                  </ButtonBlue>
                 </ModalFormContainer>
               </form>
             </>
