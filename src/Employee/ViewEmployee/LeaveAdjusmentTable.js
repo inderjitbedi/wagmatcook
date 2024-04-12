@@ -210,9 +210,7 @@ const LeaveAdjustmentTable = ({
         <>
           <LeaveDiv style={userType === ROLES.EMPLOYEE ? userstyle : {}}>
             Leave Adjustment
-            {isAccount ? (
-              ""
-            ) : (
+            {(userType === ROLES.HR || userType === ROLES.ORG_ADMIN) && (
               <ButtonBlue onClick={() => handleOpen()}>Adjust</ButtonBlue>
             )}
           </LeaveDiv>
