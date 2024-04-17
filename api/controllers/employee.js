@@ -28,6 +28,7 @@ const fs = require("fs");
 const leaveNature = require("../enum/leaveNature");
 const LeaveType = require("../models/leaveType");
 const mongoose = require("mongoose");
+const EmployeeLeaveAdjustment = require("../models/employeeLeaveAdjustment");
 
 const employeeController = {
   async list(req, res) {
@@ -2146,6 +2147,104 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
+  async updateLeaveAllocationBalance(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      let allocation = await EmployeeLeaveAllocation.findOne({
+        _id: req.body.allocationId,
+      });
+      if (!allocation) {
+        return res.status(404).json({ message: "Leave allocation not found." });
+      }
+      const { numberOfHr, nature } = req.body;
+      if (nature === "subtraction") {
+        allocation.balance -= numberOfHr;
+      } else if (nature === "addition") {
+        allocation.balance += parseInt(numberOfHr);
+      } else {
+        return res.status(400).json({ message: "Invalid nature provided." });
+      }
+      // Save updated allocation
+      await allocation.save();
+      const leaveAdjustment = await EmployeeLeaveAdjustment.create({
+        employee: user._id,
+        leaveType: allocation.leaveType,
+        numberOfHr: numberOfHr,
+        nature: nature,
+        adjustedBy: req.user._id,
+      });
+      console.log("this is the leave adjustment:", leaveAdjustment);
+
+      res.status(200).json({
+        leaveAdjustment,
+        message: "Employee leave adjusted successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async getLeaveAdjustment(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10; // Default limit to 10 if not provided
+      const startIndex = (page - 1) * limit;
+      // console.log("is this the user id", req.user._id);
+
+      const leaveAdjustment = await EmployeeLeaveAdjustment.find({
+        employee: req.params.id,
+        isDeleted: false,
+      })
+        .populate({
+          path: "leaveType",
+          select: "name",
+        })
+        .populate({
+          path: "adjustedBy",
+          populate: {
+            path: "personalInfo",
+            populate: {
+              path: "photo",
+            },
+          },
+        })
+        .sort({ createdAt: -1 })
+        .skip(startIndex)
+        .limit(limit);
+      const totalLeaveAdjustments =
+        await EmployeeLeaveAdjustment.countDocuments({
+          employee: req.params.id,
+          isDeleted: false,
+        });
+
+      // Calculate total pages for pagination
+      const totalPages = Math.ceil(totalLeaveAdjustments / limit);
+
+      res.status(200).json({
+        leaveAdjustment,
+        totalLeaveAdjustments,
+        currentPage: page,
+        totalPages,
+        message: "Employee leave adjustments fetched successfully",
+      });
+    } catch (error) {
+      console.error("employeeController:getBenefit:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
   async getLeaveAllocations(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.id });
@@ -2154,6 +2253,7 @@ const employeeController = {
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
+      // console.log("is this the user id", req.user._id);
 
       const allocations = await EmployeeLeaveAllocation.find({
         employee: req.params.id,

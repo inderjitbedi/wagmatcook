@@ -563,7 +563,7 @@ const LeaveHistory = () => {
 
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Histroy" />
+      <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave History" />
 
       {isLoading ? (
         <div
