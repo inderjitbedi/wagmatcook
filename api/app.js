@@ -91,9 +91,9 @@ app.use("/api/temp", express.static(path.join(__dirname, "temp")));
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 // app.use(express.static(path.join(__dirname, 'build')));
 // crons jobs
-// startCron();
-// startCronForJobEnd();
-// startCronForNextReview();
+startCron();
+startCronForJobEnd();
+startCronForNextReview();
 
 app.listen(process.env.PORT, () => {
   console.log("Server started on port " + process.env.PORT);
