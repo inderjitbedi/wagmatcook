@@ -324,7 +324,7 @@ const EmployeeJobDetails = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, [refresh]);
+  }, [refresh, employeeid]);
 
   return (
     <>

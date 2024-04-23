@@ -35,7 +35,7 @@ const CommenHeader = ({ employeeid }) => {
   };
   useEffect(() => {
     GetHeadersData();
-  }, []);
+  }, [employeeid]);
   return (
     <PersonalInfo>
       <PersonalImg

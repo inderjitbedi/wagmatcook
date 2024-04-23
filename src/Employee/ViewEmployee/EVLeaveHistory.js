@@ -516,7 +516,9 @@ const EVLeaveHistory = () => {
               {/* <CommenHeader employeeid={employeeid} /> */}
             </FlexSpaceBetween>
           )}
-          {[ROLES.EMPLOYEE, ROLES.MANAGER, ROLES.HR].includes(userType) && (
+          {[ROLES.EMPLOYEE, ROLES.MANAGER, ROLES.HR, ROLES.ORG_ADMIN].includes(
+            userType
+          ) && (
             <>
               <SectionCard style={{ padding: "0px 1rem" }}>
                 {limitedData?.map((data) => (
