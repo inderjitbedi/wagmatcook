@@ -93,7 +93,7 @@ app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 // crons jobs
 startCron();
 startCronForJobEnd();
-startCronForNextReview();
+// startCronForNextReview();
 
 app.listen(process.env.PORT, () => {
   console.log("Server started on port " + process.env.PORT);

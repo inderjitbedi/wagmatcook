@@ -39,17 +39,15 @@ function startCron() {
 }
 function startCronForJobEnd() {
   // Schedule the cron job to run every 15 days
-  cron.schedule("0 0 */15 * *", async () => {
-    console.log("Running a task every 15 days 0 0 */15 * *");
-
-    // Fetch employee position history where employment is scheduled to end 30 days before Position End Date
-    const date = new Date();
-    date.setDate(date.getDate() + 30); // Add 30 days to the current date
-    const endDateThreshold = date;
+  cron.schedule("0 0 * * *", async () => {
+    console.log("Running a task every day at midnight 0 0 * * *");
+    const endDateThreshold =  moment()
+    .add(30, "days")
+    .startOf("day")
+    .format("YYYY-MM-DD");;
     const employeesToNotify = await EmployeePositionHistory.find({
-      endDate: { $lte: endDateThreshold }, // Find employees whose end date is within the next 30 days
+      endDate: endDateThreshold,
       isDeleted: false,
-      isPrimary: true,
     }).populate({
       path: "employee",
       populate: {
@@ -111,14 +109,16 @@ function startCronForJobEnd() {
 }
 function startCronForNextReview() {
   // Schedule the cron job to run every 5 days
-  cron.schedule("0 0 */5 * *", async () => {
-    console.log("Running a task every 5 days 0 0 */5 * *");
+  cron.schedule("0 0 * * *", async () => {
+    console.log("Running a task every mid night  0 0 * * *");
 
-    const date = new Date();
-    date.setDate(date.getDate() + 10); // Add 10 days to the current date
-    const nextReviewThreshold = date;
+    const nextReviewThreshold = moment()
+      .add(10, "days")
+      .startOf("day")
+      .format("YYYY-MM-DD");
+
     const employeesToNotify = await EmployeeReviews.find({
-      nextReviewDate: { $lte: nextReviewThreshold }, // Find employees whose end date is within the next 10 days
+      nextReviewDate: nextReviewThreshold, // Find employees whose end date is within the next 10 days
       isDeleted: false,
     }).populate({
       path: "employee",
@@ -126,6 +126,11 @@ function startCronForNextReview() {
         path: "personalInfo",
       },
     });
+    console.log(
+      "employee upcoming review:",
+      employeesToNotify,
+      nextReviewThreshold
+    );
 
     // Iterate over each employee to send notifications
     employeesToNotify.forEach(async (review) => {
