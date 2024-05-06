@@ -143,7 +143,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
           });
           setValue("workEmail", result.personalInfo.employee.email);
           setValue("isActive", result.personalInfo.employee.isActive);
-          setDetailsLength(500 - result?.personalInfo?.comment?.length);
+          setDetailsLength(500 - (result?.personalInfo?.comment?.length || 0));
 
           if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
@@ -846,7 +846,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                 userType === ROLES.ORG_ADMIN ? (
                   <FlexContaierForm>
                     <FlexColumnForm>
-                      <InputLabel>Comment</InputLabel>
+                      <InputLabel>Comments</InputLabel>
                       <TextArea
                         type="text"
                         {...register("comment", {
@@ -856,7 +856,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           // },
                           maxLength: {
                             value: 500,
-                            message: "Details exceeds  500 characters ",
+                            message: "Comments should not exceed 500 characters",
                           },
 
                           onChange: (value) => {

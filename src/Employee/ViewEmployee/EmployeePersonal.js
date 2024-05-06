@@ -298,7 +298,7 @@ const EmployeePersonal = () => {
                     userType === ROLES.ORG_ADMIN ? (
                       <FlexSpaceBetween>
                         <FlexColumn>
-                          <TitlePara>Comment</TitlePara>
+                          <TitlePara>Comments</TitlePara>
                           <ViewPara>
                             {result.personalInfo?.comment || " - "}
                           </ViewPara>

@@ -101,7 +101,7 @@ const ManagerLeaveAction = () => {
     const value = e.target.value;
     setDetailsLength(500 - value.length);
     if (value.length > 500) {
-      setComentError("Comment exceeds  500 characters ");
+      setComentError("Comment should not exceed 500 characters ");
     } else {
       setComentError("");
     }
@@ -300,7 +300,7 @@ const ManagerLeaveAction = () => {
                   <FormContainer style={{ marginBottom: "15px" }}>
                     <ColumnFlexDiv>
                       <Titledark style={{ fontWeight: "600" }}>
-                        Comment
+                        Comments
                       </Titledark>
 
                       {leaveDetails?.status === "PENDING" ? (
@@ -327,13 +327,13 @@ const ManagerLeaveAction = () => {
                           // onChange={HandleChange}
                           disabled
                           value={
-                            leaveDetails?.responderComment || "No Comment "
+                            leaveDetails?.responderComment || "No Comments "
                           }
                         />
                       )}
                     </ColumnFlexDiv>
                     {/* <Titledark>
-                          {leaveDetails?.responderComment || "No Comment "}
+                          {leaveDetails?.responderComment || "No Comments "}
                         </Titledark> */}
                   </FormContainer>
                   {leaveDetails?.status === "PENDING" && (
