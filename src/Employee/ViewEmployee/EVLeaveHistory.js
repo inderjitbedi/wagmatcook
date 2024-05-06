@@ -522,7 +522,7 @@ const EVLeaveHistory = () => {
             <>
               <SectionCard style={{ padding: "0px 1rem" }}>
                 {limitedData?.map((data) => (
-                  <SectionCardContainer>
+                  <SectionCardContainer style={{ flex: "0 1 25%" }}>
                     <FlexColumn100>
                       <Sectionlighttitle>
                         {" "}
