@@ -115,10 +115,20 @@ const Employee = () => {
   const [user, setUser] = useState();
 
   const [searchValue, setSearchValue] = useState("");
+  const [delayedSearchValue, setDelayedSearchValue] = useState("");
 
-  const HandleSearchCahnge = (data) => {
-    setSearchValue(data);
+  const HandleSearchCahnge = (e) => {
+    setSearchValue(e.target.value);
   };
+  useEffect(() => {
+    const delayDuration = 1500;
+
+    const searchTimer = setTimeout(() => {
+      setDelayedSearchValue(searchValue);
+    }, delayDuration);
+
+    return () => clearTimeout(searchTimer);
+  }, [searchValue]);
 
   const [openDelete, setOpenDelete] = useState(false);
   const HandleOpenDelete = () => setOpenDelete(true);
@@ -275,7 +285,7 @@ const Employee = () => {
         GetEmployees(parsedUser);
       }
     }
-  }, [page, searchValue, sortBy, sortOrder]);
+  }, [page, delayedSearchValue, sortBy, sortOrder]);
   const HandleSubmitData = (data) => {
     return data;
   };
@@ -347,9 +357,11 @@ const Employee = () => {
   };
   const [Id, setId] = useState("");
 
+  const HandleSearchCahnge2 = () => {};
+
   return (
     <>
-      <CommenDashHeader onSearch={HandleSearchCahnge} text="Employee" />
+      <CommenDashHeader onSearch={HandleSearchCahnge2} text="Employee" />
 
       <DepartmentFilterContainer>
         <DepartmentFilterdiv>
@@ -456,15 +468,15 @@ const Employee = () => {
       <HeaderDiv>
         <HeaderTitle>Employee List</HeaderTitle>
         <DashHeaderSearch>
-          {/* <SearchBox>
+          <SearchBox>
             <SearchInput
               type="text"
               placeholder="Search..."
-              // value={searchValue}
-              // onChange={(e) => HandleSearchCahnge(e)}
+              value={searchValue}
+              onChange={(e) => HandleSearchCahnge(e)}
             ></SearchInput>
             <SearchIcon src="/images/icons/searchIcon.svg" />
-          </SearchBox> */}
+          </SearchBox>
         </DashHeaderSearch>
       </HeaderDiv>
 

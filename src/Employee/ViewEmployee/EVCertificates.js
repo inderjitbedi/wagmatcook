@@ -358,6 +358,8 @@ const EVCertificates = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    }else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
@@ -435,9 +437,7 @@ const EVCertificates = () => {
               <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Employee Certifications</BasicHeading>
                 {userType === ROLES.EMPLOYEE || isAccount ? (
-                  <AddNewButton onClick={HandleOpenAddNewAction}>
-                    Add New
-                  </AddNewButton>
+                  ""
                 ) : userType === ROLES.MANAGER ? (
                   <AddNewButton onClick={HandleOpenAddNewAction}>
                     Add New
@@ -749,26 +749,15 @@ const EVCertificates = () => {
                           <div></div>
                           <IconContainer style={{ alignSelf: "flex-end" }}>
                             {userType === ROLES.EMPLOYEE || isAccount ? (
-                              <Icons
-                                onClick={() => HandleUpdateAction(data)}
-                                src="/images/icons/Pendown.svg"
-                              />
+                              ""
                             ) : (
                               <Icons
                                 onClick={() => HandleUpdateAction(data)}
                                 src="/images/icons/Pendown.svg"
                               />
                             )}
-                            {userType === ROLES.EMPLOYEE ||
-                            userType === ROLES.MANAGER ||
-                            isAccount ? (
-                              <Icons
-                                onClick={() => {
-                                  setId(data._id);
-                                  HandleOpenDelete();
-                                }}
-                                src="/images/icons/Trash-2.svg"
-                              />
+                            {userType === ROLES.EMPLOYEE || isAccount ? (
+                              ""
                             ) : (
                               <Icons
                                 onClick={() => {

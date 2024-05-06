@@ -109,12 +109,11 @@ const LeaveAdjustmentTable = ({
     reset,
     setError,
     clearErrors,
-  } = useForm({
-    mode: "all",
-  });
+  } = useForm({ mode: "all" });
   const onSubmit = (data) => {
-    console.log("Form data:", data);
-    HandleSubmit(data);
+    if (Object.keys(errors).length === 0) {
+      HandleSubmit(data);
+    }
   };
   const HandleSubmit = (data) => {
     // e.preventDefault();
@@ -184,8 +183,7 @@ const LeaveAdjustmentTable = ({
   useEffect(() => {
     GetLeaveAdjustments();
   }, [page]);
-  const handleLeaveTypeChange = (e) => {};
-
+  console.log("errors in leave adjustment:", errors);
   return (
     <>
       {isLoading ? (
@@ -497,7 +495,7 @@ const LeaveAdjustmentTable = ({
                           selectedLeaveBalance <= Hrs
                         ) {
                           setError("numberOfHr", {
-                            type: "manual",
+                            type: "custom",
                             message:
                               "Number of hours cannot be greater than the selected leave balance",
                           });
@@ -511,7 +509,7 @@ const LeaveAdjustmentTable = ({
                     )}
                   </FlexColumnForm>
 
-                  <ButtonBlue type="submit" style={{ marginTop: "2.5rem" }}>
+                  <ButtonBlue type="submit" style={{ marginTop: "2.5rem" }} disabled={errors.numberOfHr}>
                     Submit
                   </ButtonBlue>
                 </ModalFormContainer>

@@ -76,6 +76,8 @@ const EmployeePersonal = () => {
       setUserType(ROLES.HR);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("organization-admin") > -1) {
+      setUserType(ROLES.ORG_ADMIN);
     }
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
@@ -276,6 +278,8 @@ const EmployeePersonal = () => {
                           <ViewPara> Female</ViewPara>
                         ) : result.personalInfo?.gender === 3 ? (
                           <ViewPara> Non-Binary</ViewPara>
+                        ) : result.personalInfo?.gender === 4 ? (
+                          <ViewPara>Prefer not to say</ViewPara>
                         ) : (
                           <ViewPara> - </ViewPara>
                         )}
@@ -289,6 +293,20 @@ const EmployeePersonal = () => {
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
+                    {userType === ROLES.MANAGER ||
+                    userType === ROLES.HR ||
+                    userType === ROLES.ORG_ADMIN ? (
+                      <FlexSpaceBetween>
+                        <FlexColumn>
+                          <TitlePara>Comment</TitlePara>
+                          <ViewPara>
+                            {result.personalInfo?.comment || " - "}
+                          </ViewPara>
+                        </FlexColumn>
+                      </FlexSpaceBetween>
+                    ) : (
+                      ""
+                    )}
 
                     {/* band number and is status */}
                     <FlexSpaceBetween>

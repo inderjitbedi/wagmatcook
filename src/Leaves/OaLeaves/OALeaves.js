@@ -22,6 +22,7 @@ import Pagination from "@mui/material/Pagination";
 import ROLES from "../../constants/roles";
 import LeaveInterval from "../../constants/leaveInterval";
 import RenewalOption from "../../constants/renewalOption";
+import moment from "moment";
 import {
   DashHeaderDepartment,
   DepartmentIconContainer,
@@ -441,6 +442,7 @@ const OALeaves = () => {
         setIsRenewalOption(true);
       }
     }
+    setSelectedDate(data.renewalDate);
 
     HandleOpen();
   };
@@ -472,6 +474,8 @@ const OALeaves = () => {
       GetLeavesType(ROLES.SUPER_ADMIN);
     }
   }, [searchValue, page]);
+  const [selectedDate, setSelectedDate] = useState("");
+
   return (
     <div>
       <CommenDashHeader onSearch={HandleSearchCahnge} text="Leave Types" />
@@ -709,16 +713,44 @@ const OALeaves = () => {
                           <InputLabel>
                             Yearly Leave Accrual Date <InputSpan>*</InputSpan>
                           </InputLabel>
-                          <Input
-                            // readOnly={update}
-                            type="date"
-                            {...register("renewalDate", {
-                              required: {
-                                value: isRenew,
-                                message: "Required",
-                              },
-                            })}
-                          />
+                          <div
+                            style={{
+                              position: "relative",
+                            }}
+                          >
+                            <Input
+                              // readOnly={update}
+                              type="date"
+                              // onChange={handleDateChange}
+                              {...register("renewalDate", {
+                                required: {
+                                  value: isRenew,
+                                  message: "Required",
+                                },
+                                onChange: (event) => {
+                                  const date = new Date(event.target.value);
+                                  setSelectedDate(date);
+                                },
+                              })}
+                            />
+
+                            <p
+                              style={{
+                                position: "absolute",
+                                top: " 39%",
+                                left: "13px",
+                                transform: "translateY(-50%)",
+                                color: "#333",
+                                backgroundColor: "white",
+                                margin: "0",
+                                width: "150px",
+                              }}
+                            >
+                              {selectedDate
+                                ? moment(selectedDate).format("MMM DD")
+                                : "MMM-DD"}
+                            </p>
+                          </div>
                           {<Errors>{errors.renewalDate?.message}</Errors>}
                         </>
                       )}

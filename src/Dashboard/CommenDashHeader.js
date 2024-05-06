@@ -668,6 +668,14 @@ const CommenDashHeader = ({ onSearch, text }) => {
                               Navigate(
                                 `/hr-management/request/${data.sender._id}/${data.dataId}`
                               );
+                            }else if (data.type.includes("JOB_END")) {
+                              Navigate(
+                                `/hr-management/employee-details/job-details/${data.dataId}`
+                              );
+                            }else if (data.type.includes("NEXT_REVIEW")){
+                              Navigate(
+                                `/hr-management/employee-details/performance/${data.dataId}`
+                              );
                             }
                           } else if (userType === ROLES.MANAGER) {
                             if (data.type.includes("TASK")) {
@@ -677,6 +685,14 @@ const CommenDashHeader = ({ onSearch, text }) => {
                             } else if (data.type.includes("LEAVE")) {
                               Navigate(
                                 `/manager-management/request/${data.sender._id}/${data.dataId}`
+                              );
+                            }else if (data.type.includes("JOB_END")) {
+                              Navigate(
+                                `/manager-management/employee-details/job-details/${data.dataId}`
+                              );
+                            }else if (data.type.includes("NEXT_REVIEW")) {
+                              Navigate(
+                                `/manager-management/employee-details/performance/${data.dataId}`
                               );
                             }
                           } else if (userType === ROLES.EMPLOYEE) {

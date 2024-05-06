@@ -40,26 +40,13 @@ const employeeController = {
       let filters = { isDeleted: false, role: { $ne: roles.ORG_ADMIN } };
 
       console.log(req.user._id);
-      if (req.query.searchKey) {
-        filters.$or = [
-          { name: { $regex: req.query.searchKey, $options: "i" } },
-          { email: { $regex: req.query.searchKey, $options: "i" } },
-          { role: { $regex: req.query.searchKey, $options: "i" } },
-          // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
-        ];
-      }
+      // if (req.query.searchKey) {
+      //   filters.$or = [
+      //     // { name: { $regex: req.query.searchKey, $options: "i" } },
+      //     // { email: { $regex: req.query.searchKey, $options: "i" } },
+      //     // { role: { $regex: req.query.searchKey, $options: "i" } },
+      //   ];
+      // }
       let sortBy = req.query.sortBy || "createdAt";
       let sortOrder = parseInt(req.query.sortOrder);
       if (sortOrder === 0 || !sortOrder) {
@@ -100,25 +87,26 @@ const employeeController = {
         {
           $unwind: "$personalInfo",
         },
-        // {
-        //     $match: {
-        //         $or: [
-        //             { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
-        //             { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
-        //         ],
-        //     },
-        // },
+        {
+          $match: {
+            $or: [
+              {
+                "personalInfo.firstName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+              {
+                "personalInfo.lastName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+
+              { email: { $regex: req.query.searchKey, $options: "i" } },
+            ],
+          },
+        },
         {
           $lookup: {
             from: "employeepositionhistories",
@@ -261,26 +249,26 @@ const employeeController = {
 
       const primaryDepartmentId = selectedEmployeeInfo[0]?.primaryDepartment;
 
-      if (req.query.searchKey) {
-        filters.$or = [
-          { name: { $regex: req.query.searchKey, $options: "i" } },
-          { email: { $regex: req.query.searchKey, $options: "i" } },
-          { role: { $regex: req.query.searchKey, $options: "i" } },
-          // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
-          // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
-        ];
-      }
+      // if (req.query.searchKey) {
+      //   filters.$or = [
+      //     { name: { $regex: req.query.searchKey, $options: "i" } },
+      //     { email: { $regex: req.query.searchKey, $options: "i" } },
+      //     { role: { $regex: req.query.searchKey, $options: "i" } },
+      //     // { "personalInfo.firstName": { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.lastName': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.address': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.city': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.province': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.postalCode': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.homePhone': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.mobile': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.personalEmail': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.emergencyContact': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.emergencyContactNumber': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.employeeId': { $regex: req.query.searchKey, $options: 'i' } },
+      //     // { 'personalInfo.sin': { $regex: req.query.searchKey, $options: 'i' } },
+      //   ];
+      // }
       let sortBy = req.query.sortBy || "createdAt";
       let sortOrder = parseInt(req.query.sortOrder);
       if (sortOrder === 0 || !sortOrder) {
@@ -324,6 +312,26 @@ const employeeController = {
         },
         {
           $unwind: "$personalInfo",
+        },
+        {
+          $match: {
+            $or: [
+              {
+                "personalInfo.firstName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+              {
+                "personalInfo.lastName": {
+                  $regex: req.query.searchKey,
+                  $options: "i",
+                },
+              },
+
+              { email: { $regex: req.query.searchKey, $options: "i" } },
+            ],
+          },
         },
         {
           $lookup: {
@@ -2164,8 +2172,10 @@ const employeeController = {
       const { numberOfHr, nature } = req.body;
       if (nature === "subtraction") {
         allocation.balance -= numberOfHr;
+        allocation.initialBalance -= parseInt(numberOfHr);
       } else if (nature === "addition") {
         allocation.balance += parseInt(numberOfHr);
+        allocation.initialBalance += parseInt(numberOfHr);
       } else {
         return res.status(400).json({ message: "Invalid nature provided." });
       }

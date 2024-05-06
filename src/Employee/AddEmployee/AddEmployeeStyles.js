@@ -286,6 +286,15 @@ export const InputLabel = styled.label`
   display: block;
   line-height: 2rem;
 `;
+export const InputPara = styled.p`
+  color: #737992;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0rem; /* 171.429% */
+  display: flex;
+  justify-content: space-between;
+`;
 export const InputSpan = styled.span`
   color: red;
   font-weight: 100;

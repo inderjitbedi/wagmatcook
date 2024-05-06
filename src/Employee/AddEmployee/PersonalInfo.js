@@ -39,6 +39,8 @@ import {
   Option,
   AlignFlex,
   FlexColumnForm50,
+  TextArea,
+  InputPara,
 } from "./AddEmployeeStyles";
 import API_URLS from "../../constants/apiUrls";
 import { FlexSpaceBetween } from "../ViewEmployee/ViewEmployeeStyle";
@@ -54,6 +56,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const [userType, setUserType] = useState("");
   const [file, setFile] = useState(null);
   const [isAccount, setIsAccount] = useState(false);
+  const [detailsLength, setDetailsLength] = useState(500);
 
   const [formData, setFormData] = useState({
     file: "",
@@ -140,6 +143,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
           });
           setValue("workEmail", result.personalInfo.employee.email);
           setValue("isActive", result.personalInfo.employee.isActive);
+          setDetailsLength(500 - result?.personalInfo?.comment?.length);
 
           if (result.personalInfo?.photo) setFile(result.personalInfo?.photo);
         } else {
@@ -783,6 +787,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           <Option value={1}>Male</Option>
                           <Option value={2}>Female</Option>
                           <Option value={3}>Non-Binary</Option>
+                          <Option value={4}>Prefer not to say</Option>
                         </Select>
                       )}
                     />
@@ -836,6 +841,43 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     {<Errors> {errors.pronouns?.message} </Errors>}
                   </FlexColumnForm>
                 </FlexContaierForm>
+                {userType === ROLES.MANAGER ||
+                userType === ROLES.HR ||
+                userType === ROLES.ORG_ADMIN ? (
+                  <FlexContaierForm>
+                    <FlexColumnForm>
+                      <InputLabel>Comment</InputLabel>
+                      <TextArea
+                        type="text"
+                        {...register("comment", {
+                          // required: {
+                          //   value: true,
+                          //   message: " Required",
+                          // },
+                          maxLength: {
+                            value: 500,
+                            message: "Details exceeds  500 characters ",
+                          },
+
+                          onChange: (value) => {
+                            setDetailsLength(500 - value.target.value.length);
+                          },
+                        })}
+                      />
+                      <InputPara>
+                        {" "}
+                        {<Errors>{errors.details?.message}</Errors>}{" "}
+                        <span style={{ justifySelf: "flex-end" }}>
+                          {" "}
+                          {detailsLength > -1 ? detailsLength : 0} characters
+                          left
+                        </span>
+                      </InputPara>
+                    </FlexColumnForm>
+                  </FlexContaierForm>
+                ) : (
+                  ""
+                )}
                 {/* <FlexContaierForm>
                   <FlexColumnForm50>
                     <InputLabel>Pronouns</InputLabel>

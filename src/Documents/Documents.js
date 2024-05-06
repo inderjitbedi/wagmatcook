@@ -733,47 +733,65 @@ const Documents = () => {
                           message: "Required",
                         },
                       }}
-                      render={({ field: { onChange, value, ref } }) => (
-                        <Autocomplete
-                          multiple
-                          id="tags-standard"
-                          value={
-                            value
-                              ? departmentData.filter((option) =>
-                                  value.includes(option._id)
-                                ) ?? []
-                              : []
-                          }
-                          onChange={(event, newValue) => {
-                            onChange(
-                              newValue ? newValue.map((item) => item._id) : []
-                            );
-                          }}
-                          sx={{ width: " 100% " }}
-                          isOptionEqualToValue={(option, value) =>
-                            option._id === value._id
-                          }
-                          getOptionLabel={(option) =>
-                            option.name && `${option.name}`
-                          }
-                          PaperComponent={(props) => (
-                            <Paper
-                              sx={{
-                                fontSize: "1.6rem !important",
-                              }}
-                              {...props}
-                            />
-                          )}
-                          options={departmentData}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              inputRef={ref}
-                              placeholder="Select Departments"
-                            />
-                          )}
-                        />
-                      )}
+                      render={({ field: { onChange, value, ref } }) => {
+                        // Add an "All" option to select all departments
+                        const departmentsWithAll = [
+                          { _id: "all", name: "All Departments" }, // Add the "All" option
+                          ...departmentData,
+                        ];
+
+                        return (
+                          <Autocomplete
+                            multiple
+                            limitTags={2}
+                            id="tags-standard"
+                            value={
+                              value
+                                ? departmentsWithAll.filter((option) =>
+                                    value.includes(option._id)
+                                  ) ?? []
+                                : []
+                            }
+                            onChange={(event, newValue) => {
+                              if (newValue.some((item) => item._id === "all")) {
+                                // If "All Departments" is selected, set all department IDs except "all"
+                                onChange(
+                                  departmentData.map((item) => item._id)
+                                );
+                              } else {
+                                onChange(
+                                  newValue
+                                    ? newValue.map((item) => item._id)
+                                    : []
+                                );
+                              }
+                            }}
+                            sx={{ width: " 100% " }}
+                            isOptionEqualToValue={(option, value) =>
+                              option._id === value._id
+                            }
+                            getOptionLabel={(option) =>
+                              option.name && `${option.name}`
+                            }
+                            PaperComponent={(props) => (
+                              <Paper
+                                sx={{
+                                  fontSize: "1.6rem !important",
+                                }}
+                                {...props}
+                              />
+                            )}
+                            options={departmentsWithAll} // Use the modified array with "All" option
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                inputRef={ref}
+                                placeholder="Select Departments"
+                              />
+                            )}
+                          />
+                        );
+                      }}
                     />
 
                     {errors.departments && (

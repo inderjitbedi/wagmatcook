@@ -308,7 +308,7 @@ const EVPerformance = () => {
     if (location.pathname.indexOf("account") > -1) {
       setIsAccount(true);
     }
-  }, []);
+  }, [employeeid]);
 
   const [tags, setTags] = useState([]);
 
