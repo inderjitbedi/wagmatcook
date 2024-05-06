@@ -293,20 +293,21 @@ const EmployeePersonal = () => {
                         </ViewPara>
                       </FlexColumn>
                     </FlexSpaceBetween>
-                    {userType === ROLES.MANAGER ||
-                    userType === ROLES.HR ||
-                    userType === ROLES.ORG_ADMIN ? (
-                      <FlexSpaceBetween>
-                        <FlexColumn>
-                          <TitlePara>Comment</TitlePara>
-                          <ViewPara>
-                            {result.personalInfo?.comment || " - "}
-                          </ViewPara>
-                        </FlexColumn>
-                      </FlexSpaceBetween>
-                    ) : (
-                      ""
-                    )}
+                    {!isAccount &&
+                      (userType === ROLES.MANAGER ||
+                      userType === ROLES.HR ||
+                      userType === ROLES.ORG_ADMIN ? (
+                        <FlexSpaceBetween>
+                          <FlexColumn>
+                            <TitlePara>Comment</TitlePara>
+                            <ViewPara>
+                              {result.personalInfo?.comment || " - "}
+                            </ViewPara>
+                          </FlexColumn>
+                        </FlexSpaceBetween>
+                      ) : (
+                        ""
+                      ))}
 
                     {/* band number and is status */}
                     <FlexSpaceBetween>

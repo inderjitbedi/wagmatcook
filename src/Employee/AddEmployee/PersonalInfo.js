@@ -856,7 +856,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                           // },
                           maxLength: {
                             value: 500,
-                            message: "Details exceeds  500 characters ",
+                            message: "comment exceeds  500 characters ",
                           },
 
                           onChange: (value) => {
@@ -869,7 +869,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                         {<Errors>{errors.details?.message}</Errors>}{" "}
                         <span style={{ justifySelf: "flex-end" }}>
                           {" "}
-                          {detailsLength > -1 ? detailsLength : 0} characters
+                          {detailsLength > -1 ? detailsLength : 500} characters
                           left
                         </span>
                       </InputPara>
