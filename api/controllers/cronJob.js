@@ -12,6 +12,7 @@ const moment = require("moment");
 const UserOrganization = require("../models/userOrganization");
 const EmployeeReviews = require("../models/employeeReviews");
 const EmployeeLeaveRew = require("../models/auditLog");
+const EmployeeLeaveAdjustment = require("../models/employeeLeaveAdjustment");
 
 function startCron() {
   cron.schedule("0 0 * * *", async () => {
@@ -41,10 +42,10 @@ function startCronForJobEnd() {
   // Schedule the cron job to run every 15 days
   cron.schedule("0 0 * * *", async () => {
     console.log("Running a task every day at midnight 0 0 * * *");
-    const endDateThreshold =  moment()
-    .add(30, "days")
-    .startOf("day")
-    .format("YYYY-MM-DD");;
+    const endDateThreshold = moment()
+      .add(30, "days")
+      .startOf("day")
+      .format("YYYY-MM-DD");
     const employeesToNotify = await EmployeePositionHistory.find({
       endDate: endDateThreshold,
       isDeleted: false,
@@ -234,15 +235,24 @@ async function renewLeaveType(leaveType) {
 
     // Save the updated allocation to the database
     await allocation.save();
-    await logAudit(
-      "Leave Allocation Rew",
-      organization,
-      allocation.employee,
-      leaveType._id,
-      allocation._id,
-      { balance: previousBalance },
-      { balance: allocation.balance }
-    );
+    const adjustment = await EmployeeLeaveAdjustment.create({
+      employee: allocation.employee,
+      leaveType: leaveType._id,
+      numberOfHr: Math.min(leaveType.maxCarryOver, allocation.balance), // Number of hours added
+      nature: "addition",
+      isAdjustedBySystem: true,
+    });
+    console.log("this is the adjustment entry:", adjustment);
+
+    // await logAudit(
+    //   "Leave Allocation Rew",
+    //   organization,
+    //   allocation.employee,
+    //   leaveType._id,
+    //   allocation._id,
+    //   { balance: previousBalance },
+    //   { balance: allocation.balance }
+    // );
   }
 }
 async function logAudit(

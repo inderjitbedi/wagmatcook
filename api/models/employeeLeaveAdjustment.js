@@ -18,6 +18,7 @@ const schema = new mongoose.Schema(
     adjustedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     isDeleted: {
       type: Boolean,
@@ -26,6 +27,10 @@ const schema = new mongoose.Schema(
     nature: {
       type: String,
       default: null,
+    },
+    isAdjustedBySystem: {
+      type: Boolean,
+      default: false,
     },
   },
   {

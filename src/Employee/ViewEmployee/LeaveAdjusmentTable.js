@@ -274,13 +274,15 @@ const LeaveAdjustmentTable = ({
                       </TabelDiv>
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
-                      {(data.adjustedBy?.personalInfo?.firstName
-                        ? data.adjustedBy?.personalInfo?.firstName
-                        : " - ") +
-                        " " +
-                        (data.adjustedBy?.personalInfo?.lastName
-                          ? data.adjustedBy?.personalInfo?.lastName
-                          : " ")}
+                      {data.isAdjustedBySystem
+                        ? "System"
+                        : (data.adjustedBy?.personalInfo?.firstName
+                            ? data.adjustedBy?.personalInfo?.firstName
+                            : " - ") +
+                          " " +
+                          (data.adjustedBy?.personalInfo?.lastName
+                            ? data.adjustedBy?.personalInfo?.lastName
+                            : " ")}
                     </TableCell>
 
                     <TableCell align="left" sx={Celllstyle2}>
@@ -293,7 +295,7 @@ const LeaveAdjustmentTable = ({
                         }}
                       >
                         {data.nature === "subtraction" ? "-" : "+"}
-                        {data.numberOfHr || " - "}
+                        {data.numberOfHr || "0"}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -509,7 +511,11 @@ const LeaveAdjustmentTable = ({
                     )}
                   </FlexColumnForm>
 
-                  <ButtonBlue type="submit" style={{ marginTop: "2.5rem" }} disabled={errors.numberOfHr}>
+                  <ButtonBlue
+                    type="submit"
+                    style={{ marginTop: "2.5rem" }}
+                    disabled={errors.numberOfHr}
+                  >
                     Submit
                   </ButtonBlue>
                 </ModalFormContainer>
