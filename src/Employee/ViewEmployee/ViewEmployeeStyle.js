@@ -724,7 +724,7 @@ export const ModalContainer = styled.div`
   box-sizing: border-box;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10;
   background-color: #ffffff;
 `;
 export const ModalHeading = styled.h1`

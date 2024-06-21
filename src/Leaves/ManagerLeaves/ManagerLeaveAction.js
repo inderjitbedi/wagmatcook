@@ -127,6 +127,8 @@ const ManagerLeaveAction = () => {
             Navigate("/manager-management/dashboard");
           } else if (userType === ROLES.HR) {
             Navigate("/hr-management/dashboard");
+          }  else if (userType === ROLES.PAYROLL) {
+            Navigate("/payroll-management/dashboard");
           } else if (userType === ROLES.EMPLOYEE) {
             Navigate("/user-management/dashboard");
           }
@@ -149,6 +151,9 @@ const ManagerLeaveAction = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetLeaveDetails(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetLeaveDetails(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetLeaveDetails(ROLES.EMPLOYEE);

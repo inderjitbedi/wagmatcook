@@ -4,6 +4,7 @@ const ROLES = Object.freeze({
   MANAGER: "MANAGER",
   HR: "HUMAN_RESOURCE",
   EMPLOYEE: "EMPLOYEE",
+  PAYROLL: "PAYROLL",
 });
 
 export default ROLES;

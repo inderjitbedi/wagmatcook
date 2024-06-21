@@ -356,6 +356,8 @@ const EVCertificates = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -436,17 +438,10 @@ const EVCertificates = () => {
             <BasicInfoDiv>
               <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                 <BasicHeading>Employee Certifications</BasicHeading>
-                {userType === ROLES.EMPLOYEE || isAccount ? (
-                  ""
-                ) : userType === ROLES.MANAGER ? (
-                  <AddNewButton onClick={HandleOpenAddNewAction}>
-                    Add New
-                  </AddNewButton>
-                ) : userType === ROLES.HR ? (
-                  <AddNewButton onClick={HandleOpenAddNewAction}>
-                    Add New
-                  </AddNewButton>
-                ) : (
+                {!(
+                  [ROLES.EMPLOYEE, ROLES.MANAGER].includes(userType) ||
+                  isAccount
+                ) && (
                   <AddNewButton onClick={HandleOpenAddNewAction}>
                     Add New
                   </AddNewButton>

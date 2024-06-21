@@ -268,7 +268,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           onMouseEnter={() => handleMouseEnter("task")}
           onMouseLeave={() => handleMouseLeave("task")}
           style={{ textDecoration: "none" }}
@@ -293,7 +293,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
               Tasks
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           onMouseEnter={() => handleMouseEnter("offboarding")}
           onMouseLeave={() => handleMouseLeave("offboarding")}
@@ -530,7 +530,7 @@ const SideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        
+
         <FlexContainer onClick={toggleSubMenu}>
           <SideBarListTitle>Organization Settings(OA)</SideBarListTitle>
         </FlexContainer>

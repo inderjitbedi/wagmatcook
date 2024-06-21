@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import httpClient from "../../api/httpClient";
 import { useHeaderInfoContext } from "../../Context/ContextProvider";
 import {
   SidebarTitle,
@@ -14,20 +13,19 @@ import {
   SideBarList,
   IconDelete,
 } from "../OADashboard/SideBarStyles";
-import ROLES from "../../constants/roles";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import httpClient from "../../api/httpClient";
 import { BiTask } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
+import { BsFilePost } from "react-icons/bs";
 import { TbMessageCheck } from "react-icons/tb";
 
-
-const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
+const PayRollSideBar = ({ ToggleSidebar, screenWidth }) => {
   const { headerData } = useHeaderInfoContext();
 
   const location = useLocation();
   const [orgData, setOrgData] = useState();
   const [userData, setUserData] = useState();
-  const [userType, setUserType] = useState("");
   const Navigate = useNavigate();
 
   const HandleLogout = () => {
@@ -35,45 +33,24 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
 
     Navigate("/");
   };
-  const SideBarData = [
-    {
-      Title: "Dashboard",
-      src: "/svg/Dashboard.svg",
-      to: "/manager-management/dashboard",
-    },
-
-    //  {
-    //    Title: "Employee",
-    //    src: "/svg/Employee.svg",
-    //    to: "/manager-management/employee-list",
-    //    active: "employee-details",
-    //  },
-
-    {
-      Title: "Leaves",
-      src: "/svg/managerleaves.svg",
-      to: "/manager-management/leaves",
-    },
-    //  {
-    //    Title: "Events",
-    //    src: "/svg/fire.svg",
-    //    //  to: "/manager-management/leaves",
-    //  },
-    //  {
-    //    Title: "My Account",
-    //    src: "/svg/person.svg",
-    //    //  to: "/manager-management/leaves",
-    //  },
-    //  {
-    //    Title: "Helpdesk",
-    //    src: "/svg/alert-circle.svg",
-    //    //  to: "/manager-management/leaves",
-    //  },
-  ];
   const style = {
     textDecoration: "none",
     color: "#279AF1",
   };
+  useEffect(() => {
+    let org = localStorage.getItem("org");
+    if (org) {
+      let parsedUser = JSON.parse(org);
+      setOrgData(parsedUser);
+    }
+    let user = localStorage.getItem("user");
+    if (user) {
+      let parsedUser = JSON.parse(user);
+      setUserData(parsedUser);
+    }
+  }, []);
+  let API_URL = process.env.REACT_APP_API_URL;
+
   const [isHovering, setIsHovering] = useState({
     dashbord: false,
     employee: false,
@@ -84,8 +61,8 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
     staffing: false,
     task: false,
     logout: false,
-    staffing: false,
     announcements: false,
+    reports: false,
   });
   const handleMouseEnter = (linkName) => {
     setIsHovering((prevState) => ({
@@ -100,33 +77,9 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
       [linkName]: false,
     }));
   };
-  useEffect(() => {
-    let org = localStorage.getItem("org");
-    if (org) {
-      let parsedUser = JSON.parse(org);
-      setOrgData(parsedUser);
-    }
-    let user = localStorage.getItem("user");
-    if (user) {
-      let parsedUser = JSON.parse(user);
-      setUserData(parsedUser);
-    }
-    if (location.pathname.indexOf("manager") > -1) {
-      setUserType(ROLES.MANAGER);
-    } else if (location.pathname.indexOf("hr") > -1) {
-      setUserType(ROLES.HR);
-    } else if (location.pathname.indexOf("payroll") > -1) {
-      setUserType(ROLES.PAYROLL);
-    } else if (location.pathname.indexOf("user") > -1) {
-      setUserType(ROLES.EMPLOYEE);
-    } else if (location.pathname.indexOf("organization-admin") > -1) {
-      setUserType(ROLES.ORG_ADMIN);
-    }
-  }, []);
-  let API_URL = process.env.REACT_APP_API_URL;
-
   return (
     <div style={{ position: "relative" }}>
+      {" "}
       {screenWidth < 1200 && (
         <IconDelete
           onClick={ToggleSidebar}
@@ -134,7 +87,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         />
       )}
       <SidebarTitle>Your Community Portal</SidebarTitle>
-      <hr style={{ width: "100%", color: "#EDEDED" }}></hr>
+      <payroll style={{ width: "100%", color: "#EDEDED" }}></payroll>
       <SideBarLogoContainer>
         <SideBarLogo
           src={
@@ -145,6 +98,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         />
         <SideBarLogodiv>
           <SideBarLogoHead>
+            {" "}
             {(headerData?.personalInfo?.firstName
               ? headerData?.personalInfo?.firstName
               : " -") +
@@ -154,15 +108,17 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
                 : " -")}
           </SideBarLogoHead>
           <SideBarLogoPara>
-            {headerData?.position?.department?.name || "-"}
+            {headerData?.position?.department?.name}
           </SideBarLogoPara>
         </SideBarLogodiv>
       </SideBarLogoContainer>
-      <hr style={{ width: "80%", color: "#EDEDED", margin: "auto" }}></hr>
+      <payroll
+        style={{ width: "80%", color: "#EDEDED", margin: "auto" }}
+      ></payroll>
       <SideBarList>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/dashboard"
+          to="/payroll-management/dashboard"
           onMouseEnter={() => handleMouseEnter("dashboard")}
           onMouseLeave={() => handleMouseLeave("dashboard")}
         >
@@ -216,13 +172,14 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
                   : { color: "#5C5C5C" }
               }
             >
-              {"Dashboard"}
+              Dashboard
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/employee-list"
+          to="/payroll-management/employee-list"
           onMouseEnter={() => handleMouseEnter("employee")}
           onMouseLeave={() => handleMouseLeave("employee")}
         >
@@ -259,9 +216,10 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/leaves"
+          to="/payroll-management/leaves"
           onMouseEnter={() => handleMouseEnter("leaves")}
           onMouseLeave={() => handleMouseLeave("leaves")}
         >
@@ -325,7 +283,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/leave/history"
+          to="/payroll-management/leave/history"
           onMouseEnter={() => handleMouseEnter("myleaves")}
           onMouseLeave={() => handleMouseLeave("myleaves")}
         >
@@ -353,7 +311,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         </Link>
         {/* <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/tasks"
+          to="/payroll-management/tasks"
           onMouseEnter={() => handleMouseEnter("task")}
           onMouseLeave={() => handleMouseLeave("task")}
         >
@@ -377,9 +335,63 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link> */}
+        {/* <Link style={{ textDecoration: "none" }} to="/payroll-management/events">
+          <SideBarListContainer style={{ zIndex: "1" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="18"
+              viewBox="0 0 19 18"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
+                fill={
+                  location.pathname.indexOf("events") > -1
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+              />
+              <mask
+                id="mask0_1509_1510"
+                style={{ maskType: "luminance" }}
+                maskUnits="userSpaceOnUse"
+                x="3"
+                y="2"
+                width="12"
+                height="14"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
+                  fill={
+                    location.pathname.indexOf("events") > -1
+                      ? "#279AF1"
+                      : "white"
+                  }
+                />
+              </mask>
+              <g mask="url(#mask0_1509_1510)"></g>
+            </svg>
+            <SideBarListTitle
+              style={
+                location.pathname.indexOf("events") > -1
+                  ? style
+                  : { color: "#5C5C5C" }
+              }
+            >
+              {" "}
+              Events
+            </SideBarListTitle>
+          </SideBarListContainer>
+        </Link> */}
+
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/documents"
+          to="/payroll-management/documents"
           onMouseEnter={() => handleMouseEnter("documents")}
           onMouseLeave={() => handleMouseLeave("documents")}
         >
@@ -394,7 +406,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
                 stroke={
-                  location.pathname.indexOf("manager-management/documents") >
+                  location.pathname.indexOf("payroll-management/documents") >
                     -1 || isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -404,7 +416,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 9.75H11.7741"
                 stroke={
-                  location.pathname.indexOf("manager-management/documents") >
+                  location.pathname.indexOf("payroll-management/documents") >
                     -1 || isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -415,7 +427,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 6.75H11.7741"
                 stroke={
-                  location.pathname.indexOf("manager-management/documents") >
+                  location.pathname.indexOf("payroll-management/documents") >
                     -1 || isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -426,7 +438,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               <path
                 d="M7.06445 12H9.41929"
                 stroke={
-                  location.pathname.indexOf("manager-management/documents") >
+                  location.pathname.indexOf("payroll-management/documents") >
                     -1 || isHovering.documents
                     ? "#279AF1"
                     : "#5C5C5C"
@@ -437,7 +449,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             <SideBarListTitle
               style={
-                location.pathname.indexOf("manager-management/documents") >
+                location.pathname.indexOf("payroll-management/documents") >
                   -1 || isHovering.documents
                   ? style
                   : { color: "#5C5C5C" }
@@ -450,7 +462,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
         </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/job-posting"
+          to="/payroll-management/job-posting"
           onMouseEnter={() => handleMouseEnter("staffing")}
           onMouseLeave={() => handleMouseLeave("staffing")}
         >
@@ -538,7 +550,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </svg>
             {/* <BsFilePost
               style={
-                location.pathname === "/hr-management/job-posting" ||
+                location.pathname === "/payroll-management/job-posting" ||
                 isHovering.staffing
                   ? style
                   : { color: "#5C5C5C" }
@@ -556,66 +568,102 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        {/* 
-         <Link
+        <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/events"
+          to="/payroll-management/reports"
+          onMouseEnter={() => handleMouseEnter("reports")}
+          onMouseLeave={() => handleMouseLeave("reports")}
         >
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
               width="19"
               height="18"
               viewBox="0 0 19 18"
               fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
-                fill={
-                  location.pathname.indexOf("events") > -1
+                d="M4.70898 6.6C4.70898 4.90294 4.70898 4.05442 5.30017 3.52721C5.89136 3 6.84285 3 8.74585 3H10.0915C11.9945 3 12.946 3 13.5372 3.52721C14.1283 4.05442 14.1283 4.90294 14.1283 6.6V11.4C14.1283 13.0971 14.1283 13.9456 13.5372 14.4728C12.946 15 11.9945 15 10.0915 15H8.74585C6.84285 15 5.89136 15 5.30017 14.4728C4.70898 13.9456 4.70898 13.0971 4.70898 11.4V6.6Z"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
                     ? "#279AF1"
                     : "#5C5C5C"
                 }
+                stroke-width="1.5"
               />
-              <mask
-                id="mask0_1509_1510"
-                style={{ maskType: "luminance" }}
-                maskUnits="userSpaceOnUse"
-                x="3"
-                y="2"
-                width="12"
-                height="14"
-              >
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M5.88301 7.13754C4.288 8.78679 4.32175 11.4013 5.98427 13.0205C6.7959 13.8133 7.87442 14.2505 9.02358 14.2513H9.02751C10.179 14.2513 11.2615 13.814 12.077 13.0205C13.7694 11.372 13.7662 8.69079 12.07 7.04454L9.72611 4.75629C9.48906 6.61779 8.75827 8.25129 7.45683 8.25129C7.05808 8.25129 6.40814 8.08179 5.88301 7.13754ZM9.02751 15.7513H9.02201C7.44741 15.7498 5.97014 15.1535 4.86258 14.0698C2.57525 11.8423 2.57211 8.21754 4.85552 5.99379L5.62712 5.24829C5.8265 5.05779 6.11614 4.98429 6.39009 5.05254C6.66246 5.12304 6.8744 5.32779 6.94504 5.58879C7.12558 6.25554 7.34066 6.58329 7.45918 6.70779C7.73784 6.42729 8.24178 5.29404 8.24178 3.37629C8.24178 3.26604 8.24178 3.16179 8.2355 3.05754C8.22058 2.83629 8.30928 2.61954 8.47726 2.46654C8.78888 2.18379 9.28811 2.18379 9.58717 2.47779L13.1901 5.99454C15.4821 8.21754 15.486 11.8423 13.1979 14.0705C12.0841 15.155 10.6037 15.7513 9.02751 15.7513Z"
-                  fill={
-                    location.pathname.indexOf("events") > -1
-                      ? "#279AF1"
-                      : "white"
-                  }
-                />
-              </mask>
-              <g mask="url(#mask0_1509_1510)"></g>
+              <path
+                d="M7.06445 9.75H11.7741"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M7.06445 6.75H11.7741"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M7.06445 12H9.41929"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M2.35547 13.5V4.5"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M16.4844 13.5V4.5"
+                stroke={
+                  location.pathname.indexOf("reports") > -1 ||
+                  isHovering.reports
+                    ? "#279AF1"
+                    : "#5C5C5C"
+                }
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
             </svg>
+
             <SideBarListTitle
               style={
-                location.pathname.indexOf("events") > -1
+                location.pathname.indexOf("reports") > -1 || isHovering.reports
                   ? style
                   : { color: "#5C5C5C" }
               }
             >
               {" "}
-              Events
+              Reports
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link> */}
+        </Link>
         <Link
           style={{ textDecoration: "none" }}
-          to="/manager-management/announcements"
+          to="/payroll-management/announcements"
           onMouseEnter={() => handleMouseEnter("announcements")}
           onMouseLeave={() => handleMouseLeave("announcements")}
         >
@@ -642,9 +690,10 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
+
         <Link
           style={{ textDecoration: "none" }}
-          to={`/manager-management/account/personal-info/${userData?._id}`}
+          to={`/payroll-management/account/personal-info/${userData?._id}`}
           onMouseEnter={() => handleMouseEnter("account")}
           onMouseLeave={() => handleMouseLeave("account")}
         >
@@ -680,11 +729,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-
-        {/* <Link
-          style={{ textDecoration: "none" }}
-          to="/manager-management/helpdesk"
-        >
+        {/* <Link style={{ textDecoration: "none" }} to="/payroll-management/helpdesk">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -778,4 +823,4 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
   );
 };
 
-export default ManagerSideBar;
+export default PayRollSideBar;

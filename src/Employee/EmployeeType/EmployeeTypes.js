@@ -335,6 +335,9 @@ const EmployeeTypes = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetEmployeeTypes(ROLES.EMPLOYEE);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetEmployeeTypes(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
       GetEmployeeTypes(ROLES.ORG_ADMIN);

@@ -168,6 +168,10 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -209,6 +213,8 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
           } else {
             if (userType === ROLES.HR) {
               Navigate(`/hr-management/job-details/${employeeid}`);
+            } else if (userType === ROLES.PAYROLL) {
+              Navigate(`/payroll-management/job-details/${employeeid}`);
             } else {
               Navigate(
                 `/organization-admin/employee/job-details/${employeeid}`
@@ -375,7 +381,9 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                     <PersonImg src="/images/User.jpg" alt="" />
                   )}
                   {(isAccount ||
-                    [ROLES.HR, ROLES.ORG_ADMIN].includes(userType)) && (
+                    [ROLES.HR, ROLES.ORG_ADMIN, ROLES.PAYROLL].includes(
+                      userType
+                    )) && (
                     <FlexColumn>
                       <FlexContaier>
                         <FlexContaier>
@@ -843,6 +851,7 @@ const PersonalInfo = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                 </FlexContaierForm>
                 {userType === ROLES.MANAGER ||
                 userType === ROLES.HR ||
+                userType === ROLES.PAYROLL ||
                 userType === ROLES.ORG_ADMIN ? (
                   <FlexContaierForm>
                     <FlexColumnForm>

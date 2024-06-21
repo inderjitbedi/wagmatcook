@@ -318,6 +318,8 @@ const EmployeeJobDetails = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -387,15 +389,11 @@ const EmployeeJobDetails = () => {
                 <BasicInfoDiv>
                   <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Employment Details</BasicHeading>
-                    {userType === ROLES.MANAGER ||
-                    userType === ROLES.EMPLOYEE ||
-                    isAccount ? (
-                      " "
-                    ) : userType === ROLES.HR ? (
-                      <AddNewButton onClick={HandleOpenAddNewAction}>
-                        Add New
-                      </AddNewButton>
-                    ) : (
+                    {!(
+                      userType === ROLES.MANAGER ||
+                      userType === ROLES.EMPLOYEE ||
+                      isAccount
+                    ) && (
                       <AddNewButton onClick={HandleOpenAddNewAction}>
                         Add New
                       </AddNewButton>

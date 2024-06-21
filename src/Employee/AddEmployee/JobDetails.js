@@ -188,6 +188,8 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -226,6 +228,8 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
           } else {
             if (userType === ROLES.HR) {
               Navigate(`/hr-management/benefits/${employeeid}`);
+            } else if (userType === ROLES.PAYROLL) {
+              Navigate(`/payroll-management/benefits/${employeeid}`);
             } else {
               Navigate(`/organization-admin/employee/benefits/${employeeid}`);
             }
@@ -403,8 +407,14 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                       );
                     } else if (userType === ROLES.HR) {
                       Navigate(`/hr-management/personal-info/${employeeid}`);
+                    } else if (userType === ROLES.PAYROLL) {
+                      Navigate(
+                        `/payroll-management/personal-info/${employeeid}`
+                      );
                     } else if (userType === ROLES.MANAGER) {
-                      Navigate(`/manager-management/personal-info/${employeeid}`);
+                      Navigate(
+                        `/manager-management/personal-info/${employeeid}`
+                      );
                     }
                   }}
                 >
@@ -484,6 +494,7 @@ const JobDetails = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                             <Option value="EMPLOYEE"> User </Option>
                             <Option value="MANAGER"> Manager</Option>
                             <Option value="HUMAN_RESOURCE">HR </Option>
+                            <Option value="PAYROLL">Payroll</Option>
                           </Select>
                         )}
                       />

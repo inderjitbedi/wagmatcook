@@ -311,6 +311,8 @@ const TaskView = () => {
               Navigate("/hr-management/dashboard");
             } else if (userType === ROLES.EMPLOYEE) {
               Navigate("/user-management/dashboard");
+            } else if (userType === ROLES.PAYROLL) {
+              Navigate("/payroll-management/dashboard");
             } else if (userType === ROLES.ORG_ADMIN) {
               Navigate("/organization-admin/dashboard");
             }
@@ -341,6 +343,9 @@ const TaskView = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetTaskDetails(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetTaskDetails(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetTaskDetails(ROLES.EMPLOYEE);

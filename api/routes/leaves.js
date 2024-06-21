@@ -23,28 +23,40 @@ router.get(
 
 router.get(
   "/history",
-  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  verifyToken([roles.HR, roles.PAYROLL, roles.MANAGER, roles.EMPLOYEE]),
   leaveController.list
 );
 router.get(
   "/history/all",
-  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE, roles.ORG_ADMIN]),
+  verifyToken([
+    roles.HR,
+    roles.PAYROLL,
+    roles.MANAGER,
+    roles.EMPLOYEE,
+    roles.ORG_ADMIN,
+  ]),
   leaveController.listAll
 );
 router.get(
   "/generate/pdf",
-  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE, roles.ORG_ADMIN]),
+  verifyToken([
+    roles.HR,
+    roles.PAYROLL,
+    roles.MANAGER,
+    roles.EMPLOYEE,
+    roles.ORG_ADMIN,
+  ]),
   leaveController.generatePdf
 );
 
 router.get(
   "/history/:id/:requestid",
-  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  verifyToken([roles.HR, roles.PAYROLL, roles.MANAGER, roles.EMPLOYEE]),
   employeeController.getLeaveRequest
 );
 router.put(
   "/history/:id/:requestid/respond",
-  verifyToken([roles.HR, roles.MANAGER]),
+  verifyToken([roles.HR, roles.PAYROLL, roles.MANAGER]),
   leaveController.respondLeaveRequest
 );
 

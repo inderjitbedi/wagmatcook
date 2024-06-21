@@ -157,7 +157,10 @@ const DocumentsTags = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetDocumentTags(ROLES.HR);
-    } else if (location.pathname.indexOf("user") > -1) {
+    }else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetDocumentTags(ROLES.PAYROLL);
+    }  else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetDocumentTags(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {

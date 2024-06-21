@@ -76,7 +76,7 @@ function startCronForJobEnd() {
           isActive: true,
         }).populate({
           path: "user",
-          match: { role: { $in: [roles.HR, roles.MANAGER] } },
+          match: { role: { $in: [roles.HR, roles.MANAGER, roles.PAYROLL] } },
         });
 
         // Extract user IDs from UserOrganization records
@@ -153,7 +153,7 @@ function startCronForNextReview() {
           isActive: true,
         }).populate({
           path: "user",
-          match: { role: { $in: [roles.HR, roles.MANAGER] } },
+          match: { role: { $in: [roles.HR, roles.MANAGER, roles.PAYROLL] } },
         });
 
         // Extract user IDs from UserOrganization records

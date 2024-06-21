@@ -58,6 +58,8 @@ const PrivateLayout = ({ component: Component, meta }: any) => {
         <Navigate to="/manager-management/dashboard" />
       ) : userRole === ROLES.HR ? (
         <Navigate to="/hr-management/dashboard" />
+      ) : userRole === ROLES.PAYROLL ? (
+        <Navigate to="/payroll-management/dashboard" />
       ) : userRole === ROLES.EMPLOYEE ? (
         <Navigate to="/user-management/dashboard" />
       ) : userRole === ROLES.SUPER_ADMIN ? (

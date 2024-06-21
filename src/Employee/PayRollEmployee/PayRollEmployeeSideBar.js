@@ -43,55 +43,59 @@ const SideBarListTitle = styled.p`
   }
 `;
 
-const HREmployeeSidebar = (props) => {
+const PayRollEmployeeSideBar = (props) => {
   const location = useLocation();
   const SideBarData = [
     {
       Title: "Personal",
-      to: "/hr-management/employee-details/personal-info/" + props.employeeId,
+      to:
+        "/payroll-management/employee-details/personal-info/" +
+        props.employeeId,
     },
     {
       Title: "Job Details",
-      to: "/hr-management/employee-details/job-details/" + props.employeeId,
+      to:
+        "/payroll-management/employee-details/job-details/" + props.employeeId,
     },
 
     {
       Title: "Benefit",
-      to: "/hr-management/employee-details/benefits/" + props.employeeId,
+      to: "/payroll-management/employee-details/benefits/" + props.employeeId,
     },
     {
       Title: "Leave Allocations",
       to:
-        "/hr-management/employee-details/leave-alloacation/" + props.employeeId,
+        "/payroll-management/employee-details/leave-alloacation/" +
+        props.employeeId,
     },
     {
       Title: "Leave History",
-      to: "/hr-management/employee-details/leave-history/" + props.employeeId,
+      to:
+        "/payroll-management/employee-details/leave-history/" +
+        props.employeeId,
     },
 
     {
       Title: "Certificates",
-      to: "/hr-management/employee-details/certificates/" + props.employeeId,
+      to:
+        "/payroll-management/employee-details/certificates/" + props.employeeId,
     },
-    {
-      Title: "Disciplinary",
-      to: "/hr-management/employee-details/discipline/" + props.employeeId,
-    },
-    {
-      Title: "Performance",
-      to: "/hr-management/employee-details/performance/" + props.employeeId,
-    },
-    {
-      Title: "Recognition",
-      to: "/hr-management/employee-details/recognition/" + props.employeeId,
-    },
+    // {
+    //   Title: "Disciplinary",
+    //   to: "/payroll-management/employee-details/discipline/" + props.employeeId,
+    // },
+    // {
+    //   Title: "Performance",
+    //   to:
+    //     "/payroll-management/employee-details/performance/" + props.employeeId,
+    // },
     {
       Title: "Documents",
-      to: "/hr-management/employee-details/documents/" + props.employeeId,
+      to: "/payroll-management/employee-details/documents/" + props.employeeId,
     },
     {
       Title: "Organization chart",
-      to: "/hr-management/employee-details/chart/" + props.employeeId,
+      to: "/payroll-management/employee-details/chart/" + props.employeeId,
     },
   ];
   const style = {
@@ -121,4 +125,4 @@ const HREmployeeSidebar = (props) => {
   );
 };
 
-export default HREmployeeSidebar;
+export default PayRollEmployeeSideBar;

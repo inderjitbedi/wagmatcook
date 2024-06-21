@@ -171,7 +171,10 @@ const OABenefits = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetBenefits(ROLES.HR);
-    } else if (location.pathname.indexOf("user") > -1) {
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetBenefits(ROLES.PAYROLL);
+    }else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetBenefits(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {

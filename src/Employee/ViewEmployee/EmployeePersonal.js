@@ -74,6 +74,8 @@ const EmployeePersonal = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -83,6 +85,9 @@ const EmployeePersonal = () => {
       setIsAccount(true);
     }
   }, [refresh]);
+  const canEdit =
+    isAccount ||
+    [ROLES.EMPLOYEE, ROLES.MANAGER, ROLES.HR, ROLES.PAYROLL].includes(userType);
   return (
     <>
       {isLoading ? (
@@ -120,22 +125,7 @@ const EmployeePersonal = () => {
                 <BasicInfoDiv>
                   <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Basic Information</BasicHeading>
-                    {isAccount || userType === ROLES.EMPLOYEE ? (
-                      <EditButton onClick={() => setIsEdit(true)}>
-                        <ButtonIcon src="/images/icons/Pen 2.svg" />
-                        Edit
-                      </EditButton>
-                    ) : userType === ROLES.MANAGER ? (
-                      <EditButton onClick={() => setIsEdit(true)}>
-                        <ButtonIcon src="/images/icons/Pen 2.svg" />
-                        Edit
-                      </EditButton>
-                    ) : userType === ROLES.HR ? (
-                      <EditButton onClick={() => setIsEdit(true)}>
-                        <ButtonIcon src="/images/icons/Pen 2.svg" />
-                        Edit
-                      </EditButton>
-                    ) : (
+                    {canEdit && (
                       <EditButton onClick={() => setIsEdit(true)}>
                         <ButtonIcon src="/images/icons/Pen 2.svg" />
                         Edit
@@ -294,9 +284,12 @@ const EmployeePersonal = () => {
                       </FlexColumn>
                     </FlexSpaceBetween>
                     {!isAccount &&
-                      (userType === ROLES.MANAGER ||
-                      userType === ROLES.HR ||
-                      userType === ROLES.ORG_ADMIN ? (
+                      [
+                        ROLES.MANAGER,
+                        ROLES.HR,
+                        ROLES.ORG_ADMIN,
+                        ROLES.PAYROLL,
+                      ].includes(userType) && (
                         <FlexSpaceBetween>
                           <FlexColumn>
                             <TitlePara>Comment</TitlePara>
@@ -305,9 +298,7 @@ const EmployeePersonal = () => {
                             </ViewPara>
                           </FlexColumn>
                         </FlexSpaceBetween>
-                      ) : (
-                        ""
-                      ))}
+                      )}
 
                     {/* band number and is status */}
                     <FlexSpaceBetween>

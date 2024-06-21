@@ -268,6 +268,8 @@ const Employee = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -654,6 +656,10 @@ const Employee = () => {
                             Navigate(
                               `/hr-management/employee-details/personal-info/${data._id}`
                             );
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(
+                              `/payroll-management/employee-details/personal-info/${data._id}`
+                            );
                           } else {
                             Navigate(
                               `/organization-admin/employee/details/personal-info/${data._id}`
@@ -703,6 +709,8 @@ const Employee = () => {
                         ? "USER"
                         : data.role === ROLES.HR
                         ? " HR"
+                        : data.role === ROLES.PAYROLL
+                        ? "Payroll"
                         : data.role) || " - "}
                     </TableCell>
                     <TableCell align="left" sx={Celllstyle2}>
@@ -716,6 +724,10 @@ const Employee = () => {
                             } else if (userType === ROLES.HR) {
                               Navigate(
                                 `/hr-management/employee-details/personal-info/${data._id}`
+                              );
+                            } else if (userType === ROLES.PAYROLL) {
+                              Navigate(
+                                `/payroll-management/employee-details/personal-info/${data._id}`
                               );
                             } else {
                               Navigate(
@@ -733,6 +745,10 @@ const Employee = () => {
                               if (userType === ROLES.HR) {
                                 Navigate(
                                   `/hr-management/personal-info/${data._id}`
+                                );
+                              } else if (userType === ROLES.PAYROLL) {
+                                Navigate(
+                                  `/payroll-management/personal-info/${data._id}`
                                 );
                               } else {
                                 Navigate(

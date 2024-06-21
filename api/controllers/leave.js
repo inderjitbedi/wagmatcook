@@ -649,6 +649,9 @@ const leaveController = {
         request.redirectUrl = `${process.env.FRONTEND_URL}manager-management/leave/history`;
       else if (request.employee.role === roles.HR)
         request.redirectUrl = `${process.env.FRONTEND_URL}hr-management/leave/history`;
+      else if (request.employee.role === roles.PAYROLL)
+        request.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/leave/history`;
+      
 
       sendGrid.send(
         request.employee.email,

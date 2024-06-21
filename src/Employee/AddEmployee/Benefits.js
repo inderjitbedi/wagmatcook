@@ -45,6 +45,8 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
   const HandleCloseThanks = () => {
     if (userType === ROLES.HR) {
       Navigate(`/hr-management/employee-list`);
+    } else if (userType === ROLES.PAYROLL) {
+      Navigate(`/payroll-management/employee-list`);
     } else {
       Navigate(`/organization-admin/employee/list`);
     }
@@ -222,6 +224,10 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -299,6 +305,10 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                       );
                     } else if (userType === ROLES.HR) {
                       Navigate(`/hr-management/personal-info/${employeeid}`);
+                    } else if (userType === ROLES.PAYROLL) {
+                      Navigate(
+                        `/payroll-management/personal-info/${employeeid}`
+                      );
                     } else if (userType === ROLES.MANAGER) {
                       Navigate(
                         `/manager-management/personal-info/${employeeid}`
@@ -318,6 +328,8 @@ const Benefits = ({ isEdit, setIsEdit, setRefresh, refresh }) => {
                       );
                     } else if (userType === ROLES.HR) {
                       Navigate(`/hr-management/job-details/${employeeid}`);
+                    } else if (userType === ROLES.PAYROLL) {
+                      Navigate(`/payroll-management/job-details/${employeeid}`);
                     } else if (userType === ROLES.MANAGER) {
                       Navigate(`/manager-management/job-details/${employeeid}`);
                     }

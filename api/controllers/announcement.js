@@ -11,6 +11,8 @@ async function processUsers(announcement, users) {
       announcement.redirectUrl = `${process.env.FRONTEND_URL}manager-management/announcement/details/${announcement._id}`;
     else if (user.employeeData.role === roles.HR)
       announcement.redirectUrl = `${process.env.FRONTEND_URL}hr-management/announcement/details/${announcement._id}`;
+    else if (user.employeeData.role === roles.PAYROLL)
+      announcement.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/announcement/details/${announcement._id}`;
     else
       announcement.redirectUrl = `${process.env.FRONTEND_URL}organization-admin/announcement/details/${announcement._id}`;
 

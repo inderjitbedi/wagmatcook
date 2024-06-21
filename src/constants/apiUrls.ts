@@ -188,6 +188,11 @@ const API_URLS = {
   updateAnnouncement: `/announcement/update/:id`,
   detailsAnnouncement: `/announcement/detail/:id`,
   listAnnouncement: `announcement/list?limit=5`,
+  // recognition routes
+  getEmployeeRecognition: `/employee/recognitions/:employeeid`,
+  addSingleEmployeeRecognition: `/employee/recognitions/:employeeid`,
+  updateEmployeeRecognition: `/employee/recognitions/:employeeid/:id`,
+  deleteEmployeeRecognition: `/employee/recognitions/:employeeid/delete/:id`,
 };
 
 export default API_URLS;
