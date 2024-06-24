@@ -81,6 +81,10 @@ const PayRollAccountSideBar = (props) => {
       to: "/payroll-management/account/performance/" + props.employeeId,
     },
     {
+      Title: "Recognition",
+      to: "/payroll-management/account/recognition/" + props.employeeId,
+    },
+    {
       Title: "Documents",
       to: "/payroll-management/account/documents/" + props.employeeId,
     },

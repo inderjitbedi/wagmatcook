@@ -81,6 +81,10 @@ const HRAccountSidebar = (props) => {
       to: "/hr-management/account/performance/" + props.employeeId,
     },
     {
+      Title: "Recognition",
+      to: "/hr-management/account/recognition/" + props.employeeId,
+    },
+    {
       Title: "Documents",
       to: "/hr-management/account/documents/" + props.employeeId,
     },

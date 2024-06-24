@@ -37,6 +37,8 @@ import API_URLS from "../../constants/apiUrls";
 import CommenHeader from "./CommenHeader";
 import { InputPara } from "./ViewEmployeeStyle";
 import InputEmoji from "react-input-emoji";
+import EmojiPicker from "emoji-picker-react";
+import { TbRuler2 } from "react-icons/tb";
 
 const CellStyle = {
   color: "#8F9BB3",
@@ -66,6 +68,8 @@ const style = {
   boxShadow: 45,
   // padding: "2rem 0rem",
   borderRadius: "8px",
+  height: "54.7rem",
+  overflowY: "scroll",
 };
 
 const EVRecognition = () => {
@@ -85,12 +89,14 @@ const EVRecognition = () => {
   const [detailsLength, setDetailsLength] = useState(500);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
+  const [emoji, setEmoji] = useState("");
 
   const handleClose = () => {
     reset({});
     clearErrors();
     setOpen(false);
     setDetailsLength(500);
+    setEmoji("");
   };
   const [Id, setId] = useState("");
 
@@ -104,6 +110,7 @@ const EVRecognition = () => {
       emojiIcon: data.emojiIcon,
     });
     setDetailsLength(500 - data?.description?.length);
+    setEmoji(data.emojiIcon);
     console.log(data);
     handleOpen();
   };
@@ -112,6 +119,7 @@ const EVRecognition = () => {
     handleOpen();
     reset({});
     clearErrors();
+    setEmoji("");
   };
 
   const {
@@ -290,7 +298,43 @@ const EVRecognition = () => {
       setIsAccount(true);
     }
   }, []);
+  const EmojiInput = ({ control, name, rules }) => {
+    const onEmojiClick = (event, emojiObject) => {
+      setEmoji((prevEmoji) => prevEmoji + event.emoji);
+      setValue(name, emoji + event.emoji);
+    };
 
+    return (
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field }) => (
+          <div>
+            <Input
+              {...field}
+              value={emoji}
+              onChange={(e) => {
+                setEmoji(e.target.value);
+                field.onChange(e.target.value);
+              }}
+              // placeholder="add emoji"
+            />
+            <EmojiPicker
+              onEmojiClick={onEmojiClick}
+              reactionsDefaultOpen={true}
+              skinTonesDisabled={true}
+              searchDisabled={true}
+              height={280}
+              width={"100%"}
+              allowExpandReactions={true}
+              previewConfig={{ showPreview: false }}
+            />
+          </div>
+        )}
+      />
+    );
+  };
   return (
     <>
       {isLoading ? (
@@ -315,9 +359,7 @@ const EVRecognition = () => {
         <MainBodyContainer>
           <LeaveDiv>
             Employee Recognition
-            {userType === ROLES.EMPLOYEE ||
-            userType === ROLES.MANAGER ||
-            userType === ROLES.PAYROLL ? (
+            {userType === ROLES.EMPLOYEE || isAccount ? (
               " "
             ) : (
               <ButtonBlue onClick={() => HandleOpenAddNewAction()}>
@@ -362,7 +404,7 @@ const EVRecognition = () => {
                     Remarks
                   </TableCell>
 
-                  {userType === ROLES.MANAGER ? (
+                  {userType === ROLES.MANAGER || isAccount ? (
                     " "
                   ) : (
                     <TableCell sx={{ ...CellStyle }} align="left">
@@ -555,24 +597,10 @@ const EVRecognition = () => {
                       <InputLabel>
                         Remarks <InputSpan>*</InputSpan>
                       </InputLabel>
-                      <Controller
+                      <EmojiInput
                         name="emojiIcon"
                         control={control}
-                        rules={{
-                          required: {
-                            value: true,
-                            message: "Required",
-                          },
-                        }}
-                        render={({ field }) => (
-                          <InputEmoji
-                            {...field}
-                            value={field.value}
-                            keepOpened={true}
-                            borderRadius="0.8rem"
-                            placeholder="Type a message"
-                          />
-                        )}
+                        rules={{ required: "Required" }}
                       />
                       {<Errors>{errors.emojiIcon?.message} </Errors>}
                     </FlexColumnForm>

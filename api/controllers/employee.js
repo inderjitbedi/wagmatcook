@@ -2914,7 +2914,7 @@ const employeeController = {
 
   async createRecognition(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.id }).populate(
+      const user = await User.findOne({ _id: req.user._id }).populate(
         "personalInfo"
       );
       if (!user) {

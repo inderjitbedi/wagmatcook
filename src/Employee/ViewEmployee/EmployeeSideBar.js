@@ -90,6 +90,11 @@ const EmployeeSideBar = (props) => {
         "/organization-admin/employee/details/performance/" + props.employeeId,
     },
     {
+      Title: "Recognition",
+      to:
+        "/organization-admin/employee/details/recognition/" + props.employeeId,
+    },
+    {
       Title: "Documents",
       to: "/organization-admin/employee/details/documents/" + props.employeeId,
     },
