@@ -430,6 +430,8 @@ const EVLeaveHistory = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
     } else if (location.pathname.indexOf("user") > -1) {
@@ -516,9 +518,13 @@ const EVLeaveHistory = () => {
               {/* <CommenHeader employeeid={employeeid} /> */}
             </FlexSpaceBetween>
           )}
-          {[ROLES.EMPLOYEE, ROLES.MANAGER, ROLES.HR, ROLES.ORG_ADMIN].includes(
-            userType
-          ) && (
+          {[
+            ROLES.EMPLOYEE,
+            ROLES.MANAGER,
+            ROLES.HR,
+            ROLES.ORG_ADMIN,
+            ROLES.PAYROLL,
+          ].includes(userType) && (
             <>
               <SectionCard style={{ padding: "0px 1rem" }}>
                 {limitedData?.map((data) => (

@@ -29,6 +29,7 @@ const leaveNature = require("../enum/leaveNature");
 const LeaveType = require("../models/leaveType");
 const mongoose = require("mongoose");
 const EmployeeLeaveAdjustment = require("../models/employeeLeaveAdjustment");
+const EmployeeRecognition = require("../models/employeeRecognition");
 
 const employeeController = {
   async list(req, res) {
@@ -1050,7 +1051,11 @@ const employeeController = {
           .status(400)
           .json({ message: "Provided invalid employee id." });
       }
-      if (user.role === roles.HR || user.role === roles.MANAGER) {
+      if (
+        user.role === roles.HR ||
+        user.role === roles.MANAGER ||
+        roles.PAYROLL
+      ) {
         const hasDirectReports = await EmployeePositionHistory.find({
           isPrimary: true,
           isDeleted: false,
@@ -1059,7 +1064,11 @@ const employeeController = {
         if (hasDirectReports.length >= 1) {
           return res.status(400).json({
             message: `Cannot delete the ${
-              user.role === roles.HR ? "HR" : "MANAGER"
+              user.role === roles.HR
+                ? "HR"
+                : roles.PAYROLL
+                ? "PAYROLL"
+                : "MANAGER"
             } as they have ${hasDirectReports.length} ${
               hasDirectReports.length > 1 ? "employees" : "employee"
             } under them. Please first offboard the employee${
@@ -2901,7 +2910,143 @@ const employeeController = {
       res.status(400).json(error);
     }
   },
+  // api for recognition
+
+  async createRecognition(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.user._id }).populate(
+        "personalInfo"
+      );
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const { title, description, emojiIcon } = req.body;
+      const recognitionData = {
+        title,
+        description,
+        emojiIcon,
+        addedBy: req.user._id,
+        employee: req.params.id, // Use employee ID from params
+      };
+      console.log("this our data:", recognitionData);
+
+      const recognition = new EmployeeRecognition(recognitionData);
+      await recognition.save();
+
+      // Create notification for the recognition
+      const notification = new Notifications({
+        title: notificationConstants[notificationType.RECOGNITION].title
+          .replace(
+            "{sender}",
+            [user.personalInfo.firstName, user.personalInfo.lastName].join(" ")
+          )
+          .replace("{title}", title) || "",
+        description: notificationConstants[notificationType.RECOGNITION].description || "",
+        type: "RECOGNITION",
+        sender: req.user._id,
+        receiver: req.params.id, // Use employee ID from params
+        dataId: recognition._id,
+      });
+      await notification.save();
+
+      res
+        .status(201)
+        .json({ recognition, message: "Recognition created successfully." });
+    } catch (error) {
+      console.error("recognitionController:create:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async updateRecognition(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const recognition = await EmployeeRecognition.findByIdAndUpdate(
+        req.params.recognitionId,
+        req.body,
+        { new: true }
+      );
+      res
+        .status(200)
+        .json({ recognition, message: "Recognition updated successfully" });
+    } catch (error) {
+      console.error("recognitionController:update:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async deleteRecognition(req, res) {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Provided invalid employee id." });
+      }
+      const recognition = await EmployeeRecognition.findByIdAndUpdate(
+        req.params.recognitionId,
+        {
+          isDeleted: true,
+        }
+      );
+      res
+        .status(200)
+        .json({ recognition, message: "Recognition deleted successfully" });
+    } catch (error) {
+      console.error("recognitionController:delete:error -", error);
+      res.status(400).json(error);
+    }
+  },
+
+  async listRecognition(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10; // Default limit to 10 if not provided
+      const startIndex = (page - 1) * limit;
+
+      const recognitionsQuery = await EmployeeRecognition.find({
+        employee: req.params.id,
+        isDeleted: false,
+      })
+        .populate({
+          path: "addedBy",
+          populate: {
+            path: "personalInfo",
+          },
+        })
+        .sort({ createdAt: -1 })
+        .skip(startIndex)
+        .limit(limit);
+
+      const totalRecognitions = await EmployeeRecognition.countDocuments({
+        employee: req.params.id,
+        isDeleted: false,
+      });
+
+      // Calculate total pages for pagination
+      const totalPages = Math.ceil(totalRecognitions / limit);
+
+      res.status(200).json({
+        recognitions: recognitionsQuery,
+        totalRecognitions,
+        currentPage: page,
+        totalPages,
+        message: "Recognitions fetched successfully.",
+      });
+    } catch (error) {
+      console.error("recognitionController:listRecognition:error -", error);
+      res.status(400).json({ message: error.message });
+    }
+  },
 };
+
 // async function reverseOrgChart(node, parent = null) {
 //   const reversedNode = {
 //     id: node.id,
@@ -3142,7 +3287,7 @@ async function findCoworkers(managerId, excludeEmployeeId) {
       path: "personalInfo",
       populate: {
         path: "photo",
-        model: "File", 
+        model: "File",
       },
     },
   });

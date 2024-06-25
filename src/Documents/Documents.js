@@ -273,6 +273,8 @@ const Documents = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -1217,6 +1219,10 @@ const Documents = () => {
                           Navigate(
                             `/manager-management/documents/history/${data._id}`
                           );
+                        } else if (userType === ROLES.PAYROLL) {
+                          Navigate(
+                            `/payroll-management/documents/history/${data._id}`
+                          );
                         } else if (userType === ROLES.EMPLOYEE) {
                           Navigate(
                             `/user-management/documents/history/${data._id}`
@@ -1280,6 +1286,10 @@ const Documents = () => {
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
                                 `/manager-management/documents/history/${data._id}`
+                              );
+                            } else if (userType === ROLES.PAYROLL) {
+                              Navigate(
+                                `/payroll-management/documents/history/${data._id}`
                               );
                             } else if (userType === ROLES.EMPLOYEE) {
                               Navigate(

@@ -296,6 +296,8 @@ const ReportTabel = ({ searchValue, Tabvalue }) => {
                         ? "USER"
                         : data.role === ROLES.HR
                         ? " HR"
+                        : data.role === ROLES.PAYROLL
+                        ? "Payroll"
                         : data.role) || " - "}
                     </TableCell>{" "}
                     <TableCell sx={CellStyle2} align="left">

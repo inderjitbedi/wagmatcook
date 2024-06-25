@@ -70,6 +70,8 @@ const EVBenefits = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -117,27 +119,20 @@ const EVBenefits = () => {
                 <BasicInfoDiv>
                   <FlexSpaceBetween style={{ marginBottom: "1rem" }}>
                     <BasicHeading>Employee Benefit</BasicHeading>
-                    {userType === ROLES.MANAGER ||
-                    userType === ROLES.EMPLOYEE ||
-                    isAccount ? (
-                      " "
-                    ) : userType === ROLES.HR ? (
-                      <EditButton
-                        style={{ marginRight: "5.4rem" }}
-                        onClick={() => setIsEdit(true)}
-                      >
-                        <ButtonIcon src="/images/icons/Pen 2.svg" />
-                        Edit
-                      </EditButton>
-                    ) : (
-                      <EditButton
-                        onClick={() => setIsEdit(true)}
-                        style={{ marginRight: "5.4rem" }}
-                      >
-                        <ButtonIcon src="/images/icons/Pen 2.svg" />
-                        Edit
-                      </EditButton>
-                    )}
+                    {!(
+                      userType === ROLES.MANAGER ||
+                      userType === ROLES.EMPLOYEE ||
+                      isAccount
+                    ) &&
+                      [ROLES.HR, ROLES.PAYROLL].includes(userType) && (
+                        <EditButton
+                          style={{ marginRight: "5.4rem" }}
+                          onClick={() => setIsEdit(true)}
+                        >
+                          <ButtonIcon src="/images/icons/Pen 2.svg" />
+                          Edit
+                        </EditButton>
+                      )}
                   </FlexSpaceBetween>
                   <BasicDetailsDiv>
                     <FlexSpaceBetween>

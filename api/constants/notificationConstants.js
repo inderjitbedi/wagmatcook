@@ -40,4 +40,8 @@ module.exports = Object.freeze({
     title: "{user} has changed the status of the task '{taskName}'.",
     description: "",
   },
+  RECOGNITION: {
+    title: "{sender} has recognized you for {title}.",
+    description: "",
+  },
 });

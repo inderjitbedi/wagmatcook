@@ -76,6 +76,10 @@ const ManagerAccountSidebar = (props) => {
       to: "/manager-management/account/performance/" + props.employeeId,
     },
     {
+      Title: "Recognition",
+      to: "/manager-management/account/recognition/" + props.employeeId,
+    },
+    {
       Title: "Documents",
       to: "/manager-management/account/documents/" + props.employeeId,
     },

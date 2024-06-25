@@ -44,7 +44,9 @@ const PublicLayout = ({ component: Component }: any) => {
         navigate("/organization-admin/dashboard");
       } else if (ROLES.HR === parsedUser.role) {
         navigate("/hr-management/dashboard");
-      } else if (ROLES.MANAGER === parsedUser.role) {
+      } else if (ROLES.PAYROLL === parsedUser.role) {
+        navigate("/payroll-management/dashboard");
+      }  else if (ROLES.MANAGER === parsedUser.role) {
         navigate("/manager-management/dashboard");
       } else if (ROLES.EMPLOYEE === parsedUser.role) {
         navigate("/user-management/dashboard");

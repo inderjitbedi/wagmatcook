@@ -142,6 +142,8 @@ const Announcements = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -445,7 +447,9 @@ const Announcements = () => {
 
       <DisciplinaryDiv>
         <DisciplinaryHeading>Announcements</DisciplinaryHeading>
-        {(userType === ROLES.ORG_ADMIN || userType === ROLES.HR) && (
+        {(userType === ROLES.ORG_ADMIN ||
+          userType === ROLES.HR ||
+          userType === ROLES.PAYROLL) && (
           <AddNewButton onClick={() => HandleOpenAddNewAction()}>
             Add New
           </AddNewButton>
@@ -806,6 +810,10 @@ const Announcements = () => {
                             Navigate(
                               `/manager-management/announcements/details/${data._id}`
                             );
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(
+                              `/payroll-management/announcements/details/${data._id}`
+                            );
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
                               `/user-management/announcements/details/${data._id}`
@@ -852,6 +860,10 @@ const Announcements = () => {
                               Navigate(
                                 `/manager-management/announcements/details/${data._id}`
                               );
+                            } else if (userType === ROLES.PAYROLL) {
+                              Navigate(
+                                `/payroll-management/announcements/details/${data._id}`
+                              );
                             } else if (userType === ROLES.EMPLOYEE) {
                               Navigate(
                                 `/user-management/announcements/details/${data._id}`
@@ -865,7 +877,8 @@ const Announcements = () => {
                           src="/images/icons/eye.svg"
                         />
                         {(userType === ROLES.ORG_ADMIN ||
-                          userType === ROLES.HR) && (
+                          userType === ROLES.HR ||
+                          userType === ROLES.PAYROLL) && (
                           <ActionIcons
                             onClick={() => {
                               HandleUpdateAction(data);
@@ -874,7 +887,8 @@ const Announcements = () => {
                           />
                         )}
                         {(userType === ROLES.ORG_ADMIN ||
-                          userType === ROLES.HR) && (
+                          userType === ROLES.HR ||
+                          userType === ROLES.PAYROLL) && (
                           <ActionIcons
                             onClick={() => {
                               HandleOpenDelete();

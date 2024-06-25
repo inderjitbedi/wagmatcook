@@ -477,6 +477,8 @@ const JobPosting = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -977,6 +979,10 @@ const JobPosting = () => {
                             Navigate(
                               `/manager-management/job-posting/details/${data._id}`
                             );
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(
+                              `/payroll-management/job-posting/details/${data._id}`
+                            );
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
                               `/user-management/job-posting/details/${data._id}`
@@ -1043,6 +1049,10 @@ const JobPosting = () => {
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
                                 `/manager-management/job-posting/details/${data._id}`
+                              );
+                            } else if (userType === ROLES.PAYROLL) {
+                              Navigate(
+                                `/payroll-management/job-posting/details/${data._id}`
                               );
                             } else if (userType === ROLES.EMPLOYEE) {
                               Navigate(

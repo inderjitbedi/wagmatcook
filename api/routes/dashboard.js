@@ -18,7 +18,7 @@ router.get(
 ); // /list?page=1&limit=10&searchKey=search_keyword
 router.get(
   "/data",
-  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE]),
+  verifyToken([roles.HR, roles.MANAGER, roles.EMPLOYEE, roles.PAYROLL]),
   dashboardController.hrData
 ); // /list?page=1&limit=10&searchKey=search_keyword
 

@@ -237,7 +237,10 @@ const Disciplinary = () => {
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetDisciplinary(ROLES.EMPLOYEE);
-    } else if (location.pathname.indexOf("organization-admin") > -1) {
+    }  else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetDisciplinary(ROLES.PAYROLL);
+    }else if (location.pathname.indexOf("organization-admin") > -1) {
       setUserType(ROLES.ORG_ADMIN);
       GetDisciplinary(ROLES.ORG_ADMIN);
     } else if (location.pathname.indexOf("super-admin") > -1) {

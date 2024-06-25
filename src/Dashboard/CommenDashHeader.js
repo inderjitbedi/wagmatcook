@@ -18,6 +18,7 @@ import ManagerSideBar from "./ManagerDashboard/ManagerSideBar";
 import HRSideBar from "./HRDashboard/HRSideBar";
 import { useHeaderInfoContext } from "../Context/ContextProvider";
 import SASideBar from "../SuperAdmin/SideBar/SASideBar";
+import PayRollSideBar from "./PayRollDashBoard/PayRollSideBar";
 import {
   DashHeader,
   DashHeaderTitle,
@@ -185,6 +186,16 @@ const CommenDashHeader = ({ onSearch, text }) => {
         <SidebarWrapper>
           {" "}
           <ManagerSideBar
+            ToggleSidebar={ToggleSidebar}
+            screenWidth={screenWidth}
+          />{" "}
+        </SidebarWrapper>
+      );
+    } else if (userType === ROLES.PAYROLL) {
+      return (
+        <SidebarWrapper>
+          {" "}
+          <PayRollSideBar
             ToggleSidebar={ToggleSidebar}
             screenWidth={screenWidth}
           />{" "}
@@ -404,6 +415,8 @@ const CommenDashHeader = ({ onSearch, text }) => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -668,13 +681,31 @@ const CommenDashHeader = ({ onSearch, text }) => {
                               Navigate(
                                 `/hr-management/request/${data.sender._id}/${data.dataId}`
                               );
-                            }else if (data.type.includes("JOB_END")) {
+                            } else if (data.type.includes("JOB_END")) {
                               Navigate(
                                 `/hr-management/employee-details/job-details/${data.dataId}`
                               );
-                            }else if (data.type.includes("NEXT_REVIEW")){
+                            } else if (data.type.includes("NEXT_REVIEW")) {
                               Navigate(
                                 `/hr-management/employee-details/performance/${data.dataId}`
+                              );
+                            }
+                          } else if (userType === ROLES.PAYROLL) {
+                            if (data.type.includes("TASK")) {
+                              Navigate(
+                                `/payroll-management/tasks/details//${data.dataId}`
+                              );
+                            } else if (data.type.includes("LEAVE")) {
+                              Navigate(
+                                `/payroll-management/request/${data.sender._id}/${data.dataId}`
+                              );
+                            } else if (data.type.includes("JOB_END")) {
+                              Navigate(
+                                `/payroll-management/employee-details/job-details/${data.dataId}`
+                              );
+                            } else if (data.type.includes("NEXT_REVIEW")) {
+                              Navigate(
+                                `/payroll-management/employee-details/performance/${data.dataId}`
                               );
                             }
                           } else if (userType === ROLES.MANAGER) {
@@ -686,11 +717,11 @@ const CommenDashHeader = ({ onSearch, text }) => {
                               Navigate(
                                 `/manager-management/request/${data.sender._id}/${data.dataId}`
                               );
-                            }else if (data.type.includes("JOB_END")) {
+                            } else if (data.type.includes("JOB_END")) {
                               Navigate(
                                 `/manager-management/employee-details/job-details/${data.dataId}`
                               );
-                            }else if (data.type.includes("NEXT_REVIEW")) {
+                            } else if (data.type.includes("NEXT_REVIEW")) {
                               Navigate(
                                 `/manager-management/employee-details/performance/${data.dataId}`
                               );

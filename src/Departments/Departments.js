@@ -156,6 +156,9 @@ const Departments = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetDepartments(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetDepartments(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetDepartments(ROLES.EMPLOYEE);

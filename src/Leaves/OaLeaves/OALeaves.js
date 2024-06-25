@@ -463,7 +463,10 @@ const OALeaves = () => {
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
       GetLeavesType(ROLES.HR);
-    } else if (location.pathname.indexOf("user") > -1) {
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
+      GetLeavesType(ROLES.PAYROLL);
+    }else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
       GetLeavesType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {

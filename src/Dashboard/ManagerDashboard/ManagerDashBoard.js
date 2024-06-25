@@ -134,6 +134,8 @@ const ManagerDashBoard = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -205,6 +207,8 @@ const ManagerDashBoard = () => {
                             Navigate(`/manager-management/announcements`);
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(`/payroll-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
                               `/user-management/leave/history/${user?._id}`
@@ -237,6 +241,8 @@ const ManagerDashBoard = () => {
                             Navigate(`/manager-management/announcements`);
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/announcements`);
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(`/payroll-management/announcements`);
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
                               `/user-management/leave/history/${user?._id}`
@@ -286,6 +292,8 @@ const ManagerDashBoard = () => {
                             Navigate(`/manager-management/leaves`);
                           } else if (userType === ROLES.HR) {
                             Navigate(`/hr-management/leaves`);
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(`/payroll-management/leaves`);
                           } else {
                             Navigate(`/user-management/leaves`);
                           }
@@ -319,6 +327,10 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(
                               `/hr-management/request/${data?.employee?._id}/${data._id}`
+                            );
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(
+                              `/payroll-management/request/${data?.employee?._id}/${data._id}`
                             );
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
@@ -380,6 +392,8 @@ const ManagerDashBoard = () => {
                           Navigate(`/manager-management/announcements`);
                         } else if (userType === ROLES.HR) {
                           Navigate(`/hr-management/announcements`);
+                        } else if (userType === ROLES.PAYROLL) {
+                          Navigate(`/payroll-management/announcements`);
                         } else {
                           Navigate(`/user-management/announcements`);
                         }
@@ -413,6 +427,10 @@ const ManagerDashBoard = () => {
                           } else if (userType === ROLES.HR) {
                             Navigate(
                               `/hr-management/announcements/details/${data._id}`
+                            );
+                          } else if (userType === ROLES.PAYROLL) {
+                            Navigate(
+                              `/payroll-management/announcements/details/${data._id}`
                             );
                           } else if (userType === ROLES.EMPLOYEE) {
                             Navigate(
@@ -460,6 +478,10 @@ const ManagerDashBoard = () => {
                         } else if (userType === ROLES.HR) {
                           Navigate(
                             `/hr-management/account/certificates/${data.employee}`
+                          );
+                        } else if (userType === ROLES.PAYROLL) {
+                          Navigate(
+                            `/payroll-management/account/certificates/${data.employee}`
                           );
                         } else {
                           Navigate(

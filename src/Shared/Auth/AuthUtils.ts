@@ -11,10 +11,13 @@ const redirectToDashboard = (role: any, navigate: any) => {
     case ROLES.HR:
       navigate("/hr-management/dashboard");
       break;
+    case ROLES.PAYROLL:
+      navigate("/payroll-management/dashboard");
+      break;
     case ROLES.MANAGER:
       navigate("/manager-management/dashboard");
       break;
-     case ROLES.EMPLOYEE:
+    case ROLES.EMPLOYEE:
       navigate("/user-management/dashboard");
       break;
     default:

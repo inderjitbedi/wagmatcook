@@ -507,6 +507,8 @@ const Offboarding = () => {
                         ? "USER"
                         : data.role === ROLES.HR
                         ? " HR"
+                        : data.role === ROLES.PAYROLL
+                        ? "Payroll"
                         : data.role) || " - "}
                     </TableCell>
                     <TableCell sx={CellStyle} align="left">

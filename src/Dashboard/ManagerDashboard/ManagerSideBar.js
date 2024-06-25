@@ -115,6 +115,8 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     } else if (location.pathname.indexOf("organization-admin") > -1) {
@@ -349,7 +351,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/tasks"
           onMouseEnter={() => handleMouseEnter("task")}
@@ -374,7 +376,7 @@ const ManagerSideBar = ({ ToggleSidebar, screenWidth }) => {
               Tasks
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         <Link
           style={{ textDecoration: "none" }}
           to="/manager-management/documents"

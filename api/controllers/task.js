@@ -40,6 +40,8 @@ const taskController = {
         task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`;
       else if (task.assignee.role === roles.MANAGER)
         task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`;
+      else if (task.assignee.role === roles.PAYROLL)
+        task.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/tasks/details/${task._id}`;
       // if (task.assignee.role === roles.HR) | obvious HR
       else
         task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`;
@@ -113,6 +115,8 @@ const taskController = {
           task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`;
         else if (task.assigner.role === roles.HR)
           task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`;
+        else if (task.assigner.role === roles.PAYROLL)
+          task.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/tasks/details/${task._id}`;
         //| obvious OA
         else
           task.redirectUrl = `${process.env.FRONTEND_URL}organization-admin/tasks/details/${task._id}`;
@@ -123,6 +127,8 @@ const taskController = {
           task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`;
         else if (task.assignee.role === roles.MANAGER)
           task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`;
+        else if (task.assignee.role === roles.PAYROLL)
+          task.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/tasks/details/${task._id}`;
         // if (task.assignee.role === roles.HR) | obvious HR
         else
           task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`;
@@ -361,6 +367,8 @@ const taskController = {
           task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`;
         else if (task.assigner.role === roles.HR)
           task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`;
+        else if (task.assigner.role === roles.PAYROLL)
+          task.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/tasks/details/${task._id}`;
         //| obvious OA
         else
           task.redirectUrl = `${process.env.FRONTEND_URL}organization-admin/tasks/details/${task._id}`;
@@ -371,6 +379,8 @@ const taskController = {
           task.redirectUrl = `${process.env.FRONTEND_URL}user-management/tasks/details/${task._id}`;
         else if (task.assignee.role === roles.MANAGER)
           task.redirectUrl = `${process.env.FRONTEND_URL}manager-management/tasks/details/${task._id}`;
+        else if (task.assignee.role === roles.PAYROLL)
+          task.redirectUrl = `${process.env.FRONTEND_URL}payroll-management/tasks/details/${task._id}`;
         // if (task.assignee.role === roles.HR) | obvious HR
         else
           task.redirectUrl = `${process.env.FRONTEND_URL}hr-management/tasks/details/${task._id}`;

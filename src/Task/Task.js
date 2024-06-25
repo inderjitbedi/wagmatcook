@@ -395,6 +395,8 @@ const Task = () => {
       setUserType(ROLES.MANAGER);
     } else if (location.pathname.indexOf("hr") > -1) {
       setUserType(ROLES.HR);
+    } else if (location.pathname.indexOf("payroll") > -1) {
+      setUserType(ROLES.PAYROLL);
     } else if (location.pathname.indexOf("user") > -1) {
       setUserType(ROLES.EMPLOYEE);
     }
@@ -728,6 +730,10 @@ const Task = () => {
                           Navigate(
                             `/manager-management/tasks/details/${data._id}`
                           );
+                        } else if (userType === ROLES.PAYROLL) {
+                          Navigate(
+                            `/payroll-management/tasks/details/${data._id}`
+                          );
                         } else if (userType === ROLES.EMPLOYEE) {
                           Navigate(
                             `/user-management/tasks/details/${data._id}`
@@ -781,6 +787,10 @@ const Task = () => {
                             } else if (userType === ROLES.MANAGER) {
                               Navigate(
                                 `/manager-management/tasks/details/${data._id}`
+                              );
+                            } else if (userType === ROLES.PAYROLL) {
+                              Navigate(
+                                `/payroll-management/tasks/details/${data._id}`
                               );
                             } else if (userType === ROLES.EMPLOYEE) {
                               Navigate(

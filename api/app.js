@@ -90,6 +90,7 @@ app.use("/api/public", express.static(path.join(__dirname, "public")));
 app.use("/api/temp", express.static(path.join(__dirname, "temp")));
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 // app.use(express.static(path.join(__dirname, 'build')));
+
 // crons jobs
 startCron();
 startCronForJobEnd();

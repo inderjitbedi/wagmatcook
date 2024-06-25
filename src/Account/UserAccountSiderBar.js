@@ -82,6 +82,10 @@ const UserAccountSiderBar = (props) => {
       to: "/user-management/account/performance/" + props.employeeId,
     },
     {
+      Title: "Recognition",
+      to: "/user-management/account/recognition/" + props.employeeId,
+    },
+    {
       Title: "Documents",
       to: "/user-management/account/documents/" + props.employeeId,
     },

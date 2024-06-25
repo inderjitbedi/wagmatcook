@@ -91,14 +91,17 @@ const AddNewEmployeeModal = ({
         if (result) {
           HandleCloseEmployee();
           if (userType === ROLES.ORG_ADMIN) {
-              Navigate(
-                `/organization-admin/employee/personal-info/${result.employee._id}`
-              );
+            Navigate(
+              `/organization-admin/employee/personal-info/${result.employee._id}`
+            );
           } else if (userType === ROLES.HR) {
-                Navigate(
-                  `/hr-management/personal-info/${result.employee._id}`
-                );
-          } reset();
+            Navigate(`/hr-management/personal-info/${result.employee._id}`);
+          } else if (userType === ROLES.PAYROLL) {
+            Navigate(
+              `/payroll-management/personal-info/${result.employee._id}`
+            );
+          }
+          reset();
         } else {
           //toast.warn("something went wrong ");
         }

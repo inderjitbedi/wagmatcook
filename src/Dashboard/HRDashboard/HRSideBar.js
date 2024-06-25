@@ -307,7 +307,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
             </SideBarListTitle>
           </SideBarListContainer>
         </Link>
-        <Link
+        {/* <Link
           style={{ textDecoration: "none" }}
           to="/hr-management/tasks"
           onMouseEnter={() => handleMouseEnter("task")}
@@ -332,7 +332,7 @@ const HRSideBar = ({ ToggleSidebar, screenWidth }) => {
               Tasks
             </SideBarListTitle>
           </SideBarListContainer>
-        </Link>
+        </Link> */}
         {/* <Link style={{ textDecoration: "none" }} to="/hr-management/events">
           <SideBarListContainer style={{ zIndex: "1" }}>
             <svg
